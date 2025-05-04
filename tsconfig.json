@@ -1,6 +1,5 @@
 {
   "compilerOptions": {
-    "target": "ES2017",
     "lib": [
       "dom",
       "dom.iterable",
@@ -11,13 +10,13 @@
     "strict": true,
     "noEmit": true,
     "esModuleInterop": true,
-    "module": "ESNext",
-    "moduleResolution": "node",
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "forceConsistentCasingInFileNames": true,
     "resolveJsonModule": true,
     "isolatedModules": true,
     "jsx": "preserve",
     "incremental": true,
-    "baseUrl": ".",
     "plugins": [
       {
         "name": "next"
@@ -26,20 +25,24 @@
     "paths": {
       "@/*": [
         "./src/*"
+      ],
+      "~/*": [
+        "./public/*"
       ]
-    }
+    },
+    "types": [
+      "vitest/globals"
+    ],
+    "target": "ES2017"
   },
-  // "include": [
-  //   "**/*.tsx",
-  // ],
   "include": [
     "next-env.d.ts",
-    "./src/**/*.ts",
-    "./src/**/*.tsx",
-    ".next/types/**/*.ts"
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts",
+    "next.config.mjs",
   ],
   "exclude": [
     "node_modules"
-    // "./src/**/*.stories.*"
   ]
 }
