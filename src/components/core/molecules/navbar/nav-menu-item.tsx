@@ -10,12 +10,18 @@ import {
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
 import { cn } from "@/lib/utils";
-import Link from "next/link";
+import Link, { LinkProps } from "next/link";
 import * as React from "react";
 
 interface NavItemProperties extends React.HTMLAttributes<HTMLElement> {
   links: NavLink[];
   isMobile?: boolean;
+}
+
+interface ListItemProperties extends LinkProps {
+  title: string;
+  className?: string;
+  children?: React.ReactNode;
 }
 
 export const NavItems: React.FC<NavItemProperties> = ({ links, isMobile, className }) => {
@@ -26,7 +32,7 @@ export const NavItems: React.FC<NavItemProperties> = ({ links, isMobile, classNa
           if (link.type === "dropdown" && link.subLinks) {
             return (
               <NavigationMenuItem key={link.id}>
-                <NavigationMenuTrigger className={`w-full`}>{link.title}</NavigationMenuTrigger>
+                <NavigationMenuTrigger className="w-full">{link.title}</NavigationMenuTrigger>
                 <NavigationMenuContent>
                   <ul className="grid gap-3 p-4 md:w-[600px] md:grid-cols-2">
                     {link.subLinks.map((subLink) => (
@@ -42,11 +48,11 @@ export const NavItems: React.FC<NavItemProperties> = ({ links, isMobile, classNa
 
           return (
             <NavigationMenuItem key={link.id}>
-              <Link href={link.href} legacyBehavior passHref>
-                <NavigationMenuLink className={cn(navigationMenuTriggerStyle(), "w-full")}>
+              <NavigationMenuLink asChild>
+                <Link href={link.href} className={cn(navigationMenuTriggerStyle(), "w-full")} legacyBehavior={false}>
                   {link.title}
-                </NavigationMenuLink>
-              </Link>
+                </Link>
+              </NavigationMenuLink>
             </NavigationMenuItem>
           );
         })}
@@ -55,13 +61,14 @@ export const NavItems: React.FC<NavItemProperties> = ({ links, isMobile, classNa
   );
 };
 
-const ListItem = React.forwardRef<React.ElementRef<"a">, React.ComponentPropsWithoutRef<"a">>(
-  ({ className, title, children, ...properties }, reference) => {
+const ListItem = React.forwardRef<HTMLAnchorElement, ListItemProperties>(
+  ({ className, title, children, href, ...properties }, reference) => {
     return (
       <li>
         <NavigationMenuLink asChild>
-          <a
+          <Link
             ref={reference}
+            href={href}
             className={cn(
               "hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground block space-y-1 rounded-md p-3 leading-none no-underline transition-colors outline-none select-none",
               className,
@@ -70,7 +77,7 @@ const ListItem = React.forwardRef<React.ElementRef<"a">, React.ComponentPropsWit
           >
             <div className="text-sm leading-none font-medium">{title}</div>
             <p className="text-muted-foreground line-clamp-2 text-sm leading-snug">{children}</p>
-          </a>
+          </Link>
         </NavigationMenuLink>
       </li>
     );
