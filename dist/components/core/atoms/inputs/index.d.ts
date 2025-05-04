@@ -1,1 +1,0 @@
-export declare function InputField({ label, name, type, placeholder, required, disabled, options, className, containerClassName, leftAddon, rightAddon, labelDetailedNode, onChange, }: FormFieldProperties): import("react/jsx-runtime").JSX.Element;
