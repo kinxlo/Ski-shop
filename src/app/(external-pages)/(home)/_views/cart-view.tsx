@@ -1,11 +1,10 @@
 "use client";
 
+import { Wrapper } from "@/components/core/layout/wrapper";
+import SkiButton from "@/components/shared/button/button";
 import { Minus, Plus, X } from "lucide-react";
 import Image from "next/image";
 import { useState } from "react";
-
-import CustomButton from "~/components/common/common-button/common-button";
-import { Wrapper } from "~/components/layout/wrapper";
 
 interface CartItem {
   id: string;
@@ -153,9 +152,9 @@ export const CartView = () => {
                 <span>₦{subtotal.toLocaleString()}</span>
               </div>
             </div>
-            <CustomButton variant="primary" size="lg" className="mt-6 w-full rounded-full sm:mt-10">
+            <SkiButton variant="primary" size="lg" className="mt-6 w-full rounded-full sm:mt-10">
               Proceed to Checkout
-            </CustomButton>
+            </SkiButton>
           </div>
         </div>
       </Wrapper>

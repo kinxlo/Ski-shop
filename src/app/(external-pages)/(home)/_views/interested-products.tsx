@@ -1,5 +1,6 @@
-import { Wrapper } from "~/components/layout/wrapper";
-import { products } from "~/utils/constants";
+import { Wrapper } from "@/components/core/layout/wrapper";
+import { products } from "@/lib/constants";
+
 import { ShopCard } from "../_components/shop-card/shop-card";
 
 export const InterestedProducts = () => {
