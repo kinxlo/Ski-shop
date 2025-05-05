@@ -8,11 +8,12 @@ jobs:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0 # Required for Git history
+          path: '.'
 
       # Setup PNPM
       - uses: pnpm/action-setup@v2
         with:
-          version: 8
+          version: 10
 
       # Setup Node.js
       - uses: actions/setup-node@v3
@@ -20,9 +21,10 @@ jobs:
           node-version: 18
           cache: "pnpm"
 
-      # Install dependencies
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+        run: |
+          ls -la # Debug: list files to verify pnpm-lock.yaml exists
+          pnpm install --frozen-lockfile
 
       # Build Storybook
       - name: Build Storybook
