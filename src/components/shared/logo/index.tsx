@@ -1,20 +1,24 @@
-import { cn } from "@/lib/utils";
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
-import { HTMLAttributes } from "react";
+import { FC } from "react";
 
-interface LogoProperties extends HTMLAttributes<HTMLImageElement> {
+type LogoProperties = {
+  logo?: string;
   width?: number;
   height?: number;
   className?: string;
-  link?: string;
-}
+};
 
-export const Logo = ({ width, height, className, link = "/seller" }: LogoProperties) => {
+export const Logo: FC<LogoProperties> = ({ logo = "/images/skicom.svg", width = 89, height = 60, className }) => {
   return (
-    <Link href={link} className="" data-testid="logo">
-      <div className={cn(`mt-1 flex w-full items-center justify-end`)}></div>
-      <Image priority src={""} alt="hris" width={width} height={height} className={cn("object-contain", className)} />
+    <Link href="/" data-testid="logo" className="">
+      {logo ? (
+        <Image src={logo} alt="Logo" width={width} height={height} className={className} />
+      ) : (
+        <p className="text-xl font-bold">LOGO</p>
+      )}
     </Link>
   );
 };

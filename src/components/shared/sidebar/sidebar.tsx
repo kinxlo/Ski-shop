@@ -4,7 +4,6 @@
 import {
   Sidebar,
   SidebarContent,
-  // SidebarHeader,
   SidebarMenu,
   SidebarMenuBadge,
   SidebarMenuButton,

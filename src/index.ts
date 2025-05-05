@@ -1,10 +1,10 @@
 import "./global.css";
 
 // ATOMS
-export * from "./components/core/atoms/button";
-export * from "./components/core/atoms/inputs";
-export * from "./components/core/atoms/logo";
+export * from "./components/shared/button";
+export * from "./components/shared/inputs";
+export * from "./components/shared/logo";
 
 // MOLECULES
-export * from "./components/core/molecules/navbar";
-export * from "./components/core/molecules/breadcrumb";
+export * from "./components/shared/navbar";
+export * from "./components/shared/breadcrumb";

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-import CustomButton from "../common-button/common-button";
+import SkiButton from "../button/button";
 import { ReusableDialog } from "./Dialog";
 
 export const ConfirmationDialog = ({
@@ -31,10 +31,10 @@ export const ConfirmationDialog = ({
       wrapperClassName={`flex flex-col items-center justify-center text-center`}
     >
       <div className="flex justify-center gap-4 pt-4">
-        <CustomButton variant="outline" onClick={() => setIsDialogOpen(false)}>
+        <SkiButton variant="outline" onClick={() => setIsDialogOpen(false)}>
           Cancel
-        </CustomButton>
-        <CustomButton
+        </SkiButton>
+        <SkiButton
           isDisabled={action.pending}
           isLoading={action.pending}
           variant="destructive"
@@ -45,7 +45,7 @@ export const ConfirmationDialog = ({
           }}
         >
           {action.buttonName}
-        </CustomButton>
+        </SkiButton>
       </div>
     </ReusableDialog>
   );
