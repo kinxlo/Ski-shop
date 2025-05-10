@@ -3,7 +3,7 @@ import Image from "next/image";
 
 import left1 from "~/images/left1.svg";
 import right1 from "~/images/right1.svg";
-import SkiButton from "../../button/button";
+import SkiButton from "../../button";
 
 export const NewsLetter = () => {
   return (

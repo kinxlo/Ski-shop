@@ -7,7 +7,7 @@ import { Menu, X } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { forwardRef, useEffect, useState } from "react";
 
-import SkiButton from "../button/button";
+import SkiButton from "../button";
 import { Logo } from "../logo";
 import { SearchDialog } from "./_components/search-modal";
 import { NavItems } from "./nav-menu-item";

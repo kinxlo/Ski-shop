@@ -2,7 +2,7 @@
 
 import { Wrapper } from "@/components/core/layout/wrapper";
 import { BlurImage } from "@/components/core/miscellaneous/blur-image";
-import SkiButton from "@/components/shared/button/button";
+import SkiButton from "@/components/shared/button";
 import { Badge } from "@/components/ui/badge";
 import { Minus, Plus, ShoppingCart, Star } from "lucide-react";
 import { useState } from "react";

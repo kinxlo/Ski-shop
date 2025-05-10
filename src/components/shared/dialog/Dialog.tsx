@@ -47,16 +47,15 @@ export function ReusableDialog({
           hideClose={hideClose}
           className={cn("border-default h-full items-center sm:max-w-[425px] md:h-fit", className)}
         >
-          {wrapperClassName ||
-            (img && (
-              <DialogHeader className={cn("h-fit", wrapperClassName)}>
-                {img && (
-                  <Image width={100} height={100} src={img || ""} alt="dangerous" className="h-[100px] w-[100px]" />
-                )}
-                <DialogTitle className={cn("text-2xl", headerClassName)}>{title}</DialogTitle>
-                <DialogDescription>{description}</DialogDescription>
-              </DialogHeader>
-            ))}
+          {/* {wrapperClassName ?? */}
+          {/* (img && ( */}
+          <DialogHeader className={cn("h-fit", wrapperClassName)}>
+            {img && <Image width={100} height={100} src={img || ""} alt="dangerous" className="h-[100px] w-[100px]" />}
+            <DialogTitle className={cn("text-2xl", headerClassName)}>{title}</DialogTitle>
+            <DialogDescription>{description}</DialogDescription>
+          </DialogHeader>
+          {/* )) */}
+          {/* } */}
           {children}
         </DialogContent>
       </div>

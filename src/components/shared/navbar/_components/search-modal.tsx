@@ -3,7 +3,7 @@ import { X } from "lucide-react";
 import { useState } from "react";
 import { LuSearch } from "react-icons/lu";
 
-import SkiButton from "../../button/button";
+import SkiButton from "../../button";
 import { ReusableDialog } from "../../dialog/Dialog";
 
 export const SearchDialog = () => {

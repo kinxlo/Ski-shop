@@ -1,5 +1,5 @@
 {
-  "name": "tsa-app",
+  "name": "ski-shop",
   "private": true,
   "version": "0.1.0",
   "type": "module",
@@ -120,6 +120,7 @@
   "devDependencies": {
     "@chromatic-com/storybook": "^3.2.6",
     "@eslint/eslintrc": "^3",
+    "@tanstack/react-query-devtools": "^5.74.7",
     "@ianvs/prettier-plugin-sort-imports": "^4.4.1",
     "@storybook/addon-a11y": "^8.0.0",
     "@storybook/addon-essentials": "^8.6.12",

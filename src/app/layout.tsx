@@ -9,9 +9,9 @@ import "../styles/theme.css";
 import "../styles/global.css";
 
 import ThemeProvider from "@/components/core/layout/ThemeToggle/theme-provider";
+import { Toast } from "@/components/shared/Toast";
 // import { ModeToggle } from "@/components/core/layout/ThemeToggle/theme-toggle";
 import { ReactQueryProvider } from "@/lib/react-query/query-provider";
-import { Toaster } from "sonner";
 
 const META_THEME_COLORS = {
   light: "#ffffff",
@@ -19,8 +19,8 @@ const META_THEME_COLORS = {
 };
 
 export const metadata: Metadata = {
-  title: "Next Shadcn",
-  description: "Basic dashboard with Next.js and Shadcn",
+  title: "Ski Shop",
+  description: "Shop Smart and Save More with Ski-Shop",
 };
 
 export const viewport: Viewport = {
@@ -65,7 +65,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
               disableTransitionOnChange
               enableColorScheme
             >
-              <Toaster />
+              <Toast />
               {/* <ModeToggle /> */}
               {children}
             </ThemeProvider>

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-import SkiButton from "../button/button";
+import SkiButton from "../button";
 import { ReusableDialog } from "./Dialog";
 
 export const ConfirmationDialog = ({

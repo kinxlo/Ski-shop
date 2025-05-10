@@ -156,6 +156,6 @@ const SkiButton = forwardRef<HTMLButtonElement, ButtonProperties>(
     );
   },
 );
-SkiButton.displayName = "CustomButton"; // This is useful for debugging in React DevTools
+SkiButton.displayName = "SkiButton"; // This is useful for debugging in React DevTools
 
 export default SkiButton;

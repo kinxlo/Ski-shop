@@ -5,7 +5,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { Home } from "lucide-react";
 import { FormProvider, useForm } from "react-hook-form";
 
-import SkiButton from "../button/button";
+import SkiButton from "../button";
 
 const meta: Meta<typeof InputField> = {
   title: "Atoms/InputField",

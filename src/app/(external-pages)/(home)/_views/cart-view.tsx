@@ -1,7 +1,7 @@
 "use client";
 
 import { Wrapper } from "@/components/core/layout/wrapper";
-import SkiButton from "@/components/shared/button/button";
+import SkiButton from "@/components/shared/button";
 import { Minus, Plus, X } from "lucide-react";
 import Image from "next/image";
 import { useState } from "react";

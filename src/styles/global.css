@@ -126,7 +126,7 @@
 
   --outline: transparent;
   --outline-hover: oklch(0.96 0 0);
-  --outline-foreground: oklch(1 0 0);
+  --outline-foreground: oklch(0.16 0 0);
 
   --link: oklch(0.16 0 0);
 

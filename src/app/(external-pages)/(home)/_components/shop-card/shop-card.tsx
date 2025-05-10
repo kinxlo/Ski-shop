@@ -45,21 +45,26 @@ export const ShopCard = ({
         />
       </div>
       <div className="space-y-2">
-        <p className="text-sm text-gray-500 capitalize">{category}</p>
-        <p className="line-clamp-2 font-medium">{title}</p>
+        <p className="text-mid-grey-II text-[10px] capitalize lg:text-sm">{category}</p>
+        <p className="line-clamp-2 text-xs font-medium lg:text-lg">{title}</p>
         <div className="flex gap-0.5">
           {Array.from({ length: 5 }).map((_, index) => (
             <Star
               key={index}
-              size={14}
-              className={`${index < rating ? "fill-yellow-400 text-yellow-400" : "text-gray-300"}`}
+              // size={14}
+              className={cn(
+                index < rating ? "fill-yellow-400 text-yellow-400" : "text-gray-300",
+                "h-2 w-2 lg:h-4 lg:w-4",
+              )}
             />
           ))}
         </div>
-        <p className={`text-mid-grey-II text-sm underline`}>By Skicom</p>
+        <p className={`text-mid-grey-II text-[10px] underline lg:text-sm`}>By Skicom</p>
         <div className="flex items-baseline gap-2">
-          <p className="text-primary text-sm font-medium lg:text-[16px]">₦{price.toLocaleString()}</p>
-          {oldPrice && <p className="text-xs text-gray-500 line-through lg:text-sm">₦{oldPrice.toLocaleString()}</p>}
+          <p className="text-primary text-xs font-medium lg:text-[16px]">₦{price.toLocaleString()}</p>
+          {oldPrice && (
+            <p className="text-mid-danger text-[10px] line-through lg:text-sm">₦{oldPrice.toLocaleString()}</p>
+          )}
         </div>
       </div>
     </Link>

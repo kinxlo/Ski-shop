@@ -1,7 +1,6 @@
+import SkiButton from ".";
 import type { Meta, StoryObj } from "@storybook/react";
 import { Home } from "lucide-react";
-
-import SkiButton from "./button";
 
 const meta: Meta<typeof SkiButton> = {
   title: "Atoms/Button",

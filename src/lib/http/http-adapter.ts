@@ -1,5 +1,6 @@
 import http from "@/lib/http/httpConfig";
-import tryCatchWrapper from "@/lib/tools/tryCatchFunction";
+
+import tryCatchWrapper from "../tools/tryCatchFunction";
 
 interface HttpResponse<T> {
   data: T;

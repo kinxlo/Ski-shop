@@ -1,5 +1,5 @@
 import { Wrapper } from "@/components/core/layout/wrapper";
-import SkiButton from "@/components/shared/button/button";
+import SkiButton from "@/components/shared/button";
 import { Badge } from "@/components/ui/badge";
 import { ArrowRight } from "lucide-react";
 

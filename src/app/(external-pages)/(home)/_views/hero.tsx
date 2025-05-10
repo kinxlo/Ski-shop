@@ -2,7 +2,7 @@
 
 import { Wrapper } from "@/components/core/layout/wrapper";
 import { BlurImage } from "@/components/core/miscellaneous/blur-image";
-import SkiButton from "@/components/shared/button/button";
+import SkiButton from "@/components/shared/button";
 import { useEffect, useState } from "react";
 
 const heroImages = ["/images/shop/hero.svg", "/images/shop/hero.svg", "/images/shop/hero.svg"];
