@@ -19,9 +19,9 @@ export const PopularProducts = () => {
   }
 
   return (
-    <Wrapper className="py-16">
+    <Wrapper className="min-h-[480px] py-16">
       <div className={`mb-8 flex items-baseline justify-between`}>
-        <h4 className="text-mid-grey-III text-sm font-black lg:text-3xl">Skicom Products</h4>
+        <h2 className="text-high-grey-II text-sm font-black lg:text-3xl">Skicom Products</h2>
         <SkiButton variant="link" className="text-primary font-medium lg:text-2xl">
           See All
         </SkiButton>
@@ -53,8 +53,8 @@ export const PopularProducts = () => {
 };
 
 const ShopCardSkeleton = () => (
-  <div className="animate-pulse space-y-3">
-    <div className="h-48 rounded-md bg-gray-200"></div>
+  <div className="animate-pulse space-y-3 rounded-lg border p-4">
+    <div className="h-72 rounded-md bg-gray-200"></div>
     <div className="h-4 rounded bg-gray-200"></div>
     <div className="h-4 w-3/4 rounded bg-gray-200"></div>
     <div className="h-4 w-1/2 rounded bg-gray-200"></div>

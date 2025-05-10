@@ -51,7 +51,7 @@ export const Hero = () => {
             <h1 className="text-[32px] leading-[44px] font-bold text-white lg:text-[56px] lg:leading-[78px]">
               Shop Smart and Save More with Ski-Shop
             </h1>
-            <p className="mb-8 text-lg text-gray-200">Your one-stop marketplace for everything you need</p>
+            <p className="mb-8 text-lg">Your one-stop marketplace for everything you need</p>
           </div>
           <div className="mx-auto mt-8 flex flex-col items-center gap-4 lg:mx-0 lg:flex-row">
             <SkiButton href={`/`} className="w-[220px] rounded-full" variant="primary">
