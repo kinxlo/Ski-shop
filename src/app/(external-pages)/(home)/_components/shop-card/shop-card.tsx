@@ -46,7 +46,7 @@ export const ShopCard = ({
       </div>
       <div className="space-y-2">
         <p className="text-mid-grey-II text-[10px] capitalize lg:text-sm">{category}</p>
-        <p className="line-clamp-2 text-xs font-medium lg:text-lg">{title}</p>
+        <p className="line-clamp-2 text-xs font-medium lg:text-sm">{title}</p>
         <Ratings rating={rating} />
         <p className={`text-mid-grey-II text-[10px] underline lg:text-sm`}>By Skicom</p>
         <div className="flex items-baseline gap-2">

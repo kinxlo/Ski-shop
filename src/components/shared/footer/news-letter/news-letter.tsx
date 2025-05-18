@@ -21,11 +21,11 @@ export const NewsLetter = () => {
             <Input
               type="email"
               placeholder="Email Address"
-              className="max-w-full rounded-full outline-none xl:w-[456px]"
+              className="h-[48px] max-w-full rounded-full outline-none xl:w-[456px]"
             />
 
             <div className="text-center">
-              <SkiButton className="bg-secondary text-background mt-3 w-[178px] rounded-full xl:mt-0" size="lg">
+              <SkiButton className="bg-accent text-background mt-3 w-[178px] rounded-full xl:mt-0" size="xl">
                 Subscribe
               </SkiButton>
             </div>

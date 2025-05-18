@@ -536,3 +536,21 @@ export const testimonialImages = [
     rating: 3,
   },
 ];
+
+export const CATEGORIES = [
+  // "All Categories",
+  "Clothings",
+  "Electronic Gadgets",
+  "Groceries",
+  "For Women",
+  "Body Cream & Oil",
+  "Furniture",
+  "TV & Homes Appliances",
+  "Watches & Accessories",
+];
+export const VENDORS = [
+  // "All Vendors",
+  "Premium Vendors",
+  "Ski-Shop",
+  "basic Vendors",
+];
