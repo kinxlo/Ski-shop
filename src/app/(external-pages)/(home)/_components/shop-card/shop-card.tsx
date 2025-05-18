@@ -1,5 +1,5 @@
+import { Ratings } from "@/components/shared/ratings";
 import { cn } from "@/lib/utils";
-import { Star } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { HTMLAttributes } from "react";
@@ -47,18 +47,7 @@ export const ShopCard = ({
       <div className="space-y-2">
         <p className="text-mid-grey-II text-[10px] capitalize lg:text-sm">{category}</p>
         <p className="line-clamp-2 text-xs font-medium lg:text-lg">{title}</p>
-        <div className="flex gap-0.5">
-          {Array.from({ length: 5 }).map((_, index) => (
-            <Star
-              key={index}
-              // size={14}
-              className={cn(
-                index < rating ? "fill-yellow-400 text-yellow-400" : "text-gray-300",
-                "h-2 w-2 lg:h-4 lg:w-4",
-              )}
-            />
-          ))}
-        </div>
+        <Ratings rating={rating} />
         <p className={`text-mid-grey-II text-[10px] underline lg:text-sm`}>By Skicom</p>
         <div className="flex items-baseline gap-2">
           <p className="text-primary text-xs font-medium lg:text-[16px]">₦{price.toLocaleString()}</p>

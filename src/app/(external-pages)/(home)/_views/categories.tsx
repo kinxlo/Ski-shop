@@ -55,8 +55,8 @@ export const Categories = () => {
   ];
 
   return (
-    <Wrapper className="py-16">
-      <h2 className="mb-8 text-center text-3xl font-semibold">Categories</h2>
+    <Wrapper className="">
+      <h2 className="text-high-grey-II mb-8 text-center text-3xl font-semibold">Categories</h2>
       <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
         {categories.map((category) => (
           <CategoryItem key={category.title} title={category.title} image={category.image} href={category.href} />

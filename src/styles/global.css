@@ -189,7 +189,7 @@
   --primary: oklch(0.38 0.15 238.7);
   --primary-foreground: oklch(1 0 0);
 
-  --secondary: oklch(0.26 0.2 280.4);
+  --secondary: oklch(1 0 0);
   --secondary-foreground: oklch(1 0 0);
 
   --muted: oklch(0.27 0 0);
@@ -331,9 +331,9 @@ h6 {
   font-weight: 500;
 }
 
-p {
-  font-weight: 500;
-}
+/* p {
+  font-weight: 400;
+} */
 
 /* Small devices (640px and up) */
 @media (min-width: 640px) {
@@ -377,4 +377,19 @@ p {
   h6 {
     font-size: 1.5rem;
   }
+}
+
+@keyframes swing {
+  0%,
+  100% {
+    transform: rotate(8deg);
+  }
+  50% {
+    transform: rotate(-5deg);
+  }
+}
+
+.animate-swing {
+  animation: swing 2s ease-in-out infinite;
+  transform-origin: top center;
 }

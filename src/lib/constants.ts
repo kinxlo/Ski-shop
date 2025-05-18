@@ -1,4 +1,3 @@
-// Use the types to define the NAV_LINKS array
 export const NAV_LINKS: NavLink[] = [
   {
     id: 1,
@@ -19,7 +18,7 @@ export const products = [
     rating: 4.8,
     price: 575_000,
     oldPrice: 600_000,
-    image: "/images/shop/hero.svg",
+    thumbnail: "/images/shop/hero.svg",
     href: "/shop/products/ps5-vr2",
     description:
       "Immerse yourself in next-level gaming with the Sony PlayStation VR2. Featuring an approximate 110° field of view, this advanced virtual reality headset delivers stunning visuals and unparalleled immersion. Seamlessly integrates with your PS5 for smooth communication and effortless setup.",
@@ -491,5 +490,49 @@ export const products = [
     reviews: 167,
     stock: 15,
     similarProducts: ["iphone-15-pro", "macbook-pro-m2", "ps5-vr2"],
+  },
+];
+
+export const testimonialImages = [
+  {
+    id: 0,
+    text: "Our Testimonials",
+    subText: "What People Say About Us",
+  },
+  {
+    id: 1,
+    image: "/images/testimonials/person2.jpg",
+    name: "John Doe",
+    position: "Designer",
+    message:
+      "Lorem ipsum dolor sit amet ctetur. Lorem libero arcu ut. Lorem ipsum dolor sit amet ctetur. Lorem libero arcu ut.Lorem ipsum dolor sit amet ctetur. Lorem libero arcu ut.Lorem ipsum dolor sit amet ctetur. Lorem libero arcu ut.Lorem ipsum dolor sit amet ctetur. Lorem libero arcu ut. Lorem libero arcu ut. Lorem ips.",
+    rating: 5,
+  },
+  {
+    id: 2,
+    image: "/images/testimonials/person4.jpg",
+    name: "Jane Doe",
+    position: "Developer",
+    message:
+      "Lorem ipsum dolor sit amet ctetur. Lorem libero arcu ut. Lorem ipsum dolor sit amet ctetur. Lorem libero arcu ut.Lorem ipsum dolor sit amet ctetur. Lorem libero arcu ut.Lorem ipsum dolor sit amet ctetur. Lorem libero arcu ut.Lorem ipsum dolor sit amet ctetur. Lorem libero arcu ut. Lorem libero arcu ut. Lorem ips.",
+    rating: 2,
+  },
+  {
+    id: 3,
+    image: "/images/testimonials/person3.jpg",
+    name: "James Doe",
+    position: "Customer Service",
+    message:
+      "Lorem ipsum dolor sit amet ctetur. Lorem libero arcu ut. Lorem ipsum dolor sit amet ctetur. Lorem libero arcu ut.Lorem ipsum dolor sit amet ctetur. Lorem libero arcu ut.Lorem ipsum dolor sit amet ctetur. Lorem libero arcu ut.Lorem ipsum dolor sit amet ctetur. Lorem libero arcu ut. Lorem libero arcu ut. Lorem ips.",
+    rating: 4,
+  },
+  {
+    id: 4,
+    image: "/images/testimonials/person1.jpg",
+    name: "Doe Jame",
+    position: "Customer Service",
+    message:
+      "Lorem ipsum dolor sit amet ctetur. Lorem libero arcu ut. Lorem ipsum dolor sit amet ctetur. Lorem libero arcu ut.Lorem ipsum dolor sit amet ctetur. Lorem libero arcu ut.Lorem ipsum dolor sit amet ctetur. Lorem libero arcu ut.Lorem ipsum dolor sit amet ctetur. Lorem libero arcu ut. Lorem libero arcu ut. Lorem ips.",
+    rating: 3,
   },
 ];

@@ -1,5 +1,12 @@
 import { HttpAdapter } from "@/lib/http/http-adapter";
 
+interface ProductResponse {
+  products: Product[];
+  total: number;
+  skip: number;
+  limit: number;
+}
+
 export class AppService {
   private readonly http: HttpAdapter;
 
@@ -8,8 +15,7 @@ export class AppService {
   }
 
   async getAllProducts() {
-    const response = await this.http.get("/products");
-
+    const response = await this.http.get<ProductResponse>("/products");
     if (response?.status === 200) {
       return response.data;
     }

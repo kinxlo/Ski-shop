@@ -2,12 +2,21 @@
 
 import { Wrapper } from "@/components/core/layout/wrapper";
 import SkiButton from "@/components/shared/button";
+import { cn } from "@/lib/utils";
 import { useAppService } from "@/services/app/use-app-service";
 import { toast } from "sonner";
 
 import { ShopCard } from "../_components/shop-card/shop-card";
 
-export const PopularProducts = () => {
+export const PopularProducts = ({
+  title,
+  headerStyle,
+  hasAction = true,
+}: {
+  title: string;
+  headerStyle?: string;
+  hasAction?: boolean;
+}) => {
   const { useGetAllProducts } = useAppService();
   const { isLoading, isError, error, data } = useGetAllProducts();
 
@@ -19,12 +28,14 @@ export const PopularProducts = () => {
   }
 
   return (
-    <Wrapper className="min-h-[480px] py-16">
-      <div className={`mb-8 flex items-baseline justify-between`}>
-        <h2 className="text-high-grey-II text-sm font-black lg:text-3xl">Skicom Products</h2>
-        <SkiButton variant="link" className="text-primary font-medium lg:text-2xl">
-          See All
-        </SkiButton>
+    <Wrapper className="min-h-[480px] pt-16">
+      <div className={cn(`mb-8 flex items-baseline justify-between`, headerStyle)}>
+        <h2 className={cn("text-high-grey-II text-sm font-black lg:text-3xl", headerStyle)}>{title}</h2>
+        {hasAction && (
+          <SkiButton variant="link" className="text-primary font-medium lg:text-2xl">
+            See All
+          </SkiButton>
+        )}
       </div>
 
       {/* Products Grid */}
@@ -36,13 +47,13 @@ export const PopularProducts = () => {
         {data?.products?.slice(0, 4).map((product) => {
           return (
             <ShopCard
-              key={product.id}
-              id={product.id}
+              key={product.id.toString()}
+              id={product.id.toString()}
               category={product.category}
               title={product.title}
               rating={product.rating}
               price={product.price}
-              oldPrice={product.oldPrice}
+              // oldPrice={product.oldPrice}
               image={product.thumbnail}
             />
           );

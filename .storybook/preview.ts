@@ -3,8 +3,13 @@ import type { Preview } from "@storybook/react";
 
 import "../src/styles/global.css";
 
+import { initialize, mswLoader } from "msw-storybook-addon";
+
+initialize();
+
 const preview: Preview = {
   tags: ["autodocs"],
+  loaders: [mswLoader],
   parameters: {
     layout: "centered",
     controls: {

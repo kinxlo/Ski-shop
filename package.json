@@ -107,6 +107,7 @@
     "sharp": "^0.33.5",
     "sonner": "^1.7.1",
     "sort-by": "^1.2.0",
+    "swiper": "^11.2.1",
     "tailwind-merge": "^3.2.0",
     "tailwindcss": "^4.1.4",
     "tailwindcss-animate": "^1.0.7",
@@ -120,7 +121,6 @@
   "devDependencies": {
     "@chromatic-com/storybook": "^3.2.6",
     "@eslint/eslintrc": "^3",
-    "@tanstack/react-query-devtools": "^5.74.7",
     "@ianvs/prettier-plugin-sort-imports": "^4.4.1",
     "@storybook/addon-a11y": "^8.0.0",
     "@storybook/addon-essentials": "^8.6.12",
@@ -133,6 +133,7 @@
     "@storybook/nextjs": "^8.6.12",
     "@storybook/react": "^8.6.12",
     "@storybook/test": "^8.6.12",
+    "@tanstack/react-query-devtools": "^5.74.7",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
@@ -155,6 +156,8 @@
     "globals": "^16.0.0",
     "husky": "^9.1.7",
     "lint-staged": "^15.2.11",
+    "msw": "^2.8.2",
+    "msw-storybook-addon": "^2.0.4",
     "playwright": "^1.52.0",
     "prettier": "3.4.2",
     "prettier-plugin-tailwindcss": "^0.6.11",
@@ -164,5 +167,10 @@
     "typescript": "^5",
     "typescript-eslint": "^8.26.1",
     "vitest": "^3.1.2"
+  },
+  "msw": {
+    "workerDirectory": [
+      "public"
+    ]
   }
 }
