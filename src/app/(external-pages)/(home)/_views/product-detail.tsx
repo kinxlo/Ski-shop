@@ -12,17 +12,27 @@ import { SimilarProducts } from "./similar-products";
 
 interface ProductDetailProperties {
   product: {
-    id: string;
-    category: string;
+    weight: number;
+    id: number;
     title: string;
-    price: number;
-    oldPrice?: number;
-    rating: number;
-    reviews: number;
     description: string;
-    specs: Array<{ label: string; value: string }>;
-    gallery: string[];
+    category: string;
+    price: number;
+    discountPercentage?: number;
+    rating: number;
     stock: number;
+    brand: string;
+    thumbnail: string;
+    images: string[];
+    reviews: {
+      rating: number;
+      comment: string;
+      date: string;
+      reviewerName: string;
+      reviewerEmail: string;
+    }[];
+    availabilityStatus: string;
+    // Add other properties as needed
   };
 }
 
@@ -33,6 +43,18 @@ export const ProductDetail = ({ product }: ProductDetailProperties) => {
   const [quantity, setQuantity] = useState(1);
   const [activeTab, setActiveTab] = useState<Tab>("description");
 
+  // Calculate discounted price if discountPercentage exists
+  const oldPrice = product.discountPercentage ? product.price / (1 - product.discountPercentage / 100) : null;
+
+  // Use images array as gallery if it exists
+  const gallery = product.images?.length ? product.images : [product.thumbnail];
+
+  // Calculate average rating from reviews
+  const averageRating =
+    product.reviews.length > 0
+      ? product.reviews.reduce((sum, review) => sum + review.rating, 0) / product.reviews.length
+      : product.rating;
+
   const handleQuantityChange = (type: "increase" | "decrease") => {
     if (type === "decrease" && quantity > 1) {
       setQuantity(quantity - 1);
@@ -40,6 +62,14 @@ export const ProductDetail = ({ product }: ProductDetailProperties) => {
       setQuantity(quantity + 1);
     }
   };
+
+  // Sample specifications - you should replace with actual product specs
+  const specs = [
+    { label: "Brand", value: product.brand },
+    { label: "Category", value: product.category },
+    { label: "Stock", value: product.stock },
+    { label: "Weight", value: `${product.weight}g` },
+  ];
 
   return (
     <section className="pt-[10rem]">
@@ -50,10 +80,10 @@ export const ProductDetail = ({ product }: ProductDetailProperties) => {
             {/* Image Gallery */}
             <div className="space-y-4">
               <div className="relative aspect-square max-h-[482px] w-full overflow-hidden rounded-lg border p-4 sm:p-[2rem]">
-                <BlurImage src={product.gallery[selectedImage]} alt={product.title} fill className="object-cover" />
+                <BlurImage src={gallery[selectedImage]} alt={product.title} fill className="object-cover" />
               </div>
               <div className="grid grid-cols-4 gap-2 sm:gap-4">
-                {product.gallery.map((image, index) => (
+                {gallery.map((image, index) => (
                   <button
                     key={index}
                     className={`relative aspect-square overflow-hidden rounded-lg border-2 p-1 sm:p-0 ${
@@ -77,32 +107,40 @@ export const ProductDetail = ({ product }: ProductDetailProperties) => {
                       <Star
                         key={index}
                         size={16}
-                        className={index < product.rating ? "fill-yellow-400 text-yellow-400" : "text-gray-300"}
+                        className={
+                          index < Math.round(averageRating) ? "fill-yellow-400 text-yellow-400" : "text-gray-300"
+                        }
                       />
                     ))}
-                    <span className="text-low-grey-II text-sm">(4.5)</span>
-                    <span className="ml-2 text-sm text-gray-600">({product.reviews} Reviews)</span>
+                    <span className="text-low-grey-II text-sm">({averageRating.toFixed(1)})</span>
+                    <span className="ml-2 text-sm text-gray-600">({product.reviews.length} Reviews)</span>
                   </div>
-                  <Badge className="bg-green-100 text-green-800">In Stock</Badge>
+                  <Badge
+                    className={
+                      product.availabilityStatus === "In Stock"
+                        ? "bg-green-100 text-green-800"
+                        : "text-destructive bg-red-100"
+                    }
+                  >
+                    {product.availabilityStatus}
+                  </Badge>
                 </div>
               </div>
 
               <div className="flex items-center gap-4">
                 <span className="text-primary text-3xl font-semibold">₦{product.price.toLocaleString()}</span>
-                {product.oldPrice && (
-                  <span className="text-xl text-gray-500 line-through">₦{product.oldPrice.toLocaleString()}</span>
+                {oldPrice && (
+                  <span className="text-destructive text-xl line-through">₦{oldPrice.toFixed(2).toLocaleString()}</span>
                 )}
               </div>
-
-              {/* <p className="text-gray-600">{product.description}</p> */}
 
               <div className="space-y-4">
                 <h3 className="text-lg font-semibold">Specifications:</h3>
                 <div className="grid grid-cols-2 gap-4">
-                  {product.specs.map((spec) => (
-                    <div key={spec.label} className="flex items-center gap-2">
+                  {specs.map((spec, index) => (
+                    <div key={index} className="flex items-center gap-2">
                       <span className="font-medium">{spec.label}:</span>
-                      <span className="text-gray-600">{spec.value}</span>
+                      <span className="text-mid-grey-II capitalize">{spec.value}</span>
                     </div>
                   ))}
                 </div>
@@ -118,9 +156,15 @@ export const ProductDetail = ({ product }: ProductDetailProperties) => {
                     <Plus size={20} className="text-gray-600" />
                   </button>
                 </div>
-                <SkiButton variant="primary" size="lg" className="flex items-center gap-2 rounded-full px-8">
+                <SkiButton
+                  variant="primary"
+                  size="lg"
+                  className="flex items-center gap-2 rounded-full px-8"
+                  isDisabled={product.availabilityStatus !== "In Stock"}
+                  href={`/shop/cart`}
+                >
                   <ShoppingCart size={20} />
-                  Add to Cart
+                  {product.availabilityStatus === "In Stock" ? "Add to Cart" : "Out of Stock"}
                 </SkiButton>
               </div>
             </div>
@@ -144,7 +188,7 @@ export const ProductDetail = ({ product }: ProductDetailProperties) => {
                   }`}
                   onClick={() => setActiveTab("reviews")}
                 >
-                  Reviews
+                  Reviews ({product.reviews.length})
                 </button>
               </div>
             </div>
@@ -156,19 +200,48 @@ export const ProductDetail = ({ product }: ProductDetailProperties) => {
                 </div>
               ) : (
                 <div className="space-y-6">
-                  <div className="flex items-center gap-4">
-                    <div className="flex items-center">
-                      {Array.from({ length: 5 }).map((_, index) => (
-                        <Star
-                          key={index}
-                          size={20}
-                          className={index < product.rating ? "fill-yellow-400 text-yellow-400" : "text-gray-300"}
-                        />
-                      ))}
-                    </div>
-                    <span className="text-sm text-gray-600">Based on {product.reviews} reviews</span>
-                  </div>
-                  <p className="text-gray-600">No reviews yet.</p>
+                  {product.reviews.length > 0 ? (
+                    <>
+                      <div className="flex items-center gap-4">
+                        <div className="flex items-center">
+                          {Array.from({ length: 5 }).map((_, index) => (
+                            <Star
+                              key={index}
+                              size={20}
+                              className={
+                                index < Math.round(averageRating) ? "fill-yellow-400 text-yellow-400" : "text-gray-300"
+                              }
+                            />
+                          ))}
+                        </div>
+                        <span className="text-sm text-gray-600">Based on {product.reviews.length} reviews</span>
+                      </div>
+                      <div className="space-y-4">
+                        {product.reviews.map((review, index) => (
+                          <div key={index} className="rounded-lg border p-4">
+                            <div className="flex items-center gap-2">
+                              {Array.from({ length: 5 }).map((_, index_) => (
+                                <Star
+                                  key={index_}
+                                  size={16}
+                                  className={
+                                    index_ < review.rating ? "fill-yellow-400 text-yellow-400" : "text-gray-300"
+                                  }
+                                />
+                              ))}
+                            </div>
+                            <p className="mt-2 font-medium">{review.reviewerName}</p>
+                            <p className="text-gray-600">{review.comment}</p>
+                            <p className="text-low-grey-II mt-2 text-sm">
+                              {new Date(review.date).toLocaleDateString()}
+                            </p>
+                          </div>
+                        ))}
+                      </div>
+                    </>
+                  ) : (
+                    <p className="text-gray-600">No reviews yet.</p>
+                  )}
                 </div>
               )}
             </div>

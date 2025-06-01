@@ -10,6 +10,7 @@ import { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
 
 import { MobileDownloadBanner } from "../_components/mobile-download-banner";
+import { ShopCardSkeleton } from "../_components/shop-card-skeleton";
 import { ShopCard } from "../(home)/_components/shop-card/shop-card";
 import { OptionsSelector } from "./_components/option/options";
 import { Hero } from "./_views/hero";
@@ -18,7 +19,7 @@ const ITEMS_PER_PAGE = 16;
 
 const Page = () => {
   const [category, setCategory] = useState<string>("All Categories");
-  const [sort, setSort] = useState<string>("All Categories");
+  const [, setSort] = useState<string>("All Categories");
   const [vendor, setVendor] = useState<string>("All Vendor");
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [totalPages, setTotalPages] = useState<number>(0);
@@ -32,7 +33,7 @@ const Page = () => {
   const filteredProducts = useMemo(() => {
     if (!data?.products) return [];
 
-    return data.products.filter((product) => {
+    return data?.products?.filter((product) => {
       // Category filter
       const categoryMatch = category === "All Categories" || product.category === category.toLowerCase();
 
@@ -42,8 +43,8 @@ const Page = () => {
       // Search filter (case insensitive)
       const searchMatch =
         searchQuery === "" ||
-        product.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        product.category.toLowerCase().includes(searchQuery.toLowerCase());
+        product?.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        product?.category.toLowerCase().includes(searchQuery.toLowerCase());
 
       return categoryMatch && searchMatch;
     });
@@ -52,7 +53,7 @@ const Page = () => {
   useEffect(() => {
     if (filteredProducts) {
       // Calculate total pages
-      const totalItems = filteredProducts.length;
+      const totalItems = filteredProducts?.length;
       const calculatedTotalPages = Math.ceil(totalItems / ITEMS_PER_PAGE);
       setTotalPages(calculatedTotalPages);
 
@@ -62,7 +63,7 @@ const Page = () => {
       // Update displayed products for current page
       const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
       const endIndex = startIndex + ITEMS_PER_PAGE;
-      setDisplayedProducts(filteredProducts.slice(startIndex, endIndex));
+      setDisplayedProducts(filteredProducts?.slice(startIndex, endIndex));
     }
   }, [filteredProducts, currentPage]);
 
@@ -90,13 +91,11 @@ const Page = () => {
           <OptionsSelector
             title={`Category`}
             categories={["All Categories", ...CATEGORIES]}
-            value={category}
             onChange={(value) => setCategory(value)}
           />
           <OptionsSelector
             title={`Vendor`}
             categories={["All Vendor", ...VENDORS]}
-            value={vendor}
             onChange={(value) => setVendor(value)}
           />
         </section>
@@ -110,7 +109,6 @@ const Page = () => {
               <CustomSelect
                 options={["All Categories", ...CATEGORIES]}
                 placeholder="Choose a category"
-                value={sort}
                 onChange={(value) => setSort(value)}
               />
             </div>
@@ -136,7 +134,7 @@ const Page = () => {
                 Array.from({ length: 12 }).map((_, index: number) => {
                   return <ShopCardSkeleton key={index} />;
                 })}
-              {!isLoading && displayedProducts.length === 0 && (
+              {!isLoading && displayedProducts?.length === 0 && (
                 <div className="col-span-full py-10 text-center">
                   <p className="text-mid-grey-II text-lg">No products found matching your filters</p>
                 </div>
@@ -144,13 +142,14 @@ const Page = () => {
               {displayedProducts?.map((product) => {
                 return (
                   <ShopCard
-                    key={product.id.toString()}
-                    id={product.id.toString()}
-                    category={product.category}
-                    title={product.title}
-                    rating={product.rating}
-                    price={product.price}
-                    image={product.thumbnail}
+                    key={product?.id.toString()}
+                    id={product?.id.toString()}
+                    category={product?.category}
+                    title={product?.title}
+                    rating={product?.rating}
+                    price={product?.price}
+                    discount={product.discountPercentage}
+                    image={product?.thumbnail}
                   />
                 );
               })}
@@ -168,12 +167,3 @@ const Page = () => {
   );
 };
 export default Page;
-
-const ShopCardSkeleton = () => (
-  <div className="animate-pulse space-y-3 rounded-lg border p-4">
-    <div className="h-72 rounded-md bg-gray-200"></div>
-    <div className="h-4 rounded bg-gray-200"></div>
-    <div className="h-4 w-3/4 rounded bg-gray-200"></div>
-    <div className="h-4 w-1/2 rounded bg-gray-200"></div>
-  </div>
-);

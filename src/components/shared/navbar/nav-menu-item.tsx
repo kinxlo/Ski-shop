@@ -16,6 +16,7 @@ import * as React from "react";
 interface NavItemProperties extends React.HTMLAttributes<HTMLElement> {
   links: NavLink[];
   isMobile?: boolean;
+  pathname: string;
 }
 
 interface ListItemProperties extends LinkProps {
@@ -24,19 +25,30 @@ interface ListItemProperties extends LinkProps {
   children?: React.ReactNode;
 }
 
-export const NavItems: React.FC<NavItemProperties> = ({ links, isMobile, className }) => {
+export const NavItems: React.FC<NavItemProperties> = ({ links, isMobile, className, pathname }) => {
   return (
     <NavigationMenu className={cn(isMobile && "block max-w-full", className)}>
       <NavigationMenuList className={cn(isMobile && "block")}>
         {links.map((link, index) => {
+          const isActive = pathname === link.href;
+
           if (link.type === "dropdown" && link.subLinks) {
+            const isDropdownActive = link.subLinks.some((subLink) => pathname === subLink.href);
+
             return (
               <NavigationMenuItem key={index}>
-                <NavigationMenuTrigger className="w-full">{link.title}</NavigationMenuTrigger>
+                <NavigationMenuTrigger className={cn("w-full", isDropdownActive && "text-accent")}>
+                  {link.title}
+                </NavigationMenuTrigger>
                 <NavigationMenuContent>
                   <ul className="grid gap-3 p-4 md:w-[600px] md:grid-cols-2">
                     {link.subLinks.map((subLink) => (
-                      <ListItem key={subLink.id} href={subLink.href} title={subLink.title}>
+                      <ListItem
+                        key={subLink.id}
+                        href={subLink.href}
+                        title={subLink.title}
+                        className={cn(pathname === subLink.href && "bg-accent text-accent-foreground")}
+                      >
                         {subLink.description}
                       </ListItem>
                     ))}
@@ -48,8 +60,14 @@ export const NavItems: React.FC<NavItemProperties> = ({ links, isMobile, classNa
 
           return (
             <NavigationMenuItem key={index}>
-              <NavigationMenuLink asChild>
-                <Link href={link.href} className={cn(navigationMenuTriggerStyle(), "w-full")} legacyBehavior={false}>
+              <NavigationMenuLink
+                className={`transition-all hover:bg-transparent hover:text-black hover:underline focus:bg-transparent focus:text-black`}
+                asChild
+              >
+                <Link
+                  href={link.href}
+                  className={cn(navigationMenuTriggerStyle(), "w-full", isActive && "text-primary underline")}
+                >
                   {link.title}
                 </Link>
               </NavigationMenuLink>

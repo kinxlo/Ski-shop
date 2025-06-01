@@ -5,18 +5,27 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { LuFacebook, LuInstagram, LuMail, LuMapPin, LuPhoneCall, LuTwitter } from "react-icons/lu";
 
+// import { Map } from "../map/map";
+
+// const location = {
+//   address: "yemsays map",
+//   lat: 6.535_77,
+//   lng: 3.365_96,
+// };
+
 export const SectionOne = () => {
   return (
     <section className="bg-high-grey-I pt-14">
       <Wrapper>
         <div className="mx-auto max-w-[1000px] text-center">
-          <p className="text-secondary my-2 text-[28px] leading-[44px] font-semibold lg:text-[44px] xl:leading-[39px]">
+          <h1 className="text-high-grey-II my-2 mb-6 text-[28px] leading-[44px] font-semibold lg:text-[44px] xl:leading-[39px]">
             Feel Free To Reach Out
-          </p>
+          </h1>
 
           <p className="mx-auto max-w-[792px] text-[17px] leading-[25px] xl:text-[20px] xl:leading-[30px]">
-            Lorem ipsum dolor sit amet consectetur. Lorem libero arcu ut venenatis feugiat lacus. Elit tellus morbi quis
-            a aliquam mi pretium nam donec. Duis posuere venenatis et amet sed.
+            We&apos;re here for you! Whether you have questions about shopping, selling, deliveries, or just want to
+            learn more about how Ski-Shop is shaping the future of commerce, feel free to reach out — we’re happy to
+            help.
           </p>
         </div>
 
@@ -115,7 +124,7 @@ export const SectionOne = () => {
           </div>
         </section>
       </Wrapper>
-      <div className="mt-5 lg:mt-20">
+      <div className="leaflet-container mt-5 lg:mt-20">
         <BlurImage
           src="/images/map.svg"
           width={138}
@@ -123,6 +132,7 @@ export const SectionOne = () => {
           alt="map"
           className="mx-auto w-full max-w-full object-cover lg:h-[318px]"
         />
+        {/* <Map location={location} /> */}
       </div>
     </section>
   );

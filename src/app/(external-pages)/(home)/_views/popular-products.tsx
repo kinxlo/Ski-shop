@@ -53,7 +53,7 @@ export const PopularProducts = ({
               title={product.title}
               rating={product.rating}
               price={product.price}
-              // oldPrice={product.oldPrice}
+              discount={product.discountPercentage}
               image={product.thumbnail}
             />
           );

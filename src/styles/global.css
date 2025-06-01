@@ -393,3 +393,8 @@ h6 {
   animation: swing 2s ease-in-out infinite;
   transform-origin: top center;
 }
+
+.leaflet-container {
+  height: 100%;
+  width: 100%;
+}

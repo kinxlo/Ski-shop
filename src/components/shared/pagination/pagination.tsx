@@ -23,7 +23,7 @@ export const Paginations: React.FC<PaginationsProperties> = ({ currentPage, tota
   return (
     <div>
       <Pagination className="w-[300px]">
-        <PaginationContent>
+        <PaginationContent className={`gap-5`}>
           <PaginationItem>
             <PaginationPrevious
               href="#"
@@ -42,7 +42,7 @@ export const Paginations: React.FC<PaginationsProperties> = ({ currentPage, tota
                 href="#"
                 size={"default"}
                 onClick={(event) => handlePageChange(index + 1, event)}
-                className={`${currentPage === index + 1 ? "bg-primary text-white" : ""}`}
+                className={`${currentPage === index + 1 ? "bg-accent text-white" : ""}`}
               >
                 {index + 1}
               </PaginationLink>

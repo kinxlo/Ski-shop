@@ -152,7 +152,12 @@ export const CartView = () => {
                 <span>₦{subtotal.toLocaleString()}</span>
               </div>
             </div>
-            <SkiButton variant="primary" size="lg" className="mt-6 w-full rounded-full sm:mt-10">
+            <SkiButton
+              href={`/shop/cart/checkout`}
+              variant="primary"
+              size="xl"
+              className="mt-6 w-full rounded-full sm:mt-10"
+            >
               Proceed to Checkout
             </SkiButton>
           </div>

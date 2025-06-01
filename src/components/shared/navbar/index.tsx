@@ -32,7 +32,7 @@ export const Navbar = forwardRef<HTMLElement, NavbarProperties>(
         <Wrapper className={`p-0`}>
           <div className={cn("flex h-16 items-center justify-between md:h-24", className)}>
             <div className="flex-shrink-0">{logo}</div>
-            <NavItems links={links} className={`hidden lg:block`} />
+            <NavItems links={links} pathname={pathname} className="hidden lg:block" />
             <div className="flex items-center gap-4">
               <SearchDialog />
               {user || cta || (
@@ -65,7 +65,7 @@ export const Navbar = forwardRef<HTMLElement, NavbarProperties>(
             )}
           >
             <div className="space-y-2 px-4 py-3">
-              <NavItems links={links} isMobile />
+              <NavItems pathname={pathname} links={links} isMobile />
               {!user && (
                 <div className="flex flex-col space-y-2 pt-2">
                   <SkiButton href="/login" className="w-full">

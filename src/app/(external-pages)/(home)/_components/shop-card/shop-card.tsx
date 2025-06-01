@@ -13,6 +13,7 @@ interface ShopCardProperties extends HTMLAttributes<HTMLDivElement> {
   oldPrice?: number;
   image: string;
   isStarSeller?: boolean;
+  discount?: number;
 }
 
 export const ShopCard = ({
@@ -21,14 +22,16 @@ export const ShopCard = ({
   title,
   rating,
   price,
-  oldPrice,
+  discount,
   image,
   className,
   isStarSeller = true,
 }: ShopCardProperties) => {
+  const oldPrice = discount ? price / (1 - discount / 100) : null;
+
   return (
     <Link
-      href={`/products/${id}`}
+      href={`/shop/products/${id}`}
       className={cn(
         "block rounded-lg border bg-no-repeat p-4",
         isStarSeller && "bg-[url('/images/star-seller.svg')]",

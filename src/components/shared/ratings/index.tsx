@@ -7,7 +7,7 @@ export const Ratings = ({ rating }: { rating: number }) => {
       {Array.from({ length: 5 }).map((_, index) => (
         <Star
           key={index}
-          // size={14}
+          size={30}
           className={cn(index < rating ? "fill-yellow-400 text-yellow-400" : "text-gray-300", "h-2 w-2 lg:h-4 lg:w-4")}
         />
       ))}

@@ -4,7 +4,6 @@ import { Wrapper } from "@/components/core/layout/wrapper";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation"; // Import usePathname
-import { FC } from "react";
 
 import Apple from "~/images/Apple.png";
 import facebook from "~/images/facebook.png";
@@ -14,9 +13,9 @@ import Logo from "~/images/skicom.svg";
 import twitter from "~/images/twitter.png";
 import { NewsLetter } from "./news-letter/news-letter";
 
-export const Footer: FC = () => {
+export const Footer = () => {
   const getYear = new Date().getFullYear();
-  const pathname = usePathname(); // Get the current path
+  const pathname = usePathname();
 
   return (
     <main className="w-full bg-black py-10 md:py-14">
@@ -65,7 +64,7 @@ export const Footer: FC = () => {
             </div>
 
             <div className="hidden xl:block">
-              <h2 className="text-sm font-semibold text-white uppercase">Contact</h2>
+              <h6 className="text-sm font-semibold text-white uppercase">Contact</h6>
               <p className="mt-5 text-sm text-white">Plot 1, Kwara Osun Street, Lagos.</p>
               <div className="mt-2 flex items-center gap-1">
                 <a href="tel:08130054558" className="text-sm text-white">
@@ -78,7 +77,7 @@ export const Footer: FC = () => {
             </div>
 
             <div className="hidden xl:block">
-              <h2 className="text-sm font-semibold text-white uppercase">Quick Links</h2>
+              <h6 className="text-sm font-semibold text-white uppercase">Quick Links</h6>
               <div className="flex items-center gap-20">
                 <div className="mt-5 flex flex-col gap-2">
                   <Link href="/about" className={`text-sm ${pathname === "/about" ? "text-primary font-bold" : ""}`}>
@@ -107,7 +106,7 @@ export const Footer: FC = () => {
             </div>
 
             <div className="hidden xl:block">
-              <h2 className="text-sm font-semibold text-white uppercase">Help</h2>
+              <h6 className="text-sm font-semibold text-white uppercase">Help</h6>
               <div className="flex items-center gap-20">
                 <div className="mt-5 flex flex-col gap-2">
                   <Link href="/faq" className={`text-sm ${pathname === "/faq" ? "text-primary font-bold" : ""}`}>

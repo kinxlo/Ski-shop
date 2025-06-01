@@ -9,8 +9,8 @@ import "../styles/theme.css";
 import "../styles/global.css";
 
 import ThemeProvider from "@/components/core/layout/ThemeToggle/theme-provider";
+import { ModeToggle } from "@/components/core/layout/ThemeToggle/theme-toggle";
 import { Toast } from "@/components/shared/Toast";
-// import { ModeToggle } from "@/components/core/layout/ThemeToggle/theme-toggle";
 import { ReactQueryProvider } from "@/lib/react-query/query-provider";
 
 const META_THEME_COLORS = {
@@ -66,8 +66,8 @@ export default async function RootLayout({ children }: { children: React.ReactNo
               enableColorScheme
             >
               <Toast />
-              {/* <ModeToggle /> */}
               {children}
+              <ModeToggle />
             </ThemeProvider>
           </ReactQueryProvider>
         </NuqsAdapter>

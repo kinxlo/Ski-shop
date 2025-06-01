@@ -3,13 +3,11 @@
 
 import { useEffect, useRef, useState } from "react";
 import { A11y, Autoplay, FreeMode, Navigation, Pagination, Scrollbar, Thumbs } from "swiper/modules";
-import { Swiper, SwiperSlide, useSwiper } from "swiper/react";
+import { Swiper, SwiperSlide } from "swiper/react";
 import type { Swiper as SwiperType } from "swiper/types";
 
-// Import Swiper styles
 import "swiper/css";
 import "swiper/css/pagination";
-// import "swiper/css/navigation";
 import "swiper/css/scrollbar";
 import "swiper/css/free-mode";
 import "swiper/css/thumbs";
@@ -19,15 +17,29 @@ import { ChevronLeftCircle, ChevronRightCircle } from "lucide-react";
 
 import SkiButton from "../button";
 
-export const UniversalSwiper = ({
+interface UniversalSwiperProperties<T> {
+  items: T[];
+  renderItem: (item: T, index: number) => React.ReactNode;
+  swiperOptions?: any;
+  showNavigation?: boolean;
+  showPagination?: boolean;
+  showScrollbar?: boolean;
+  className?: string;
+  swiperClassName?: string;
+  slideClassName?: string;
+  thumbsSwiper?: SwiperType | null;
+  breakpoints?: any;
+  freeMode?: boolean;
+  onSwiperInit?: (swiper: SwiperType) => void;
+}
+
+export const UniversalSwiper = <T,>({
   items,
   renderItem,
   swiperOptions = {},
   showNavigation = false,
   showPagination = false,
   showScrollbar = false,
-  // navigationSize = 24,
-  // navigationOffset = 0,
   className,
   swiperClassName,
   slideClassName,
@@ -35,24 +47,18 @@ export const UniversalSwiper = ({
   breakpoints,
   freeMode = false,
   onSwiperInit,
-}: UniversalSwiperProperties) => {
+}: UniversalSwiperProperties<T>) => {
   const [isMounted, setIsMounted] = useState(false);
-  const [, setSwiperInstance] = useState<SwiperType | null>(null);
   const swiperReference = useRef<SwiperType | null>(null);
-  const autoplayReference = useRef<any>(null);
 
   useEffect(() => {
     setIsMounted(true);
     return () => {
-      // Cleanup autoplay on unmount
-      if (autoplayReference.current) {
-        autoplayReference.current.stop();
+      // Cleanup swiper instance on unmount
+      if (swiperReference.current) {
+        swiperReference.current.destroy(true, true);
       }
     };
-  }, []);
-
-  useEffect(() => {
-    setIsMounted(true);
   }, []);
 
   if (!isMounted || !items?.length) return null;
@@ -68,24 +74,21 @@ export const UniversalSwiper = ({
   ];
 
   return (
-    <div className={cn(className)}>
+    <div className={cn("relative", className)}>
       <Swiper
         {...swiperOptions}
         autoplay={{
-          delay: 3000, // 3 seconds delay
+          delay: 3000,
           disableOnInteraction: false,
           pauseOnMouseEnter: true,
         }}
         modules={modules}
-        thumbs={{ swiper: thumbsSwiper }}
+        thumbs={{ swiper: thumbsSwiper && !thumbsSwiper.destroyed ? thumbsSwiper : null }}
         breakpoints={breakpoints}
         freeMode={freeMode}
-        className={cn(swiperClassName)}
+        className={cn("w-full", swiperClassName)}
         onSwiper={(swiper) => {
-          setSwiperInstance(swiper);
-          onSwiperInit?.(swiper);
           swiperReference.current = swiper;
-          autoplayReference.current = swiper.autoplay;
           onSwiperInit?.(swiper);
         }}
       >
@@ -94,44 +97,49 @@ export const UniversalSwiper = ({
             {renderItem(item, index)}
           </SwiperSlide>
         ))}
-        {/* <div className={`py-5`}></div> */}
-        {/* {showNavigation && swiperInstance && <CustomNavigation iconSize={navigationSize} offset={navigationOffset} />} */}
       </Swiper>
+
+      {showNavigation && (
+        <CustomNavigation className="pointer-events-none absolute inset-0" swiperInstance={swiperReference.current} />
+      )}
     </div>
   );
 };
 
-type CustomNavigationProperties = {
-  variant?: "default" | "minimal";
-  iconSize?: number;
-  offset?: number;
+interface CustomNavigationProperties {
   className?: string;
-};
+  iconSize?: number;
+  swiperInstance?: SwiperType | null;
+}
 
-export const CustomNavigation = ({ iconSize = 24, className }: CustomNavigationProperties) => {
-  const swiper = useSwiper();
+export const CustomNavigation = ({ className, iconSize = 24, swiperInstance }: CustomNavigationProperties) => {
   const [isBeginning, setIsBeginning] = useState(true);
   const [isEnd, setIsEnd] = useState(false);
 
   useEffect(() => {
-    const handleSlideChange = (swiper: SwiperType) => {
-      setIsBeginning(swiper.isBeginning);
-      setIsEnd(swiper.isEnd);
+    if (!swiperInstance) return;
+
+    const updateNavigationState = () => {
+      setIsBeginning(swiperInstance.isBeginning);
+      setIsEnd(swiperInstance.isEnd);
     };
 
-    swiper.on("slideChange", handleSlideChange);
+    swiperInstance.on("slideChange", updateNavigationState);
+    updateNavigationState(); // Initial update
 
     return () => {
-      swiper.off("slideChange", handleSlideChange);
+      swiperInstance.off("slideChange", updateNavigationState);
     };
-  }, [swiper]);
+  }, [swiperInstance]);
+
+  if (!swiperInstance) return null;
 
   return (
-    <div className={cn("absolute inset-0 flex items-center justify-between p-2", className)}>
+    <div className={cn("flex items-center justify-between", className)}>
       <SkiButton
         onClick={(event) => {
           event.stopPropagation();
-          swiper.slidePrev();
+          swiperInstance.slidePrev();
         }}
         isDisabled={isBeginning}
         isIconOnly
@@ -140,14 +148,14 @@ export const CustomNavigation = ({ iconSize = 24, className }: CustomNavigationP
         size="circle"
         aria-label="Previous slide"
         className={cn(
-          "hover:bg-primary z-10 bg-black/50 text-white hover:text-white",
-          isBeginning ? "hidden" : "block",
+          "hover:bg-primary pointer-events-auto z-10 bg-black/50 text-white hover:text-white",
+          isBeginning && "cursor-default opacity-0",
         )}
       />
       <SkiButton
         onClick={(event) => {
           event.stopPropagation();
-          swiper.slideNext();
+          swiperInstance.slideNext();
         }}
         isDisabled={isEnd}
         isIconOnly
@@ -155,7 +163,10 @@ export const CustomNavigation = ({ iconSize = 24, className }: CustomNavigationP
         variant="ghost"
         size="circle"
         aria-label="Next slide"
-        className={cn("hover:bg-primary z-10 bg-black/50 text-white hover:text-white", isEnd ? "hidden" : "block")}
+        className={cn(
+          "hover:bg-primary pointer-events-auto z-10 bg-black/50 text-white hover:text-white",
+          isEnd && "cursor-default opacity-0",
+        )}
       />
     </div>
   );

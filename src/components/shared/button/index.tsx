@@ -76,7 +76,7 @@ const SkiButton = forwardRef<HTMLButtonElement, ButtonProperties>(
       cloneElement(
         icon as ReactElement,
         {
-          className: "w-[1rem] h-[1rem] dark:invert dark:filter",
+          className: "w-[1rem] h-[1rem]",
           "data-testid": "icon",
         } as React.HTMLAttributes<HTMLElement>,
       )
@@ -95,7 +95,7 @@ const SkiButton = forwardRef<HTMLButtonElement, ButtonProperties>(
       </>
     );
 
-    const buttonClasses = `transition-all duration-300 ease-in-out rounded-full ${
+    const buttonClasses = `transition-all duration-300 ease-in-out rounded-full cursor-pointer ${
       isDisabled ? "opacity-50 cursor-not-allowed" : "hover:shadow-sneob dark:hover:shadow-sneobw focus:shadow-none"
     } ${className}`;
 
