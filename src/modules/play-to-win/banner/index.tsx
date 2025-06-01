@@ -5,7 +5,7 @@ import Image from "next/image";
 const PlayToWinBanner = () => {
   return (
     <section
-      className={`my-[78px] flex flex-col-reverse items-center justify-between gap-4 rounded-lg bg-[#FFF9F2] px-[62px] py-[64px] lg:flex-row`}
+      className={`my-[78px] flex flex-col-reverse items-center justify-between gap-4 rounded-lg bg-[#FFF9F2] p-8 lg:flex-row lg:px-[62px] lg:py-[64px]`}
     >
       <div className={`max-w-[456px]`}>
         <Badge variant={`default`} className={`bg-accent rounded-md px-[12px] py-[6px]`}>

@@ -71,7 +71,7 @@ export const Navbar = forwardRef<HTMLElement, NavbarProperties>(
                   <SkiButton href="/login" className="w-full">
                     Sign in
                   </SkiButton>
-                  <SkiButton variant="primary" href="/register" className="w-full">
+                  <SkiButton variant="primary" href="/signup" className="w-full">
                     Sign up
                   </SkiButton>
                 </div>

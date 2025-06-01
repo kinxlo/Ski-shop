@@ -450,3 +450,26 @@ export const externalNavlinks = [
   { id: 5, name: "Features", path: "/features", type: "link" },
   { id: 4, name: "Pricing", path: "/pricing", type: "link" },
 ];
+
+export const OUR_STRENGTH = [
+  {
+    title: "Secured Payment",
+    description: "Secure, instant payments and transactions with our integrated financial solution.",
+    image: "/images/about/illustration-1.svg",
+  },
+  {
+    title: "Fast Delivery",
+    description: "Secure, instant payments and transactions with our integrated financial solution.",
+    image: "/images/about/illustration-2.svg",
+  },
+  {
+    title: "Verified Vendors",
+    description: "Secure, instant payments and transactions with our integrated financial solution.",
+    image: "/images/about/illustration-3.svg",
+  },
+  {
+    title: "Seamless Experience",
+    description: "Secure, instant payments and transactions with our integrated financial solution.",
+    image: "/images/about/illustration-4.svg",
+  },
+];

@@ -32,7 +32,7 @@ export const SectionOne = () => {
         <section className="mx-auto mt-[53px] gap-[66px] rounded-[10px] px-0 py-[29px] lg:flex lg:justify-center lg:bg-white lg:px-[42px]">
           {/* contact form */}
           <div className="bg-mid-grey-III relative hidden h-[600px] w-full flex-col rounded-tl-xl rounded-bl-xl p-8 text-white lg:flex">
-            <h4 className="text-[28px] font-semibold text-[#ffff]">Contact Information</h4>
+            <h4 className="text-[28px] font-semibold !text-white">Contact Information</h4>
 
             <div className="mt-32 space-y-9">
               <div className="flex items-center gap-5">

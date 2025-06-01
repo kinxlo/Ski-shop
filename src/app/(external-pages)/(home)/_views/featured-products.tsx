@@ -56,7 +56,7 @@ export const FeaturedProducts = () => {
   const featuredProducts = data?.products?.slice(0, 4);
 
   return (
-    <Wrapper className="mx-auto my-[98px] grid gap-8 px-4 md:grid-cols-2">
+    <Wrapper className="mx-auto my-[98px] grid gap-2 px-4 md:grid-cols-2 lg:gap-8">
       {/* Large Earbuds Banner */}
       <section className="group relative row-span-2 overflow-hidden rounded-md sm:min-h-[630px]">
         <div
@@ -130,7 +130,7 @@ export const FeaturedProducts = () => {
       </section>
 
       {/* Grid of two smaller cards */}
-      <section className={`grid grid-cols-2 gap-8`}>
+      <section className={`grid grid-cols-2 gap-2 lg:gap-8`}>
         {[featuredProducts?.[2], featuredProducts?.[3]].map((product, index) => (
           <section key={index} className="group relative overflow-hidden rounded-md">
             <div

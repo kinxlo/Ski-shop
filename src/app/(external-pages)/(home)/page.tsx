@@ -48,7 +48,7 @@ const Page = () => {
           image="/images/black-friday-tag.svg"
           tagTitle="Massive Discounts. Limited Time."
           heading={
-            <h1 className="mt-4 text-2xl md:text-3xl lg:text-5xl">
+            <h1 className="mt-4 text-2xl !text-white md:text-3xl lg:text-5xl">
               <span className={`text-accent`}>Black Friday </span> Hits Ski-Shop Every Year
             </h1>
           }
@@ -64,7 +64,7 @@ const Page = () => {
         >
           <div className={`w-full max-w-[457px] flex-1`}>
             <p className={`text-accent text-lg`}>Black Friday Is Coming...</p>
-            <h1 className="mt-4 text-2xl md:text-3xl lg:text-5xl">Coupons, Freebies & Fire Deals Await!</h1>
+            <h1 className="mt-4 text-2xl !text-white md:text-3xl lg:text-5xl">Coupons, Freebies & Fire Deals Await!</h1>
             <div className={`mt-8`}>
               <CountdownTimer id="sales-countdown" duration="5d 0h 0m 0s" />
             </div>
@@ -72,7 +72,7 @@ const Page = () => {
         </BlackFridayReusableBanner>
       </Wrapper>
       <PopularProducts
-        headerStyle={`bg-black text-white rounded-se-lg rounded-ss-lg p-[10px]`}
+        headerStyle={`bg-black !text-white rounded-se-lg rounded-ss-lg p-[10px]`}
         title={"Black Friday Deals - Up to 70% Off"}
         hasAction={false}
       />

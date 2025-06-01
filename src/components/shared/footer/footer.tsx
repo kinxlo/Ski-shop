@@ -64,7 +64,7 @@ export const Footer = () => {
             </div>
 
             <div className="hidden xl:block">
-              <h6 className="text-sm font-semibold text-white uppercase">Contact</h6>
+              <h6 className="text-sm font-semibold !text-white uppercase">Contact</h6>
               <p className="mt-5 text-sm text-white">Plot 1, Kwara Osun Street, Lagos.</p>
               <div className="mt-2 flex items-center gap-1">
                 <a href="tel:08130054558" className="text-sm text-white">
@@ -77,23 +77,20 @@ export const Footer = () => {
             </div>
 
             <div className="hidden xl:block">
-              <h6 className="text-sm font-semibold text-white uppercase">Quick Links</h6>
+              <h6 className="text-sm font-semibold !text-white uppercase">Quick Links</h6>
               <div className="flex items-center gap-20">
                 <div className="mt-5 flex flex-col gap-2">
                   <Link href="/about" className={`text-sm ${pathname === "/about" ? "text-primary font-bold" : ""}`}>
                     About
                   </Link>
-                  <Link
-                    href="/services"
-                    className={`text-sm ${pathname === "/services" ? "text-primary font-bold" : ""}`}
-                  >
-                    Services
+                  <Link href="/" className={`text-sm ${pathname === "/" ? "text-primary font-bold" : ""}`}>
+                    Explore
                   </Link>
                 </div>
 
                 <div className="mt-5 flex flex-col gap-2">
-                  <Link href="/store" className={`text-sm ${pathname === "/store" ? "text-primary font-bold" : ""}`}>
-                    Store
+                  <Link href="/shop" className={`text-sm ${pathname === "/shop" ? "text-primary font-bold" : ""}`}>
+                    Shop
                   </Link>
                   <Link
                     href="/contact"
@@ -106,17 +103,8 @@ export const Footer = () => {
             </div>
 
             <div className="hidden xl:block">
-              <h6 className="text-sm font-semibold text-white uppercase">Help</h6>
+              <h6 className="text-sm font-semibold !text-white uppercase">Help</h6>
               <div className="flex items-center gap-20">
-                <div className="mt-5 flex flex-col gap-2">
-                  <Link href="/faq" className={`text-sm ${pathname === "/faq" ? "text-primary font-bold" : ""}`}>
-                    FAQ
-                  </Link>
-                  <Link href="/blog" className={`text-sm ${pathname === "/blog" ? "text-primary font-bold" : ""}`}>
-                    Blog
-                  </Link>
-                </div>
-
                 <div className="mt-5 flex flex-col gap-2">
                   <Link
                     href="/live-chat"

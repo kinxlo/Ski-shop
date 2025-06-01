@@ -48,7 +48,7 @@ export const Hero = () => {
       <Wrapper>
         <div className="relative z-10 flex min-h-[600px] flex-col items-center justify-center text-center text-white">
           <div className="mt-[10rem] max-w-xl space-y-[12px]">
-            <h1 className="text-[32px] leading-[44px] font-bold text-white lg:text-[56px] lg:leading-[78px]">
+            <h1 className="text-[32px] leading-[44px] font-bold !text-white lg:text-[56px] lg:leading-[78px]">
               Shop Smart and Save More with Ski-Shop
             </h1>
             <p className="mb-8 text-lg">Your one-stop marketplace for everything you need</p>

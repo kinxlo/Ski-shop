@@ -26,7 +26,7 @@ export const BlackFridayReusableBanner: FC<BannerProperties> = ({
   return (
     <section
       className={cn(
-        `relative flex flex-col-reverse items-center justify-between overflow-hidden rounded-[12px] bg-black bg-[url(/images/black-friday-bg.svg)] bg-cover bg-right p-8 text-white lg:min-h-[500px] lg:gap-20`,
+        `relative flex flex-col-reverse items-center justify-between overflow-hidden rounded-[12px] bg-black bg-[url(/images/black-friday-bg.svg)] bg-cover bg-right p-8 !text-white lg:min-h-[500px] lg:gap-20`,
         `md:px-8`,
         `lg:flex-row lg:px-15`,
         className,
