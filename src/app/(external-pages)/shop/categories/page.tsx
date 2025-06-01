@@ -1,12 +1,13 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
+import { Wrapper } from "@/components/core/layout/wrapper";
+import { Paginations } from "@/components/shared/pagination/pagination";
+import { products } from "@/lib/constants";
 import { useState } from "react";
 
-import { Paginations } from "~/components/layout/pagination/pagination";
-import { Wrapper } from "~/components/layout/wrapper";
-import { products } from "~/utils/constants";
-import { ProductBreadcrumb } from "../_components/product-breadcrumb";
-import { ShopCard } from "../_components/shop-card";
+import { ProductBreadcrumb } from "../../(home)/_components/product-breadcrumb";
+import { ShopCard } from "../../(home)/_components/shop-card/shop-card";
 
 const ITEMS_PER_PAGE = 8;
 
@@ -22,7 +23,7 @@ const CategoriesProducts = () => {
       <ProductBreadcrumb productTitle="Phones" />
       <Wrapper className="py-16">
         <div className="grid grid-cols-2 gap-6 sm:grid-cols-3 md:grid-cols-4">
-          {currentProducts.map((product) => (
+          {currentProducts.map((product: any) => (
             <ShopCard
               key={product.id}
               id={product.id}
