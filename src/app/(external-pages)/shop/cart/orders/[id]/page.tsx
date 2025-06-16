@@ -9,7 +9,6 @@ import { ProductOrderDetail } from "./_views/product-order-detail";
 
 interface PageProperties {
   params: { id: string };
-  searchParams?: Record<string, string | string[] | undefined>;
 }
 
 export default function Page({ params }: PageProperties) {
