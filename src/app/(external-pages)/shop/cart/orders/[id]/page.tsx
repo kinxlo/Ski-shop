@@ -1,19 +1,24 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { useAppService } from "@/services/app/use-app-service";
-import { useParams, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
 import { ProductOrderDetail } from "./_views/product-order-detail";
 
-export default function Page() {
-  const { id } = useParams();
+interface PageProperties {
+  params: { id: string };
+  searchParams?: Record<string, string | string[] | undefined>;
+}
+
+export default function Page({ params }: PageProperties) {
   const router = useRouter();
   const { useGetAllProducts } = useAppService();
   const { isLoading, data } = useGetAllProducts();
 
-  const productId = Number(id);
-  const product = data?.products.find((p: Product) => Number(p.id) === productId);
+  const productId = Number(params.id);
+  const product = data?.products.find((p: any) => Number(p.id) === productId);
 
   useEffect(() => {
     if (!isLoading && !product) {
