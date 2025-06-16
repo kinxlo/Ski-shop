@@ -7,11 +7,7 @@ import { useEffect } from "react";
 
 import { ProductOrderDetail } from "./_views/product-order-detail";
 
-interface PageProperties {
-  params: { id: string };
-}
-
-export default function Page({ params }: PageProperties) {
+export default function Page({ params }: { params: { id: string } }) {
   const router = useRouter();
   const { useGetAllProducts } = useAppService();
   const { isLoading, data } = useGetAllProducts();
