@@ -1,28 +1,38 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-"use client";
+// /* eslint-disable @typescript-eslint/no-explicit-any */
+// "use client";
 
-import { useAppService } from "@/services/app/use-app-service";
-import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+// import { useAppService } from "@/services/app/use-app-service";
+// import { useRouter } from "next/navigation";
+// import { useEffect } from "react";
 
-import { ProductOrderDetail } from "./_views/product-order-detail";
+// import { ProductOrderDetail } from "./_views/product-order-detail";
 
-export default function Page({ params }: { params: any }) {
-  const router = useRouter();
-  const { useGetAllProducts } = useAppService();
-  const { isLoading, data } = useGetAllProducts();
+// export default function Page({ params }: { params: any }) {
+//   const router = useRouter();
+//   const { useGetAllProducts } = useAppService();
+//   const { isLoading, data } = useGetAllProducts();
 
-  const productId = Number(params.id);
-  const product = data?.products.find((p: any) => Number(p.id) === productId);
+//   const productId = Number(params.id);
+//   const product = data?.products.find((p: any) => Number(p.id) === productId);
 
-  useEffect(() => {
-    if (!isLoading && !product) {
-      router.replace("/not-found");
-    }
-  }, [isLoading, product, router]);
+//   useEffect(() => {
+//     if (!isLoading && !product) {
+//       router.replace("/not-found");
+//     }
+//   }, [isLoading, product, router]);
 
-  if (isLoading) return <div>Loading...</div>;
-  if (!product) return null;
+//   if (isLoading) return <div>Loading...</div>;
+//   if (!product) return null;
 
-  return <ProductOrderDetail product={product} />;
-}
+//   return <ProductOrderDetail product={product} />;
+// }
+
+const page = () => {
+  return (
+    <div className={`flex h-[100dvh] w-[100wvh] items-center justify-center text-center`}>
+      This Page is Under Modification...
+    </div>
+  );
+};
+
+export default page;
