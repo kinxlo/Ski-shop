@@ -6,10 +6,15 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { LoginFormData, loginSchema } from "@/schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { FormProvider, useForm } from "react-hook-form";
 import { FaGoogle } from "react-icons/fa";
+import { toast } from "sonner";
+
+import { login } from "../actions/auth-action";
 
 export const LoginForm = () => {
+  const router = useRouter();
   const methods = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
@@ -20,12 +25,30 @@ export const LoginForm = () => {
 
   const {
     handleSubmit,
-    // formState: {},
+    formState: { isSubmitting, isValid },
+    setError,
   } = methods;
 
-  // eslint-disable-next-line unused-imports/no-unused-vars, @typescript-eslint/no-unused-vars
   const handleSubmitForm = async (data: LoginFormData) => {
-    // await login(data);
+    const result = await login(data);
+
+    if (result?.error) {
+      toast.error("Login Failed", {
+        description: result.error,
+      });
+
+      // Optionally set field errors
+      if (result.error.toLowerCase().includes("email")) {
+        setError("email", { message: result.error });
+      } else if (result.error.toLowerCase().includes("password")) {
+        setError("password", { message: result.error });
+      }
+    } else {
+      toast.success("Login Successful", {
+        description: "Redirecting to dashboard...",
+      });
+      router.push("/admin/home");
+    }
   };
 
   return (
@@ -66,7 +89,14 @@ export const LoginForm = () => {
 
           {/* CTA */}
           <section className="flex flex-col items-center justify-center gap-[20px] pt-[20px]">
-            <SkiButton size="lg" className="h-[56px] w-full rounded-full" variant="primary" type="submit">
+            <SkiButton
+              isDisabled={isSubmitting || !isValid}
+              isLoading={isSubmitting}
+              size="lg"
+              className="h-[56px] w-full rounded-full"
+              variant="primary"
+              type="submit"
+            >
               Login
             </SkiButton>
             <span className="text-mid-grey-II">-------------------- OR --------------------</span>

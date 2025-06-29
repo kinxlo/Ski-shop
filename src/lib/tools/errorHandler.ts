@@ -7,7 +7,7 @@ export const handleError = (error: unknown, fallbackMessage?: string): string =>
     const axiosError = error as { response?: { status?: number; data?: { message?: string } } };
 
     if (axiosError.response?.status === 401) {
-      window.location.href = "/auth/login";
+      window.location.href = "/login";
       return "Unauthorized";
     }
 

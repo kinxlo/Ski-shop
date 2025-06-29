@@ -4,6 +4,7 @@
 import {
   Sidebar,
   SidebarContent,
+  SidebarHeader,
   SidebarMenu,
   SidebarMenuBadge,
   SidebarMenuButton,
@@ -14,6 +15,8 @@ import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
+import { Logo } from "../logo";
+
 // import { Logo } from "../logo";
 
 export function DashboardSidebar({ navItems }: { navItems: any }) {
@@ -21,27 +24,13 @@ export function DashboardSidebar({ navItems }: { navItems: any }) {
   const userID = pathname.split("/")[2];
   const { setOpenMobile } = useSidebar();
 
-  // const renderIcon = (item: SidebarItem) => {
-  //   if (item.icon) {
-  //     const Icon = item.icon;
-  //     return <Icon className="h-5 w-5" />;
-  //   }
-
-  //   if (item.iconUrl) {
-  //     return (
-  //       <div className="relative h-6 w-6">
-  //         <Image
-  //           src={item.iconUrl}
-  //           alt={item.route}
-  //           fill
-  //           className="object-contain dark:invert dark:filter"
-  //           sizes="24px"
-  //         />
-  //       </div>
-  //     );
-  //   }
-  //   return null;
-  // };
+  const renderIcon = (item: any) => {
+    if (item.icon) {
+      const Icon = item.icon;
+      return <Icon className="h-5 w-5" />;
+    }
+    return null;
+  };
 
   const handleCloseOnMobile = () => {
     setOpenMobile(false);
@@ -49,10 +38,10 @@ export function DashboardSidebar({ navItems }: { navItems: any }) {
 
   return (
     <Sidebar className={`border-border border-r-[0.5px] shadow-none`}>
-      {/* <SidebarHeader className={`h-28 items-center justify-center`}>
-        <Logo width={140} height={47} />
-      </SidebarHeader> */}
-      <SidebarContent>
+      <SidebarHeader className={`h-28 items-center justify-center`}>
+        <Logo width={80} height={47} />
+      </SidebarHeader>
+      <SidebarContent className={`mt-20`}>
         <SidebarMenu className={`space-y-2 p-4`}>
           {navItems?.map((item: any) => {
             if (item.divider) {
@@ -68,13 +57,13 @@ export function DashboardSidebar({ navItems }: { navItems: any }) {
                   className={cn(
                     "flex h-[48px] items-center gap-3 rounded-lg text-[16px] font-medium transition-all duration-200",
                     isActive
-                      ? "border-primary text-primary shadow-active border-2"
+                      ? "bg-primary/10 text-primary shadow-active border-primary rounded-none border-l-4"
                       : "text-mid-grey-II hover:bg-low-grey-I",
                   )}
                 >
                   <Link onClick={handleCloseOnMobile} href={link} data-testid={item.id} role="sidebar-link">
-                    {/* {renderIcon(item)} */}
-                    <span className={`font-medium dark:text-white`}>{item.route}</span>
+                    {renderIcon(item)}
+                    <span className={`font-light dark:text-white`}>{item.route}</span>
                     {item.badge && (
                       <SidebarMenuBadge
                         className={cn(

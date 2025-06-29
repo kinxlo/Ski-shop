@@ -2,13 +2,14 @@ import * as z from "zod";
 
 export const registerSchema = z
   .object({
-    first_name: z.string().min(2, "First name must be at least 2 characters"),
-    last_name: z.string().min(2, "Last name must be at least 2 characters"),
+    firstName: z.string().min(2, "First name must be at least 2 characters"),
+    lastName: z.string().min(2, "Last name must be at least 2 characters"),
+    role: z.string().min(2, "Role must be at least 2 characters"),
     email: z.string().email("Please enter a valid email"),
     password: z.string().min(8, "Password must be at least 8 characters"),
-    password_confirmation: z.string(),
+    confirmPassword: z.string(),
   })
-  .refine((data) => data.password === data.password_confirmation, {
+  .refine((data) => data.password === data.confirmPassword, {
     message: "Passwords don't match",
     path: ["password_confirmation"],
   });

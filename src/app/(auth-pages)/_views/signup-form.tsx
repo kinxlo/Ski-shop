@@ -2,31 +2,48 @@
 
 import SkiButton from "@/components/shared/button";
 import { FormField } from "@/components/shared/FormFields";
+import { withDependency } from "@/HOC/withDependencies";
+import { dependencies } from "@/lib/tools/dependencies";
 import { RegisterFormData, registerSchema } from "@/schemas";
+import { AuthService } from "@/services/auth/auth.service";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { FormProvider, useForm } from "react-hook-form";
 import { FaGoogle } from "react-icons/fa";
+import { toast } from "sonner";
 
-export const SignupForm = () => {
+export const BaseSignupForm = ({ authService }: { authService: AuthService }) => {
+  const router = useRouter();
   const methods = useForm<RegisterFormData>({
     resolver: zodResolver(registerSchema),
     defaultValues: {
       email: "",
       password: "",
-      first_name: "",
-      last_name: "",
+      confirmPassword: "",
+      firstName: "",
+      lastName: "",
+      role: "vendor",
     },
   });
 
   const {
     handleSubmit,
-    // formState: {},
+    formState: { isSubmitting, isValid },
   } = methods;
 
-  // eslint-disable-next-line unused-imports/no-unused-vars, @typescript-eslint/no-unused-vars
   const handleSubmitForm = async (data: RegisterFormData) => {
-    // await login(data);
+    const formData = {
+      ...data,
+      role: "vendor",
+    };
+    const response = await authService.signUp(formData);
+    if (response?.success) {
+      toast.success(`Registration Successful`, {
+        description: `Registration Successful`,
+      });
+      router.push(`/login`);
+    }
   };
 
   return (
@@ -36,10 +53,16 @@ export const SignupForm = () => {
           <section className={`space-y-4`}>
             <FormField placeholder={`Enter email address`} className={`h-14 w-full`} name={"email"} />
             <div className="grid grid-cols-1 gap-4 space-y-2 lg:grid-cols-2">
-              <FormField placeholder={`Enter first name`} className={`h-14 w-full`} name={"first_name"} />
-              <FormField placeholder={`Enter last name`} className={`h-14 w-full`} name={"last_name"} />
+              <FormField placeholder={`Enter first name`} className={`h-14 w-full`} name={"firstName"} />
+              <FormField placeholder={`Enter last name`} className={`h-14 w-full`} name={"lastName"} />
             </div>
             <FormField type={`password`} placeholder={`Enter password`} className={`h-14 w-full`} name={"password"} />
+            <FormField
+              type={`password`}
+              placeholder={`Enter confirm password`}
+              className={`h-14 w-full`}
+              name={"confirmPassword"}
+            />
           </section>
           <section className="mt-[23px] flex items-center justify-between">
             <div className="text-muted-foreground mb-4">
@@ -59,8 +82,15 @@ export const SignupForm = () => {
 
           {/* CTA */}
           <section className="flex flex-col items-center justify-center gap-[20px] pt-[20px]">
-            <SkiButton size="lg" className="h-[56px] w-full rounded-full" variant="primary" type="submit">
-              Sign up
+            <SkiButton
+              isDisabled={!isValid}
+              isLoading={isSubmitting}
+              size="lg"
+              className="h-[56px] w-full rounded-full"
+              variant="primary"
+              type="submit"
+            >
+              {isSubmitting ? `Signing up..` : ` Sign up`}
             </SkiButton>
             <span className="text-mid-grey-II">-------------------- OR --------------------</span>
             <SkiButton
@@ -84,3 +114,7 @@ export const SignupForm = () => {
     </section>
   );
 };
+
+export const SignupForm = withDependency(BaseSignupForm, {
+  authService: dependencies.AUTH_SERVICE,
+});

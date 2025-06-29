@@ -12,6 +12,7 @@ import ThemeProvider from "@/components/core/layout/ThemeToggle/theme-provider";
 // import { ModeToggle } from "@/components/core/layout/ThemeToggle/theme-toggle";
 import { Toast } from "@/components/shared/Toast";
 import { ReactQueryProvider } from "@/lib/react-query/query-provider";
+import { SessionProvider } from "next-auth/react";
 
 const META_THEME_COLORS = {
   light: "#ffffff",
@@ -47,31 +48,33 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           }}
         />
       </head>
-      <body
-        className={cn(
-          "bg-background font-sans antialiased",
-          activeThemeValue ? `theme-${activeThemeValue}` : "",
-          isScaled ? "theme-scaled" : "",
-          fontVariables,
-        )}
-      >
-        <NextTopLoader showSpinner={false} />
-        <NuqsAdapter>
-          <ReactQueryProvider>
-            <ThemeProvider
-              attribute="class"
-              defaultTheme="system"
-              enableSystem
-              disableTransitionOnChange
-              enableColorScheme
-            >
-              <Toast />
-              {children}
-              {/* <ModeToggle /> */}
-            </ThemeProvider>
-          </ReactQueryProvider>
-        </NuqsAdapter>
-      </body>
+      <SessionProvider>
+        <body
+          className={cn(
+            "bg-background font-sans antialiased",
+            activeThemeValue ? `theme-${activeThemeValue}` : "",
+            isScaled ? "theme-scaled" : "",
+            fontVariables,
+          )}
+        >
+          <NextTopLoader showSpinner={false} />
+          <NuqsAdapter>
+            <ReactQueryProvider>
+              <ThemeProvider
+                attribute="class"
+                defaultTheme="system"
+                enableSystem
+                disableTransitionOnChange
+                enableColorScheme
+              >
+                <Toast />
+                {children}
+                {/* <ModeToggle /> */}
+              </ThemeProvider>
+            </ReactQueryProvider>
+          </NuqsAdapter>
+        </body>
+      </SessionProvider>
     </html>
   );
 }

@@ -1,3 +1,8 @@
+import { MdDashboard } from "react-icons/md";
+import { PiUsersThreeLight } from "react-icons/pi";
+import { RiShoppingCartLine } from "react-icons/ri";
+import { TbSettings2, TbShoppingBag } from "react-icons/tb";
+
 export const NAV_LINKS: NavLink[] = [
   {
     id: 1,
@@ -553,4 +558,120 @@ export const VENDORS = [
   "Premium Vendors",
   "Ski-Shop",
   "basic Vendors",
+];
+
+export const sideItems = [
+  {
+    route: "Dashboard",
+    link: "/admin/home",
+    icon: MdDashboard,
+    id: "home",
+  },
+  {
+    route: "Products",
+    link: "/admin/products",
+    icon: TbShoppingBag,
+    id: "products",
+  },
+  {
+    route: "Orders",
+    link: "/admin/orders",
+    icon: RiShoppingCartLine,
+    id: "orders",
+  },
+  {
+    route: "Users",
+    link: "/admin/users",
+    icon: PiUsersThreeLight,
+    id: "users",
+  },
+  {
+    route: "Settings",
+    link: "/admin/settings",
+    icon: TbSettings2,
+    id: "settings",
+  },
+];
+
+// Define static employee data
+export const staticEmployees = [
+  {
+    id: "1",
+    name: "John Doe",
+    email: "john@example.com",
+    department: "Sales",
+    role: "Manager",
+    status: "Active",
+    joinDate: "2022-01-15",
+  },
+  {
+    id: "2",
+    name: "Jane Smith",
+    email: "jane@example.com",
+    department: "Marketing",
+    role: "Specialist",
+    status: "Active",
+    joinDate: "2022-03-10",
+  },
+  {
+    id: "3",
+    name: "Robert Johnson",
+    email: "robert@example.com",
+    department: "Development",
+    role: "Engineer",
+    status: "Inactive",
+    joinDate: "2021-11-05",
+  },
+  {
+    id: "4",
+    name: "Emily Davis",
+    email: "emily@example.com",
+    department: "HR",
+    role: "Coordinator",
+    status: "Active",
+    joinDate: "2023-02-20",
+  },
+  {
+    id: "5",
+    name: "Michael Wilson",
+    email: "michael@example.com",
+    department: "Finance",
+    role: "Analyst",
+    status: "Active",
+    joinDate: "2022-07-12",
+  },
+];
+
+// Define columns for the table
+export const employeeColumns = [
+  {
+    id: "name",
+    header: "Name",
+    accessorKey: "name",
+  },
+  {
+    id: "email",
+    header: "Email",
+    accessorKey: "email",
+  },
+  {
+    id: "department",
+    header: "Department",
+    accessorKey: "department",
+  },
+  {
+    id: "role",
+    header: "Role",
+    accessorKey: "role",
+  },
+  {
+    id: "status",
+    header: "Status",
+    accessorKey: "status",
+  },
+  {
+    id: "joinDate",
+    header: "Join Date",
+    accessorKey: "joinDate",
+  },
 ];

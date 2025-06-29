@@ -2,6 +2,8 @@
 import { ChangeEventHandler, FocusEventHandler, HTMLAttributes, MouseEventHandler } from "react";
 
 declare global {
+  type DataItem = Record<string, any>;
+
   export interface LogoProperties {
     logo: string;
     width?: number;
@@ -10,6 +12,20 @@ declare global {
     alt?: string;
     href?: string;
     onClick?: MouseEventHandler<HTMLAnchorElement>;
+  }
+
+  type DependencyInjector = (Component: React.ElementType, dependencies: { [key: string]: symbol }) => any;
+
+  interface ResolveDependencies {
+    [key: string]: object;
+  }
+
+  interface IDependencyContainer {
+    _dependencies: {
+      [key: symbol]: object;
+    };
+    add: (key: symbol, dependency: object) => void;
+    get: <T>(key: symbol) => T;
   }
 
   interface InputProperties {
@@ -122,6 +138,8 @@ declare global {
     onPageChange?: (page: number) => void;
     totalPages?: number;
     itemsPerPage?: number;
+    hasPreviousPage?: boolean;
+    hasNextPage?: boolean;
     rowActions?: (row: T) => IRowAction<T>[];
     onRowClick?: (row: T) => void;
     showPagination?: boolean;
@@ -171,7 +189,40 @@ declare global {
     meta: ProductMeta;
     images: string[];
     thumbnail: string;
+    status: string;
   }
+
+  // interface Product {
+  //   id: string;
+  //   name: string;
+  //   status: "published" | "draft" | "archived"; // Assuming possible status values
+  //   category: string;
+  //   description: string;
+  //   discountPrice: number | null;
+  //   images: string[];
+  //   price: number;
+  //   stockCount: number;
+  //   store: {
+  //     id: string;
+  //     category: string;
+  //     description: string;
+  //     logo: string;
+  //     name: string;
+  //     createdAt: string;
+  //     updatedAt: string;
+  //   };
+  //   user: {
+  //     id: string;
+  //     email: string;
+  //     firstName: string;
+  //     lastName: string;
+  //     role: string;
+  //     createdAt: string;
+  //     updatedAt: string;
+  //   };
+  //   createdAt: string;
+  //   updatedAt: string;
+  // }
 
   type UniversalSwiperProperties = {
     /**

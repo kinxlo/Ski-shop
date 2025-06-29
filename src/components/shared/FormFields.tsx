@@ -91,7 +91,7 @@ export function FormField({
                 />
               ) : type === "select" ? (
                 <Select onValueChange={field.onChange} value={field.value} disabled={disabled}>
-                  <SelectTrigger className={cn(inputClassName, "w-full")}>
+                  <SelectTrigger className={cn(inputClassName, "w-full bg-white")}>
                     <SelectValue placeholder={placeholder} />
                   </SelectTrigger>
                   <SelectContent>
@@ -103,7 +103,7 @@ export function FormField({
                   </SelectContent>
                 </Select>
               ) : type === "number" ? (
-                <input
+                <Input
                   {...field}
                   type="number"
                   placeholder={placeholder}
