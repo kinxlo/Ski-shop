@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import axios from "axios";
 import NextAuth, { CredentialsSignin, DefaultSession } from "next-auth";
@@ -40,7 +41,48 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   secret: process.env.AUTH_SECRET,
   // debug: process.env.NODE_ENV === "development",
   providers: [
-    // In your NextAuth configuration
+    // Google OAuth via credentials provider
+    Credentials({
+      id: "google",
+      name: "Google",
+      credentials: {
+        code: { type: "text" },
+      },
+      authorize: async (credentials) => {
+        try {
+          if (!credentials.code) {
+            throw new CredentialsSignin("Missing Google authentication data");
+          }
+          const response = await axios.get(
+            `${process.env.NEXT_PUBLIC_BASE_URL}/auth/oauth/google/callback?code=${credentials.code}`,
+          );
+          // console.log("Google OAuth response:", response.data);
+          if (response.data.success) {
+            console.log("Google OAuth successful, returning user data");
+            // Remove window.location.href assignment to avoid ReferenceError on server
+            return {
+              id: response.data.data.user.id,
+              name: response.data.data.user.fullName,
+              email: response.data.data.user.email,
+              role: { id: response.data.data.user.role, name: response.data.data.user.role },
+              accessToken: response.data.data.tokens.accessToken,
+              refreshToken: response.data.data.tokens.refreshToken,
+            };
+          }
+          return null;
+        } catch (error) {
+          if (axios.isAxiosError(error)) {
+            console.log("Google OAuth error:", error.response?.data || error.message);
+            const message = error.response?.data?.message || "Google authentication failed";
+            throw new CredentialsSignin(message);
+          }
+          console.log("Google OAuth unexpected error:", error);
+          throw new CredentialsSignin("Google authentication failed");
+        }
+      },
+    }),
+
+    // conventional credentials
     Credentials({
       name: "Credentials",
       credentials: {
@@ -64,11 +106,12 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
               id: response.data.data.user.id,
               name: response.data.data.user.fullName,
               email: response.data.data.user.email,
-              role: response.data.data.user.role,
+              role: { id: response.data.data.user.role, name: response.data.data.user.role },
               accessToken: response.data.data.tokens.accessToken,
               refreshToken: response.data.data.tokens.refreshToken,
             };
           }
+          return null;
         } catch (error) {
           if (axios.isAxiosError(error)) {
             const message = error.response?.data?.message || "Invalid email or password";
@@ -76,7 +119,6 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           }
           throw new CredentialsSignin("Login failed. Please try again.");
         }
-
         throw new CredentialsSignin("Login failed. Please try again.");
       },
     }),

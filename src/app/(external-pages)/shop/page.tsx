@@ -1,13 +1,16 @@
 "use client";
 
 import { Wrapper } from "@/components/core/layout/wrapper";
+import { EmptyState } from "@/components/shared/empty-state";
 import { Paginations } from "@/components/shared/pagination/pagination";
 import { CustomSelect } from "@/components/shared/select-dropdown";
 import { Input } from "@/components/ui/input";
-import { CATEGORIES, VENDORS } from "@/lib/constants";
+import { updateQueryParamameters } from "@/hooks/use-search-parameters";
+import { VENDORS } from "@/lib/constants";
 import { useAppService } from "@/services/app/use-app-service";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
-import { toast } from "sonner";
+import { useDebounce } from "use-debounce";
 
 import { MobileDownloadBanner } from "../_components/mobile-download-banner";
 import { ShopCardSkeleton } from "../_components/shop-card-skeleton";
@@ -15,150 +18,232 @@ import { ShopCard } from "../(home)/_components/shop-card/shop-card";
 import { OptionsSelector } from "./_components/option/options";
 import { Hero } from "./_views/hero";
 
-const ITEMS_PER_PAGE = 16;
+interface IFilters {
+  page?: number;
+  category?: string;
+  search?: string;
+}
 
 const Page = () => {
-  const [category, setCategory] = useState<string>("All Categories");
-  const [, setSort] = useState<string>("All Categories");
-  const [vendor, setVendor] = useState<string>("All Vendor");
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParameters = useSearchParams();
+  const { useGetAllProducts, useGetAllProductCategory } = useAppService();
+
+  // State management
   const [currentPage, setCurrentPage] = useState<number>(1);
-  const [totalPages, setTotalPages] = useState<number>(0);
-  const [displayedProducts, setDisplayedProducts] = useState<Product[]>([]);
-  const [searchQuery, setSearchQuery] = useState<string>("");
+  const [searchInput, setSearchInput] = useState<string>("");
+  const [vendor, setVendor] = useState<string>("All Vendor");
+  const [selectedCategory, setSelectedCategory] = useState<string>("All Categories");
+  const {
+    data: categoriesData,
+    isError: isCategoriesError,
+    isLoading: isCategoriesLoading,
+  } = useGetAllProductCategory();
 
-  const { useGetAllProducts } = useAppService();
-  const { isLoading, isError, error, data } = useGetAllProducts();
+  // Debounce search input
+  const [debouncedSearch] = useDebounce(searchInput, 500);
 
-  // Filter products based on category, vendor, and search query
-  const filteredProducts = useMemo(() => {
-    if (!data?.products) return [];
+  // Prepare filters for API call
+  const filters = useMemo<IFilters>(() => {
+    return {
+      page: currentPage,
+      ...(selectedCategory !== "All Categories" && { categories: selectedCategory.toLowerCase() }),
+      ...(debouncedSearch && { search: debouncedSearch }),
+    };
+  }, [currentPage, selectedCategory, debouncedSearch]);
 
-    return data?.products?.filter((product) => {
-      // Category filter
-      const categoryMatch = category === "All Categories" || product.category === category.toLowerCase();
+  // Queries
+  // const { data: productData, isLoading: isLoadingProducts, error: productsError } = useGetAllProducts(filters);
+  const {
+    data: productData,
+    isLoading: isLoadingProducts,
+    isError: isProductError,
+    refetch: refetchProducts, // Add this
+  } = useGetAllProducts(filters);
 
-      // Vendor filter
-      //   const vendorMatch = vendor === "All Vendor" || product?.vendor === vendor;
+  // Derived state
+  const products = productData?.data?.items || [];
+  const totalProducts = productData?.data?.metadata.total || 0;
+  const totalPages = productData?.data?.metadata.totalPages || 0;
+  const categories = categoriesData?.data || [];
 
-      // Search filter (case insensitive)
-      const searchMatch =
-        searchQuery === "" ||
-        product?.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        product?.category.toLowerCase().includes(searchQuery.toLowerCase());
-
-      return categoryMatch && searchMatch;
-    });
-  }, [data, category, searchQuery]);
-
+  // Add this effect to refetch when filters change
   useEffect(() => {
-    if (filteredProducts) {
-      // Calculate total pages
-      const totalItems = filteredProducts?.length;
-      const calculatedTotalPages = Math.ceil(totalItems / ITEMS_PER_PAGE);
-      setTotalPages(calculatedTotalPages);
+    refetchProducts();
+  }, [filters, refetchProducts]);
 
-      // Reset to first page when filters change
-      setCurrentPage(1);
+  // Update your category change handler
+  const handleCategoryChange = async (value: string) => {
+    setSelectedCategory(value);
+    setCurrentPage(1);
 
-      // Update displayed products for current page
-      const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
-      const endIndex = startIndex + ITEMS_PER_PAGE;
-      setDisplayedProducts(filteredProducts?.slice(startIndex, endIndex));
-    }
-  }, [filteredProducts, currentPage]);
-
-  // Handle error state
-  if (isError) {
-    toast.error("something went wrong", {
-      description: error.message,
+    // Update URL
+    updateQueryParamameters(router, pathname, new URLSearchParams(searchParameters.toString()), {
+      category: value === "All Categories" ? null : value,
+      page: null,
     });
-  }
 
+    await refetchProducts(); // Force refetch
+  };
+
+  // Handle search input change
+  const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchInput(event.target.value);
+    setCurrentPage(1);
+  };
+
+  // Handle vendor change
+  const handleVendorChange = (value: string) => {
+    setVendor(value);
+    setCurrentPage(1);
+  };
+
+  // Handle page change
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchQuery(event.target.value);
-  };
+  // Initialize from URL params
+  useEffect(() => {
+    const category = searchParameters.get("category");
+    if (category) {
+      setSelectedCategory(category);
+    }
+  }, [searchParameters]);
+
+  if (isProductError) {
+    return (
+      <Wrapper className="py-12">
+        <EmptyState
+          images={[
+            {
+              src: "/images/empty-state.svg",
+              alt: "Empty Cart",
+              width: 100,
+              height: 100,
+            },
+          ]}
+          description={"Your cart is empty"}
+          button={{
+            text: "Continue Shopping",
+            onClick: () => router.push("/shop"),
+          }}
+        />
+      </Wrapper>
+    );
+  }
+
+  if (isCategoriesError) return;
 
   return (
     <>
       <Hero />
-      <Wrapper className={`my-14 grid grid-cols-12 gap-6`}>
-        <section className={`col-span-2 space-y-10`}>
+      <Wrapper className="my-14 grid grid-cols-12 gap-6">
+        {/* Filters sidebar */}
+        <section className="col-span-2 space-y-10">
+          {isCategoriesLoading ? (
+            <div className="space-y-2">
+              <h6 className="font-semibold uppercase">Categories</h6>
+              <div className="space-y-4">
+                {Array.from({ length: 7 }).map((_, index) => (
+                  <div key={index} className="flex items-center space-x-2">
+                    <div className="bg-muted h-4 w-4 animate-pulse rounded-full" />
+                    <div className="bg-muted h-4 w-24 animate-pulse rounded" />
+                  </div>
+                ))}
+              </div>
+            </div>
+          ) : (
+            <OptionsSelector
+              title="Categories"
+              categories={["All Categories", ...categories]}
+              value={selectedCategory}
+              onChange={handleCategoryChange}
+            />
+          )}
           <OptionsSelector
-            title={`Category`}
-            categories={["All Categories", ...CATEGORIES]}
-            onChange={(value) => setCategory(value)}
-          />
-          <OptionsSelector
-            title={`Vendor`}
+            title="Vendor"
             categories={["All Vendor", ...VENDORS]}
-            onChange={(value) => setVendor(value)}
+            value={vendor}
+            onChange={handleVendorChange}
           />
         </section>
-        <section className={`col-span-10`}>
-          <article className={`flex items-center justify-between`}>
-            <div className={`w-[20rem]`}>
-              <Input name={"search"} placeholder={`Search products...`} value={searchQuery} onChange={handleSearch} />
+
+        {/* Main content */}
+        <section className="col-span-10">
+          {/* Search and sort header */}
+          <article className="flex items-center justify-between">
+            <div className="w-[20rem]">
+              <Input
+                disabled
+                name="search"
+                placeholder="Search products..."
+                value={searchInput}
+                onChange={handleSearch}
+              />
             </div>
-            <div className={`flex items-center space-x-4`}>
-              <p className={`text-sm`}>Sort By:</p>
+            <div className="flex items-center space-x-4">
+              <p className="text-sm">Sort By:</p>
               <CustomSelect
-                options={["All Categories", ...CATEGORIES]}
+                options={["All Categories", ...categories]}
                 placeholder="Choose a category"
-                onChange={(value) => setSort(value)}
+                value={selectedCategory}
+                onChange={handleCategoryChange}
               />
             </div>
           </article>
-          <article className={`bg-high-grey-I my-4 flex items-center justify-between rounded-md p-4`}>
+
+          {/* Active filters info */}
+          <article className="bg-high-grey-I my-4 flex items-center justify-between rounded-md p-4">
             <div>
-              <span className={`text-mid-grey-II text-sm`}>Active Filters: </span>
-              <span className={`space-x-4 text-sm`}>
-                {category} / {vendor}
-                {searchQuery && ` / Search: ${searchQuery}`}
+              <span className="text-mid-grey-II text-sm">Active Filters: </span>
+              <span className="space-x-4 text-sm">
+                {selectedCategory} / {vendor}
+                {debouncedSearch && ` / Search: ${debouncedSearch}`}
               </span>
             </div>
             <div>
-              <p className={`text-mid-grey-II text-sm`}>
-                <span className={`text-high-grey-II text-sm font-semibold`}>{filteredProducts?.length || 0}</span>{" "}
-                results found
+              <p className="text-mid-grey-II text-sm">
+                <span className="text-high-grey-II text-sm font-semibold">{totalProducts}</span> results found
               </p>
             </div>
           </article>
-          <section className={`my-8`}>
+
+          {/* Products grid */}
+          <section className="my-8">
             <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
-              {isLoading &&
-                Array.from({ length: 12 }).map((_, index: number) => {
-                  return <ShopCardSkeleton key={index} />;
-                })}
-              {!isLoading && displayedProducts?.length === 0 && (
+              {isLoadingProducts && Array.from({ length: 12 }).map((_, index) => <ShopCardSkeleton key={index} />)}
+
+              {!isLoadingProducts && products.length === 0 && (
                 <div className="col-span-full py-10 text-center">
                   <p className="text-mid-grey-II text-lg">No products found matching your filters</p>
                 </div>
               )}
-              {displayedProducts?.map((product) => {
-                return (
+
+              {!isLoadingProducts &&
+                products.map((product: Product) => (
                   <ShopCard
-                    key={product?.id.toString()}
-                    id={product?.id.toString()}
-                    category={product?.category}
-                    title={product?.title}
-                    rating={product?.rating}
-                    price={product?.price}
-                    discount={product.discountPercentage}
-                    image={product?.thumbnail}
+                    key={product.id.toString()}
+                    id={product.id.toString()}
+                    category={product.category}
+                    title={product.name}
+                    rating={3}
+                    price={product.price}
+                    discount={product.discountPrice || 0}
+                    image={product.images[0]}
+                    name={product.user.name || "Skicom"}
                   />
-                );
-              })}
+                ))}
             </div>
-            <div className={`my-10`}>
-              {!isLoading && totalPages > 1 && (
+
+            {/* Pagination */}
+            {!isLoadingProducts && totalPages > 1 && (
+              <div className="my-10">
                 <Paginations currentPage={currentPage} totalPages={totalPages} onPageChange={handlePageChange} />
-              )}
-            </div>
+              </div>
+            )}
           </section>
         </section>
       </Wrapper>
@@ -166,4 +251,5 @@ const Page = () => {
     </>
   );
 };
+
 export default Page;

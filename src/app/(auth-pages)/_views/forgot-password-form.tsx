@@ -1,28 +1,40 @@
+/* eslint-disable no-console */
 "use client";
 
 import SkiButton from "@/components/shared/button";
 import { FormField } from "@/components/shared/FormFields";
-import { LoginFormData, loginSchema } from "@/schemas";
+import { ForgotPasswordData, forgotPasswordSchema } from "@/schemas";
+import { useAuthService } from "@/services/auth/use-auth-service";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FormProvider, useForm } from "react-hook-form";
+import { toast } from "sonner";
+
+// import { toast } from "sonner";
 
 export const ForgotPasswordForm = () => {
-  const methods = useForm<LoginFormData>({
-    resolver: zodResolver(loginSchema),
+  const { useForgotPassword } = useAuthService();
+  const { mutateAsync: forgotPassword, isPending } = useForgotPassword();
+  const methods = useForm<ForgotPasswordData>({
+    resolver: zodResolver(forgotPasswordSchema),
     defaultValues: {
       email: "",
-      password: "",
     },
   });
 
   const {
     handleSubmit,
-    // formState: {},
+    formState: { isValid },
   } = methods;
 
-  // eslint-disable-next-line unused-imports/no-unused-vars, @typescript-eslint/no-unused-vars
-  const handleSubmitForm = async (data: LoginFormData) => {
-    // await login(data);
+  const handleSubmitForm = async (data: ForgotPasswordData) => {
+    console.log(data);
+    await forgotPassword(data, {
+      onSuccess: () => {
+        toast.success(`Sent Successfully`, {
+          description: "Please check your email for the reset link.",
+        });
+      },
+    });
   };
 
   return (
@@ -30,12 +42,25 @@ export const ForgotPasswordForm = () => {
       <FormProvider {...methods}>
         <form onSubmit={handleSubmit(handleSubmitForm)} className="">
           <section className={`space-y-4`}>
-            <FormField type={`email`} placeholder={`Enter email address`} className={`h-14 w-full`} name={"email"} />
+            <FormField
+              type={`email`}
+              placeholder={`Enter email address`}
+              className={`h-14 w-full`}
+              name={"email"}
+              disabled={isPending}
+            />
           </section>
 
           {/* CTA */}
           <section className="flex flex-col items-center justify-center gap-[20px] pt-[20px]">
-            <SkiButton size="lg" className="h-[56px] w-full rounded-full" variant="primary" type="submit">
+            <SkiButton
+              size="lg"
+              isDisabled={isPending || !isValid}
+              isLoading={isPending}
+              className="h-[56px] w-full rounded-full"
+              variant="primary"
+              type="submit"
+            >
               Send Reset Link
             </SkiButton>
           </section>

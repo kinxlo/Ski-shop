@@ -2,102 +2,285 @@
 
 import { Wrapper } from "@/components/core/layout/wrapper";
 import SkiButton from "@/components/shared/button";
-import { Minus, Plus, X } from "lucide-react";
-import Image from "next/image";
-import { useState } from "react";
-
-interface CartItem {
-  id: string;
-  title: string;
-  price: number;
-  quantity: number;
-  image: string;
-}
+import { EmptyState } from "@/components/shared/empty-state";
+import { Skeleton } from "@/components/ui/skeleton";
+import { formatCurrency } from "@/lib/utils";
+import { useAppService } from "@/services/app/use-app-service";
+import { Minus, Plus, Trash2 } from "lucide-react";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 export const CartView = () => {
-  const [cartItems, setCartItems] = useState<CartItem[]>([
-    {
-      id: "ps5-vr2",
-      title: "Sony PlayStation VR2 Approx. 110°",
-      price: 575_000,
-      quantity: 1,
-      image: "/images/shop/hero.svg",
-    },
-    {
-      id: "ps5-vr2-2",
-      title: "Sony PlayStation VR2 Approx. 110°",
-      price: 575_000,
-      quantity: 1,
-      image: "/images/shop/hero.svg",
-    },
-  ]);
+  const router = useRouter();
+  const { data: session } = useSession();
+  const { useGetCart, useRemoveFromCart, useUpdateCartItem } = useAppService();
+  // Mutations
+  const { mutateAsync: updateQuantity, isPending: isUpdating } = useUpdateCartItem();
+  const { mutateAsync: removeItem, isPending: isRemoving } = useRemoveFromCart();
+
+  // Fetch cart data
+  const { data: cartResponse, isLoading, error, refetch } = useGetCart();
+  const cartItems = cartResponse?.data?.items || [];
+  const cartMetadata = cartResponse?.data?.metadata;
+
+  if (!session) {
+    return (
+      <Wrapper className="py-12">
+        <EmptyState
+          images={[
+            {
+              src: "/images/empty-state.svg",
+              alt: "Empty Cart",
+              width: 100,
+              height: 100,
+            },
+          ]}
+          description={"Please log in to view your cart"}
+          button={{
+            text: "Log In",
+            onClick: () => router.push("/login"),
+          }}
+        />
+      </Wrapper>
+    );
+  }
+
+  // In your CartView component
+  // const { data: cartResponse = { data: { items: [], metadata: { total: 0 } }, isLoading, error, refetch } = useGetCart();
+  // const cartItems = cartResponse.data.items;
+  // const cartMetadata = cartResponse.data.metadata;
 
   const handleQuantityChange = (itemId: string, action: "increase" | "decrease") => {
-    setCartItems((previousItems) =>
-      previousItems.map((item) => {
-        if (item.id === itemId) {
-          const newQuantity = action === "increase" ? item.quantity + 1 : item.quantity - 1;
-          return {
-            ...item,
-            quantity: Math.max(1, newQuantity), // Prevent quantity from going below 1
-          };
-        }
-        return item;
-      }),
+    const item = cartItems.find((item) => item.id === itemId);
+    if (!item) return;
+
+    const newQuantity = action === "increase" ? item.quantity + 1 : item.quantity - 1;
+
+    if (newQuantity < 1) {
+      handleRemoveItem(itemId);
+      return;
+    }
+
+    updateQuantity(
+      { itemId, quantity: newQuantity },
+      {
+        onSuccess: () => {
+          toast.success("Quantity updated");
+          refetch();
+        },
+      },
     );
   };
 
   const handleRemoveItem = (itemId: string) => {
-    setCartItems((previousItems) => previousItems.filter((item) => item.id !== itemId));
+    removeItem(itemId, {
+      onSuccess: () => {
+        toast.success("Item removed from cart");
+        refetch();
+      },
+      onError: (error) => {
+        toast.error("Failed to remove item", {
+          description: error.message,
+        });
+      },
+    });
   };
 
-  const subtotal = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  const subtotal = cartItems.reduce(
+    (sum: number, item: CartItem) => sum + (item.product.price || 0) * item.quantity,
+    0,
+  );
+  const shipping = subtotal > 100 ? 0 : 15;
+  const total = subtotal + shipping;
+
+  if (isLoading) {
+    return (
+      <Wrapper className="py-12">
+        <CartViewSkeleton />
+      </Wrapper>
+    );
+  }
+
+  if (error) {
+    return (
+      <Wrapper className="py-12">
+        <EmptyState
+          images={[
+            {
+              src: "/images/empty-state.svg",
+              alt: "Empty Cart",
+              width: 100,
+              height: 100,
+            },
+          ]}
+          description={"Your cart is empty"}
+          button={{
+            text: "Continue Shopping",
+            onClick: () => router.push("/shop"),
+          }}
+        />
+      </Wrapper>
+    );
+  }
 
   return (
-    <section>
-      <Wrapper className="py-4 sm:py-8">
-        <h1 className="mb-4 text-xl font-semibold sm:mb-8 sm:text-2xl">Cart</h1>
-        <div className="grid gap-4 sm:gap-8 lg:grid-cols-3">
-          <div className="lg:col-span-2">
-            {/* Product Table - Hidden on mobile, shown on larger screens */}
-            <div className="hidden overflow-x-auto sm:block">
+    <Wrapper className="py-6 sm:py-10">
+      <p className="mb-6 text-lg font-bold sm:mb-8 sm:text-2xl">
+        Cart {cartMetadata && `(${cartMetadata.total} items)`}
+      </p>
+
+      {cartItems.length === 0 ? (
+        <div className="flex flex-col items-center py-12">
+          <p className="mb-6 text-lg text-gray-600">Your cart is empty</p>
+          <SkiButton href="/shop" variant="primary" size="lg" className="rounded-full">
+            Continue Shopping
+          </SkiButton>
+        </div>
+      ) : (
+        <div className="grid gap-8 lg:grid-cols-3">
+          {/* Mobile Card View */}
+          <div className="space-y-4 lg:hidden">
+            {cartItems.map((item: CartItem) => (
+              <div key={item.id} className="rounded-lg border p-4">
+                <div className="flex justify-between">
+                  <div className="flex items-start gap-4">
+                    <div className="relative h-16 w-16 flex-shrink-0 overflow-hidden rounded bg-gray-100">
+                      <div className="flex h-full items-center justify-center text-gray-400">
+                        <svg className="h-8 w-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                          />
+                        </svg>
+                      </div>
+                    </div>
+                    <div>
+                      <p className="font-medium">{item.product.name}</p>
+                      <p className="text-xs text-gray-500">SKU: {item.product.id}</p>
+                      <div className="mt-2">
+                        <p className="font-medium">
+                          ${item.product.price?.toFixed(2)}
+                          {item.product.discountPrice && (
+                            <span className="ml-2 text-sm text-gray-500 line-through">
+                              ${item.product.discountPrice.toFixed(2)}
+                            </span>
+                          )}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => handleRemoveItem(item.id)}
+                    disabled={isRemoving}
+                    className="text-red-500 hover:text-red-700 disabled:opacity-50"
+                    aria-label="Remove item"
+                  >
+                    <Trash2 className="h-5 w-5" />
+                  </button>
+                </div>
+
+                <div className="mt-4 flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <button
+                      onClick={() => handleQuantityChange(item.id, "decrease")}
+                      disabled={isUpdating}
+                      className="flex h-8 w-8 items-center justify-center rounded border bg-gray-50 hover:bg-gray-100 disabled:opacity-50"
+                    >
+                      <Minus className="h-4 w-4" />
+                    </button>
+                    <span className="w-8 text-center">{item.quantity}</span>
+                    <button
+                      onClick={() => handleQuantityChange(item.id, "increase")}
+                      disabled={isUpdating}
+                      className="flex h-8 w-8 items-center justify-center rounded border bg-gray-50 hover:bg-gray-100 disabled:opacity-50"
+                    >
+                      <Plus className="h-4 w-4" />
+                    </button>
+                  </div>
+                  <p className="font-medium">${((item.product.price || 0) * item.quantity).toFixed(2)}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Desktop Table View */}
+          <div className="hidden lg:col-span-2 lg:block">
+            <div className="overflow-hidden rounded-lg border">
               <table className="w-full">
-                <thead>
-                  <tr className="border-b text-left">
-                    <th className="pb-4">Product</th>
-                    <th className="pb-4">Price</th>
-                    <th className="pb-4">Quantity</th>
-                    <th className="pb-4">Subtotal</th>
-                    <th className="pb-4"></th>
+                <thead className="bg-gray-50">
+                  <tr>
+                    <th className="px-4 py-3 text-left text-sm font-medium">Product</th>
+                    <th className="px-4 py-3 text-left text-sm font-medium">Price</th>
+                    <th className="px-4 py-3 text-left text-sm font-medium">Quantity</th>
+                    <th className="px-4 py-3 text-left text-sm font-medium">Total</th>
+                    <th className="px-4 py-3 text-left text-sm font-medium"></th>
                   </tr>
                 </thead>
-                <tbody className="divide-y">
-                  {cartItems.map((item) => (
+                <tbody className="divide-y divide-gray-200">
+                  {cartItems.map((item: CartItem) => (
                     <tr key={item.id}>
-                      <td className="py-4">
+                      <td className="px-4 py-4">
                         <div className="flex items-center gap-4">
-                          <div className="relative h-20 w-20 overflow-hidden rounded-lg">
-                            <Image src={item.image} alt={item.title} fill className="object-cover" />
+                          <div className="relative h-16 w-16 flex-shrink-0 overflow-hidden rounded bg-gray-100">
+                            <div className="flex h-full items-center justify-center text-gray-400">
+                              <svg className="h-8 w-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  strokeWidth={2}
+                                  d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                                />
+                              </svg>
+                            </div>
                           </div>
-                          <span className="font-medium">{item.title}</span>
+                          <div>
+                            <p className="font-medium">{item.product.name}</p>
+                            <p className="text-xs text-gray-500">SKU: {item.product.id}</p>
+                          </div>
                         </div>
                       </td>
-                      <td className="py-4">₦{item.price.toLocaleString()}</td>
-                      <td className="py-4">
-                        <div className="flex w-fit items-center gap-4 rounded-full border px-4 py-2">
-                          <button onClick={() => handleQuantityChange(item.id, "decrease")}>
-                            <Minus size={20} className="text-gray-600" />
+                      <td className="px-4 py-4">
+                        {formatCurrency(item.product.price)}
+                        <br />
+                        {item.product.discountPrice && (
+                          <span className="text-destructive ml-2 text-xs line-through">
+                            {formatCurrency(item.product?.discountPrice)}
+                          </span>
+                        )}
+                      </td>
+                      <td className="px-4 py-4">
+                        <div className="flex items-center gap-2">
+                          <button
+                            onClick={() => handleQuantityChange(item.id, "decrease")}
+                            disabled={isUpdating}
+                            className="flex h-8 w-8 items-center justify-center rounded border bg-gray-50 hover:bg-gray-100 disabled:opacity-50"
+                          >
+                            <Minus className="h-4 w-4" />
                           </button>
-                          <span className="w-8 text-center font-medium">{item.quantity}</span>
-                          <button onClick={() => handleQuantityChange(item.id, "increase")}>
-                            <Plus size={20} className="text-gray-600" />
+                          <span className="w-8 text-center">{item.quantity}</span>
+                          <button
+                            onClick={() => handleQuantityChange(item.id, "increase")}
+                            disabled={isUpdating}
+                            className="flex h-8 w-8 items-center justify-center rounded border bg-gray-50 hover:bg-gray-100 disabled:opacity-50"
+                          >
+                            <Plus className="h-4 w-4" />
                           </button>
                         </div>
                       </td>
-                      <td className="py-4">₦{(item.price * item.quantity).toLocaleString()}</td>
-                      <td className="py-4">
-                        <button onClick={() => handleRemoveItem(item.id)} className="text-red-500 hover:text-red-600">
-                          <X size={20} />
+                      <td className="px-4 py-4 font-medium">
+                        {formatCurrency((item.product.price || 0) * item.quantity)}
+                      </td>
+                      <td className="px-4 py-4">
+                        <button
+                          onClick={() => handleRemoveItem(item.id)}
+                          disabled={isRemoving}
+                          className="text-red-500 hover:text-red-700 disabled:opacity-50"
+                          aria-label="Remove item"
+                        >
+                          <Trash2 className="h-5 w-5" />
                         </button>
                       </td>
                     </tr>
@@ -105,64 +288,148 @@ export const CartView = () => {
                 </tbody>
               </table>
             </div>
+          </div>
 
-            {/* Mobile Product List */}
-            <div className="space-y-4 sm:hidden">
-              {cartItems.map((item) => (
-                <div key={item.id} className="space-y-3 rounded-lg border p-4">
-                  <div className="flex gap-3">
-                    <div className="relative h-20 w-20 flex-shrink-0 overflow-hidden rounded-lg">
-                      <Image src={item.image} alt={item.title} fill className="object-cover" />
-                    </div>
-                    <div className="flex-1">
-                      <h6 className="font-medium">{item.title}</h6>
-                      <p className="text-gray-600">₦{item.price.toLocaleString()}</p>
-                    </div>
-                    <button onClick={() => handleRemoveItem(item.id)} className="text-red-500 hover:text-red-600">
-                      <X size={20} />
-                    </button>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-4 rounded-full border px-4 py-2">
-                      <button onClick={() => handleQuantityChange(item.id, "decrease")}>
-                        <Minus size={18} className="text-gray-600" />
-                      </button>
-                      <span className="w-6 text-center font-medium">{item.quantity}</span>
-                      <button onClick={() => handleQuantityChange(item.id, "increase")}>
-                        <Plus size={18} className="text-gray-600" />
-                      </button>
-                    </div>
-                    <p className="font-medium">₦{(item.price * item.quantity).toLocaleString()}</p>
+          {/* Order Summary (Visible on both mobile and desktop) */}
+          <div className="lg:col-span-1">
+            <div className="rounded-lg border bg-gray-50 p-6">
+              <p className="mb-4 text-lg font-semibold sm:text-2xl">Cart Summary</p>
+              <hr className={`mb-5`} />
+              <div className="space-y-4">
+                <div className="flex justify-between">
+                  <span>Subtotal</span>
+                  <span>{formatCurrency(subtotal)}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span>Shipping</span>
+                  <span>{shipping === 0 ? "Free" : `${formatCurrency(shipping)}`}</span>
+                </div>
+                <div className="border-t pt-4">
+                  <div className="flex justify-between font-semibold">
+                    <span>Total</span>
+                    <span>{formatCurrency(total)}</span>
                   </div>
                 </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Cart Summary */}
-          <div className="rounded-lg border p-4 sm:p-6">
-            <h2 className="mb-4 text-base font-semibold sm:text-lg">Cart Summary</h2>
-            <div className="space-y-4 border-t pt-4 sm:space-y-6">
-              <div className="flex justify-between">
-                <span>Subtotal</span>
-                <span>₦{subtotal.toLocaleString()}</span>
               </div>
-              <div className="flex justify-between font-medium">
-                <span>Total</span>
-                <span>₦{subtotal.toLocaleString()}</span>
-              </div>
+              <SkiButton href={`/shop/cart/checkout`} variant="primary" size="lg" className="mt-6 w-full rounded-full">
+                Proceed to Checkout
+              </SkiButton>
             </div>
-            <SkiButton
-              href={`/shop/cart/checkout`}
-              variant="primary"
-              size="xl"
-              className="mt-6 w-full rounded-full sm:mt-10"
-            >
-              Proceed to Checkout
-            </SkiButton>
           </div>
         </div>
-      </Wrapper>
+      )}
+    </Wrapper>
+  );
+};
+
+const CartViewSkeleton = () => {
+  return (
+    <section className="">
+      <Skeleton className="mb-6 h-8 w-48 sm:mb-8 sm:h-10" />
+
+      <div className="grid gap-8 lg:grid-cols-3">
+        {/* Mobile Card View Skeleton */}
+        <div className="space-y-4 lg:hidden">
+          {Array.from({ length: 3 }).map((_, index) => (
+            <div key={index} className="rounded-lg border p-4">
+              <div className="flex justify-between">
+                <div className="flex items-start gap-4">
+                  <Skeleton className="h-16 w-16 rounded" />
+                  <div className="space-y-2">
+                    <Skeleton className="h-5 w-32" />
+                    <Skeleton className="h-4 w-24" />
+                    <Skeleton className="h-5 w-20" />
+                  </div>
+                </div>
+                <Skeleton className="h-5 w-5" />
+              </div>
+
+              <div className="mt-4 flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <Skeleton className="h-8 w-8 rounded" />
+                  <Skeleton className="h-6 w-8" />
+                  <Skeleton className="h-8 w-8 rounded" />
+                </div>
+                <Skeleton className="h-5 w-16" />
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Desktop Table View Skeleton */}
+        <div className="hidden lg:col-span-2 lg:block">
+          <div className="overflow-hidden rounded-lg border">
+            <table className="w-full">
+              <thead className="bg-gray-50">
+                <tr>
+                  {["Product", "Price", "Quantity", "Total", ""].map((header, index) => (
+                    <th key={index} className="px-4 py-3 text-left text-sm font-medium">
+                      <Skeleton className="h-5 w-24" />
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-200">
+                {Array.from({ length: 3 }).map((_, index) => (
+                  <tr key={index}>
+                    <td className="px-4 py-4">
+                      <div className="flex items-center gap-4">
+                        <Skeleton className="h-16 w-16 rounded" />
+                        <div className="space-y-2">
+                          <Skeleton className="h-5 w-32" />
+                          <Skeleton className="h-4 w-24" />
+                        </div>
+                      </div>
+                    </td>
+                    <td className="px-4 py-4">
+                      <Skeleton className="h-5 w-16" />
+                      <Skeleton className="mt-1 h-4 w-12" />
+                    </td>
+                    <td className="px-4 py-4">
+                      <div className="flex items-center gap-2">
+                        <Skeleton className="h-8 w-8 rounded" />
+                        <Skeleton className="h-6 w-8" />
+                        <Skeleton className="h-8 w-8 rounded" />
+                      </div>
+                    </td>
+                    <td className="px-4 py-4">
+                      <Skeleton className="h-5 w-16" />
+                    </td>
+                    <td className="px-4 py-4">
+                      <Skeleton className="h-5 w-5" />
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        {/* Order Summary Skeleton */}
+        <div className="lg:col-span-1">
+          <div className="rounded-lg border bg-gray-50 p-6">
+            <Skeleton className="mb-4 h-8 w-48" />
+            <Skeleton className="mb-5 h-px w-full" />
+            <div className="space-y-4">
+              <div className="flex justify-between">
+                <Skeleton className="h-5 w-16" />
+                <Skeleton className="h-5 w-20" />
+              </div>
+              <div className="flex justify-between">
+                <Skeleton className="h-5 w-16" />
+                <Skeleton className="h-5 w-20" />
+              </div>
+              <div className="border-t pt-4">
+                <div className="flex justify-between">
+                  <Skeleton className="h-6 w-16" />
+                  <Skeleton className="h-6 w-24" />
+                </div>
+              </div>
+            </div>
+            <Skeleton className="mt-6 h-12 w-full rounded-full" />
+          </div>
+        </div>
+      </div>
     </section>
   );
 };

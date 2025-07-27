@@ -1,89 +1,116 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { Wrapper } from "@/components/core/layout/wrapper";
 import { BlurImage } from "@/components/core/miscellaneous/blur-image";
 import SkiButton from "@/components/shared/button";
-import { Badge } from "@/components/ui/badge";
+import { Ratings } from "@/components/shared/ratings";
+import { Skeleton } from "@/components/ui/skeleton";
+import { useAppService } from "@/services/app/use-app-service";
+import { useQueryClient } from "@tanstack/react-query";
 import { Minus, Plus, ShoppingCart, Star } from "lucide-react";
+// import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { MdStarBorderPurple500 } from "react-icons/md";
+import { toast } from "sonner";
 
 import { ProductBreadcrumb } from "../_components/product-breadcrumb";
+import { ShopCardSkeleton } from "./popular-products";
 import { SimilarProducts } from "./similar-products";
-
-interface ProductDetailProperties {
-  product: {
-    weight: number;
-    id: number;
-    title: string;
-    description: string;
-    category: string;
-    price: number;
-    discountPercentage?: number;
-    rating: number;
-    stock: number;
-    brand: string;
-    thumbnail: string;
-    images: string[];
-    reviews: {
-      rating: number;
-      comment: string;
-      date: string;
-      reviewerName: string;
-      reviewerEmail: string;
-    }[];
-    availabilityStatus: string;
-    // Add other properties as needed
-  };
-}
 
 type Tab = "description" | "reviews";
 
-export const ProductDetail = ({ product }: ProductDetailProperties) => {
+export const ProductDetail = ({ product }: any) => {
+  // const { data: session } = useSession();
+  const router = useRouter();
   const [selectedImage, setSelectedImage] = useState(0);
   const [quantity, setQuantity] = useState(1);
+  const { useAddToCart } = useAppService();
   const [activeTab, setActiveTab] = useState<Tab>("description");
+  const queryClient = useQueryClient();
+  const { mutate: addToCart, isPending } = useAddToCart({
+    onMutate: async (newItem: any) => {
+      // Cancel any outgoing refetches
+      await queryClient.cancelQueries({ queryKey: ["cart"] });
+      // Snapshot the previous value
+      const previousCart = queryClient.getQueryData(["cart"]);
 
+      // Optimistically update to the new value
+      queryClient.setQueryData(["cart"], (old: any) => {
+        const existingItem = old?.items?.find((item: any) => item.productId === newItem.productId);
+        if (existingItem) {
+          return {
+            ...old,
+            items: old.items.map((item: any) =>
+              item.productId === newItem.productId ? { ...item, quantity: item.quantity + newItem.quantity } : item,
+            ),
+          };
+        }
+        return {
+          ...old,
+          items: [...(old?.items || []), { ...newItem, id: Date.now().toString() }],
+        };
+      });
+
+      return { previousCart };
+    },
+    onError: (error: any, newItem: any, context: any) => {
+      queryClient.setQueryData(["cart"], context?.previousCart);
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ["cart"] });
+    },
+  });
   // Calculate discounted price if discountPercentage exists
-  const oldPrice = product.discountPercentage ? product.price / (1 - product.discountPercentage / 100) : null;
+  // const oldPrice = product.discountPercentage ? product.price / (1 - product.discountPercentage / 100) : null;
 
   // Use images array as gallery if it exists
   const gallery = product.images?.length ? product.images : [product.thumbnail];
 
   // Calculate average rating from reviews
   const averageRating =
-    product.reviews.length > 0
-      ? product.reviews.reduce((sum, review) => sum + review.rating, 0) / product.reviews.length
+    product?.reviews?.length > 0
+      ? product.reviews.reduce((sum: any, review: any) => sum + review.rating, 0) / product.reviews.length
       : product.rating;
 
   const handleQuantityChange = (type: "increase" | "decrease") => {
     if (type === "decrease" && quantity > 1) {
       setQuantity(quantity - 1);
-    } else if (type === "increase" && quantity < product.stock) {
-      setQuantity(quantity + 1);
+    } else if (type === "increase") {
+      if (quantity < product.stockCount) {
+        setQuantity(quantity + 1);
+      } else {
+        toast.info(`Maximum available quantity is ${product.stockCount}`);
+      }
     }
   };
 
-  // Sample specifications - you should replace with actual product specs
-  const specs = [
-    { label: "Brand", value: product.brand },
-    { label: "Category", value: product.category },
-    { label: "Stock", value: product.stock },
-    { label: "Weight", value: `${product.weight}g` },
-  ];
+  const handleAddToCart = () => {
+    addToCart(
+      { productId: product.id, quantity },
+      {
+        onSuccess: () => {
+          toast.success(`Added to cart successfully`);
+          router.push(`/shop/cart`);
+        },
+      },
+    );
+  };
 
   return (
     <section className="pt-[10rem]">
-      <ProductBreadcrumb productTitle={product.title} />
+      <ProductBreadcrumb productTitle={product.name} />
       <Wrapper className="py-8">
         <div className="space-y-12">
           <div className="grid gap-8 md:grid-cols-2">
             {/* Image Gallery */}
             <div className="space-y-4">
               <div className="relative aspect-square max-h-[482px] w-full overflow-hidden rounded-lg border p-4 sm:p-[2rem]">
-                <BlurImage src={gallery[selectedImage]} alt={product.title} fill className="object-cover" />
+                <BlurImage src={gallery[selectedImage]} alt={product.name} fill className="object-cover" />
               </div>
               <div className="grid grid-cols-4 gap-2 sm:gap-4">
-                {gallery.map((image, index) => (
+                {gallery.map((image: any, index: any) => (
                   <button
                     key={index}
                     className={`relative aspect-square overflow-hidden rounded-lg border-2 p-1 sm:p-0 ${
@@ -91,7 +118,7 @@ export const ProductDetail = ({ product }: ProductDetailProperties) => {
                     }`}
                     onClick={() => setSelectedImage(index)}
                   >
-                    <BlurImage src={image} alt={product.title} fill className="object-cover" />
+                    <BlurImage src={image} alt={product.name} fill className="object-cover" />
                   </button>
                 ))}
               </div>
@@ -99,72 +126,52 @@ export const ProductDetail = ({ product }: ProductDetailProperties) => {
 
             {/* Product Info */}
             <div className="space-y-6">
-              <div>
-                <h1 className="mb-4 text-3xl font-semibold">{product.title}</h1>
-                <div className="flex items-center gap-4">
-                  <div className="flex items-center gap-1">
-                    {Array.from({ length: 5 }).map((_, index) => (
-                      <Star
-                        key={index}
-                        size={16}
-                        className={
-                          index < Math.round(averageRating) ? "fill-yellow-400 text-yellow-400" : "text-gray-300"
-                        }
-                      />
-                    ))}
-                    <span className="text-low-grey-II text-sm">({averageRating.toFixed(1)})</span>
-                    <span className="ml-2 text-sm text-gray-600">({product.reviews.length} Reviews)</span>
-                  </div>
-                  <Badge
-                    className={
-                      product.availabilityStatus === "In Stock"
-                        ? "bg-green-100 text-green-800"
-                        : "text-destructive bg-red-100"
-                    }
-                  >
-                    {product.availabilityStatus}
-                  </Badge>
-                </div>
-              </div>
-
+              <h4 className="mb-4 text-3xl leading-7 font-semibold">{product.name}</h4>
               <div className="flex items-center gap-4">
-                <span className="text-primary text-3xl font-semibold">₦{product.price.toLocaleString()}</span>
-                {oldPrice && (
-                  <span className="text-destructive text-xl line-through">₦{oldPrice.toFixed(2).toLocaleString()}</span>
+                <Ratings size={24} rating={3} />
+                <p className={`text-high-grey-II text-2xl font-medium`}>(4.5) 10 Reviews</p>
+              </div>
+              <div className="flex items-center gap-4">
+                <p className={`text-high-grey-II text-[22px] underline`}>By {product.user.name}</p>
+                <p className={`text-primary flex items-end font-medium`}>
+                  <MdStarBorderPurple500 className={`text-2xl`} size={24} />
+                  <span className={`text-xl leading-4.5 font-semibold`}>Star Seller</span>
+                </p>
+              </div>
+              <div className="mt-8 flex items-baseline gap-4">
+                <span className="text-primary text-4xl font-semibold">₦{product.price.toLocaleString()}</span>
+                {product.discountPrice && (
+                  <span className="text-destructive text-xl line-through">
+                    ₦{product.discountPrice.toFixed(2).toLocaleString()}
+                  </span>
                 )}
               </div>
-
-              <div className="space-y-4">
-                <h3 className="text-lg font-semibold">Specifications:</h3>
-                <div className="grid grid-cols-2 gap-4">
-                  {specs.map((spec, index) => (
-                    <div key={index} className="flex items-center gap-2">
-                      <span className="font-medium">{spec.label}:</span>
-                      <span className="text-mid-grey-II capitalize">{spec.value}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              <div className="flex items-center gap-6">
-                <div className="flex items-center gap-4 rounded-full border px-4 py-2">
-                  <button onClick={() => handleQuantityChange("decrease")}>
-                    <Minus size={20} className="text-gray-600" />
+              <div>{product.description}</div>
+              <div className="flex flex-col items-start gap-6">
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={() => handleQuantityChange("decrease")}
+                    className="flex h-8 w-8 items-center justify-center rounded-full border bg-gray-50 hover:bg-gray-100 disabled:opacity-50"
+                  >
+                    <Minus className="h-4 w-4" />
                   </button>
                   <span className="w-8 text-center font-medium">{quantity}</span>
-                  <button onClick={() => handleQuantityChange("increase")}>
-                    <Plus size={20} className="text-gray-600" />
+                  <button
+                    onClick={() => handleQuantityChange("increase")}
+                    className="flex h-8 w-8 items-center justify-center rounded-full border bg-gray-50 hover:bg-gray-100 disabled:opacity-50"
+                  >
+                    <Plus className="h-4 w-4" />
                   </button>
                 </div>
                 <SkiButton
                   variant="primary"
-                  size="lg"
-                  className="flex items-center gap-2 rounded-full px-8"
-                  isDisabled={product.availabilityStatus !== "In Stock"}
-                  href={`/shop/cart`}
+                  size="xl"
+                  className="flex w-full items-center gap-2 rounded-full px-8 py-8"
+                  isDisabled={product.stockCount === 0 || isPending}
+                  onClick={handleAddToCart}
                 >
                   <ShoppingCart size={20} />
-                  {product.availabilityStatus === "In Stock" ? "Add to Cart" : "Out of Stock"}
+                  {isPending ? "Adding..." : product.stockCount === 0 ? "Out of Stock" : "Add to Cart"}
                 </SkiButton>
               </div>
             </div>
@@ -188,7 +195,7 @@ export const ProductDetail = ({ product }: ProductDetailProperties) => {
                   }`}
                   onClick={() => setActiveTab("reviews")}
                 >
-                  Reviews ({product.reviews.length})
+                  Reviews ({product?.reviews?.length})
                 </button>
               </div>
             </div>
@@ -214,10 +221,10 @@ export const ProductDetail = ({ product }: ProductDetailProperties) => {
                             />
                           ))}
                         </div>
-                        <span className="text-sm text-gray-600">Based on {product.reviews.length} reviews</span>
+                        <span className="text-sm text-gray-600">Based on {product?.reviews?.length} reviews</span>
                       </div>
                       <div className="space-y-4">
-                        {product.reviews.map((review, index) => (
+                        {product?.reviews?.map((review: any, index: any) => (
                           <div key={index} className="rounded-lg border p-4">
                             <div className="flex items-center gap-2">
                               {Array.from({ length: 5 }).map((_, index_) => (
@@ -248,9 +255,89 @@ export const ProductDetail = ({ product }: ProductDetailProperties) => {
           </div>
 
           {/* Similar Products */}
-          <SimilarProducts currentProductId={product.id} category={product.category} />
+          <SimilarProducts currentProductId={product?.id} category={product?.category} />
         </div>
       </Wrapper>
+    </section>
+  );
+};
+
+export const ProductDetailSkeleton = () => {
+  return (
+    <section className="pt-[10rem]">
+      <ProductBreadcrumb productTitle={`...loading product details`} />
+      <div className="py-8">
+        <div className="space-y-12">
+          <div className="grid gap-8 md:grid-cols-2">
+            {/* Image Gallery Skeleton */}
+            <div className="space-y-4">
+              <div className="relative aspect-square max-h-[482px] w-full overflow-hidden rounded-lg border p-4 sm:p-[2rem]">
+                <Skeleton className="h-full w-full" />
+              </div>
+              <div className="grid grid-cols-4 gap-2 sm:gap-4">
+                {Array.from({ length: 4 }).map((_, index) => (
+                  <Skeleton key={index} className="aspect-square rounded-lg" />
+                ))}
+              </div>
+            </div>
+
+            {/* Product Info Skeleton */}
+            <div className="space-y-6">
+              <Skeleton className="mb-4 h-8 w-3/4 text-3xl" />
+              <div className="flex items-center gap-4">
+                <div className="flex gap-1">
+                  {Array.from({ length: 5 }).map((_, index) => (
+                    <Skeleton key={index} className="h-6 w-6" />
+                  ))}
+                </div>
+                <Skeleton className="h-6 w-32" />
+              </div>
+              <div className="flex items-center gap-4">
+                <Skeleton className="h-6 w-40" />
+                <Skeleton className="h-6 w-24" />
+              </div>
+              <div className="mt-8 flex items-baseline gap-4">
+                <Skeleton className="h-10 w-32" />
+                <Skeleton className="h-6 w-24" />
+              </div>
+              <div className="space-y-2">
+                <Skeleton className="h-4 w-full" />
+                <Skeleton className="h-4 w-5/6" />
+                <Skeleton className="h-4 w-4/5" />
+                <Skeleton className="h-4 w-3/4" />
+              </div>
+              <div className="flex flex-col items-start gap-6">
+                <div className="flex w-fit items-center gap-4 rounded-full border p-4">
+                  <Skeleton className="h-5 w-5" />
+                  <Skeleton className="h-6 w-8" />
+                  <Skeleton className="h-5 w-5" />
+                </div>
+                <Skeleton className="h-14 w-full rounded-full" />
+              </div>
+            </div>
+          </div>
+
+          {/* Description & Reviews Tabs Skeleton */}
+          <div className="space-y-6">
+            <div className="border-muted min-h-[200px] space-y-4 rounded-lg border p-4">
+              <Skeleton className="h-4 w-full" />
+              <Skeleton className="h-4 w-5/6" />
+              <Skeleton className="h-4 w-4/5" />
+              <Skeleton className="h-4 w-3/4" />
+              <Skeleton className="h-4 w-full" />
+              <Skeleton className="h-4 w-5/6" />
+              <Skeleton className="h-4 w-4/5" />
+            </div>
+          </div>
+
+          {/* Similar Products Skeleton */}
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
+            {Array.from({ length: 4 }).map((_, index) => (
+              <ShopCardSkeleton key={index} />
+            ))}
+          </div>
+        </div>
+      </div>
     </section>
   );
 };

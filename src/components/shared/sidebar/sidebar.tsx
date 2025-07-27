@@ -41,7 +41,7 @@ export function DashboardSidebar({ navItems }: { navItems: any }) {
       <SidebarHeader className={`h-28 items-center justify-center`}>
         <Logo width={80} height={47} />
       </SidebarHeader>
-      <SidebarContent className={`mt-20`}>
+      <SidebarContent className={``}>
         <SidebarMenu className={`space-y-2 p-4`}>
           {navItems?.map((item: any) => {
             if (item.divider) {

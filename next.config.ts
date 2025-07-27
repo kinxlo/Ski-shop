@@ -1,6 +1,9 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  experimental: {
+    serverComponentsExternalPackages: ["msw"],
+  },
   typescript: {
     ignoreBuildErrors: true,
   },
@@ -9,6 +12,15 @@ const nextConfig: NextConfig = {
     remotePatterns: [
       {
         hostname: "cdn.dummyjson.com",
+      },
+      {
+        hostname: "picsum.photos",
+      },
+      {
+        hostname: "nyc3.digitaloceanspaces.com",
+      },
+      {
+        hostname: "loremflickr.com",
       },
     ],
   },

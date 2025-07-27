@@ -2,27 +2,52 @@
 
 import SkiButton from "@/components/shared/button";
 import { FormField } from "@/components/shared/FormFields";
-import { LoginFormData, loginSchema } from "@/schemas";
+import { useSearchParameters } from "@/hooks/use-search-parameters";
+import { ResetPasswordData, resetPasswordSchema } from "@/schemas";
+import { useAuthService } from "@/services/auth/use-auth-service";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/navigation";
 import { FormProvider, useForm } from "react-hook-form";
+import { toast } from "sonner";
 
 export const ResetPasswordForm = () => {
-  const methods = useForm<LoginFormData>({
-    resolver: zodResolver(loginSchema),
+  const token = useSearchParameters("token");
+  const router = useRouter();
+  const { useResetPassword } = useAuthService();
+  const { mutateAsync: resetPassword, isPending } = useResetPassword();
+  const methods = useForm<ResetPasswordData>({
+    resolver: zodResolver(resetPasswordSchema),
     defaultValues: {
-      email: "",
       password: "",
+      confirmPassword: "",
     },
   });
 
   const {
     handleSubmit,
-    // formState: {},
+    formState: { isValid },
   } = methods;
 
-  // eslint-disable-next-line unused-imports/no-unused-vars, @typescript-eslint/no-unused-vars
-  const handleSubmitForm = async (data: LoginFormData) => {
-    // await login(data);
+  const handleSubmitForm = async (data: ResetPasswordData) => {
+    const tokenizedData: {
+      token?: string;
+      password: string;
+      confirmPassword: string;
+    } = {
+      ...data,
+      ...(token ? { token } : {}),
+    };
+    try {
+      const response = await resetPassword(tokenizedData);
+      toast.success(`Password Reset Successful`, {
+        description: response?.data,
+      });
+      router.push(`/login`);
+    } catch (error) {
+      toast.error("Password Reset Failed", {
+        description: error instanceof Error ? error.message : "An unknown error occurred",
+      });
+    }
   };
 
   return (
@@ -34,19 +59,26 @@ export const ResetPasswordForm = () => {
               type={`password`}
               placeholder={`Enter new password`}
               className={`h-14 w-full`}
-              name={"new_password"}
+              name={"password"}
             />
             <FormField
               type={`password`}
               placeholder={` confirm password`}
               className={`h-14 w-full`}
-              name={"confirm_password"}
+              name={"confirmPassword"}
             />
           </section>
 
           {/* CTA */}
           <section className="flex flex-col items-center justify-center gap-[20px] pt-[20px]">
-            <SkiButton size="lg" className="h-[56px] w-full rounded-full" variant="primary" type="submit">
+            <SkiButton
+              isDisabled={isPending || !isValid}
+              isLoading={isPending}
+              size="lg"
+              className="h-[56px] w-full rounded-full"
+              variant="primary"
+              type="submit"
+            >
               Reset Password
             </SkiButton>
           </section>

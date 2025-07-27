@@ -2,6 +2,7 @@
 
 import { BlurImage } from "@/components/core/miscellaneous/blur-image";
 import { formatDate } from "@/lib/tools/format";
+import { cn } from "@/lib/utils";
 
 import { User } from "./type";
 
@@ -34,30 +35,48 @@ import { User } from "./type";
 export const orderColumn: IColumnDefinition<Product>[] = [
   {
     header: "Product",
-    accessorKey: "title",
+    accessorKey: "name",
   },
   {
     header: "Order ID",
-    accessorKey: "id",
+    accessorKey: "store",
+    render: (_, product: Product) => (
+      <span className={`rounded-md px-2 py-1 text-sm capitalize`}>{product.store.id}</span>
+    ),
   },
   {
     header: "Amount",
     accessorKey: "price",
+    render: (_, product: Product) => (
+      <span className={`rounded-md px-2 py-1 text-sm capitalize`}>&#8358;{product.price.toLocaleString()}</span>
+    ),
   },
   {
     header: "Customer Name",
-    accessorKey: "id",
+    accessorKey: "user",
+    render: (_, product: Product) => (
+      <span className={`rounded-md px-2 py-1 text-sm capitalize`}>{product.user.name}</span>
+    ),
   },
   {
     header: "Date & Time",
-    accessorKey: "id",
+    accessorKey: "createdAt",
+    render: (_, product: Product) => (
+      <span className={`rounded-md px-2 py-1 text-sm capitalize`}>{formatDate(product.createdAt)}</span>
+    ),
   },
   {
     header: "Status",
     accessorKey: "status",
     render: (_, product: Product) => (
-      <span className={`rounded-md px-2 py-1 text-sm capitalize ${"bg-green-100 text-green-800"}`}>
-        {product.status || `Completed`}
+      <span
+        className={cn(
+          `rounded-full px-2 py-1 text-xs capitalize`,
+          product.status.includes(`published`) && `bg-low-success text-mid-success`,
+          product.status.includes(`draft`) && `bg-yellow-100 text-yellow-600`,
+        )}
+      >
+        {product.status}
       </span>
     ),
   },
@@ -66,14 +85,14 @@ export const orderColumn: IColumnDefinition<Product>[] = [
 export const productColumn: IColumnDefinition<Product>[] = [
   {
     header: "IMG",
-    accessorKey: "thumbnail",
+    accessorKey: "images",
     render: (_, product: Product) => (
-      <BlurImage className={`bg-muted`} width={49} height={45} src={product.thumbnail} alt={product.title} />
+      <BlurImage className={`bg-muted`} width={49} height={45} src={product.images[0]} alt={product.name} />
     ),
   },
   {
     header: "Product Name",
-    accessorKey: "title",
+    accessorKey: "name",
   },
   {
     header: "Category",
@@ -86,12 +105,12 @@ export const productColumn: IColumnDefinition<Product>[] = [
   },
   {
     header: "Stock",
-    accessorKey: "stock",
+    accessorKey: "stockCount",
   },
   {
     header: "Date Added",
-    accessorKey: "meta",
-    render: (_, product: Product) => <span className={`capitalize`}>{formatDate(product.meta.createdAt)}</span>,
+    accessorKey: "createdAt",
+    render: (_, product: Product) => <span className={`capitalize`}>{formatDate(product.createdAt)}</span>,
   },
 ];
 

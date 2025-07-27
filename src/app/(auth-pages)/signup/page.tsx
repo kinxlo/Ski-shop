@@ -1,6 +1,6 @@
 "use client";
 
-import { SignupForm } from "../_views/signup-form";
+import { BaseSignupForm } from "../_views/signup-form";
 
 const LoginPage = () => {
   return (
@@ -11,7 +11,7 @@ const LoginPage = () => {
           Create an account to unlock your shopping experience.
         </p>
       </div>
-      <SignupForm />
+      <BaseSignupForm />
     </section>
   );
 };

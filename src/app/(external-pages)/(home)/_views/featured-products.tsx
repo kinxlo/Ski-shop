@@ -53,7 +53,7 @@ export const FeaturedProducts = () => {
   }
 
   // Extract featured products from data or use fallbacks
-  const featuredProducts = data?.products?.slice(0, 4);
+  const featuredProducts = data?.data?.items.slice(0, 4);
 
   return (
     <Wrapper className="mx-auto my-[98px] grid gap-2 px-4 md:grid-cols-2 lg:gap-8">
@@ -73,11 +73,11 @@ export const FeaturedProducts = () => {
             Sponsored Ad
           </Badge>
           <div className={`space-y-2`}>
-            <p className="line-clamp-2 text-xs font-medium lg:text-xl">{featuredProducts?.[0].title}</p>
+            <p className="line-clamp-2 text-xs font-medium lg:text-xl">{featuredProducts?.[0].name}</p>
             <p className="text-mid-grey-II line-clamp-2 max-w-[300px] text-xs font-light lg:text-sm">
               {featuredProducts?.[0].description}
             </p>
-            <Ratings rating={featuredProducts?.[0].rating || 0} />
+            <Ratings rating={3} />
             <p className={`text-mid-grey-II text-[10px] underline lg:text-sm`}>By Skicom</p>
             <div className="flex items-baseline gap-2">
               <p className="text-accent text-xs font-medium lg:text-2xl">
@@ -97,7 +97,7 @@ export const FeaturedProducts = () => {
       <section className="group relative overflow-hidden rounded-md">
         <div
           style={{
-            backgroundImage: `url(${featuredProducts?.[1].thumbnail})`,
+            backgroundImage: `url(${featuredProducts?.[1]?.images?.[0] || "https://res.cloudinary.com/kingsleysolomon/image/upload/v1742989695/byte-alley/hwqfbog9bbrubto2v0te.svg"})`,
             backgroundRepeat: "no-repeat",
             backgroundPosition: "right",
             backgroundSize: "contain",
@@ -109,19 +109,19 @@ export const FeaturedProducts = () => {
             Sponsored Ad
           </Badge>
           <div className={`space-y-2`}>
-            <p className="line-clamp-2 text-xs font-medium lg:text-xl">{featuredProducts?.[1].title}</p>
+            <p className="line-clamp-2 text-xs font-medium lg:text-xl">{featuredProducts?.[1]?.name}</p>
             <p className="text-mid-grey-II line-clamp-2 max-w-[300px] text-xs font-light lg:text-sm">
-              {featuredProducts?.[1].description}
+              {featuredProducts?.[1]?.description}
             </p>
-            <Ratings rating={featuredProducts?.[1].rating || 0} />
+            <Ratings rating={0} />
             <p className={`text-mid-grey-II text-[10px] underline lg:text-sm`}>By Skicom</p>
             <div className="flex items-baseline gap-2">
               <p className="text-accent text-xs font-medium lg:text-2xl">
-                ₦{featuredProducts?.[1].price.toLocaleString()}
+                ₦{featuredProducts?.[1]?.price?.toLocaleString()}
               </p>
-              {featuredProducts?.[0].price && (
+              {featuredProducts?.[0]?.price && (
                 <p className="text-mid-danger text-sm line-through lg:text-xl">
-                  ₦{featuredProducts?.[0].price.toLocaleString()}
+                  ₦{featuredProducts?.[0]?.price?.toLocaleString()}
                 </p>
               )}
             </div>
@@ -147,11 +147,11 @@ export const FeaturedProducts = () => {
                 Sponsored Ad
               </Badge>
               <div className={`space-y-2`}>
-                <p className="line-clamp-2 text-xs font-medium lg:text-xl">{product?.title}</p>
+                <p className="line-clamp-2 text-xs font-medium lg:text-xl">{product?.name}</p>
                 <p className="text-mid-grey-II line-clamp-2 max-w-[300px] text-xs font-light lg:text-sm">
                   {product?.description}
                 </p>
-                <Ratings rating={product?.rating || 0} />
+                <Ratings rating={0} />
                 <p className={`text-mid-grey-II text-[10px] underline lg:text-sm`}>By Skicom</p>
                 <div className="flex items-baseline gap-2">
                   <p className="text-accent text-xs font-medium lg:text-2xl">₦{product?.price.toLocaleString()}</p>

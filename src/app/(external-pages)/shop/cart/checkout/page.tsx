@@ -3,18 +3,65 @@
 import { ProductBreadcrumb } from "@/app/(external-pages)/(home)/_components/product-breadcrumb";
 import { Wrapper } from "@/components/core/layout/wrapper";
 import SkiButton from "@/components/shared/button";
+import { formatCurrency } from "@/lib/utils";
+import { useAppService } from "@/services/app/use-app-service";
 import { ChevronRight } from "lucide-react";
 import Image from "next/image";
 import { useState } from "react";
+import { toast } from "sonner";
 
 const CheckoutPage = () => {
   const [paymentMethod, setPaymentMethod] = useState<"bank" | "paystack">("bank");
   const [deliveryMethod, setDeliveryMethod] = useState<"station" | "door">("station");
 
+  const { useCheckoutCart, useGetCart } = useAppService();
+  const { mutateAsync: checkout, isPending: isCheckingOut } = useCheckoutCart();
+  const { data: cartData, isLoading: isCartLoading, error: cartError } = useGetCart();
+
+  // Calculate shipping fee based on delivery method
+  const shippingFee = deliveryMethod === "door" ? 5000 : 2000;
+
+  // Calculate totals
+  const subtotal =
+    cartData?.data?.items?.reduce((sum: number, item: CartItem) => sum + item.product.price * item.quantity, 0) || 0;
+
+  const total = subtotal + shippingFee;
+
+  const handleCheckout = () => {
+    const checkoutData = {
+      deliveryMethod,
+      paymentMethod,
+    };
+
+    if (!deliveryMethod || !paymentMethod) {
+      toast.error("Please select both delivery and payment methods");
+      return;
+    } else if (paymentMethod === "paystack") {
+      checkout(checkoutData, {
+        onSuccess: (response) => {
+          if (response?.data?.checkoutUrl) {
+            toast.success("Checkout successful");
+            window.open(response.data.checkoutUrl as string, "_blank", "noopener,noreferrer");
+          }
+        },
+        onError: (error) => {
+          toast.error("Checkout failed", {
+            description: error.message,
+          });
+        },
+      });
+    } else if (paymentMethod === "bank") {
+      toast.success("Bank transfer selected. Please follow the instructions to complete your payment.");
+    }
+  };
+
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
-    // eslint-disable-next-line no-console
-    console.log("Checkout submitted", { paymentMethod });
+    if (!deliveryMethod || !paymentMethod) {
+      toast.error("Please select both delivery and payment methods");
+      return;
+    }
+    handleCheckout();
   };
 
   return (
@@ -22,7 +69,7 @@ const CheckoutPage = () => {
       <ProductBreadcrumb productTitle={`checkout`} />
       <Wrapper className="px-4 py-8">
         <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
-          {/* Billing Details Form */}
+          {/* Delivery and Payment Section */}
           <div>
             <h5 className="mb-6 text-2xl font-semibold">Delivery Method</h5>
 
@@ -65,7 +112,6 @@ const CheckoutPage = () => {
                       onChange={() => setDeliveryMethod("door")}
                       className="mt-1 mr-2 p-0"
                     />
-
                     <p className={`text-xl font-semibold`}>Door Delivery</p>
                   </div>
                   <p className={`my-4`}>
@@ -95,7 +141,7 @@ const CheckoutPage = () => {
                       </p>
                     )}
                   </label>
-                  <label className="flex cursor-pointer p-4">
+                  <label className="flex cursor-pointer items-center p-4">
                     <input
                       type="radio"
                       name="payment"
@@ -104,7 +150,6 @@ const CheckoutPage = () => {
                       onChange={() => setPaymentMethod("paystack")}
                       className="mr-2 p-0"
                     />
-
                     <Image
                       src="/images/paystack-logo.svg"
                       alt="Paystack"
@@ -116,7 +161,13 @@ const CheckoutPage = () => {
                 </div>
               </div>
 
-              <SkiButton variant={`primary`} className={`mt-8 w-full`}>
+              <SkiButton
+                type="submit"
+                isLoading={isCheckingOut}
+                isDisabled={!deliveryMethod || !paymentMethod || isCheckingOut || isCartLoading}
+                variant={`primary`}
+                className={`mt-8 w-full`}
+              >
                 Proceed to Checkout
               </SkiButton>
             </form>
@@ -126,32 +177,68 @@ const CheckoutPage = () => {
           <div className="h-fit rounded-lg border p-6">
             <h5 className="mb-6 text-xl font-semibold">Your order</h5>
             <hr />
-            <div className="mt-4 space-y-4">
-              <div className="flex justify-between">
-                <span>Product</span>
-                <span>Subtotal</span>
+
+            {isCartLoading ? (
+              <div className="mt-4 flex justify-center py-8">
+                <p>Loading cart items...</p>
               </div>
-              <div className="flex items-start justify-between pt-4">
-                <span className="flex-1">Sony PlayStation VR2 Approx. 110°, Communication with PS5.</span>
-                <span>₦575,000</span>
+            ) : cartError ? (
+              <div className="mt-4 rounded-lg bg-red-50 p-4 text-red-600">Error loading cart items</div>
+            ) : (
+              <div className="mt-4 space-y-4">
+                <div className="flex justify-between font-medium">
+                  <span>Product</span>
+                  <span>Subtotal</span>
+                </div>
+
+                {cartData?.data?.items?.length ? (
+                  <>
+                    {cartData.data.items.map((item: CartItem) => (
+                      <div key={item.id} className="flex items-start justify-between pt-4">
+                        <div className="flex flex-1 items-start gap-3">
+                          {item.image && (
+                            <Image
+                              src={item.image}
+                              alt={item.product.name}
+                              width={50}
+                              height={50}
+                              className="h-12 w-12 rounded object-cover"
+                            />
+                          )}
+                          <span>
+                            {item.product.name} × {item.quantity}
+                          </span>
+                        </div>
+                        <span>{formatCurrency(item.product.price * item.quantity)}</span>
+                      </div>
+                    ))}
+
+                    <div className="flex justify-between border-t pt-4">
+                      <span>Subtotal</span>
+                      <span>{formatCurrency(subtotal)}</span>
+                    </div>
+
+                    <div className="flex justify-between pt-4">
+                      <span>Shipping</span>
+                      <span className="text-right">
+                        <span className="text-gray-500">
+                          ({deliveryMethod === "door" ? "Door Delivery" : "Pick-up Station"})
+                        </span>
+                        <br />
+                        {formatCurrency(shippingFee)}
+                      </span>
+                    </div>
+
+                    <div className="flex justify-between border-t pt-4 font-semibold">
+                      <span>Total</span>
+                      <span className="text-primary">{formatCurrency(total)}</span>
+                    </div>
+                  </>
+                ) : (
+                  <div className="py-8 text-center text-gray-500">Your cart is empty</div>
+                )}
               </div>
-              <div className="flex justify-between border-t pt-4">
-                <span>Subtotal</span>
-                <span>₦575,000</span>
-              </div>
-              <div className="flex justify-between pt-4">
-                <span>Shipping</span>
-                <span className="text-right">
-                  <span className="text-gray-500">(Regular Shipping)</span>
-                  <br />
-                  ₦5,000
-                </span>
-              </div>
-              <div className="flex justify-between border-t pt-4 font-semibold">
-                <span>Total</span>
-                <span className={`text-primary font-semibold`}>₦580,000</span>
-              </div>
-            </div>
+            )}
           </div>
         </div>
       </Wrapper>

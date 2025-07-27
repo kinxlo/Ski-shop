@@ -1,51 +1,74 @@
 "use client";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { ChevronDown } from "lucide-react";
-import { useSession } from "next-auth/react";
-import { useState } from "react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { LogOut, Settings, User } from "lucide-react";
+import { signOut, useSession } from "next-auth/react";
+import Link from "next/link";
+import { toast } from "sonner";
 
 interface UserAvatarProfileProperties {
   className?: string;
   showInfo?: boolean;
 }
 
+const handleLogout = async () => {
+  try {
+    await signOut({
+      redirect: true,
+      callbackUrl: "/login",
+    });
+    toast.success("Logged out successfully");
+  } catch {
+    toast.error("Failed to log out");
+  }
+};
+
 export function UserAvatarProfile({ className, showInfo = false }: UserAvatarProfileProperties) {
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const { data: session } = useSession();
+
   return (
-    <>
-      <div onClick={() => setIsDropdownOpen(!isDropdownOpen)} className="flex items-center gap-2">
+    <DropdownMenu>
+      <DropdownMenuTrigger className="flex items-center gap-2 focus:outline-none">
         <Avatar className={className}>
-          <AvatarImage src={session?.user?.image || ""} alt={session?.user?.name || ""} />
-          <AvatarFallback className="rounded-lg">
-            {session?.user?.name?.slice(0, 2)?.toUpperCase() || "SC"}
+          <AvatarImage src={session?.user?.image || ""} alt={session?.user?.name || "User avatar"} />
+          <AvatarFallback className="bg-muted">
+            {session?.user?.name?.slice(0, 2)?.toUpperCase() || "US"}
           </AvatarFallback>
         </Avatar>
+
         {showInfo && (
-          <div className="grid flex-1 text-left text-sm leading-tight">
-            <span className="truncate font-semibold">{session?.user?.name || ""}</span>
+          <div className="grid text-left">
+            <span className="truncate font-medium">{session?.user?.name || "User"}</span>
+            <span className="text-muted-foreground truncate text-xs">{session?.user?.email}</span>
           </div>
         )}
-        <ChevronDown
-          size="16"
-          className={`text-gray-500 transition-transform duration-200 ${isDropdownOpen ? "rotate-180" : ""}`}
-        />
-      </div>
-      {/* Dropdown Menu */}
-      {isDropdownOpen && (
-        <div className="absolute right-0 mt-2 w-48 origin-top-right rounded-lg bg-white py-1 shadow-lg ring-1 ring-gray-200 focus:outline-none">
-          <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">
-            My Profile
-          </a>
-          <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">
-            Account Settings
-          </a>
-          <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">
-            Logout
-          </a>
-        </div>
-      )}
-    </>
+      </DropdownMenuTrigger>
+
+      <DropdownMenuContent className="w-56" align="end">
+        <Link href={`/admin/home`}>
+          <DropdownMenuItem className="cursor-pointer">
+            <User className="mr-2 h-4 w-4" />
+            <span>Profile</span>
+          </DropdownMenuItem>
+        </Link>
+        <Link href={`/admin/home`}>
+          <DropdownMenuItem className="cursor-pointer">
+            <Settings className="mr-2 h-4 w-4" />
+            <span>Settings</span>
+          </DropdownMenuItem>
+        </Link>
+
+        <DropdownMenuItem className="text-destructive focus:text-destructive cursor-pointer" onClick={handleLogout}>
+          <LogOut className="mr-2 h-4 w-4" />
+          <span>Log out</span>
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
 }

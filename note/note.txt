@@ -1,0 +1,205 @@
+// "use client";
+
+// import { Wrapper } from "@/components/core/layout/wrapper";
+// import { Paginations } from "@/components/shared/pagination/pagination";
+// import { CustomSelect } from "@/components/shared/select-dropdown";
+// import { Input } from "@/components/ui/input";
+// import { updateQueryParamameters } from "@/hooks/use-search-parameters";
+// import { VENDORS } from "@/lib/constants";
+// import { formatCategory } from "@/lib/utils";
+// import { useAppService } from "@/services/app/use-app-service";
+// import { usePathname, useRouter, useSearchParams } from "next/navigation";
+// import { useEffect, useMemo, useState } from "react";
+// import { toast } from "sonner";
+// import { useDebounce } from "use-debounce";
+
+// import { MobileDownloadBanner } from "../_components/mobile-download-banner";
+// import { ShopCardSkeleton } from "../_components/shop-card-skeleton";
+// import { ShopCard } from "../(home)/_components/shop-card/shop-card";
+// import { OptionsSelector } from "./_components/option/options";
+// import { Hero } from "./_views/hero";
+
+// interface IFilters {
+//   page?: number;
+//   category?: string;
+//   search?: string;
+// }
+
+// const Page = () => {
+//   const router = useRouter();
+//   const searchParameters = useSearchParams();
+//   const pathname = usePathname();
+
+//   // State management
+//   const [currentPage, setCurrentPage] = useState<number>(1);
+//   const [totalPages, setTotalPages] = useState<number>(0);
+//   const [searchInput, setSearchInput] = useState<string>("");
+//   const [vendor, setVendor] = useState<string>("All Vendor");
+
+//   // Get category from URL or use default
+//   const categoryParameter = searchParameters.get("category") || "All Categories";
+
+//   // Debounce search input
+//   const [debouncedSearch] = useDebounce(searchInput, 500);
+
+//   const { useGetAllProducts, useGetAllProductCategory } = useAppService();
+
+//   // Prepare filters for API call
+//   const filters = useMemo<IFilters>(
+//     () => ({
+//       page: currentPage,
+//       ...(categoryParameter &&
+//         categoryParameter !== "All Categories" && {
+//           categories: categoryParameter.toLowerCase(),
+//         }),
+//       ...(debouncedSearch && { search: debouncedSearch }),
+//     }),
+//     [currentPage, categoryParameter, debouncedSearch],
+//   );
+
+//   // React Query data fetching
+//   const { data, isLoading, isError, error } = useGetAllProducts(filters);
+
+//   const { data: categoriesData } = useGetAllProductCategory();
+
+//   // Prepare categories for dropdown
+//   const allCategories = useMemo(
+//     () => ["All Categories", ...(categoriesData?.data?.map(formatCategory) || [])],
+//     [categoriesData],
+//   );
+
+//   // Update total pages when data changes
+//   useEffect(() => {
+//     if (data?.data?.metadata?.totalPages) {
+//       setTotalPages(data.data.metadata.totalPages);
+//     }
+//   }, [data]);
+
+//   // Handle error state
+//   useEffect(() => {
+//     if (isError) {
+//       toast.error("Failed to fetch products", {
+//         description: error?.message || "Please try again later",
+//       });
+//     }
+//   }, [isError, error]);
+
+//   const handlePageChange = (page: number) => {
+//     setCurrentPage(page);
+//     window.scrollTo({ top: 0, behavior: "smooth" });
+//   };
+
+//   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
+//     setSearchInput(event.target.value);
+//     setCurrentPage(1);
+//   };
+
+//   const handleCategoryChange = (value: string) => {
+//     updateQueryParamameters(router, pathname, new URLSearchParams(searchParameters.toString()), {
+//       category: value === "All Categories" ? null : value,
+//       page: null,
+//     });
+//     setCurrentPage(1);
+//   };
+
+//   const handleVendorChange = (value: string) => {
+//     setVendor(value);
+//     setCurrentPage(1);
+//   };
+
+//   return (
+//     <>
+//       <Hero />
+//       <Wrapper className="my-14 grid grid-cols-12 gap-6">
+//         {/* Filters sidebar */}
+//         <section className="col-span-2 space-y-10">
+//           <OptionsSelector
+//             title="Category"
+//             categories={allCategories}
+//             value={categoryParameter}
+//             onChange={handleCategoryChange}
+//           />
+//           <OptionsSelector
+//             title="Vendor"
+//             categories={["All Vendor", ...VENDORS]}
+//             value={vendor}
+//             onChange={handleVendorChange}
+//           />
+//         </section>
+
+//         {/* Main content */}
+//         <section className="col-span-10">
+//           {/* Search and sort header */}
+//           <article className="flex items-center justify-between">
+//             <div className="w-[20rem]">
+//               <Input name="search" placeholder="Search products..." value={searchInput} onChange={handleSearch} />
+//             </div>
+//             <div className="flex items-center space-x-4">
+//               <p className="text-sm">Sort By:</p>
+//               <CustomSelect
+//                 options={allCategories}
+//                 placeholder="Choose a category"
+//                 value={categoryParameter}
+//                 onChange={handleCategoryChange}
+//               />
+//             </div>
+//           </article>
+
+//           {/* Active filters info */}
+//           <article className="bg-high-grey-I my-4 flex items-center justify-between rounded-md p-4">
+//             <div>
+//               <span className="text-mid-grey-II text-sm">Active Filters: </span>
+//               <span className="space-x-4 text-sm">
+//                 {categoryParameter} / {vendor}
+//                 {debouncedSearch && ` / Search: ${debouncedSearch}`}
+//               </span>
+//             </div>
+//             <div>
+//               <p className="text-mid-grey-II text-sm">
+//                 <span className="text-high-grey-II text-sm font-semibold">{data?.data?.metadata?.totalPages || 0}</span>{" "}
+//                 results found
+//               </p>
+//             </div>
+//           </article>
+
+//           {/* Products grid */}
+//           <section className="my-8">
+//             <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
+//               {isLoading && Array.from({ length: 12 }).map((_, index) => <ShopCardSkeleton key={index} />)}
+
+//               {!isLoading && data?.data?.items?.length === 0 && (
+//                 <div className="col-span-full py-10 text-center">
+//                   <p className="text-mid-grey-II text-lg">No products found matching your filters</p>
+//                 </div>
+//               )}
+
+//               {!isLoading &&
+//                 data?.data?.items?.map((product) => (
+//                   <ShopCard
+//                     key={product.id}
+//                     id={product.id.toString()}
+//                     category={product.category}
+//                     title={product.name}
+//                     rating={3}
+//                     price={product.price}
+//                     discount={product.discountPrice || 0}
+//                     image={product.images[0]}
+//                   />
+//                 ))}
+//             </div>
+
+//             {/* Pagination */}
+//             {!isLoading && totalPages > 1 && (
+//               <div className="my-10">
+//                 <Paginations currentPage={currentPage} totalPages={totalPages} onPageChange={handlePageChange} />
+//               </div>
+//             )}
+//           </section>
+//         </section>
+//       </Wrapper>
+//       <MobileDownloadBanner />
+//     </>
+//   );
+// };
+
+// export default Page;

@@ -23,6 +23,8 @@ interface EmptyStateProperties {
     icon?: React.ReactNode;
   };
   className?: string;
+  descriptionClassName?: string;
+  titleClassName?: string;
   actionButton?: React.ReactNode;
 }
 
@@ -33,6 +35,8 @@ export const EmptyState = ({
   button,
   actionButton,
   className = "",
+  descriptionClassName = "",
+  titleClassName = "",
 }: EmptyStateProperties) => {
   return (
     <div
@@ -58,11 +62,9 @@ export const EmptyState = ({
       </div>
 
       {/* Content container */}
-      <div className="flex flex-col items-center space-y-4">
-        {title && <h3 className="text-h5 text-primary font-semibold">{title}</h3>}
-
-        <p className="text-muted-foreground max-w-[500px] text-base font-medium">{description}</p>
-
+      <div className="flex flex-col items-center">
+        {title && <h3 className={cn(`text-h5 text-primary font-semibold`, titleClassName)}>{title}</h3>}
+        <p className={cn("text-muted-foreground max-w-[500px] font-medium", descriptionClassName)}>{description}</p>
         {button ? (
           <SkiButton onClick={button.onClick} variant="primary" size="xl" className="mt-6">
             {button.icon && <span className="mr-2">{button.icon}</span>}

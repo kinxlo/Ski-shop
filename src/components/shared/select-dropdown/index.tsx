@@ -1,31 +1,17 @@
 "use client";
 
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { useState } from "react";
 
 interface CustomSelectProperties {
   options: string[];
   placeholder?: string;
+  value?: string;
   onChange?: (value: string) => void;
-  defaultValue?: string;
 }
 
-export function CustomSelect({
-  options,
-  placeholder = "Select an option",
-  onChange,
-  defaultValue,
-}: CustomSelectProperties) {
-  const [value, setValue] = useState(defaultValue || "");
-
+export function CustomSelect({ options, placeholder = "Select an option", value, onChange }: CustomSelectProperties) {
   return (
-    <Select
-      value={value}
-      onValueChange={(value_) => {
-        setValue(value_);
-        onChange?.(value_);
-      }}
-    >
+    <Select value={value} onValueChange={onChange}>
       <SelectTrigger className="">
         <SelectValue placeholder={placeholder} />
       </SelectTrigger>

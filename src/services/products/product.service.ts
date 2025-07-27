@@ -1,12 +1,6 @@
 import { Users } from "@/components/shared/dashboard-table/type";
 import { HttpAdapter } from "@/lib/http/http-adapter";
-
-interface ProductResponse {
-  products: Product[];
-  total: number;
-  skip: number;
-  limit: number;
-}
+import { tryCatchWrapper } from "@/lib/tools/tryCatchFunction";
 
 export class ProductService {
   private readonly http: HttpAdapter;
@@ -16,19 +10,27 @@ export class ProductService {
   }
 
   async getAllProducts(filters: IFilters) {
-    const queryParameters = this.buildQueryParameters(filters);
-    const response = await this.http.get<ProductResponse>(`/products${queryParameters}`);
-    if (response?.status === 200) {
-      return response.data;
-    }
+    return tryCatchWrapper(async () => {
+      const queryParameters = this.buildQueryParameters(filters);
+      const response = await this.http.get<ProductApiResponse>(`/products?${queryParameters}`);
+
+      if (response?.status === 200) {
+        return response.data.data;
+      }
+      throw new Error("Failed to fetch products");
+    });
   }
 
   async getAllUsers(filters: IFilters) {
-    const queryParameters = this.buildQueryParameters(filters);
-    const response = await this.http.get<Users>(`/users${queryParameters}`);
-    if (response?.status === 200) {
-      return response.data;
-    }
+    return tryCatchWrapper(async () => {
+      const queryParameters = this.buildQueryParameters(filters);
+      const response = await this.http.get<Users>(`/users?${queryParameters}`);
+
+      if (response?.status === 200) {
+        return response.data;
+      }
+      throw new Error("Failed to fetch users");
+    });
   }
 
   private buildQueryParameters(filters: IFilters): string {

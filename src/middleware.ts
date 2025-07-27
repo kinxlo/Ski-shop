@@ -4,7 +4,7 @@ import { NextResponse } from "next/server";
 
 import { auth } from "./lib/next-auth";
 
-export default auth((request) => {
+export default auth(async (request) => {
   const { nextUrl } = request;
   const isLoggedIn = !!request.auth;
 

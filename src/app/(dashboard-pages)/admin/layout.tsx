@@ -13,7 +13,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         <DashboardSidebar navItems={sideItems} />
         <SidebarInset className="flex-1">
           <div className="flex h-full flex-col">
-            <header className="flex h-20 shrink-0 items-center gap-2 px-4 py-5">
+            <header className="flex h-20 shrink-0 items-center gap-2 border-b px-4 py-5">
               <SidebarTrigger className="text-primary -ml-1 size-9" />
               <div className="flex-1">
                 <TopBar notificationsCount={12} className="px-6" />

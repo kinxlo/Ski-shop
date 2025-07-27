@@ -12,6 +12,7 @@ import ThemeProvider from "@/components/core/layout/ThemeToggle/theme-provider";
 // import { ModeToggle } from "@/components/core/layout/ThemeToggle/theme-toggle";
 import { Toast } from "@/components/shared/Toast";
 import { ReactQueryProvider } from "@/lib/react-query/query-provider";
+import { MockServiceWorkerProvider } from "@/mocks/mock-provider";
 import { SessionProvider } from "next-auth/react";
 
 const META_THEME_COLORS = {
@@ -68,8 +69,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
                 enableColorScheme
               >
                 <Toast />
-                {children}
-                {/* <ModeToggle /> */}
+                <MockServiceWorkerProvider isEnabled={false}>{children}</MockServiceWorkerProvider>
               </ThemeProvider>
             </ReactQueryProvider>
           </NuqsAdapter>

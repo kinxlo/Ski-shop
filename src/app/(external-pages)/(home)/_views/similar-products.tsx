@@ -11,7 +11,7 @@ interface SimilarProductsProperties {
 export const SimilarProducts = ({ category }: SimilarProductsProperties) => {
   const { useGetAllProducts } = useAppService();
   const { isLoading, data } = useGetAllProducts();
-  const similarProducts = data?.products.filter((product) => product.category === category).slice(0, 4);
+  const similarProducts = data?.data?.items?.filter((product) => product.category === category).slice(0, 4);
 
   return (
     <div className="space-y-6">
@@ -32,11 +32,11 @@ export const SimilarProducts = ({ category }: SimilarProductsProperties) => {
               key={product.id.toString()}
               id={product.id.toString()}
               category={product.category}
-              title={product.title}
-              rating={product.rating}
+              title={product.name}
+              rating={3}
               price={product.price}
-              discount={product.discountPercentage}
-              image={product.thumbnail}
+              discount={product.discountPrice || 0}
+              image={product.images[0]}
             />
           );
         })}

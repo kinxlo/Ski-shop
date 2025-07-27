@@ -13,7 +13,7 @@ export const TopVendors = () => {
   const { useGetAllProducts } = useAppService();
   const { isLoading, isError, error, data } = useGetAllProducts();
 
-  const products: Product[] = data?.products || [];
+  const products: Product[] = data?.data?.items || [];
 
   if (isError) {
     toast.error("Something went wrong", {
@@ -43,13 +43,19 @@ export const TopVendors = () => {
           items={products}
           renderItem={(product: Product) => (
             <section className={`flex flex-col items-center gap-2 text-center`}>
-              <div className={`bg-mid-grey-I rounded-full p-4`}>
-                <BlurImage width={120} height={120} src={product.thumbnail} alt={product.title} />
+              <div className={`bg-mid-grey-I size-[120px] overflow-hidden rounded-full p-4`}>
+                <BlurImage
+                  width={120}
+                  height={120}
+                  className={`scale-150 object-cover`}
+                  src={product.images[0]}
+                  alt={product.name}
+                />
               </div>
-              <p>{product.title}</p>
+              <p>{product.name}</p>
               <div className={`flex items-center gap-4`}>
-                <Ratings rating={product.rating} />
-                <p>({`${product.reviews.length}`})</p>
+                <Ratings rating={3} />
+                <p>({`${product?.stockCount}` || 0})</p>
               </div>
             </section>
           )}

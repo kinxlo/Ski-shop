@@ -54,10 +54,10 @@ export const Hero = () => {
             <p className="mb-8 text-lg">Your one-stop marketplace for everything you need</p>
           </div>
           <div className="mx-auto mt-8 flex flex-col items-center gap-4 lg:mx-0 lg:flex-row">
-            <SkiButton href={`/`} size={`xl`} className="w-[220px]" variant="primary">
+            <SkiButton href={`/shop`} size={`xl`} className="w-[220px]" variant="primary">
               Shop Now
             </SkiButton>
-            <SkiButton href={`/`} size={`xl`} className="w-[220px] text-white" variant="outline">
+            <SkiButton href={`/signup`} size={`xl`} className="w-[220px] text-white" variant="outline">
               Become a Seller
             </SkiButton>
           </div>

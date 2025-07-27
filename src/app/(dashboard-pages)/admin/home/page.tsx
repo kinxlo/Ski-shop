@@ -4,44 +4,78 @@ import Loading from "@/app/Loading";
 import { SearchInput } from "@/components/core/miscellaneous/search-input";
 import { DashboardTable } from "@/components/shared/dashboard-table";
 import { orderColumn } from "@/components/shared/dashboard-table/table-data";
+import { updateQueryParamameters, useSearchParameters } from "@/hooks/use-search-parameters";
+import { formatCurrency } from "@/lib/utils";
+import { useHomeService } from "@/services/dashboard/home/use-home-service";
 import { useProductService } from "@/services/products/use-product-service";
-import { useState } from "react";
-import { FaWallet } from "react-icons/fa";
+import { useSession } from "next-auth/react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
 import { GiWallet } from "react-icons/gi";
-import { HiMiniUserGroup } from "react-icons/hi2";
+import { IoRibbonOutline } from "react-icons/io5";
+import { MdOutlineAddCard } from "react-icons/md";
+import { PiUsersThreeLight } from "react-icons/pi";
+import { RiShoppingCartLine } from "react-icons/ri";
 
 import { FilterDropdown } from "../_components/dashboard-table/_components/filter-dropdown";
 import { OverViewCard } from "../_components/overview-card";
 import { CurrencyDropdown } from "./_components/currency-dropdown";
 import { SectionTwo } from "./_components/currency-dropdown/section-two";
+import { VerifyEmailModal } from "./_components/verify-modal";
+import DashboardHomeSkeleton from "./page-skeleton";
 
 const Page = () => {
-  // const { data: session } = useSession();
-  const [searchQuery, setSearchQuery] = useState("");
-  const [currentPage, setCurrentPage] = useState(1);
+  const { data: session } = useSession();
+  const [showVerifyModal, setShowVerifyModal] = useState(false);
+  const router = useRouter();
+  const searchParameters = useSearchParams();
 
-  // Initialize product service
-  const { useGetAllProducts } = useProductService();
+  // Get initial values from URL params
+  const initialSearch = useSearchParameters("search") || "";
+  const initialPage = Number.parseInt(useSearchParameters("page") || "1");
+  const initialStatus = useSearchParameters("status") || "all";
+
+  const [searchQuery, setSearchQuery] = useState(initialSearch);
+  const [currentPage, setCurrentPage] = useState(initialPage);
+  const [status] = useState(initialStatus);
+
+  // Update URL when filters change
+  useEffect(() => {
+    updateQueryParamameters(
+      router,
+      "/admin/home", // adjust this to your actual path
+      new URLSearchParams(searchParameters),
+      {
+        search: searchQuery,
+        page: currentPage.toString(),
+        status: status === "all" ? null : status,
+      },
+    );
+  }, [searchQuery, currentPage, status, router, searchParameters]);
 
   const filters: IFilters = {
     page: currentPage,
-    ...(status !== "all" && { status: status as "published" | "draft" }),
+    // ...(status !== "all" && { status: status as "published" | "draft" }),
     ...(searchQuery && { search: searchQuery }),
   };
 
-  // Fetch products data
-  const {
-    data: productData,
-    isLoading: isProductsLoading,
-    isError,
-  } = useGetAllProducts(filters, {
-    keepPreviousData: true,
-    staleTime: 1000 * 60 * 5, // 5 minutes cache
-  });
+  const { useGetAllProducts } = useProductService();
+  const { useGetOverview } = useHomeService();
+  const { data: productData, isLoading: isProductsLoading, isError } = useGetAllProducts(filters);
+  const { data: overviewData, isLoading: isOverviewLoading } = useGetOverview();
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
   };
+
+  // const handleStatusChange = (newStatus: string) => {
+  //   setStatus(newStatus);
+  //   setCurrentPage(1); // Reset to first page when status changes
+  // };
+
+  if (isOverviewLoading) {
+    return <DashboardHomeSkeleton />;
+  }
 
   if (isError) {
     return (
@@ -52,74 +86,95 @@ const Page = () => {
   }
 
   return (
-    <main>
-      <section className="mb-5 flex items-center justify-between">
-        <h4 className="text-mid-grey-III text-[18px] lg:text-[30px]">Dashboard Overview</h4>
-        <div>
-          <CurrencyDropdown />
-        </div>
-      </section>
-
-      <section className="grid grid-cols-1 gap-5 lg:grid-cols-3">
-        <OverViewCard
-          title={"Total Products"}
-          value={productData?.products.length || "0"}
-          icon={<FaWallet />}
-          iconClassName="bg-low-blue text-[24px] blue text-primary"
-        />
-        <OverViewCard
-          title={"Total Revenue"}
-          value={0}
-          icon={<HiMiniUserGroup />}
-          iconClassName="bg-low-warning text-[24px] text-high-warning"
-        />
-        <OverViewCard
-          title={"Active Products"}
-          value={0}
-          icon={<GiWallet />}
-          iconClassName="bg-[#F2EBFB] text-[24px] text-purple"
-        />
-      </section>
-
-      <section>
-        <SectionTwo />
-      </section>
-
-      <section className={`space-y-4 bg-white p-6`}>
-        <section className={`flex flex-col-reverse justify-between gap-4 lg:flex-row lg:items-center`}>
-          <div className="">
-            <p className="text-lg font-bold">Resent Orders</p>
-          </div>
-          <div className="">
-            <div className="flex items-center gap-2">
-              <SearchInput className={``} onSearch={setSearchQuery} />
-              <FilterDropdown />
-            </div>
+    <>
+      <VerifyEmailModal email={session?.user?.email || null} open={showVerifyModal} onOpenChange={setShowVerifyModal} />
+      <main>
+        <section className="mb-5 flex items-center justify-between">
+          <h4 className="text-mid-grey-III text-[18px] lg:text-[30px]">Dashboard Overview</h4>
+          <div>
+            <CurrencyDropdown />
           </div>
         </section>
+
+        <section className="grid grid-cols-1 gap-5 lg:grid-cols-3">
+          <OverViewCard
+            title={"Total Revenue"}
+            value={formatCurrency(overviewData?.data?.overview?.totalRevenue || 0)}
+            icon={<GiWallet />}
+            iconClassName="bg-[#F2EBFB] text-[24px] text-purple"
+          />
+          <OverViewCard
+            title={"Total Orders"}
+            value={overviewData?.data?.overview?.totalOrders || "0"}
+            icon={<RiShoppingCartLine />}
+            iconClassName="bg-low-blue text-[24px] blue text-primary"
+          />
+          <OverViewCard
+            title={"Total Users"}
+            value={overviewData?.data?.overview?.totalUsers || "0"}
+            icon={<PiUsersThreeLight />}
+            iconClassName="bg-low-success text-[24px] text-mid-success"
+          />
+          <OverViewCard
+            title={"New Orders"}
+            value={overviewData?.data?.overview?.newOrders || "0"}
+            icon={<RiShoppingCartLine />}
+            iconClassName="bg-low-blue text-[24px] blue text-primary"
+          />
+          <OverViewCard
+            title={"Pending Payouts"}
+            value={overviewData?.data?.overview?.pendingPayouts || "0"}
+            icon={<MdOutlineAddCard />}
+            iconClassName="bg-low-danger text-[24px] text-mid-danger"
+          />
+          <OverViewCard
+            title={"Active Subscriptions"}
+            value={overviewData?.data?.overview?.activeSubscription || "0"}
+            icon={<IoRibbonOutline />}
+            iconClassName="bg-low-success text-[24px] text-mid-success"
+          />
+        </section>
+
         <section>
-          {isProductsLoading ? (
-            <Loading text="Loading products..." className="w-fill h-fit p-20" />
-          ) : productData?.products?.length ? (
-            <DashboardTable
-              data={productData.products.slice(0, 6)}
-              columns={orderColumn}
-              currentPage={currentPage}
-              totalPages={productData.total || 1}
-              itemsPerPage={productData.limit || 10}
-              hasPreviousPage={false}
-              hasNextPage={false}
-              onPageChange={handlePageChange}
-              showPagination
-            />
-          ) : (
-            <div className="flex items-center justify-center p-20">
-              <p>No products found. Add your first product to get started.</p>
-            </div>
-          )}
+          <SectionTwo />
         </section>
-      </section>
-    </main>
+
+        <section className={`space-y-4 bg-white p-6`}>
+          <section className={`flex flex-col-reverse justify-between gap-4 lg:flex-row lg:items-center`}>
+            <div className="">
+              <p className="text-lg font-bold">Resent Orders</p>
+            </div>
+            <div className="">
+              <div className="flex items-center gap-2">
+                <SearchInput className={``} onSearch={setSearchQuery} />
+                <FilterDropdown />
+              </div>
+            </div>
+          </section>
+          <section>
+            {isProductsLoading ? (
+              <Loading text="Loading products..." className="w-fill h-fit p-20" />
+            ) : productData?.items?.length ? (
+              <DashboardTable
+                data={productData?.items}
+                columns={orderColumn}
+                currentPage={currentPage}
+                totalPages={productData.metadata.totalPages}
+                itemsPerPage={productData?.metadata?.total}
+                hasPreviousPage={productData?.metadata?.hasPreviousPage}
+                hasNextPage={productData?.metadata?.hasNextPage}
+                onPageChange={handlePageChange}
+                showPagination
+              />
+            ) : (
+              <div className="flex items-center justify-center p-20">
+                <p>No products found. Add your first product to get started.</p>
+              </div>
+            )}
+          </section>
+        </section>
+      </main>
+    </>
   );
 };
 

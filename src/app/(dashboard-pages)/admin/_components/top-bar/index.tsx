@@ -3,6 +3,8 @@
 import { SearchInput } from "@/components/core/miscellaneous/search-input";
 import { UserAvatarProfile } from "@/components/core/miscellaneous/user-avatar-profile";
 import { BellDot } from "lucide-react";
+import { useSession } from "next-auth/react";
+import { useEffect } from "react";
 
 type TopBarProperties = {
   notificationsCount?: number;
@@ -11,8 +13,13 @@ type TopBarProperties = {
 
 // onSearch,
 export default function TopBar({ notificationsCount = 0, className = "" }: TopBarProperties) {
+  const { data: session } = useSession();
+  useEffect(() => {
+    // eslint-disable-next-line no-console
+    console.log(session);
+  }, [session]);
   return (
-    <header className={`bg-background flex h-16 items-center justify-between px-4 ${className}`}>
+    <header className={`bg-background flex h-16 items-center justify-between ${className}`}>
       <div className="relative hidden w-full max-w-[240px] md:block">
         <SearchInput className={`bg-muted min-w-md border-none`} onSearch={() => {}} />
       </div>

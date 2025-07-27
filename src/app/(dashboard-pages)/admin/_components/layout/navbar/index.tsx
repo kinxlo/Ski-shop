@@ -1,4 +1,4 @@
-import SearchInput from "@/components/core/miscellaneous/search-input";
+import { SearchInput } from "@/components/core/miscellaneous/search-input";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Separator } from "@/components/ui/separator";
 import { LuBell } from "react-icons/lu";
@@ -9,7 +9,7 @@ const BaseDashboardNavbar = () => {
   return (
     <nav className="border-border sticky top-0 z-[1] border-b-[0.5px]" role="navbar">
       <section className="flex w-full items-center justify-between gap-[20px] bg-white px-[16px] py-[20px] lg:px-[32px]">
-        <SearchInput />
+        <SearchInput onSearch={() => {}} />
         <section className="flex items-center justify-between gap-1 md:gap-2 lg:gap-4">
           <div className="relative flex items-center justify-center">
             <Popover>

@@ -1,11 +1,5 @@
 import { HttpAdapter } from "@/lib/http/http-adapter";
-
-interface ProductResponse {
-  products: Product[];
-  total: number;
-  skip: number;
-  limit: number;
-}
+import { tryCatchWrapper } from "@/lib/tools/tryCatchFunction";
 
 export class AppService {
   private readonly http: HttpAdapter;
@@ -14,11 +8,106 @@ export class AppService {
     this.http = httpAdapter;
   }
 
-  async getAllProducts() {
-    const response = await this.http.get<ProductResponse>("/products");
-    if (response?.status === 200) {
-      return response.data;
-    }
+  async getAllProducts(filters: IFilters = Object.create({ page: 1 })) {
+    return tryCatchWrapper(async () => {
+      const queryParameters = this.buildQueryParameters(filters);
+      const response = await this.http.get<ProductApiResponse>(`/products?${queryParameters}`);
+
+      if (response?.status === 200) {
+        return response.data;
+      }
+      throw new Error("Failed to fetch products");
+    });
+  }
+
+  async getSingleProduct(id: string) {
+    return tryCatchWrapper(async () => {
+      const response = await this.http.get<{ success: boolean; data: Product }>(`/products/${id}`);
+      if (response?.status === 200) {
+        return response.data;
+      }
+      throw new Error(`Failed to fetch product with ID: ${id}`);
+    });
+  }
+
+  async getAllProductCategory() {
+    return tryCatchWrapper(async () => {
+      const response = await this.http.get<{ data: string[] }>("/products/categories");
+      if (response?.status === 200) {
+        return response.data;
+      }
+      throw new Error("Failed to fetch product categories");
+    });
+  }
+
+  async addToCart(data: { productId: string; quantity: number }) {
+    return tryCatchWrapper(async () => {
+      const response = await this.http.post<CartApiResponse>("/carts", data);
+
+      if (response?.status === 201) {
+        return response.data;
+      }
+      throw new Error("Failed to add item to cart");
+    });
+  }
+
+  async getCart() {
+    return tryCatchWrapper(async () => {
+      const response = await this.http.get<CartApiResponse>("/carts");
+
+      if (response?.status === 200) {
+        return response.data || { items: [], metadata: { total: 0 } };
+      }
+      throw new Error("Failed to fetch cart");
+    });
+  }
+
+  async getCartById(id: string) {
+    return tryCatchWrapper(async () => {
+      const response = await this.http.get<CartItemApiResponse>(`/carts/${id}`);
+
+      if (response?.status === 200) {
+        return response.data;
+      }
+      throw new Error("Failed to fetch cart item");
+    });
+  }
+
+  async updateCartItem(data: { itemId: string; quantity: number }) {
+    return tryCatchWrapper(async () => {
+      const response = await this.http.patch<CartApiResponse>(`/carts/${data.itemId}`, {
+        quantity: data.quantity,
+      });
+
+      if (response?.status === 200) {
+        return response.data;
+      }
+      throw new Error("Failed to update cart item");
+    });
+  }
+
+  async removeFromCart(itemId: string) {
+    return tryCatchWrapper(async () => {
+      const response = await this.http.delete<CartApiResponse>(`/carts/${itemId}`);
+
+      if (response?.status === 200) {
+        return response.data;
+      }
+      throw new Error("Failed to remove item from cart");
+    });
+  }
+
+  async checkoutCart() {
+    return tryCatchWrapper(async () => {
+      const response = await this.http.post<CheckoutApiResponse>("/carts/checkout", {
+        paymentMethod: "paystack",
+      });
+
+      if (response?.status === 201) {
+        return response.data;
+      }
+      throw new Error("Failed to checkout cart");
+    });
   }
 
   private buildQueryParameters(filters: IFilters): string {

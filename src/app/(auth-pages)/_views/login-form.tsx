@@ -7,6 +7,7 @@ import { LoginFormData, loginSchema } from "@/schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useTransition } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { FaGoogle } from "react-icons/fa";
 import { toast } from "sonner";
@@ -14,6 +15,7 @@ import { toast } from "sonner";
 import { login } from "../actions/auth-action";
 
 export const LoginForm = () => {
+  const [isGooglePending, startGoogleTransition] = useTransition();
   const router = useRouter();
   const methods = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
@@ -49,6 +51,12 @@ export const LoginForm = () => {
       });
       router.push("/admin/home");
     }
+  };
+
+  const handleGoogleSignIn = () => {
+    startGoogleTransition(async () => {
+      router.push(`${process.env.NEXT_PUBLIC_BASE_URL}/auth/oauth/google/redirect`);
+    });
   };
 
   return (
@@ -106,6 +114,9 @@ export const LoginForm = () => {
               variant="outline"
               isRightIconVisible
               icon={<FaGoogle />}
+              isDisabled={isGooglePending}
+              isLoading={isGooglePending}
+              onClick={handleGoogleSignIn}
             >
               Login with Google
             </SkiButton>

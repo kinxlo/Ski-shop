@@ -20,3 +20,18 @@ export const login = async (data: LoginFormData) => {
     return { error: "An unexpected error occurred. Please try again." };
   }
 };
+
+export async function handleGoogleCallback(code: string) {
+  try {
+    const result = await signIn("google", {
+      code,
+      redirect: false,
+    });
+    return result ? { success: true } : { error: "Google authentication failed" };
+  } catch (error) {
+    if (error instanceof CredentialsSignin) {
+      return { error: error.message || "Google authentication failed" };
+    }
+    return { error: "An unexpected error occurred during Google authentication." };
+  }
+}

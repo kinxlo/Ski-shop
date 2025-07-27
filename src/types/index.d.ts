@@ -117,6 +117,9 @@ declare global {
     status?: string;
     start_date?: string;
     end_date?: string;
+    categories?: string;
+    search?: string;
+    limit?: number;
   }
 
   interface IColumnDefinition<T extends DataItem> {
@@ -158,71 +161,6 @@ declare global {
     height: number;
     depth: number;
   }
-
-  interface ProductMeta {
-    createdAt: string;
-    updatedAt: string;
-    barcode: string;
-    qrCode: string;
-  }
-
-  interface Product {
-    id: number;
-    title: string;
-    description: string;
-    category: string;
-    price: number;
-    discountPercentage: number;
-    rating: number;
-    stock: number;
-    tags: string[];
-    brand: string;
-    sku: string;
-    weight: number;
-    dimensions: Dimensions;
-    warrantyInformation: string;
-    shippingInformation: string;
-    availabilityStatus: string;
-    reviews: Review[];
-    returnPolicy: string;
-    minimumOrderQuantity: number;
-    meta: ProductMeta;
-    images: string[];
-    thumbnail: string;
-    status: string;
-  }
-
-  // interface Product {
-  //   id: string;
-  //   name: string;
-  //   status: "published" | "draft" | "archived"; // Assuming possible status values
-  //   category: string;
-  //   description: string;
-  //   discountPrice: number | null;
-  //   images: string[];
-  //   price: number;
-  //   stockCount: number;
-  //   store: {
-  //     id: string;
-  //     category: string;
-  //     description: string;
-  //     logo: string;
-  //     name: string;
-  //     createdAt: string;
-  //     updatedAt: string;
-  //   };
-  //   user: {
-  //     id: string;
-  //     email: string;
-  //     firstName: string;
-  //     lastName: string;
-  //     role: string;
-  //     createdAt: string;
-  //     updatedAt: string;
-  //   };
-  //   createdAt: string;
-  //   updatedAt: string;
-  // }
 
   type UniversalSwiperProperties = {
     /**
@@ -301,6 +239,77 @@ declare global {
      */
     onSwiperInit?: (swiper: SwiperType) => void;
   };
+
+  interface Product {
+    id: string;
+    name: string;
+    status: "draft" | "published";
+    category: string;
+    description: string;
+    discountPrice: number | null;
+    images: string[];
+    price: number;
+    stockCount: number;
+    store: {
+      id: string;
+      name: string;
+    };
+    user: {
+      id: string;
+      name: string;
+    };
+    createdAt: string;
+    updateAt: string;
+  }
+
+  interface Metadata {
+    total: number;
+    page: number;
+    limit: number;
+    totalPages: number;
+    hasNextPage: boolean;
+    hasPreviousPage: boolean;
+  }
+
+  interface ProductApiResponse {
+    success: boolean;
+    data: {
+      items: Product[];
+      metadata: Metadata;
+    };
+  }
+
+  interface CartApiResponse {
+    data: {
+      items: CartItem[];
+      metadata: {
+        total: number;
+        [key: string]: unknown;
+      };
+    };
+  }
+
+  interface CartItemApiResponse {
+    data: CartItem;
+  }
+
+  interface CheckoutApiResponse {
+    data: {
+      orderId: string;
+      status: string;
+      [key: string]: unknown;
+    };
+  }
+
+  interface CartItem {
+    id: string;
+    product: Product;
+    name: string;
+    price: number;
+    quantity: number;
+    image?: string;
+    [key: string]: unknown;
+  }
 }
 
 // This export is needed to make the file a module

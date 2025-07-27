@@ -20,18 +20,25 @@ export const loginSchema = z.object({
   // .min(8, "Password must be at least 8 characters"),
 });
 
+export const verifyOTP = z.object({
+  code: z.number().min(6, "A minimum number of 6"),
+});
 export const forgotPasswordSchema = z.object({
   email: z.string().email({
     message: "Please enter a valid email address",
   }),
 });
-export const resetPasswordSchema = z.object({
-  token: z.string().min(1, "Title is required").optional(),
-  email: z.string().min(1, "Email is required").email("Please enter a valid email address").optional(),
-  password: z.string().min(1, "Password is required").min(8, "Password must be at least 8 characters"),
-  password_confirmation: z.string().min(1, "Confirm password is required"),
-});
-
+export const resetPasswordSchema = z
+  .object({
+    token: z.string().min(1, "Title is required").optional(),
+    // email: z.string().min(1, "Email is required").email("Please enter a valid email address").optional(),
+    password: z.string().min(1, "Password is required").min(8, "Password must be at least 8 characters"),
+    confirmPassword: z.string().min(1, "Confirm password is required"),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Passwords don't match",
+    path: ["confirmPassword"],
+  });
 // Base schema for common fields
 const BaseSchema = z.object({
   product_type: z.enum(["digital_product", "skill_selling"]),
@@ -156,6 +163,7 @@ export const funnelSettingsSchema = z.object({
 export type RegisterFormData = z.infer<typeof registerSchema>;
 export type LoginFormData = z.infer<typeof loginSchema>;
 export type ForgotPasswordData = z.infer<typeof forgotPasswordSchema>;
+export type VerifyOTP = z.infer<typeof verifyOTP>;
 export type ResetPasswordData = z.infer<typeof resetPasswordSchema>;
 export type WithdrawalData = z.infer<typeof withdrawalSchema>;
 export type BankFormData = z.infer<typeof bankFormSchema>;

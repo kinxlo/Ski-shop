@@ -19,7 +19,7 @@ const Page = () => {
   return (
     <>
       <Hero />
-      <PopularProducts title={"Skicom Products"} />
+      <PopularProducts fullList={`/shop`} title={"Skicom Products"} />
       <PopularProducts title={"Top Sellers"} hasAction={false} />
       <Wrapper>
         <PlayToWinBanner />

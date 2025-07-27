@@ -2,19 +2,22 @@
 
 import SkiButton from "@/components/shared/button";
 import { FormField } from "@/components/shared/FormFields";
-import { withDependency } from "@/HOC/withDependencies";
-import { dependencies } from "@/lib/tools/dependencies";
 import { RegisterFormData, registerSchema } from "@/schemas";
-import { AuthService } from "@/services/auth/auth.service";
+import { useAuthService } from "@/services/auth/use-auth-service";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useTransition } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { FaGoogle } from "react-icons/fa";
 import { toast } from "sonner";
 
-export const BaseSignupForm = ({ authService }: { authService: AuthService }) => {
+export const BaseSignupForm = () => {
+  const [isGooglePending, startGoogleTransition] = useTransition();
   const router = useRouter();
+  const { useSignUp } = useAuthService();
+  const { mutateAsync: signUp, isPending: isSigningUp } = useSignUp();
+
   const methods = useForm<RegisterFormData>({
     resolver: zodResolver(registerSchema),
     defaultValues: {
@@ -23,27 +26,35 @@ export const BaseSignupForm = ({ authService }: { authService: AuthService }) =>
       confirmPassword: "",
       firstName: "",
       lastName: "",
-      role: "vendor",
+      role: "",
     },
   });
 
   const {
     handleSubmit,
-    formState: { isSubmitting, isValid },
+    formState: { isValid },
   } = methods;
 
   const handleSubmitForm = async (data: RegisterFormData) => {
-    const formData = {
-      ...data,
-      role: "vendor",
-    };
-    const response = await authService.signUp(formData);
-    if (response?.success) {
-      toast.success(`Registration Successful`, {
-        description: `Registration Successful`,
+    try {
+      const response = await signUp(data);
+      if (response?.success) {
+        toast.success(`Registration Successful`, {
+          description: `Registration Successful`,
+        });
+        router.push(`/login`);
+      }
+    } catch (error) {
+      toast.error("Registration Failed", {
+        description: error instanceof Error ? error.message : "An unknown error occurred",
       });
-      router.push(`/login`);
     }
+  };
+
+  const handleGoogleSignIn = () => {
+    startGoogleTransition(async () => {
+      router.push(`${process.env.NEXT_PUBLIC_BASE_URL}/auth/oauth/google/redirect`);
+    });
   };
 
   return (
@@ -63,11 +74,21 @@ export const BaseSignupForm = ({ authService }: { authService: AuthService }) =>
               className={`h-14 w-full`}
               name={"confirmPassword"}
             />
+            <FormField
+              type={`select`}
+              placeholder={`Enter role`}
+              className={`!h-14 w-full`}
+              name={"role"}
+              options={[
+                { value: `customer`, label: `Customer` },
+                { value: `vendor`, label: `Vendor` },
+              ]}
+            />
           </section>
           <section className="mt-[23px] flex items-center justify-between">
             <div className="text-muted-foreground mb-4">
               <p>
-                By signing up, you’re agreeing to Skicom&apos;s
+                By signing up, you&apos;re agreeing to Skicom&apos;s
                 <Link href="/privacy" className="text-primary hover:underline">
                   {" "}
                   Privacy Policy
@@ -84,13 +105,13 @@ export const BaseSignupForm = ({ authService }: { authService: AuthService }) =>
           <section className="flex flex-col items-center justify-center gap-[20px] pt-[20px]">
             <SkiButton
               isDisabled={!isValid}
-              isLoading={isSubmitting}
+              isLoading={isSigningUp}
               size="lg"
               className="h-[56px] w-full rounded-full"
               variant="primary"
               type="submit"
             >
-              {isSubmitting ? `Signing up..` : ` Sign up`}
+              {isSigningUp ? `Signing up..` : ` Sign up`}
             </SkiButton>
             <span className="text-mid-grey-II">-------------------- OR --------------------</span>
             <SkiButton
@@ -99,6 +120,9 @@ export const BaseSignupForm = ({ authService }: { authService: AuthService }) =>
               variant="outline"
               isRightIconVisible
               icon={<FaGoogle />}
+              isDisabled={isGooglePending}
+              isLoading={isGooglePending}
+              onClick={handleGoogleSignIn}
             >
               Signup with Google
             </SkiButton>
@@ -114,7 +138,3 @@ export const BaseSignupForm = ({ authService }: { authService: AuthService }) =>
     </section>
   );
 };
-
-export const SignupForm = withDependency(BaseSignupForm, {
-  authService: dependencies.AUTH_SERVICE,
-});

@@ -1,5 +1,7 @@
+import SkiButton from "@/components/shared/button";
 import { Ratings } from "@/components/shared/ratings";
 import { cn } from "@/lib/utils";
+import { HeartFilledIcon } from "@radix-ui/react-icons";
 import Image from "next/image";
 import Link from "next/link";
 import { HTMLAttributes } from "react";
@@ -14,6 +16,8 @@ interface ShopCardProperties extends HTMLAttributes<HTMLDivElement> {
   image: string;
   isStarSeller?: boolean;
   discount?: number;
+  name: string;
+  showSaveButton?: boolean;
 }
 
 export const ShopCard = ({
@@ -25,7 +29,9 @@ export const ShopCard = ({
   discount,
   image,
   className,
-  isStarSeller = true,
+  name,
+  showSaveButton = false,
+  isStarSeller = false,
 }: ShopCardProperties) => {
   const oldPrice = discount ? price / (1 - discount / 100) : null;
 
@@ -33,11 +39,27 @@ export const ShopCard = ({
     <Link
       href={`/shop/products/${id}`}
       className={cn(
-        "block rounded-lg border bg-no-repeat p-4",
+        "relative block rounded-lg border bg-no-repeat p-4", // Added 'relative' for positioning
         isStarSeller && "bg-[url('/images/star-seller.svg')]",
         className,
       )}
     >
+      {showSaveButton && (
+        <SkiButton
+          variant={`outline`}
+          icon={<HeartFilledIcon className="h-4 w-4 text-red-500" />}
+          isIconOnly
+          size="icon"
+          className="text-mid-grey-II absolute top-4 right-4 z-10 rounded-full bg-white/80 p-2 backdrop-blur-sm transition-all hover:bg-white hover:text-red-500"
+          onClick={(event) => {
+            event.preventDefault(); // Prevent link navigation
+            event.stopPropagation(); // Stop event bubbling
+            // Will add functionality later
+          }}
+          aria-label="Save product"
+        />
+      )}
+
       <div className="relative z-[-1] mb-3 aspect-square overflow-hidden rounded-lg">
         <Image
           src={image}
@@ -51,7 +73,7 @@ export const ShopCard = ({
         <p className="text-mid-grey-II text-[10px] capitalize lg:text-sm">{category}</p>
         <p className="line-clamp-2 text-xs font-medium lg:text-sm">{title}</p>
         <Ratings rating={rating} />
-        <p className={`text-mid-grey-II text-[10px] underline lg:text-sm`}>By Skicom</p>
+        <p className={`text-mid-grey-II text-[10px] underline lg:text-sm`}>By {name}</p>
         <div className="flex items-baseline gap-2">
           <p className="text-primary text-xs font-medium lg:text-[16px]">₦{price.toLocaleString()}</p>
           {oldPrice && (
