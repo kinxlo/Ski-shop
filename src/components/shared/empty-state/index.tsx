@@ -41,7 +41,7 @@ export const EmptyState = ({
   return (
     <div
       className={cn(
-        "flex min-h-[400px] w-full flex-col items-center justify-center space-y-8 px-4 text-center",
+        "mb-4 flex min-h-[400px] w-full flex-col items-center justify-center space-y-8 px-4 text-center",
         className,
       )}
     >

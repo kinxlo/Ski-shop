@@ -4,6 +4,7 @@ import Loading from "@/app/Loading";
 import { SearchInput } from "@/components/core/miscellaneous/search-input";
 import { DashboardTable } from "@/components/shared/dashboard-table";
 import { orderColumn } from "@/components/shared/dashboard-table/table-data";
+import { EmptyState } from "@/components/shared/empty-state";
 import { updateQueryParamameters, useSearchParameters } from "@/hooks/use-search-parameters";
 import { formatCurrency } from "@/lib/utils";
 import { useHomeService } from "@/services/dashboard/home/use-home-service";
@@ -22,7 +23,7 @@ import { OverViewCard } from "../_components/overview-card";
 import { CurrencyDropdown } from "./_components/currency-dropdown";
 import { SectionTwo } from "./_components/currency-dropdown/section-two";
 import { VerifyEmailModal } from "./_components/verify-modal";
-import DashboardHomeSkeleton from "./page-skeleton";
+import { AnalysisSkeleton, SectionTwoSkeleton, TableSkeleton } from "./page-skeleton";
 
 const Page = () => {
   const { data: session } = useSession();
@@ -61,8 +62,8 @@ const Page = () => {
 
   const { useGetAllProducts } = useProductService();
   const { useGetOverview } = useHomeService();
-  const { data: productData, isLoading: isProductsLoading, isError } = useGetAllProducts(filters);
-  const { data: overviewData, isLoading: isOverviewLoading } = useGetOverview();
+  const { data: productData, isLoading: isProductsLoading, isError: isProductsError } = useGetAllProducts(filters);
+  const { data: overviewData, isLoading: isOverviewLoading, isError: isOverviewError } = useGetOverview();
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
@@ -72,18 +73,6 @@ const Page = () => {
   //   setStatus(newStatus);
   //   setCurrentPage(1); // Reset to first page when status changes
   // };
-
-  if (isOverviewLoading) {
-    return <DashboardHomeSkeleton />;
-  }
-
-  if (isError) {
-    return (
-      <div className="flex items-center justify-center p-20">
-        <p>Error loading products. Please try again later.</p>
-      </div>
-    );
-  }
 
   return (
     <>
@@ -96,82 +85,126 @@ const Page = () => {
           </div>
         </section>
 
-        <section className="grid grid-cols-1 gap-5 lg:grid-cols-3">
-          <OverViewCard
-            title={"Total Revenue"}
-            value={formatCurrency(overviewData?.data?.overview?.totalRevenue || 0)}
-            icon={<GiWallet />}
-            iconClassName="bg-[#F2EBFB] text-[24px] text-purple"
+        {/* Overview Cards Section */}
+        {isOverviewLoading ? (
+          <AnalysisSkeleton />
+        ) : isOverviewError ? (
+          <EmptyState
+            title="Error loading data"
+            description="There was a problem fetching the overview data. Please try again later."
+            className="min-h-fit space-y-0 rounded-lg bg-red-50 p-6"
+            titleClassName={`!text-lg font-bold !text-mid-danger`}
+            descriptionClassName={`!text-mid-danger`}
+            images={[]}
           />
-          <OverViewCard
-            title={"Total Orders"}
-            value={overviewData?.data?.overview?.totalOrders || "0"}
-            icon={<RiShoppingCartLine />}
-            iconClassName="bg-low-blue text-[24px] blue text-primary"
-          />
-          <OverViewCard
-            title={"Total Users"}
-            value={overviewData?.data?.overview?.totalUsers || "0"}
-            icon={<PiUsersThreeLight />}
-            iconClassName="bg-low-success text-[24px] text-mid-success"
-          />
-          <OverViewCard
-            title={"New Orders"}
-            value={overviewData?.data?.overview?.newOrders || "0"}
-            icon={<RiShoppingCartLine />}
-            iconClassName="bg-low-blue text-[24px] blue text-primary"
-          />
-          <OverViewCard
-            title={"Pending Payouts"}
-            value={overviewData?.data?.overview?.pendingPayouts || "0"}
-            icon={<MdOutlineAddCard />}
-            iconClassName="bg-low-danger text-[24px] text-mid-danger"
-          />
-          <OverViewCard
-            title={"Active Subscriptions"}
-            value={overviewData?.data?.overview?.activeSubscription || "0"}
-            icon={<IoRibbonOutline />}
-            iconClassName="bg-low-success text-[24px] text-mid-success"
-          />
-        </section>
+        ) : (
+          <section className="grid grid-cols-1 gap-5 lg:grid-cols-3">
+            <OverViewCard
+              title={"Total Revenue"}
+              value={formatCurrency(overviewData?.data?.overview?.totalRevenue || 0)}
+              icon={<GiWallet />}
+              iconClassName="bg-[#F2EBFB] text-[24px] text-purple"
+            />
+            <OverViewCard
+              title={"Total Orders"}
+              value={overviewData?.data?.overview?.totalOrders || "0"}
+              icon={<RiShoppingCartLine />}
+              iconClassName="bg-low-blue text-[24px] blue text-primary"
+            />
+            <OverViewCard
+              title={"Total Users"}
+              value={overviewData?.data?.overview?.totalUsers || "0"}
+              icon={<PiUsersThreeLight />}
+              iconClassName="bg-low-success text-[24px] text-mid-success"
+            />
+            <OverViewCard
+              title={"New Orders"}
+              value={overviewData?.data?.overview?.newOrders || "0"}
+              icon={<RiShoppingCartLine />}
+              iconClassName="bg-low-blue text-[24px] blue text-primary"
+            />
+            <OverViewCard
+              title={"Pending Payouts"}
+              value={overviewData?.data?.overview?.pendingPayouts || "0"}
+              icon={<MdOutlineAddCard />}
+              iconClassName="bg-low-danger text-[24px] text-mid-danger"
+            />
+            <OverViewCard
+              title={"Active Subscriptions"}
+              value={overviewData?.data?.overview?.activeSubscription || "0"}
+              icon={<IoRibbonOutline />}
+              iconClassName="bg-low-success text-[24px] text-mid-success"
+            />
+          </section>
+        )}
 
+        {/* Section Two */}
         <section>
-          <SectionTwo />
+          {isOverviewLoading ? (
+            <SectionTwoSkeleton />
+          ) : isOverviewError ? (
+            <EmptyState
+              title="Error loading Graph data"
+              description="There was a problem fetching the graph data. Please try again later."
+              className="min-h-fit space-y-0 rounded-lg bg-red-50 p-6"
+              titleClassName={`!text-lg font-bold !text-mid-danger`}
+              descriptionClassName={`!text-mid-danger`}
+              images={[]}
+            />
+          ) : (
+            <SectionTwo />
+          )}
         </section>
 
-        <section className={`space-y-4 bg-white p-6`}>
-          <section className={`flex flex-col-reverse justify-between gap-4 lg:flex-row lg:items-center`}>
-            <div className="">
-              <p className="text-lg font-bold">Resent Orders</p>
-            </div>
-            <div className="">
-              <div className="flex items-center gap-2">
-                <SearchInput className={``} onSearch={setSearchQuery} />
-                <FilterDropdown />
-              </div>
-            </div>
-          </section>
-          <section>
-            {isProductsLoading ? (
-              <Loading text="Loading products..." className="w-fill h-fit p-20" />
-            ) : productData?.items?.length ? (
-              <DashboardTable
-                data={productData?.items}
-                columns={orderColumn}
-                currentPage={currentPage}
-                totalPages={productData.metadata.totalPages}
-                itemsPerPage={productData?.metadata?.total}
-                hasPreviousPage={productData?.metadata?.hasPreviousPage}
-                hasNextPage={productData?.metadata?.hasNextPage}
-                onPageChange={handlePageChange}
-                showPagination
-              />
-            ) : (
-              <div className="flex items-center justify-center p-20">
-                <p>No products found. Add your first product to get started.</p>
-              </div>
-            )}
-          </section>
+        {/* Products Table Section */}
+        <section>
+          {isProductsLoading ? (
+            <TableSkeleton />
+          ) : isProductsError ? (
+            <EmptyState
+              title="Error loading products"
+              description="There was a problem fetching the table data. Please try again later."
+              className="min-h-fit space-y-0 rounded-lg bg-red-50 p-6"
+              titleClassName={`!text-lg font-bold !text-mid-danger`}
+              descriptionClassName={`!text-mid-danger`}
+              images={[]}
+            />
+          ) : (
+            <section className={`mt-6 space-y-4 rounded-lg bg-white p-6`}>
+              <section className={`flex flex-col-reverse justify-between gap-4 lg:flex-row lg:items-center`}>
+                <div className="">
+                  <p className="text-lg font-bold">Resent Orders</p>
+                </div>
+                <div className="">
+                  <div className="flex items-center gap-2">
+                    <SearchInput className={``} onSearch={setSearchQuery} />
+                    <FilterDropdown />
+                  </div>
+                </div>
+              </section>
+              <section>
+                {isProductsLoading ? (
+                  <Loading text="Loading products..." className="w-fill h-fit p-20" />
+                ) : productData?.items?.length ? (
+                  <DashboardTable
+                    data={productData?.items}
+                    columns={orderColumn}
+                    currentPage={currentPage}
+                    totalPages={productData.metadata.totalPages}
+                    itemsPerPage={productData?.metadata?.total}
+                    hasPreviousPage={productData?.metadata?.hasPreviousPage}
+                    hasNextPage={productData?.metadata?.hasNextPage}
+                    onPageChange={handlePageChange}
+                    showPagination
+                  />
+                ) : (
+                  <div className="flex items-center justify-center p-20">
+                    <p>No products found. Add your first product to get started.</p>
+                  </div>
+                )}
+              </section>
+            </section>
+          )}
         </section>
       </main>
     </>

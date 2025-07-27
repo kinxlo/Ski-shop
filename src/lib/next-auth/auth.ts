@@ -56,10 +56,9 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           const response = await axios.get(
             `${process.env.NEXT_PUBLIC_BASE_URL}/auth/oauth/google/callback?code=${credentials.code}`,
           );
-          // console.log("Google OAuth response:", response.data);
+
           if (response.data.success) {
             console.log("Google OAuth successful, returning user data");
-            // Remove window.location.href assignment to avoid ReferenceError on server
             return {
               id: response.data.data.user.id,
               name: response.data.data.user.fullName,
