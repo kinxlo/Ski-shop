@@ -22,11 +22,26 @@ export const TopVendors = () => {
     return (
       <>
         <EmptyState
+          className={`space-y-0`}
           title="No trending products at the moment."
           description="There are no best selling products yet."
           images={[]}
         />
       </>
+    );
+  }
+
+  if (products.length === 0) {
+    return (
+      <Wrapper className={`my-[78px] min-h-[308px]`}>
+        <h1 className="text-h3 sm:text-h3-sm md:text-h3-md text-high-grey-II">Top Vendors</h1>
+        <EmptyState
+          className="bg-mid-grey-I min-h-fit space-y-0 rounded-lg py-10"
+          description="There are no best selling products yet."
+          descriptionClassName={`text-primary`}
+          images={[{ src: "/images/empty-state.svg", width: 80, height: 80, alt: "No vendors" }]}
+        />
+      </Wrapper>
     );
   }
 

@@ -6,6 +6,8 @@ export const publicRoutes: string[] = [
   "/about",
   "/contact",
   "/shop",
+  "/shop/cart/*",
+  "/shop/product/*",
 ];
 
 export const authRoutes: string[] = [

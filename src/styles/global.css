@@ -263,6 +263,15 @@
   }
 }
 
+.hide-scrollbar {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
+}
+
 html {
   scrollbar-width: thin;
   scrollbar-color: var(--primary) hsla(0, 0%, 0%, 0.06);

@@ -5,13 +5,17 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { LuFacebook, LuInstagram, LuMail, LuMapPin, LuPhoneCall, LuTwitter } from "react-icons/lu";
 
-// import { Map } from "../map/map";
+import { GoogleMap } from "../map/google-map";
 
-// const location = {
-//   address: "yemsays map",
-//   lat: 6.535_77,
-//   lng: 3.365_96,
-// };
+const location = {
+  address: "49, Adeyemi Street, Otubu Bus Stop, Agege, Lagos.",
+  lat: 6.535_77,
+  lng: 3.365_96,
+};
+
+// You'll need to add your Google Maps API key to your environment variables
+// Add this to your .env.local file: NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=your_api_key_here
+const GOOGLE_MAPS_API_KEY = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || "";
 
 export const SectionOne = () => {
   return (
@@ -124,15 +128,22 @@ export const SectionOne = () => {
           </div>
         </section>
       </Wrapper>
-      <div className="leaflet-container mt-5 lg:mt-20">
-        <BlurImage
-          src="/images/map.svg"
-          width={138}
-          height={318}
-          alt="map"
-          className="mx-auto w-full max-w-full object-cover lg:h-[318px]"
-        />
-        {/* <Map location={location} /> */}
+      <div className="mt-5 px-4 lg:mt-20 lg:px-0">
+        <div className="">
+          <h2 className="text-high-grey-II mb-6 text-center text-[24px] font-semibold lg:text-[32px]">Find Us Here</h2>
+          {GOOGLE_MAPS_API_KEY ? (
+            <GoogleMap location={location} apiKey={GOOGLE_MAPS_API_KEY} />
+          ) : (
+            <div className="flex h-[400px] w-full items-center justify-center rounded-lg bg-gray-100 lg:h-[500px]">
+              <div className="text-center">
+                <p className="mb-2 text-gray-500">Google Maps API key not configured</p>
+                <p className="text-sm text-gray-400">
+                  Please add NEXT_PUBLIC_GOOGLE_MAPS_API_KEY to your environment variables
+                </p>
+              </div>
+            </div>
+          )}
+        </div>
       </div>
     </section>
   );

@@ -3,6 +3,8 @@
 import { Wrapper } from "@/components/core/layout/wrapper";
 import { BlurImage } from "@/components/core/miscellaneous/blur-image";
 import SkiButton from "@/components/shared/button";
+import { cn } from "@/lib/utils";
+import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 
 const heroImages = ["/images/shop/hero.svg", "/images/shop/hero.svg", "/images/shop/hero.svg"];
@@ -10,6 +12,7 @@ const heroImages = ["/images/shop/hero.svg", "/images/shop/hero.svg", "/images/s
 export const Hero = () => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(true);
+  const { data: session } = useSession();
 
   useEffect(() => {
     const transitionDuration = 2500;
@@ -57,7 +60,12 @@ export const Hero = () => {
             <SkiButton href={`/shop`} size={`xl`} className="w-[220px]" variant="primary">
               Shop Now
             </SkiButton>
-            <SkiButton href={`/signup`} size={`xl`} className="w-[220px] text-white" variant="outline">
+            <SkiButton
+              href={`/signup`}
+              size={`xl`}
+              className={cn("w-[220px] text-white", session?.user?.role.name === "vendor" && "hidden")}
+              variant="outline"
+            >
               Become a Seller
             </SkiButton>
           </div>

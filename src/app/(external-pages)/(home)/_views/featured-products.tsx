@@ -1,21 +1,40 @@
 "use client";
 
 import { Wrapper } from "@/components/core/layout/wrapper";
+import SkiButton from "@/components/shared/button";
+import { EmptyState } from "@/components/shared/empty-state";
 import { Ratings } from "@/components/shared/ratings";
 import { Badge } from "@/components/ui/badge";
 import { useAppService } from "@/services/app/use-app-service";
+import { memo, useMemo } from "react";
 import { toast } from "sonner";
 
+// Types
+interface Product {
+  id: string;
+  name: string;
+  description: string;
+  price: number;
+  images: string[];
+  rating?: number;
+}
+
+interface ProductCardProperties {
+  product: Product;
+  isLarge?: boolean;
+  className?: string;
+}
+
 // Skeleton Loader Component
-const FeaturedProductsSkeleton = () => {
+const FeaturedProductsSkeleton = memo(() => {
   return (
     <Wrapper className="mx-auto my-[98px] grid gap-4 px-4 md:grid-cols-2">
-      {/* Large Earbuds Banner Skeleton */}
+      {/* Large Product Banner Skeleton */}
       <div className="row-span-2 flex h-[300px] animate-pulse items-center justify-center rounded-2xl bg-gray-200 sm:min-h-[630px]">
         <div className="h-10 w-3/4 rounded bg-gray-300"></div>
       </div>
 
-      {/* Smartwatch and Tablet Grid Skeletons */}
+      {/* Product Grid Skeletons */}
       <div className="flex h-[200px] animate-pulse items-center justify-center rounded-2xl bg-gray-200 md:h-full">
         <div className="space-y-4">
           <div className="h-4 w-20 rounded bg-gray-300"></div>
@@ -33,11 +52,79 @@ const FeaturedProductsSkeleton = () => {
       </div>
     </Wrapper>
   );
-};
+});
 
-export const FeaturedProducts = () => {
+FeaturedProductsSkeleton.displayName = "FeaturedProductsSkeleton";
+
+// Individual Product Card Component
+const ProductCard = memo(({ product, isLarge = false, className = "" }: ProductCardProperties) => {
+  const fallbackImage =
+    "https://res.cloudinary.com/kingsleysolomon/image/upload/v1742989695/byte-alley/hwqfbog9bbrubto2v0te.svg";
+  const productImage = product?.images?.[0] || fallbackImage;
+
+  const backgroundSize = isLarge ? "cover" : "contain";
+  const backgroundPosition = isLarge ? "center" : "right";
+
+  return (
+    <section
+      className={`group relative overflow-hidden rounded-md ${className}`}
+      role="article"
+      aria-label={`Featured product: ${product?.name}`}
+    >
+      <div
+        style={{
+          backgroundImage: `url(${productImage})`,
+          backgroundRepeat: "no-repeat",
+          backgroundPosition,
+          backgroundSize,
+        }}
+        className="absolute inset-0 z-[1] h-full w-full bg-black transition-all duration-300 group-hover:scale-105 group-hover:blur-sm"
+        aria-hidden="true"
+      />
+      <div className="backdrop-blur-0 relative z-[2] flex h-full transform flex-col justify-between gap-6 p-6 text-white transition-all duration-300 group-hover:backdrop-blur-[2px]">
+        <Badge variant="default" className="bg-accent w-fit rounded-md px-3 py-1.5">
+          Sponsored Ad
+        </Badge>
+        <div className="space-y-2">
+          <h3 className="line-clamp-2 text-xs font-medium lg:text-xl">{product?.name || "Product Name"}</h3>
+          <p className="text-mid-grey-II line-clamp-2 max-w-[300px] text-xs font-light lg:text-sm">
+            {product?.description || "Product description not available"}
+          </p>
+          <Ratings rating={product?.rating || 0} />
+          <p className="text-mid-grey-II text-[10px] underline lg:text-sm">By Skicom</p>
+          <div className="flex items-baseline gap-2">
+            <p className="text-accent text-xs font-medium lg:text-2xl">₦{product?.price?.toLocaleString() || "0"}</p>
+            {product?.price && (
+              <p className="text-mid-danger text-sm line-through lg:text-xl">
+                ₦{(product.price * 1.2).toLocaleString()}
+              </p>
+            )}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+});
+
+ProductCard.displayName = "ProductCard";
+
+// Main Component
+export const FeaturedProducts = memo(() => {
   const { useGetAllProducts } = useAppService();
-  const { isLoading, isError, error, data } = useGetAllProducts();
+  const { isLoading, isError, error, data, refetch } = useGetAllProducts();
+
+  // Memoize featured products to prevent unnecessary re-renders
+  const featuredProducts = useMemo(() => {
+    if (!data?.data?.items) return [];
+    return data.data.items.slice(0, 4).map((item: unknown) => ({
+      id: (item as { id?: string })?.id || `product-${Math.random()}`,
+      name: (item as { name?: string })?.name || "Product",
+      description: (item as { description?: string })?.description || "Product description",
+      price: (item as { price?: number })?.price || 0,
+      images: (item as { images?: string[] })?.images || [],
+      rating: (item as { rating?: number })?.rating || 0,
+    }));
+  }, [data]);
 
   // Handle loading state
   if (isLoading) {
@@ -46,126 +133,58 @@ export const FeaturedProducts = () => {
 
   // Handle error state
   if (isError) {
-    toast.error("Something went wrong", {
-      description: error?.message,
+    toast.error("Failed to load featured products", {
+      description: error?.message || "Please try again later",
     });
-    return <FeaturedProductsSkeleton />; // Show skeleton even on error if preferred
+    return (
+      <EmptyState
+        images={[{ src: "/images/empty-state.svg", width: 80, height: 80, alt: "No featured products" }]}
+        description="Failed to load featured products"
+        descriptionClassName="text-mid-danger"
+        className="min-h-fit space-y-0 rounded-lg py-10"
+        actionButton={
+          <SkiButton
+            onClick={() => refetch()}
+            variant="outline"
+            className="border-mid-danger text-mid-danger hover:bg-mid-danger/10 mt-4 border"
+          >
+            Retry
+          </SkiButton>
+        }
+      />
+    );
   }
 
-  // Extract featured products from data or use fallbacks
-  const featuredProducts = data?.data?.items.slice(0, 4);
+  // Handle empty state
+  if (featuredProducts.length === 0) {
+    return (
+      <Wrapper className={`my-[78px] min-h-[308px]`}>
+        <EmptyState
+          images={[{ src: "/images/empty-state.svg", width: 80, height: 80, alt: "No featured products" }]}
+          description="No featured products found"
+          descriptionClassName="text-primary"
+          className="bg-mid-grey-I min-h-fit space-y-0 rounded-lg py-10"
+        />
+      </Wrapper>
+    );
+  }
 
   return (
     <Wrapper className="mx-auto my-[98px] grid gap-2 px-4 md:grid-cols-2 lg:gap-8">
-      {/* Large Earbuds Banner */}
-      <section className="group relative row-span-2 overflow-hidden rounded-md sm:min-h-[630px]">
-        <div
-          style={{
-            backgroundImage: `url(${featuredProducts?.[0]?.images[0]})`,
-            backgroundRepeat: "no-repeat",
-            backgroundPosition: "center",
-            backgroundSize: "cover",
-          }}
-          className="absolute inset-0 z-[1] h-full w-full bg-black transition-all duration-300 group-hover:scale-105 group-hover:blur-sm"
-        />
-        <div className="backdrop-blur-0 relative z-[2] flex h-full transform flex-col justify-between gap-10 p-6 text-white transition-all duration-300 group-hover:backdrop-blur-[2px]">
-          <Badge variant={`default`} className={`bg-accent rounded-md px-[12px] py-[6px]`}>
-            Sponsored Ad
-          </Badge>
-          <div className={`space-y-2`}>
-            <p className="line-clamp-2 text-xs font-medium lg:text-xl">{featuredProducts?.[0]?.name}</p>
-            <p className="text-mid-grey-II line-clamp-2 max-w-[300px] text-xs font-light lg:text-sm">
-              {featuredProducts?.[0]?.description}
-            </p>
-            <Ratings rating={3} />
-            <p className={`text-mid-grey-II text-[10px] underline lg:text-sm`}>By Skicom</p>
-            <div className="flex items-baseline gap-2">
-              <p className="text-accent text-xs font-medium lg:text-2xl">
-                ₦{featuredProducts?.[0]?.price.toLocaleString()}
-              </p>
-              {featuredProducts?.[0]?.price && (
-                <p className="text-mid-danger text-sm line-through lg:text-xl">
-                  ₦{featuredProducts?.[0]?.price?.toLocaleString()}
-                </p>
-              )}
-            </div>
-          </div>
-        </div>
-      </section>
+      {/* Large Featured Product Banner */}
+      <ProductCard product={featuredProducts[0]} isLarge={true} className="row-span-2 sm:min-h-[630px]" />
 
-      {/* Smartwatch Card */}
-      <section className="group relative overflow-hidden rounded-md">
-        <div
-          style={{
-            backgroundImage: `url(${featuredProducts?.[1]?.images?.[0] || "https://res.cloudinary.com/kingsleysolomon/image/upload/v1742989695/byte-alley/hwqfbog9bbrubto2v0te.svg"})`,
-            backgroundRepeat: "no-repeat",
-            backgroundPosition: "right",
-            backgroundSize: "contain",
-          }}
-          className="absolute inset-0 z-[1] h-full w-full bg-black transition-all duration-300 group-hover:scale-105 group-hover:blur-sm"
-        />
-        <div className="backdrop-blur-0 relative z-[2] flex h-full transform flex-col justify-between gap-10 p-6 text-white transition-all duration-300 group-hover:backdrop-blur-[2px]">
-          <Badge variant={`default`} className={`bg-accent rounded-md px-[12px] py-[6px]`}>
-            Sponsored Ad
-          </Badge>
-          <div className={`space-y-2`}>
-            <p className="line-clamp-2 text-xs font-medium lg:text-xl">{featuredProducts?.[1]?.name}</p>
-            <p className="text-mid-grey-II line-clamp-2 max-w-[300px] text-xs font-light lg:text-sm">
-              {featuredProducts?.[1]?.description}
-            </p>
-            <Ratings rating={0} />
-            <p className={`text-mid-grey-II text-[10px] underline lg:text-sm`}>By Skicom</p>
-            <div className="flex items-baseline gap-2">
-              <p className="text-accent text-xs font-medium lg:text-2xl">
-                ₦{featuredProducts?.[1]?.price?.toLocaleString()}
-              </p>
-              {featuredProducts?.[0]?.price && (
-                <p className="text-mid-danger text-sm line-through lg:text-xl">
-                  ₦{featuredProducts?.[0]?.price?.toLocaleString()}
-                </p>
-              )}
-            </div>
-          </div>
-        </div>
-      </section>
+      {/* Second Featured Product */}
+      <ProductCard product={featuredProducts[1]} className="md:h-full" />
 
       {/* Grid of two smaller cards */}
-      <section className={`grid grid-cols-2 gap-2 lg:gap-8`}>
-        {[featuredProducts?.[2], featuredProducts?.[3]].map((product, index) => (
-          <section key={index} className="group relative overflow-hidden rounded-md">
-            <div
-              style={{
-                backgroundImage: `url(${product?.images[0]})`,
-                backgroundRepeat: "no-repeat",
-                backgroundPosition: "right",
-                backgroundSize: "cover",
-              }}
-              className="absolute inset-0 z-[1] h-full w-full bg-black transition-all duration-300 group-hover:scale-105 group-hover:blur-sm"
-            />
-            <div className="backdrop-blur-0 relative z-[2] flex h-full transform flex-col justify-between gap-10 p-6 text-white transition-all duration-300 group-hover:backdrop-blur-[2px]">
-              <Badge variant={`default`} className={`bg-accent rounded-md px-[12px] py-[6px]`}>
-                Sponsored Ad
-              </Badge>
-              <div className={`space-y-2`}>
-                <p className="line-clamp-2 text-xs font-medium lg:text-xl">{product?.name}</p>
-                <p className="text-mid-grey-II line-clamp-2 max-w-[300px] text-xs font-light lg:text-sm">
-                  {product?.description}
-                </p>
-                <Ratings rating={0} />
-                <p className={`text-mid-grey-II text-[10px] underline lg:text-sm`}>By Skicom</p>
-                <div className="flex items-baseline gap-2">
-                  <p className="text-accent text-xs font-medium lg:text-2xl">₦{product?.price.toLocaleString()}</p>
-                  {product?.price && (
-                    <p className="text-mid-danger text-sm line-through lg:text-xl">
-                      ₦{product?.price.toLocaleString()}
-                    </p>
-                  )}
-                </div>
-              </div>
-            </div>
-          </section>
+      <div className="grid grid-cols-2 gap-2 lg:gap-8">
+        {featuredProducts.slice(2, 4).map((product: Product, index: number) => (
+          <ProductCard key={product.id || index} product={product} />
         ))}
-      </section>
+      </div>
     </Wrapper>
   );
-};
+});
+
+FeaturedProducts.displayName = "FeaturedProducts";

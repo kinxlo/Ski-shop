@@ -1,6 +1,7 @@
+/* eslint-disable no-console */
 "use client";
 
-import { ReactNode, useEffect } from "react";
+import { ReactNode, useEffect, useState } from "react";
 
 import { worker } from "./browser";
 
@@ -10,25 +11,24 @@ type MockServiceWorkerProviderProperties = {
 };
 
 export const MockServiceWorkerProvider = ({ children, isEnabled }: MockServiceWorkerProviderProperties) => {
-  // const [isReady] = useState(false);
+  const [isReady, setIsReady] = useState(false);
 
   useEffect(() => {
     const initMocks = async () => {
-      // if (isEnabled) {
-      //   await worker.start({
-      //     onUnhandledRequest: "bypass", // or "warn" or "error"
-      //     quiet: false, // set to true to suppress MSW logs
-      //   });
-      //   setIsReady(true);
-      // } else {
-      //   setIsReady(true);
-      // }
-      if (typeof window === "undefined") {
-        const { server } = await import("./server");
-        server.listen();
+      if (isEnabled) {
+        try {
+          await worker.start({
+            onUnhandledRequest: "bypass", // or "warn" or "error"
+            quiet: false, // set to true to suppress MSW logs
+          });
+          console.log("[MSW] Mocking enabled.");
+        } catch (error) {
+          console.error("[MSW] Failed to start worker:", error);
+        }
+        setIsReady(true);
       } else {
-        const { worker } = await import("./browser");
-        worker.start();
+        console.log("[MSW] Mocking disabled.");
+        setIsReady(true);
       }
     };
 
@@ -41,9 +41,9 @@ export const MockServiceWorkerProvider = ({ children, isEnabled }: MockServiceWo
     };
   }, [isEnabled]);
 
-  // if (!isReady) {
-  //   return null;
-  // }
+  if (!isReady) {
+    return null;
+  }
 
   return <>{children}</>;
 };

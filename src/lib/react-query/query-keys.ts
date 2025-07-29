@@ -3,6 +3,7 @@ export const queryKeys = {
     list: (filters?: IFilters) => ["products", "list", ...(filters ? Object.entries(filters) : [])],
     details: (id: string) => ["products", "details", id] as const,
     categories: () => ["products", "categories"] as const,
+    saved: () => ["products", "saved"] as const,
   },
   cart: {
     list: () => ["cart"] as const,

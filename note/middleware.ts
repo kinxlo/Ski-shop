@@ -19,25 +19,8 @@ export default auth(async (request) => {
     return NextResponse.next();
   }
 
-  // Skip middleware for mock service worker and related files
-  if (
-    pathname.startsWith("/mockServiceWorker.js") ||
-    pathname.includes("mockServiceWorker") ||
-    pathname.startsWith("/_next/static") ||
-    pathname.startsWith("/api/") // Allow all API routes to pass through for mocking
-  ) {
-    return NextResponse.next();
-  }
-
   // Allow public routes and any route under /explore
-  // The following block checks if the current request's pathname matches any of the public routes.
-  // It does this by iterating over each route in the publicRoutes array and removing any "*" wildcard from the route string using route.replace("*", "").
-  // Then, it checks if the pathname starts with the resulting route string.
-  // This is a simple way to support wildcard routes (like "/fetching-data/*") by matching any path that starts with the base route.
-  // However, not all routes in publicRoutes use the "*" wildcard, and some (like "/shop/product/:id") use parameterized segments (":id"), which this logic does not handle.
-  // So, while route.replace("*", "") works for wildcard routes, it does not properly match parameterized routes (e.g., "/shop/product/:id" or with regex).
-  // As a result, only exact prefix matches will work, and parameterized or regex routes may not be matched as intended.
-  if (publicRoutes.some((route) => pathname.startsWith(route.replace("*", "")))) {
+  if (publicRoutes.includes(pathname)) {
     return NextResponse.next();
   }
 
@@ -113,9 +96,8 @@ export const config = {
      * - images (image files)
      * - favicon.ico (favicon file)
      * - public (public assets)
-     * - mockServiceWorker (mock service worker)
      */
-    "/((?!api|_next|static|images|favicon.ico|public|mockServiceWorker).*)",
+    "/((?!api|_next|static|images|favicon.ico|public).*)",
   ],
 };
 

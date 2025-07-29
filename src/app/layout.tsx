@@ -69,7 +69,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
                 enableColorScheme
               >
                 <Toast />
-                <MockServiceWorkerProvider isEnabled={false}>{children}</MockServiceWorkerProvider>
+                <MockServiceWorkerProvider isEnabled={true}>{children}</MockServiceWorkerProvider>
               </ThemeProvider>
             </ReactQueryProvider>
           </NuqsAdapter>

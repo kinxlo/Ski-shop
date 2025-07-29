@@ -34,3 +34,21 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
+## Google Maps Setup
+
+This project uses Google Maps for the contact page. To set up Google Maps:
+
+1. Go to the [Google Cloud Console](https://console.cloud.google.com/)
+2. Create a new project or select an existing one
+3. Enable the following APIs:
+   - Maps JavaScript API
+   - Places API
+4. Create credentials (API Key) for the project
+5. Create a `.env.local` file in the root directory and add:
+   ```
+   NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=your_google_maps_api_key_here
+   ```
+6. Replace `your_google_maps_api_key_here` with your actual API key
+
+**Important**: Make sure to restrict your API key to your domain for security.

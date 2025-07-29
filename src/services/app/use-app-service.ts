@@ -26,6 +26,12 @@ export const useAppService = () => {
   const useGetAllProductCategory = (options?: any) =>
     useServiceQuery([...queryKeys.product.categories()], (service) => service.getAllProductCategory(), options);
 
+  const useGetSavedProducts = (options?: any) =>
+    useServiceQuery([...queryKeys.product.saved()], (service) => service.getSavedProducts(), {
+      staleTime: 1000 * 60 * 5, // 5 minutes cache
+      ...options,
+    });
+
   const useGetCart = (options?: any) =>
     useServiceQuery(
       [...queryKeys.cart.list()],
@@ -100,7 +106,15 @@ export const useAppService = () => {
   const useSaveProduct = (options?: any) =>
     useServiceMutation((service, data: { productId: string }) => service.saveProduct(data), {
       onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: queryKeys.order.list() });
+        queryClient.invalidateQueries({ queryKey: queryKeys.product.saved() });
+      },
+      ...options,
+    });
+
+  const useRemoveFromFavorites = (options?: any) =>
+    useServiceMutation((service, productId: string) => service.removeFromFavorites(productId), {
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: queryKeys.product.saved() });
       },
       ...options,
     });
@@ -110,6 +124,7 @@ export const useAppService = () => {
     useGetAllProducts,
     useGetSingleProduct,
     useGetAllProductCategory,
+    useGetSavedProducts,
 
     // Cart Queries
     useGetCart,
@@ -127,5 +142,6 @@ export const useAppService = () => {
 
     // Product Mutations
     useSaveProduct,
+    useRemoveFromFavorites,
   };
 };

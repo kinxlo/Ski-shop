@@ -1,6 +1,7 @@
 "use client";
 
 import { Wrapper } from "@/components/core/layout/wrapper";
+import SkiButton from "@/components/shared/button";
 import { EmptyState } from "@/components/shared/empty-state";
 import { Paginations } from "@/components/shared/pagination/pagination";
 import { CustomSelect } from "@/components/shared/select-dropdown";
@@ -117,19 +118,19 @@ const Page = () => {
     return (
       <Wrapper className="py-12">
         <EmptyState
-          images={[
-            {
-              src: "/images/empty-state.svg",
-              alt: "Empty Cart",
-              width: 100,
-              height: 100,
-            },
-          ]}
-          description={"Your cart is empty"}
-          button={{
-            text: "Continue Shopping",
-            onClick: () => router.push("/shop"),
-          }}
+          images={[{ src: "/images/empty-state.svg", width: 80, height: 80, alt: "No featured products" }]}
+          description="Failed to load featured products"
+          descriptionClassName="text-mid-danger"
+          className="space-y-0 rounded-lg py-10"
+          actionButton={
+            <SkiButton
+              onClick={() => refetchProducts()}
+              variant="outline"
+              className="border-mid-danger text-mid-danger hover:bg-mid-danger/10 mt-4 border"
+            >
+              Retry
+            </SkiButton>
+          }
         />
       </Wrapper>
     );
@@ -218,7 +219,19 @@ const Page = () => {
 
               {!isLoadingProducts && products.length === 0 && (
                 <div className="col-span-full py-10 text-center">
-                  <p className="text-mid-grey-II text-lg">No products found matching your filters</p>
+                  <EmptyState
+                    images={[
+                      {
+                        src: "/images/empty-state.svg",
+                        alt: "Empty Cart",
+                        width: 80,
+                        height: 80,
+                      },
+                    ]}
+                    description={"No products found matching your filters"}
+                    descriptionClassName="text-primary"
+                    className={`bg-mid-grey-I min-h-fit space-y-0 rounded-lg py-10`}
+                  />
                 </div>
               )}
 

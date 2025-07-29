@@ -1,12 +1,10 @@
-import SkiButton from "@/components/shared/button";
 import { Ratings } from "@/components/shared/ratings";
-import { cn } from "@/lib/utils";
-import { useAppService } from "@/services/app/use-app-service";
-import { HeartFilledIcon } from "@radix-ui/react-icons";
+import { useSaveProduct } from "@/hooks/use-save-product";
+import { cn, formatCurrency } from "@/lib/utils";
 import Image from "next/image";
 import Link from "next/link";
 import { HTMLAttributes } from "react";
-import { toast } from "sonner";
+import { PiHeart, PiHeartFill } from "react-icons/pi";
 
 interface ShopCardProperties extends HTMLAttributes<HTMLDivElement> {
   id: string | undefined;
@@ -36,25 +34,10 @@ export const ShopCard = ({
   isStarSeller = false,
 }: ShopCardProperties) => {
   const oldPrice = discount ? price / (1 - discount / 100) : null;
-  const { useSaveProduct } = useAppService();
-  const { mutate: saveProduct, isPending } = useSaveProduct();
-  const handleSaveProduct = () => {
-    if (!id) {
-      toast.error("Product ID is missing");
-      return;
-    }
-    saveProduct(
-      { productId: id },
-      {
-        onSuccess: () => {
-          toast.success("Product saved successfully");
-        },
-        onError: () => {
-          toast.error("Failed to save product");
-        },
-      },
-    );
-  };
+  const { isSaved, isPending, toggleSave } = useSaveProduct(id || "");
+
+  // Don't render save button if no ID
+  const shouldShowSaveButton = showSaveButton && id;
 
   return (
     <Link
@@ -65,21 +48,31 @@ export const ShopCard = ({
         className,
       )}
     >
-      {showSaveButton && (
-        <SkiButton
-          variant={`outline`}
-          icon={<HeartFilledIcon className="h-4 w-4 text-red-500" />}
-          isIconOnly
-          size="icon"
-          isLoading={isPending}
-          className="text-mid-grey-II absolute top-4 right-4 z-10 rounded-full bg-white/80 p-2 backdrop-blur-sm transition-all hover:bg-white hover:text-red-500"
+      {shouldShowSaveButton && (
+        <button
+          role="button"
+          tabIndex={0}
+          aria-label={isSaved ? "Remove from favorites" : "Save product"}
+          className={cn(
+            "absolute top-4 right-4 z-10 cursor-pointer rounded-full bg-white/80 p-2 backdrop-blur-sm transition-all",
+            isSaved ? "text-red-500 hover:bg-red-50" : "text-mid-grey-II hover:bg-white hover:text-red-500",
+            isPending && "pointer-events-none opacity-60",
+          )}
           onClick={(event) => {
             event.preventDefault(); // Prevent link navigation
             event.stopPropagation(); // Stop event bubbling
-            handleSaveProduct();
+            if (!isPending) toggleSave();
           }}
-          aria-label="Save product"
-        />
+          onKeyDown={(event) => {
+            if ((event.key === "Enter" || event.key === " ") && !isPending) {
+              event.preventDefault();
+              event.stopPropagation();
+              toggleSave();
+            }
+          }}
+        >
+          {isSaved ? <PiHeartFill className="h-6 w-6 text-red-500" /> : <PiHeart className="h-6 w-6 text-gray-500" />}
+        </button>
       )}
 
       <div className="relative z-[-1] mb-3 aspect-square overflow-hidden rounded-lg">
@@ -97,9 +90,9 @@ export const ShopCard = ({
         <Ratings rating={rating} />
         <p className={`text-mid-grey-II text-[10px] underline lg:text-sm`}>By {name}</p>
         <div className="flex items-baseline gap-2">
-          <p className="text-primary text-xs font-medium lg:text-[16px]">₦{price.toLocaleString()}</p>
+          <p className="text-primary text-xs font-medium lg:text-[16px]">{formatCurrency(price)}</p>
           {oldPrice && (
-            <p className="text-mid-danger text-[10px] line-through lg:text-sm">₦{oldPrice.toLocaleString()}</p>
+            <p className="text-mid-danger text-[10px] line-through lg:text-sm">{formatCurrency(oldPrice)}</p>
           )}
         </div>
       </div>

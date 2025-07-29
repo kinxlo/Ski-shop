@@ -27,18 +27,25 @@ export const PopularProducts = ({
   if (isError) {
     return (
       <Wrapper className="min-h-[480px] pt-16">
+        <h2 className={cn("text-high-grey-II text-sm font-black lg:text-3xl", headerStyle)}>{title}</h2>
         <EmptyState
           images={[
             {
               src: "/images/empty-state.svg",
               alt: "Empty Cart",
-              width: 100,
-              height: 100,
+              width: 80,
+              height: 80,
             },
           ]}
           description={"Failed to load product. Please try again."}
+          descriptionClassName={`text-mid-danger`}
+          className={`space-y-0 rounded-lg`}
           actionButton={
-            <SkiButton onClick={() => refetch()} variant="default" className="bg-high-grey-I mt-4">
+            <SkiButton
+              onClick={() => refetch()}
+              variant="outline"
+              className="border-mid-danger text-mid-danger hover:bg-mid-danger/10 mt-4 border"
+            >
               Retry
             </SkiButton>
           }
@@ -50,22 +57,19 @@ export const PopularProducts = ({
   if (data?.data?.items?.length === 0) {
     return (
       <Wrapper className="min-h-[480px] pt-16">
+        <h2 className={cn("text-high-grey-II text-sm font-black lg:text-3xl", headerStyle)}>{title}</h2>
         <EmptyState
           images={[
             {
               src: "/images/empty-state.svg",
               alt: "Empty Cart",
-              width: 100,
-              height: 100,
+              width: 80,
+              height: 80,
             },
           ]}
           description={"No products found"}
-          className={`space-y-0`}
-          actionButton={
-            <SkiButton onClick={() => refetch()} variant="default" className="bg-high-grey-I mt-4">
-              Retry
-            </SkiButton>
-          }
+          descriptionClassName={`text-primary`}
+          className="bg-mid-grey-I min-h-fit space-y-0 rounded-lg py-10"
         />
       </Wrapper>
     );

@@ -6,10 +6,11 @@ import { BlurImage } from "@/components/core/miscellaneous/blur-image";
 import SkiButton from "@/components/shared/button";
 import { Ratings } from "@/components/shared/ratings";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useSaveProduct } from "@/hooks/use-save-product";
+import { cn, formatCurrency } from "@/lib/utils";
 import { useAppService } from "@/services/app/use-app-service";
 import { useQueryClient } from "@tanstack/react-query";
-import { Minus, Plus, ShoppingCart, Star } from "lucide-react";
-// import { useSession } from "next-auth/react";
+import { Heart, Minus, Plus, ShoppingCart, Star } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { MdStarBorderPurple500 } from "react-icons/md";
@@ -22,11 +23,11 @@ import { SimilarProducts } from "./similar-products";
 type Tab = "description" | "reviews";
 
 export const ProductDetail = ({ product }: any) => {
-  // const { data: session } = useSession();
   const router = useRouter();
   const [selectedImage, setSelectedImage] = useState(0);
   const [quantity, setQuantity] = useState(1);
   const { useAddToCart } = useAppService();
+  const { isSaved, isPending: isSaving, toggleSave } = useSaveProduct(product?.id || "");
   const [activeTab, setActiveTab] = useState<Tab>("description");
   const queryClient = useQueryClient();
   const { mutate: addToCart, isPending } = useAddToCart({
@@ -62,8 +63,6 @@ export const ProductDetail = ({ product }: any) => {
       queryClient.invalidateQueries({ queryKey: ["cart"] });
     },
   });
-  // Calculate discounted price if discountPercentage exists
-  // const oldPrice = product.discountPercentage ? product.price / (1 - product.discountPercentage / 100) : null;
 
   // Use images array as gallery if it exists
   const gallery = product.images?.length ? product.images : [product.thumbnail];
@@ -108,6 +107,31 @@ export const ProductDetail = ({ product }: any) => {
             <div className="space-y-4">
               <div className="relative aspect-square max-h-[482px] w-full overflow-hidden rounded-lg border p-4 sm:p-[2rem]">
                 <BlurImage src={gallery[selectedImage]} alt={product.name} fill className="object-cover" />
+                {/* Heart button positioned absolutely over the image */}
+                <button
+                  role="button"
+                  tabIndex={0}
+                  aria-label={isSaved ? "Remove from favorites" : "Save product"}
+                  className={cn(
+                    "absolute top-4 right-4 z-10 flex h-10 w-10 cursor-pointer items-center justify-center rounded-full bg-white/80 p-2 backdrop-blur-sm transition-all hover:bg-white",
+                    isSaved ? "text-red-500 hover:bg-red-50" : "text-gray-500 hover:text-red-500",
+                    isSaving && "pointer-events-none opacity-60",
+                  )}
+                  onClick={(event) => {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    if (!isSaving) toggleSave();
+                  }}
+                  onKeyDown={(event) => {
+                    if ((event.key === "Enter" || event.key === " ") && !isSaving) {
+                      event.preventDefault();
+                      event.stopPropagation();
+                      toggleSave();
+                    }
+                  }}
+                >
+                  {isSaved ? <Heart className="h-6 w-6 fill-red-500 text-red-500" /> : <Heart className="h-6 w-6" />}
+                </button>
               </div>
               <div className="grid grid-cols-4 gap-2 sm:gap-4">
                 {gallery.map((image: any, index: any) => (
@@ -139,40 +163,42 @@ export const ProductDetail = ({ product }: any) => {
                 </p>
               </div>
               <div className="mt-8 flex items-baseline gap-4">
-                <span className="text-primary text-4xl font-semibold">₦{product.price.toLocaleString()}</span>
+                <span className="text-primary text-4xl font-semibold">{formatCurrency(product.price)}</span>
                 {product.discountPrice && (
-                  <span className="text-destructive text-xl line-through">
-                    ₦{product.discountPrice.toFixed(2).toLocaleString()}
-                  </span>
+                  <span className="text-destructive text-xl line-through">{formatCurrency(product.discountPrice)}</span>
                 )}
               </div>
               <div>{product.description}</div>
               <div className="flex flex-col items-start gap-6">
-                <div className="flex items-center gap-2">
-                  <button
-                    onClick={() => handleQuantityChange("decrease")}
-                    className="flex h-8 w-8 items-center justify-center rounded-full border bg-gray-50 hover:bg-gray-100 disabled:opacity-50"
+                <section className="flex w-full flex-row-reverse items-center justify-between gap-4">
+                  <div className="flex items-center gap-2">
+                    <button
+                      onClick={() => handleQuantityChange("decrease")}
+                      className="flex h-8 w-8 items-center justify-center rounded-full border bg-gray-50 hover:bg-gray-100 disabled:opacity-50"
+                    >
+                      <Minus className="h-4 w-4" />
+                    </button>
+                    <span className="w-8 text-center font-medium">{quantity}</span>
+                    <button
+                      onClick={() => handleQuantityChange("increase")}
+                      className="flex h-8 w-8 items-center justify-center rounded-full border bg-gray-50 hover:bg-gray-100 disabled:opacity-50"
+                    >
+                      <Plus className="h-4 w-4" />
+                    </button>
+                  </div>
+                </section>
+                <div className="flex w-full gap-4">
+                  <SkiButton
+                    variant="primary"
+                    size="xl"
+                    className="flex flex-1 items-center gap-2 rounded-full px-8 py-8"
+                    isDisabled={product.stockCount === 0 || isPending}
+                    onClick={handleAddToCart}
                   >
-                    <Minus className="h-4 w-4" />
-                  </button>
-                  <span className="w-8 text-center font-medium">{quantity}</span>
-                  <button
-                    onClick={() => handleQuantityChange("increase")}
-                    className="flex h-8 w-8 items-center justify-center rounded-full border bg-gray-50 hover:bg-gray-100 disabled:opacity-50"
-                  >
-                    <Plus className="h-4 w-4" />
-                  </button>
+                    <ShoppingCart size={20} />
+                    {isPending ? "Adding..." : product.stockCount === 0 ? "Out of Stock" : "Add to Cart"}
+                  </SkiButton>
                 </div>
-                <SkiButton
-                  variant="primary"
-                  size="xl"
-                  className="flex w-full items-center gap-2 rounded-full px-8 py-8"
-                  isDisabled={product.stockCount === 0 || isPending}
-                  onClick={handleAddToCart}
-                >
-                  <ShoppingCart size={20} />
-                  {isPending ? "Adding..." : product.stockCount === 0 ? "Out of Stock" : "Add to Cart"}
-                </SkiButton>
               </div>
             </div>
           </div>

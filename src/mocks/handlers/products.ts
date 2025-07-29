@@ -1,5 +1,8 @@
 import { delay, http, HttpResponse } from "msw";
 
+// In-memory storage for saved products
+let savedProducts: string[] = [];
+
 const products: ProductApiResponse = {
   success: true,
   data: {
@@ -167,4 +170,100 @@ export const productHandlers = [
       ],
     });
   }),
+
+  // Get saved products
+  http.get(`/products/saves`, async () => {
+    await delay(150);
+    return HttpResponse.json({
+      success: true,
+      data: {
+        items: products.data.items.filter((product) => savedProducts.includes(product.id)),
+        metadata: {
+          total: savedProducts.length,
+          page: 1,
+          limit: 10,
+          totalPages: Math.ceil(savedProducts.length / 10),
+          hasNextPage: false,
+          hasPreviousPage: false,
+        },
+      },
+    });
+  }),
+
+  // Save product to favorites/wishlist
+  http.post(`/products/saves`, async ({ request }) => {
+    const body = (await request.json()) as { productId: string };
+    const { productId } = body;
+
+    await delay(150);
+
+    if (!productId) {
+      return HttpResponse.json(
+        {
+          success: false,
+          message: "Product ID is required",
+        },
+        { status: 400 },
+      );
+    }
+
+    // Check if product exists
+    const product = products.data.items.find((item) => item.id === productId);
+    if (!product) {
+      return HttpResponse.json(
+        {
+          success: false,
+          message: "Product not found",
+        },
+        { status: 404 },
+      );
+    }
+
+    // Add to saved products if not already saved
+    if (savedProducts.includes(productId)) {
+      // Product already saved, return success
+      return HttpResponse.json(
+        {
+          success: true,
+          data: {
+            id: productId,
+            savedAt: new Date().toISOString(),
+            message: "Product already saved",
+          },
+        },
+        { status: 200 },
+      );
+    }
+
+    // Add to saved products
+    savedProducts.push(productId);
+
+    return HttpResponse.json(
+      {
+        success: true,
+        data: {
+          id: productId,
+          savedAt: new Date().toISOString(),
+          message: "Product saved successfully",
+        },
+      },
+      { status: 201 },
+    );
+  }),
+
+  http.delete(
+    `/products/saves/:id([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})`,
+    async ({ params }) => {
+      const { id } = params;
+      await delay(150);
+
+      // Remove from saved products
+      savedProducts = savedProducts.filter((productId) => productId !== id);
+
+      return HttpResponse.json({
+        success: true,
+        message: "Product removed from favorites",
+      });
+    },
+  ),
 ];

@@ -40,6 +40,16 @@ export class AppService {
     });
   }
 
+  async getSavedProducts() {
+    return tryCatchWrapper(async () => {
+      const response = await this.http.get<ProductApiResponse>("/products/saves");
+      if (response?.status === 200) {
+        return response.data;
+      }
+      throw new Error("Failed to fetch saved products");
+    });
+  }
+
   async addToCart(data: { productId: string; quantity: number }) {
     return tryCatchWrapper(async () => {
       const response = await this.http.post<CartApiResponse>("/carts", data);
@@ -139,6 +149,16 @@ export class AppService {
         return response.data;
       }
       throw new Error("Failed to save product");
+    });
+  }
+
+  async removeFromFavorites(productId: string) {
+    return tryCatchWrapper(async () => {
+      const response = await this.http.delete<Product>(`/products/saves/${productId}`);
+      if (response?.status === 200) {
+        return response.data;
+      }
+      throw new Error("Failed to remove product from favorites");
     });
   }
 
