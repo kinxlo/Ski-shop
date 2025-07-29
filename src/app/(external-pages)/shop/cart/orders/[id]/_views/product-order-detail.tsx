@@ -91,23 +91,30 @@ export const ProductOrderDetail = ({ order }: ProductOrderDetailProperties) => {
               >
                 {order.status}
               </Badge>
-              {order.status === "delivered" && <p>Delivered on {deliveryDate.toLocaleDateString("en-GB")}</p>}
-              {order.status === "paid" && <p>To be delivered {deliveryDate.toLocaleDateString("en-GB")}</p>}
+              {order.status === "paid" && <p>Delivered on {deliveryDate.toLocaleDateString("en-GB")}</p>}
+              {order.status === "pending" && <p>To be delivered {deliveryDate.toLocaleDateString("en-GB")}</p>}
             </div>
-            <RatingModal
-              product={{
-                id: product.id,
-                name: product.name,
-                images: product.images,
-                description: "Sony PlayStation VR2 Approx. 110°, Communication with PS5",
-              }}
-              onRatingSubmit={(rating, review) => handleRatingSubmit(rating, review, product.id)}
-              triggerStructure={
-                <SkiButton variant="primary" size="xl" className="flex w-full items-center gap-2 rounded-full px-8">
-                  Rate Product
-                </SkiButton>
-              }
-            />
+            {order.status === "pending" && (
+              <SkiButton variant="primary" size="xl" className="flex w-full items-center gap-2 rounded-full px-8">
+                Track Order
+              </SkiButton>
+            )}
+            {order.status === "paid" && (
+              <RatingModal
+                product={{
+                  id: product.id,
+                  name: product.name,
+                  images: product.images,
+                  description: "Sony PlayStation VR2 Approx. 110°, Communication with PS5",
+                }}
+                onRatingSubmit={(rating, review) => handleRatingSubmit(rating, review, product.id)}
+                triggerStructure={
+                  <SkiButton variant="primary" size="xl" className="flex w-full items-center gap-2 rounded-full px-8">
+                    Rate Product
+                  </SkiButton>
+                }
+              />
+            )}
           </div>
         </div>
       </Wrapper>

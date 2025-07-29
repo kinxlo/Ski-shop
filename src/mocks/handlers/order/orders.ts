@@ -6,7 +6,7 @@ const orders: OrderApiResponse = {
     items: [
       {
         id: "65ccfd94-00f7-431a-8a96-3828be395d7b",
-        status: "paid",
+        status: "pending",
         buyer: {
           id: "3ce6a457-5673-43fe-92ce-3c110223116e",
           name: "Tobi customer",
@@ -16,9 +16,7 @@ const orders: OrderApiResponse = {
             id: "3ce6a457-5673-43fe-92ce-3c110223116e",
             name: "Licensed Frozen Pizza",
             images: [
-              "https://loremflickr.com/300/300?lock=3513850756333568",
-              "https://picsum.photos/seed/1peIUM/300/300",
-              "https://loremflickr.com/300/300?lock=1158193499602944",
+              "https://res.cloudinary.com/kingsleysolomon/image/upload/v1742989695/byte-alley/hwqfbog9bbrubto2v0te.svg",
             ],
             price: 500,
             quantity: 2,
@@ -42,9 +40,7 @@ const orders: OrderApiResponse = {
             id: "3ce6a457-5673-43fe-92ce-3c110223116e",
             name: "Licensed Frozen Pizza",
             images: [
-              "https://loremflickr.com/300/300?lock=3513850756333568",
-              "https://picsum.photos/seed/1peIUM/300/300",
-              "https://loremflickr.com/300/300?lock=1158193499602944",
+              "https://res.cloudinary.com/kingsleysolomon/image/upload/v1742989695/byte-alley/hwqfbog9bbrubto2v0te.svg",
             ],
             price: 500,
             quantity: 2,
@@ -58,7 +54,7 @@ const orders: OrderApiResponse = {
       },
       {
         id: "400f4bd4-4059-4b5d-8f68-6a093739f0bc",
-        status: "paid",
+        status: "pending",
         buyer: {
           id: "3ce6a457-5673-43fe-92ce-3c110223116e",
           name: "Tobi customer",
@@ -68,9 +64,7 @@ const orders: OrderApiResponse = {
             id: "3ce6a457-5673-43fe-92ce-3c110223116e",
             name: "Licensed Frozen Pizza",
             images: [
-              "https://loremflickr.com/300/300?lock=3513850756333568",
-              "https://picsum.photos/seed/1peIUM/300/300",
-              "https://loremflickr.com/300/300?lock=1158193499602944",
+              "https://res.cloudinary.com/kingsleysolomon/image/upload/v1742989695/byte-alley/hwqfbog9bbrubto2v0te.svg",
             ],
             price: 500,
             quantity: 2,
@@ -94,9 +88,7 @@ const orders: OrderApiResponse = {
             id: "3ce6a457-5673-43fe-92ce-3c110223116e",
             name: "Licensed Frozen Pizza",
             images: [
-              "https://loremflickr.com/300/300?lock=3513850756333568",
-              "https://picsum.photos/seed/1peIUM/300/300",
-              "https://loremflickr.com/300/300?lock=1158193499602944",
+              "https://res.cloudinary.com/kingsleysolomon/image/upload/v1742989695/byte-alley/hwqfbog9bbrubto2v0te.svg",
             ],
             price: 500,
             quantity: 2,
@@ -110,7 +102,7 @@ const orders: OrderApiResponse = {
       },
       {
         id: "e1b16c99-cc04-4d49-9058-fa7e5dc07bb3",
-        status: "paid",
+        status: "pending",
         buyer: {
           id: "3ce6a457-5673-43fe-92ce-3c110223116e",
           name: "Tobi customer",
@@ -120,9 +112,7 @@ const orders: OrderApiResponse = {
             id: "3ce6a457-5673-43fe-92ce-3c110223116e",
             name: "Licensed Frozen Pizza",
             images: [
-              "https://loremflickr.com/300/300?lock=3513850756333568",
-              "https://picsum.photos/seed/1peIUM/300/300",
-              "https://loremflickr.com/300/300?lock=1158193499602944",
+              "https://res.cloudinary.com/kingsleysolomon/image/upload/v1742989695/byte-alley/hwqfbog9bbrubto2v0te.svg",
             ],
             price: 500,
             quantity: 2,
@@ -146,9 +136,7 @@ const orders: OrderApiResponse = {
             id: "3ce6a457-5673-43fe-92ce-3c110223116e",
             name: "Licensed Frozen Pizza",
             images: [
-              "https://loremflickr.com/300/300?lock=3513850756333568",
-              "https://picsum.photos/seed/1peIUM/300/300",
-              "https://loremflickr.com/300/300?lock=1158193499602944",
+              "https://res.cloudinary.com/kingsleysolomon/image/upload/v1742989695/byte-alley/hwqfbog9bbrubto2v0te.svg",
             ],
             price: 500,
             quantity: 2,
