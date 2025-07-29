@@ -52,7 +52,7 @@ export default function EarnPage() {
 
   return (
     <section className="pt-[10rem]">
-      <ProductBreadcrumb productTitle="Cart" />
+      <ProductBreadcrumb productTitle="Invest & Earn" />
       {/* Breadcrumb */}
       <div className="border-b bg-white">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
