@@ -47,6 +47,30 @@ export const PopularProducts = ({
     );
   }
 
+  if (data?.data?.items?.length === 0) {
+    return (
+      <Wrapper className="min-h-[480px] pt-16">
+        <EmptyState
+          images={[
+            {
+              src: "/images/empty-state.svg",
+              alt: "Empty Cart",
+              width: 100,
+              height: 100,
+            },
+          ]}
+          description={"No products found"}
+          className={`space-y-0`}
+          actionButton={
+            <SkiButton onClick={() => refetch()} variant="default" className="bg-high-grey-I mt-4">
+              Retry
+            </SkiButton>
+          }
+        />
+      </Wrapper>
+    );
+  }
+
   return (
     <Wrapper className="min-h-[480px] pt-16">
       <div className={cn(`mb-8 flex items-baseline justify-between`, headerStyle)}>

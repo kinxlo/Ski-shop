@@ -5,18 +5,13 @@ import { OrderCard } from "@/app/(external-pages)/(home)/_components/shop-card/o
 import { Wrapper } from "@/components/core/layout/wrapper";
 import { cn } from "@/lib/utils";
 import { useAppService } from "@/services/app/use-app-service";
-import { toast } from "sonner";
 
 const Orders = ({ headerStyle }: { title: string; headerStyle?: string; hasAction?: boolean }) => {
-  const { useGetAllProducts } = useAppService();
-  const { isLoading, isError, error, data } = useGetAllProducts();
+  const { useGetOrders } = useAppService();
+  const { data: orderData, isLoading } = useGetOrders();
 
-  // Handle error state
-  if (isError) {
-    toast.error("something went wrong", {
-      description: error.message,
-    });
-  }
+  // eslint-disable-next-line no-console
+  console.log(orderData);
 
   return (
     <section className="min-h-[480px] pt-[10rem]">
@@ -32,15 +27,16 @@ const Orders = ({ headerStyle }: { title: string; headerStyle?: string; hasActio
             Array.from({ length: 8 }).map((_, index: number) => {
               return <ShopCardSkeleton key={index} />;
             })}
-          {data?.products?.slice(0, 8).map((product) => {
+          {orderData?.data.items?.map((product) => {
             return (
               <OrderCard
                 key={product.id.toString()}
                 id={product.id.toString()}
-                title={product.title}
-                rating={product.rating}
-                discount={product.discountPercentage}
-                image={product.thumbnail}
+                title={product.products[0].name}
+                rating={3}
+                // discount={product.products[0].price ? formatCurrency(product.products[0].price) : 0}
+                image={product.products[0].images[0]}
+                status={product.status}
               />
             );
           })}

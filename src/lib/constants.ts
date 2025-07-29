@@ -107,7 +107,7 @@ export const sideItems = [
   },
   {
     route: "Skicom Products",
-    link: "/admin/skicom-products",
+    link: "/admin/products",
     icon: TbShoppingBag,
     id: "skicom-products",
   },

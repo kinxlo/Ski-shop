@@ -301,6 +301,41 @@ declare global {
     };
   }
 
+  interface OrderBuyer {
+    id: string;
+    name: string;
+  }
+
+  interface OrderVendor {
+    id: string;
+    name: string;
+  }
+
+  interface OrderProduct {
+    id: string;
+    name: string;
+    images: string[];
+    price: number;
+    quantity: number;
+    vendor: OrderVendor;
+  }
+
+  interface Order {
+    id: string;
+    status: "paid" | "pending" | "cancelled" | "delivered";
+    buyer: OrderBuyer;
+    products: OrderProduct[];
+    createdAt: string;
+  }
+
+  interface OrderApiResponse {
+    success: boolean;
+    data: {
+      items: Order[];
+      metadata: Metadata;
+    };
+  }
+
   interface CartItem {
     id: string;
     product: Product;

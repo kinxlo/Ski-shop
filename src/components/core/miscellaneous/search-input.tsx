@@ -11,6 +11,7 @@ interface SearchInputProperties {
   onSearch: (query: string) => void;
   delay?: number; // debounce delay in ms
   className?: string;
+  initialValue?: string;
 }
 
 export const SearchInput = ({
@@ -18,9 +19,15 @@ export const SearchInput = ({
   onSearch,
   delay = 300,
   className = "",
+  initialValue = "",
 }: SearchInputProperties) => {
-  const [searchQuery, setSearchQuery] = useState("");
+  const [searchQuery, setSearchQuery] = useState(initialValue);
   const [debouncedQuery] = useDebounce(searchQuery, delay);
+
+  // Update internal state when initialValue changes (for URL sync)
+  useEffect(() => {
+    setSearchQuery(initialValue);
+  }, [initialValue]);
 
   useEffect(() => {
     onSearch(debouncedQuery);

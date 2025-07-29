@@ -1,6 +1,6 @@
 "use server";
 
-import { signIn } from "@/lib/next-auth";
+import { signIn } from "@/lib/next-auth/auth";
 import { LoginFormData } from "@/schemas";
 import { CredentialsSignin } from "next-auth";
 

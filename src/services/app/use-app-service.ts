@@ -89,6 +89,22 @@ export const useAppService = () => {
       ...options,
     });
 
+  const useGetOrders = (options?: any) =>
+    useServiceQuery([...queryKeys.order.list()], (service) => service.order(), {
+      ...options,
+    });
+
+  const useGetOrderById = (id: string, options?: any) =>
+    useServiceQuery([...queryKeys.order.details(id)], (service) => service.getOrderById(id), options);
+
+  const useSaveProduct = (options?: any) =>
+    useServiceMutation((service, data: { productId: string }) => service.saveProduct(data), {
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: queryKeys.order.list() });
+      },
+      ...options,
+    });
+
   return {
     // Product Queries
     useGetAllProducts,
@@ -104,5 +120,12 @@ export const useAppService = () => {
     useUpdateCartItem,
     useRemoveFromCart,
     useCheckoutCart,
+
+    // Order Queries
+    useGetOrders,
+    useGetOrderById,
+
+    // Product Mutations
+    useSaveProduct,
   };
 };

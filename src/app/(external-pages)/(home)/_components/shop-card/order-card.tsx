@@ -12,13 +12,22 @@ interface OrderCardProperties extends HTMLAttributes<HTMLDivElement> {
   image: string;
   isStarSeller?: boolean;
   discount?: number;
+  status: string;
 }
 
-export const OrderCard = ({ id, title, rating, image, className, isStarSeller = true }: OrderCardProperties) => {
+export const OrderCard = ({
+  id,
+  title,
+  rating,
+  image,
+  className,
+  isStarSeller = true,
+  status,
+}: OrderCardProperties) => {
   return (
     <div
       className={cn(
-        "flex gap-8 rounded-lg border bg-no-repeat p-4",
+        "flex flex-col gap-8 rounded-lg border bg-no-repeat p-4 lg:flex-row",
         isStarSeller && "bg-[url('/images/star-seller.svg')]",
         className,
       )}
@@ -33,11 +42,19 @@ export const OrderCard = ({ id, title, rating, image, className, isStarSeller = 
         />
       </div>
       <div className="w-full space-y-2">
-        <p className="text-mid-grey-II text-[10px] capitalize lg:text-xl">Order #124376</p>
+        <p className="text-mid-grey-II text-[10px] capitalize lg:text-sm">Order #{id}</p>
         <p className="line-clamp-2 text-xs font-medium lg:text-2xl">{title}</p>
         <Ratings rating={rating} />
         <div className="mt-8 space-y-2 text-xl">
-          <Badge className={`bg-[#C5A83C] text-[10px] lg:text-sm`}>Pending</Badge>
+          <Badge
+            className={cn(
+              `text-[10px] capitalize lg:text-sm`,
+              status === "pending" && "bg-[#C5A83C]",
+              status === "paid" && "bg-[#008000]",
+            )}
+          >
+            {status}
+          </Badge>
           <p>To be delivered 27-01-2025</p>
         </div>
       </div>

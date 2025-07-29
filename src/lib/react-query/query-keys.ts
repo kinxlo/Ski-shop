@@ -14,4 +14,9 @@ export const queryKeys = {
   dashboard: {
     overview: () => ["dashboard", "overview"] as const,
   },
+
+  order: {
+    list: () => ["order", "list"] as const,
+    details: (id: string) => ["order", "details", id] as const,
+  },
 };

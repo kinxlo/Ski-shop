@@ -49,7 +49,8 @@ export const LoginForm = () => {
       toast.success("Login Successful", {
         description: "Redirecting to dashboard...",
       });
-      router.push("/admin/home");
+      // Let the middleware handle the redirect based on user role
+      router.refresh();
     }
   };
 

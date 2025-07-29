@@ -2,7 +2,7 @@
 
 import { BlurImage } from "@/components/core/miscellaneous/blur-image";
 import { formatDate } from "@/lib/tools/format";
-import { cn } from "@/lib/utils";
+import { cn, formatCurrency } from "@/lib/utils";
 
 import { User } from "./type";
 
@@ -48,7 +48,8 @@ export const orderColumn: IColumnDefinition<Product>[] = [
     header: "Amount",
     accessorKey: "price",
     render: (_, product: Product) => (
-      <span className={`rounded-md px-2 py-1 text-sm capitalize`}>&#8358;{product.price.toLocaleString()}</span>
+      // <span className={`rounded-md px-2 py-1 text-sm capitalize`}>&#8358;{product.price.toLocaleString()}</span>
+      <span className={`rounded-md px-2 py-1 text-sm capitalize`}>{formatCurrency(product.price)}</span>
     ),
   },
   {

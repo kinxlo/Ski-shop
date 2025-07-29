@@ -1,10 +1,12 @@
 import SkiButton from "@/components/shared/button";
 import { Ratings } from "@/components/shared/ratings";
 import { cn } from "@/lib/utils";
+import { useAppService } from "@/services/app/use-app-service";
 import { HeartFilledIcon } from "@radix-ui/react-icons";
 import Image from "next/image";
 import Link from "next/link";
 import { HTMLAttributes } from "react";
+import { toast } from "sonner";
 
 interface ShopCardProperties extends HTMLAttributes<HTMLDivElement> {
   id: string | undefined;
@@ -30,10 +32,29 @@ export const ShopCard = ({
   image,
   className,
   name,
-  showSaveButton = false,
+  showSaveButton = true,
   isStarSeller = false,
 }: ShopCardProperties) => {
   const oldPrice = discount ? price / (1 - discount / 100) : null;
+  const { useSaveProduct } = useAppService();
+  const { mutate: saveProduct, isPending } = useSaveProduct();
+  const handleSaveProduct = () => {
+    if (!id) {
+      toast.error("Product ID is missing");
+      return;
+    }
+    saveProduct(
+      { productId: id },
+      {
+        onSuccess: () => {
+          toast.success("Product saved successfully");
+        },
+        onError: () => {
+          toast.error("Failed to save product");
+        },
+      },
+    );
+  };
 
   return (
     <Link
@@ -50,11 +71,12 @@ export const ShopCard = ({
           icon={<HeartFilledIcon className="h-4 w-4 text-red-500" />}
           isIconOnly
           size="icon"
+          isLoading={isPending}
           className="text-mid-grey-II absolute top-4 right-4 z-10 rounded-full bg-white/80 p-2 backdrop-blur-sm transition-all hover:bg-white hover:text-red-500"
           onClick={(event) => {
             event.preventDefault(); // Prevent link navigation
             event.stopPropagation(); // Stop event bubbling
-            // Will add functionality later
+            handleSaveProduct();
           }}
           aria-label="Save product"
         />

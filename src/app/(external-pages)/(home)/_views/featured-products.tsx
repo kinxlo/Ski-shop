@@ -61,7 +61,7 @@ export const FeaturedProducts = () => {
       <section className="group relative row-span-2 overflow-hidden rounded-md sm:min-h-[630px]">
         <div
           style={{
-            backgroundImage: `url(${featuredProducts?.[0].images[0]})`,
+            backgroundImage: `url(${featuredProducts?.[0]?.images[0]})`,
             backgroundRepeat: "no-repeat",
             backgroundPosition: "center",
             backgroundSize: "cover",
@@ -73,19 +73,19 @@ export const FeaturedProducts = () => {
             Sponsored Ad
           </Badge>
           <div className={`space-y-2`}>
-            <p className="line-clamp-2 text-xs font-medium lg:text-xl">{featuredProducts?.[0].name}</p>
+            <p className="line-clamp-2 text-xs font-medium lg:text-xl">{featuredProducts?.[0]?.name}</p>
             <p className="text-mid-grey-II line-clamp-2 max-w-[300px] text-xs font-light lg:text-sm">
-              {featuredProducts?.[0].description}
+              {featuredProducts?.[0]?.description}
             </p>
             <Ratings rating={3} />
             <p className={`text-mid-grey-II text-[10px] underline lg:text-sm`}>By Skicom</p>
             <div className="flex items-baseline gap-2">
               <p className="text-accent text-xs font-medium lg:text-2xl">
-                ₦{featuredProducts?.[0].price.toLocaleString()}
+                ₦{featuredProducts?.[0]?.price.toLocaleString()}
               </p>
-              {featuredProducts?.[0].price && (
+              {featuredProducts?.[0]?.price && (
                 <p className="text-mid-danger text-sm line-through lg:text-xl">
-                  ₦{featuredProducts?.[0].price.toLocaleString()}
+                  ₦{featuredProducts?.[0]?.price?.toLocaleString()}
                 </p>
               )}
             </div>

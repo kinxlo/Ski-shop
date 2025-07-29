@@ -110,6 +110,38 @@ export class AppService {
     });
   }
 
+  async order() {
+    return tryCatchWrapper(async () => {
+      const response = await this.http.get<OrderApiResponse>("/orders");
+
+      if (response?.status === 200) {
+        return response.data;
+      }
+      throw new Error("Failed to fetch orders");
+    });
+  }
+
+  async getOrderById(id: string) {
+    return tryCatchWrapper(async () => {
+      const response = await this.http.get<{ success: boolean; data: Order }>(`/orders/${id}`);
+
+      if (response?.status === 200) {
+        return response.data;
+      }
+      throw new Error(`Failed to fetch order with ID: ${id}`);
+    });
+  }
+
+  async saveProduct(data: { productId: string }) {
+    return tryCatchWrapper(async () => {
+      const response = await this.http.post<Product>(`/products/saves`, data);
+      if (response?.status === 201) {
+        return response.data;
+      }
+      throw new Error("Failed to save product");
+    });
+  }
+
   private buildQueryParameters(filters: IFilters): string {
     const queryParameters = new URLSearchParams();
     for (const [key, value] of Object.entries(filters)) {
