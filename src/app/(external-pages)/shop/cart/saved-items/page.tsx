@@ -3,20 +3,17 @@
 import { ProductBreadcrumb } from "@/app/(external-pages)/(home)/_components/product-breadcrumb";
 import { ShopCard } from "@/app/(external-pages)/(home)/_components/shop-card/shop-card";
 import { Wrapper } from "@/components/core/layout/wrapper";
+import SkiButton from "@/components/shared/button";
+import { EmptyState } from "@/components/shared/empty-state";
 import { cn } from "@/lib/utils";
 import { useAppService } from "@/services/app/use-app-service";
-import { toast } from "sonner";
 
 const SavedItems = ({ headerStyle }: { title: string; headerStyle?: string; hasAction?: boolean }) => {
-  const { useGetAllProducts } = useAppService();
-  const { isLoading, isError, error, data } = useGetAllProducts();
+  const { useGetSavedProducts } = useAppService();
+  const { isLoading, isError, data, refetch } = useGetSavedProducts();
 
-  // Handle error state
-  if (isError) {
-    toast.error("something went wrong", {
-      description: error.message,
-    });
-  }
+  // Handle empty state
+  const hasSavedItems = data?.data?.items && data.data.items.length > 0;
 
   return (
     <section className="min-h-[480px] pt-[10rem]">
@@ -26,27 +23,72 @@ const SavedItems = ({ headerStyle }: { title: string; headerStyle?: string; hasA
           <h2 className={cn("text-high-grey-II text-sm font-black lg:text-3xl", headerStyle)}>Saved Items</h2>
         </div>
 
+        {/* Loading State */}
+        {isLoading && (
+          <div className="grid grid-cols-2 gap-8 sm:grid-cols-3 lg:grid-cols-4">
+            {Array.from({ length: 4 }).map((_, index: number) => (
+              <ShopCardSkeleton key={index} />
+            ))}
+          </div>
+        )}
+
+        {/* Error State */}
+        {isError && (
+          <EmptyState
+            images={[{ src: "/images/empty-state.svg", width: 80, height: 80, alt: "Empty State" }]}
+            title={"Failed to load saved items"}
+            description={"Something went wrong while loading your saved items."}
+            className={`space-y-0 rounded-lg`}
+            titleClassName={`!text-2xl !text-mid-danger`}
+            descriptionClassName={`text-mid-danger mb-4`}
+            actionButton={
+              <SkiButton
+                onClick={() => refetch()}
+                variant="outline"
+                className={`border-mid-danger text-mid-danger border`}
+              >
+                Try Again
+              </SkiButton>
+            }
+          />
+        )}
+
+        {/* Empty State */}
+        {!isLoading && !isError && !hasSavedItems && (
+          <EmptyState
+            images={[{ src: "/images/empty-state.svg", width: 80, height: 80, alt: "Empty State" }]}
+            title={"No saved items yet"}
+            description={"Start saving your favorite products to see them here."}
+            className={`bg-mid-grey-I space-y-0 rounded-lg`}
+            titleClassName={`!text-2xl`}
+            descriptionClassName={`text-base mb-4`}
+            actionButton={
+              <SkiButton href="/shop" variant="primary">
+                Browse Products
+              </SkiButton>
+            }
+          />
+        )}
+
         {/* Products Grid */}
-        <div className="grid grid-cols-2 gap-8 sm:grid-cols-3 lg:grid-cols-4">
-          {isLoading &&
-            Array.from({ length: 8 }).map((_, index: number) => {
-              return <ShopCardSkeleton key={index} />;
-            })}
-          {data?.products?.slice(0, 8).map((product) => {
-            return (
+        {!isLoading && !isError && hasSavedItems && (
+          <div className="grid grid-cols-2 gap-8 sm:grid-cols-3 lg:grid-cols-4">
+            {data?.data?.items?.map((product: Product) => (
               <ShopCard
-                key={product.id.toString()}
-                id={product.id.toString()}
+                key={product.id}
+                id={product.id}
                 category={product.category}
-                title={product.title}
-                rating={product.rating}
+                title={product.name}
+                rating={3}
                 price={product.price}
-                discount={product.discountPercentage}
-                image={product.thumbnail}
+                discount={product.discountPrice || 0}
+                image={product.images[0]}
+                name={product.user.name || "Skicom"}
+                showSaveButton={true} // Ensure save button is shown
               />
-            );
-          })}
-        </div>
+            ))}
+          </div>
+        )}
       </Wrapper>
     </section>
   );

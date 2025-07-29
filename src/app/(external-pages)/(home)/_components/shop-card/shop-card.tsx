@@ -1,6 +1,6 @@
 import { Ratings } from "@/components/shared/ratings";
-import { useSaveProduct } from "@/hooks/use-save-product";
 import { cn, formatCurrency } from "@/lib/utils";
+import { useSaveProduct } from "@/mocks/handlers/products/use-save-product";
 import Image from "next/image";
 import Link from "next/link";
 import { HTMLAttributes } from "react";

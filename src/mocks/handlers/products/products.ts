@@ -1,7 +1,32 @@
 import { delay, http, HttpResponse } from "msw";
 
-// In-memory storage for saved products
-let savedProducts: string[] = [];
+// Helper functions for localStorage persistence
+const STORAGE_KEY = "ski_shop_saved_products";
+
+const getSavedProductsFromStorage = (): Product[] => {
+  if (typeof window === "undefined") return [];
+
+  try {
+    const stored = localStorage.getItem(STORAGE_KEY);
+    return stored ? JSON.parse(stored) : [];
+  } catch {
+    // Silently handle localStorage errors
+    return [];
+  }
+};
+
+const saveProductsToStorage = (products: Product[]): void => {
+  if (typeof window === "undefined") return;
+
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(products));
+  } catch {
+    // Silently handle localStorage errors
+  }
+};
+
+// Initialize saved products from localStorage
+let savedProducts: Product[] = getSavedProductsFromStorage();
 
 const products: ProductApiResponse = {
   success: true,
@@ -177,7 +202,7 @@ export const productHandlers = [
     return HttpResponse.json({
       success: true,
       data: {
-        items: products.data.items.filter((product) => savedProducts.includes(product.id)),
+        items: savedProducts, // Return the full saved product objects directly
         metadata: {
           total: savedProducts.length,
           page: 1,
@@ -220,7 +245,7 @@ export const productHandlers = [
     }
 
     // Add to saved products if not already saved
-    if (savedProducts.includes(productId)) {
+    if (savedProducts.some((savedProduct) => savedProduct.id === productId)) {
       // Product already saved, return success
       return HttpResponse.json(
         {
@@ -236,7 +261,8 @@ export const productHandlers = [
     }
 
     // Add to saved products
-    savedProducts.push(productId);
+    savedProducts.push(product);
+    saveProductsToStorage(savedProducts); // Save to localStorage
 
     return HttpResponse.json(
       {
@@ -258,7 +284,8 @@ export const productHandlers = [
       await delay(150);
 
       // Remove from saved products
-      savedProducts = savedProducts.filter((productId) => productId !== id);
+      savedProducts = savedProducts.filter((product) => product.id !== id);
+      saveProductsToStorage(savedProducts); // Save to localStorage
 
       return HttpResponse.json({
         success: true,

@@ -5,11 +5,14 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { LogOut, Settings, User } from "lucide-react";
+import { LogOut, Users } from "lucide-react";
 import { signOut, useSession } from "next-auth/react";
 import Link from "next/link";
+import { useState } from "react";
+import { PiCaretDown, PiHeart, PiList } from "react-icons/pi";
 import { toast } from "sonner";
 
 interface UserAvatarProfileProperties {
@@ -31,9 +34,9 @@ const handleLogout = async () => {
 
 export function UserAvatarProfile({ className, showInfo = false }: UserAvatarProfileProperties) {
   const { data: session } = useSession();
-
+  const [open, setOpen] = useState(false);
   return (
-    <DropdownMenu>
+    <DropdownMenu open={open} onOpenChange={setOpen}>
       <DropdownMenuTrigger className="flex items-center gap-2 focus:outline-none">
         <Avatar className={className}>
           <AvatarImage src={session?.user?.image || ""} alt={session?.user?.name || "User avatar"} />
@@ -48,24 +51,31 @@ export function UserAvatarProfile({ className, showInfo = false }: UserAvatarPro
             <span className="text-muted-foreground truncate text-xs">{session?.user?.email}</span>
           </div>
         )}
+        <PiCaretDown className={`mr-2 h-4 w-4 transition-transform duration-200 ${open ? "rotate-180" : ""}`} />
       </DropdownMenuTrigger>
 
       <DropdownMenuContent className="w-56" align="end">
-        <Link href={`/admin/home`}>
+        <Link href={`/shop/cart/saved-items`}>
           <DropdownMenuItem className="cursor-pointer">
-            <User className="mr-2 h-4 w-4" />
-            <span>Profile</span>
+            <PiHeart className="mr-2 h-4 w-4" />
+            <span>Save Items</span>
           </DropdownMenuItem>
         </Link>
-        <Link href={`/admin/home`}>
+        <Link href={`/shop/cart/orders`}>
           <DropdownMenuItem className="cursor-pointer">
-            <Settings className="mr-2 h-4 w-4" />
-            <span>Settings</span>
+            <PiList className="mr-2 h-4 w-4" />
+            <span>My Orders</span>
           </DropdownMenuItem>
         </Link>
-
+        <Link href={`/shop/cart/orders`}>
+          <DropdownMenuItem className="cursor-pointer">
+            <Users className="mr-2 h-4 w-4" />
+            <span>Invest & Earn</span>
+          </DropdownMenuItem>
+        </Link>
+        <DropdownMenuSeparator />
         <DropdownMenuItem className="text-destructive focus:text-destructive cursor-pointer" onClick={handleLogout}>
-          <LogOut className="mr-2 h-4 w-4" />
+          <LogOut className="text-destructive mr-2 h-4 w-4" />
           <span>Log out</span>
         </DropdownMenuItem>
       </DropdownMenuContent>
