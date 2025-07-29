@@ -20,7 +20,7 @@ const BasePreLoader = () => {
         .then((result) => {
           if (result.success) {
             // Redirect to admin home on success
-            router.push("/admin/home");
+            router.push("/dashboard/home");
           } else {
             // Redirect to login with error on failure
             router.push("/login?error=" + encodeURIComponent("Google authentication failed"));
