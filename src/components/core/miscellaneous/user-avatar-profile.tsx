@@ -67,7 +67,7 @@ export function UserAvatarProfile({ className, showInfo = false }: UserAvatarPro
             <span>My Orders</span>
           </DropdownMenuItem>
         </Link>
-        <Link href={`/shop/cart/orders`}>
+        <Link href={`/earn`}>
           <DropdownMenuItem className="cursor-pointer">
             <Users className="mr-2 h-4 w-4" />
             <span>Invest & Earn</span>
