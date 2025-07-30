@@ -1,6 +1,5 @@
 "use client";
 
-import { ProductBreadcrumb } from "@/app/(external-pages)/(home)/_components/product-breadcrumb";
 import { Wrapper } from "@/components/core/layout/wrapper";
 import SkiButton from "@/components/shared/button";
 import { ReusableDialog } from "@/components/shared/dialog/Dialog";
@@ -14,6 +13,8 @@ import { useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
+
+import { ProductBreadcrumb } from "../../../(home)/_components/product-breadcrumb";
 
 interface CheckoutFormData {
   pickupStation: string;

@@ -1,4 +1,4 @@
-import { ProductBreadcrumb } from "@/app/(external-pages)/(home)/_components/product-breadcrumb";
+import { ProductBreadcrumb } from "@/app/[locale]/(external-pages)/(home)/_components/product-breadcrumb";
 import { Wrapper } from "@/components/core/layout/wrapper";
 import SkiButton from "@/components/shared/button";
 import { RatingModal } from "@/components/shared/rating-modal";

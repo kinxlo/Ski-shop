@@ -1,12 +1,13 @@
 /* eslint-disable no-console */
 "use client";
 
-import { handleGoogleCallback } from "@/app/(auth-pages)/actions/auth-action";
 import Loading from "@/app/Loading";
 import { useSearchParameters } from "@/hooks/use-search-parameters";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { toast } from "sonner";
+
+import { handleGoogleCallback } from "../../actions/auth-action";
 
 const BasePreLoader = () => {
   const router = useRouter();
