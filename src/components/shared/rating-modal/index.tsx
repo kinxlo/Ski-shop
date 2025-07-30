@@ -1,4 +1,4 @@
-import { Modal } from "@/app/(dashboard-pages)/admin/_components/modals/content-modal";
+import { Modal } from "@/app/[locale]/(dashboard-pages)/admin/_components/modals/content-modal";
 import SkiButton from "@/components/shared/button";
 import Image from "next/image";
 import { useState } from "react";

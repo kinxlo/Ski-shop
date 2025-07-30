@@ -1,11 +1,12 @@
 "use client";
 
-import { ProductDetail, ProductDetailSkeleton } from "@/app/(external-pages)/(home)/_views/product-detail";
 import { Wrapper } from "@/components/core/layout/wrapper";
 import SkiButton from "@/components/shared/button";
 import { EmptyState } from "@/components/shared/empty-state";
 import { useAppService } from "@/services/app/use-app-service";
 import { useParams } from "next/navigation";
+
+import { ProductDetail, ProductDetailSkeleton } from "../../../(home)/_views/product-detail";
 
 export default function Page() {
   const { id } = useParams();
