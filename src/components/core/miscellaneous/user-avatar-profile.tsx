@@ -1,5 +1,6 @@
 "use client";
 
+import { LanguageToggle } from "@/components/shared/language-toggle";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   DropdownMenu,
@@ -73,6 +74,10 @@ export function UserAvatarProfile({ className, showInfo = false }: UserAvatarPro
             <span>Invest & Earn</span>
           </DropdownMenuItem>
         </Link>
+        <DropdownMenuSeparator />
+        <div className="px-2 py-1.5">
+          <LanguageToggle />
+        </div>
         <DropdownMenuSeparator />
         <DropdownMenuItem className="text-destructive focus:text-destructive cursor-pointer" onClick={handleLogout}>
           <LogOut className="text-destructive mr-2 h-4 w-4" />

@@ -1,13 +1,26 @@
+import createMiddleware from "next-intl/middleware";
 import { NextResponse } from "next/server";
 
 import { auth } from "../src/lib/next-auth/auth";
 import { adminRoutes, authRoutes, publicRoutes, superAdminRoutes, vendorRoutes } from "../src/lib/routes/routes";
+import { defaultLocale, locales } from "./lib/i18n/config";
+
+// Create the next-intl middleware
+const intlMiddleware = createMiddleware({
+  locales,
+  defaultLocale,
+  localePrefix: "always",
+});
 
 export default auth(async (request) => {
   const { nextUrl } = request;
   const { pathname } = nextUrl;
   const isLoggedIn = !!request.auth;
   const userRole = request.auth?.user?.role?.name || "";
+
+  // Handle locale routing first
+  const intlResponse = intlMiddleware(request);
+  if (intlResponse) return intlResponse;
 
   // Skip middleware for all OAuth callback related routes
   if (

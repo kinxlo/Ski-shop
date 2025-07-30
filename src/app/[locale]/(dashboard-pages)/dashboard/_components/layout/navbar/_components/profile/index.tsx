@@ -14,9 +14,11 @@ import {
 import { withDependency } from "@/HOC/withDependencies";
 import { dependencies } from "@/lib/tools/dependencies";
 import { AuthService } from "@/services/auth/auth.service";
+import { useTranslations } from "next-intl";
 import { LuChevronDown } from "react-icons/lu";
 
 export const BaseProfile = ({ authService }: { authService: AuthService }) => {
+  const t = useTranslations();
   // eslint-disable-next-line unicorn/consistent-function-scoping
   const handleLogOut = async () => {
     // eslint-disable-next-line no-console
@@ -46,7 +48,7 @@ export const BaseProfile = ({ authService }: { authService: AuthService }) => {
         <DropdownMenuSeparator />
         <DropdownMenuItem>Profile</DropdownMenuItem>
         <DropdownMenuItem onClick={handleLogOut} className="text-mid-danger">
-          Log out
+          {t("profile.logout")}
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

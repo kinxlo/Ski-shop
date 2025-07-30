@@ -6,6 +6,7 @@ import { EmptyState } from "@/components/shared/empty-state";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
 import { useAppService } from "@/services/app/use-app-service";
+import { useTranslations } from "next-intl";
 
 import { ShopCard } from "../_components/shop-card/shop-card";
 
@@ -22,6 +23,7 @@ export const PopularProducts = ({
 }) => {
   const { useGetAllProducts } = useAppService();
   const { isLoading, isError, data, refetch } = useGetAllProducts();
+  const t = useTranslations("home.popularProducts");
 
   // Handle error state
   if (isError) {
@@ -37,7 +39,7 @@ export const PopularProducts = ({
               height: 80,
             },
           ]}
-          description={"Failed to load product. Please try again."}
+          description={t("failedToLoad")}
           descriptionClassName={`text-mid-danger`}
           className={`space-y-0 rounded-lg`}
           actionButton={
@@ -46,7 +48,7 @@ export const PopularProducts = ({
               variant="outline"
               className="border-mid-danger text-mid-danger hover:bg-mid-danger/10 mt-4 border"
             >
-              Retry
+              {t("retry")}
             </SkiButton>
           }
         />
@@ -67,7 +69,7 @@ export const PopularProducts = ({
               height: 80,
             },
           ]}
-          description={"No products found"}
+          description={t("noProductsFound")}
           descriptionClassName={`text-primary`}
           className="bg-mid-grey-I min-h-fit space-y-0 rounded-lg py-10"
         />
@@ -81,7 +83,7 @@ export const PopularProducts = ({
         <h2 className={cn("text-high-grey-II text-sm font-black lg:text-3xl", headerStyle)}>{title}</h2>
         {hasAction && (
           <SkiButton href={fullList} variant="link" className="text-primary font-medium lg:text-2xl">
-            See All
+            {t("seeAll")}
           </SkiButton>
         )}
       </div>

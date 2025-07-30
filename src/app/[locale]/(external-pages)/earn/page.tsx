@@ -3,6 +3,7 @@
 import { BreadCrumb } from "@/components/shared/breadcrumb";
 import SkiButton from "@/components/shared/button";
 import { Input } from "@/components/ui/input";
+import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { PiLink } from "react-icons/pi";
 
@@ -12,6 +13,7 @@ export default function EarnPage() {
   const [inviteCode] = useState("SKS123GU");
   const [successfulInvites] = useState(3);
   const [copied, setCopied] = useState(false);
+  const t = useTranslations();
 
   const handleCopyCode = async () => {
     try {
@@ -52,7 +54,7 @@ export default function EarnPage() {
 
   return (
     <section className="pt-[10rem]">
-      <ProductBreadcrumb productTitle="Invest & Earn" />
+      <ProductBreadcrumb productTitle={t("profile.investEarn")} />
       {/* Breadcrumb */}
       <div className="border-b bg-white">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">

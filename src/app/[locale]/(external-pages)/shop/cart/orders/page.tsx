@@ -1,12 +1,13 @@
 "use client";
 
-import { ProductBreadcrumb } from "@/app/(external-pages)/(home)/_components/product-breadcrumb";
-import { OrderCard } from "@/app/(external-pages)/(home)/_components/shop-card/order-card";
 import { Wrapper } from "@/components/core/layout/wrapper";
 import SkiButton from "@/components/shared/button";
 import { EmptyState } from "@/components/shared/empty-state";
 import { cn } from "@/lib/utils";
 import { useAppService } from "@/services/app/use-app-service";
+
+import { ProductBreadcrumb } from "../../../(home)/_components/product-breadcrumb";
+import { OrderCard } from "../../../(home)/_components/shop-card/order-card";
 
 const Orders = ({ headerStyle }: { title: string; headerStyle?: string; hasAction?: boolean }) => {
   const { useGetOrders } = useAppService();

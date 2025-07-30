@@ -5,6 +5,7 @@ import { BlurImage } from "@/components/core/miscellaneous/blur-image";
 import SkiButton from "@/components/shared/button";
 import { cn } from "@/lib/utils";
 import { useSession } from "next-auth/react";
+import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
 
 const heroImages = ["/images/shop/hero.svg", "/images/shop/hero.svg", "/images/shop/hero.svg"];
@@ -13,6 +14,7 @@ export const Hero = () => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(true);
   const { data: session } = useSession();
+  const t = useTranslations("home.hero");
 
   useEffect(() => {
     const transitionDuration = 2500;
@@ -52,13 +54,13 @@ export const Hero = () => {
         <div className="relative z-10 flex min-h-[600px] flex-col items-center justify-center text-center text-white">
           <div className="mt-[10rem] max-w-xl space-y-[12px]">
             <h1 className="text-[32px] leading-[44px] font-bold !text-white lg:text-[56px] lg:leading-[78px]">
-              Shop Smart and Save More with Ski-Shop
+              {t("title")}
             </h1>
-            <p className="mb-8 text-lg">Your one-stop marketplace for everything you need</p>
+            <p className="mb-8 text-lg">{t("subtitle")}</p>
           </div>
           <div className="mx-auto mt-8 flex flex-col items-center gap-4 lg:mx-0 lg:flex-row">
             <SkiButton href={`/shop`} size={`xl`} className="w-[220px]" variant="primary">
-              Shop Now
+              {t("shopNow")}
             </SkiButton>
             <SkiButton
               href={`/signup`}
@@ -66,7 +68,7 @@ export const Hero = () => {
               className={cn("w-[220px] text-white", session?.user?.role.name === "vendor" && "hidden")}
               variant="outline"
             >
-              Become a Seller
+              {t("becomeSeller")}
             </SkiButton>
           </div>
 
