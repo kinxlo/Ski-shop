@@ -80,7 +80,8 @@ export const VENDORS = [
   "basic Vendors",
 ];
 
-export const sideItems = [
+// Admin navigation items
+export const adminSideItems = [
   {
     route: "Dashboard",
     link: "/admin/home",
@@ -142,6 +143,78 @@ export const sideItems = [
     id: "settings",
   },
 ];
+
+// Vendor navigation items
+export const vendorSideItems = [
+  {
+    route: "Dashboard",
+    link: "/dashboard/home",
+    icon: MdDashboard,
+    id: "home",
+  },
+  {
+    route: "Products",
+    link: "/dashboard/products",
+    icon: TbShoppingBag,
+    id: "products",
+  },
+  {
+    route: "Orders",
+    link: "/dashboard/orders",
+    icon: RiShoppingCartLine,
+    id: "orders",
+  },
+  {
+    route: "Users",
+    link: "/dashboard/users",
+    icon: PiUsersThreeLight,
+    id: "users",
+  },
+  {
+    route: "Downloads",
+    link: "/dashboard/downloads",
+    icon: MdOutlineAddCard,
+    id: "downloads",
+  },
+  {
+    route: "Settings",
+    link: "/dashboard/settings",
+    icon: TbSettings2,
+    id: "settings",
+  },
+];
+
+// Super Admin navigation items (includes all admin items plus super admin specific ones)
+export const superAdminSideItems = [
+  ...adminSideItems,
+  {
+    route: "Super Admin",
+    link: "/super-admin/dashboard",
+    icon: MdDashboard,
+    id: "super-admin",
+  },
+  {
+    route: "Admin Management",
+    link: "/super-admin/admin-management",
+    icon: PiUsersThreeLight,
+    id: "admin-management",
+  },
+  {
+    route: "System Settings",
+    link: "/super-admin/system-settings",
+    icon: TbSettings2,
+    id: "system-settings",
+  },
+  {
+    route: "Audit Logs",
+    link: "/super-admin/audit-logs",
+    icon: RiAdvertisementLine,
+    id: "audit-logs",
+  },
+];
+
+// Legacy export for backward compatibility
+export const sideItems = adminSideItems;
 
 // Define columns for the table
 export const employeeColumns = [

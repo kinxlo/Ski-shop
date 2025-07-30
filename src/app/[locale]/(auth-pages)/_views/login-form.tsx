@@ -46,9 +46,7 @@ export const LoginForm = () => {
         setError("password", { message: result.error });
       }
     } else {
-      toast.success("Login Successful", {
-        description: "Redirecting to dashboard...",
-      });
+      toast.success("Login Successful");
       router.push("/dashboard/home");
     }
   };

@@ -2,7 +2,14 @@ import createMiddleware from "next-intl/middleware";
 import { NextResponse } from "next/server";
 
 import { auth } from "../src/lib/next-auth/auth";
-import { adminRoutes, authRoutes, publicRoutes, superAdminRoutes, vendorRoutes } from "../src/lib/routes/routes";
+import {
+  adminRoutes,
+  authRoutes,
+  customerRoutes,
+  publicRoutes,
+  superAdminRoutes,
+  vendorRoutes,
+} from "../src/lib/routes/routes";
 import { defaultLocale, locales } from "./lib/i18n/config";
 
 // Create the next-intl middleware
@@ -11,6 +18,25 @@ const intlMiddleware = createMiddleware({
   defaultLocale,
   localePrefix: "always",
 });
+
+// Helper function to match routes with wildcards and parameters
+function matchRoute(pathname: string, routePattern: string): boolean {
+  // Remove wildcards for matching
+  const cleanRoute = routePattern.replace("*", "");
+
+  // If route ends with *, check if pathname starts with the base route
+  if (routePattern.endsWith("*")) {
+    return pathname.startsWith(cleanRoute);
+  }
+
+  // For exact matches
+  return pathname === routePattern;
+}
+
+// Helper function to check if pathname matches any route in the array
+function matchesAnyRoute(pathname: string, routes: string[]): boolean {
+  return routes.some((route) => matchRoute(pathname, route));
+}
 
 export default auth(async (request) => {
   const { nextUrl } = request;
@@ -42,15 +68,8 @@ export default auth(async (request) => {
     return NextResponse.next();
   }
 
-  // Allow public routes and any route under /explore
-  // The following block checks if the current request's pathname matches any of the public routes.
-  // It does this by iterating over each route in the publicRoutes array and removing any "*" wildcard from the route string using route.replace("*", "").
-  // Then, it checks if the pathname starts with the resulting route string.
-  // This is a simple way to support wildcard routes (like "/fetching-data/*") by matching any path that starts with the base route.
-  // However, not all routes in publicRoutes use the "*" wildcard, and some (like "/shop/product/:id") use parameterized segments (":id"), which this logic does not handle.
-  // So, while route.replace("*", "") works for wildcard routes, it does not properly match parameterized routes (e.g., "/shop/product/:id" or with regex).
-  // As a result, only exact prefix matches will work, and parameterized or regex routes may not be matched as intended.
-  if (publicRoutes.some((route) => pathname.startsWith(route.replace("*", "")))) {
+  // Allow public routes
+  if (matchesAnyRoute(pathname, publicRoutes)) {
     return NextResponse.next();
   }
 
@@ -60,7 +79,7 @@ export default auth(async (request) => {
   }
 
   // Handle auth routes (login, register, etc.)
-  if (authRoutes.some((route) => pathname.startsWith(route.replace("*", "")))) {
+  if (matchesAnyRoute(pathname, authRoutes)) {
     if (isLoggedIn) {
       // If user is already logged in, redirect based on their role
       const targetPath = getTargetPathForRole(userRole);
@@ -72,7 +91,7 @@ export default auth(async (request) => {
   // Check if user is authenticated
   if (!isLoggedIn) {
     // Only redirect to login if not already on an auth page
-    if (!authRoutes.some((route) => pathname.startsWith(route.replace("*", "")))) {
+    if (!matchesAnyRoute(pathname, authRoutes)) {
       const loginUrl = new URL("/login", nextUrl.origin);
       loginUrl.searchParams.set("callbackUrl", pathname);
       return NextResponse.redirect(loginUrl);
@@ -94,20 +113,25 @@ export default auth(async (request) => {
 
 // Helper function to check if user has access to a route
 function checkRouteAccess(pathname: string, role: string): boolean {
-  switch (role.toUpperCase()) {
-    case "SUPER_ADMIN": {
+  switch (role) {
+    case "super_admin": {
       // Super admin can access everything
-      return [...superAdminRoutes, ...adminRoutes, ...vendorRoutes].some((route) => pathname.startsWith(route));
+      return matchesAnyRoute(pathname, [...superAdminRoutes, ...adminRoutes, ...vendorRoutes, ...customerRoutes]);
     }
 
-    case "ADMIN": {
+    case "admin": {
       // Admin can access admin routes only
-      return adminRoutes.some((route) => pathname.startsWith(route));
+      return matchesAnyRoute(pathname, adminRoutes);
     }
 
-    case "VENDOR": {
+    case "vendor": {
       // Vendors can only access vendor routes
-      return vendorRoutes.some((route) => pathname.startsWith(route));
+      return matchesAnyRoute(pathname, vendorRoutes);
+    }
+
+    case "customer": {
+      // Customers can only access customer routes
+      return matchesAnyRoute(pathname, customerRoutes);
     }
 
     default: {
@@ -133,15 +157,18 @@ export const config = {
 };
 
 export function getTargetPathForRole(role: string): string {
-  switch (role.toUpperCase()) {
-    case "SUPER_ADMIN": {
+  switch (role) {
+    case "super_admin": {
       return "/super-admin/dashboard";
     }
-    case "ADMIN": {
+    case "admin": {
       return "/admin/home";
     }
-    case "VENDOR": {
-      return `/dashboard/home`;
+    case "vendor": {
+      return "/dashboard/home";
+    }
+    case "customer": {
+      return "/shop";
     }
     default: {
       return "/login";

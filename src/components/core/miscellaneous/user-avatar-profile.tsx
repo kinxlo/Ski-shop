@@ -9,12 +9,15 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { LogOut, Users } from "lucide-react";
+import { ComponentGuard } from "@/lib/routes/component-guard";
+import { Box, ListOrdered, LogOut, Users } from "lucide-react";
 import { signOut, useSession } from "next-auth/react";
 import Link from "next/link";
 import { useState } from "react";
-import { PiCaretDown, PiHeart, PiList } from "react-icons/pi";
+import { PiCaretDown, PiHeart } from "react-icons/pi";
 import { toast } from "sonner";
+
+import { ModeToggle } from "../layout/ThemeToggle/theme-toggle";
 
 interface UserAvatarProfileProperties {
   className?: string;
@@ -64,7 +67,7 @@ export function UserAvatarProfile({ className, showInfo = false }: UserAvatarPro
         </Link>
         <Link href={`/shop/cart/orders`}>
           <DropdownMenuItem className="cursor-pointer">
-            <PiList className="mr-2 h-4 w-4" />
+            <ListOrdered className="mr-2 h-4 w-4" />
             <span>My Orders</span>
           </DropdownMenuItem>
         </Link>
@@ -74,8 +77,17 @@ export function UserAvatarProfile({ className, showInfo = false }: UserAvatarPro
             <span>Invest & Earn</span>
           </DropdownMenuItem>
         </Link>
+        <ComponentGuard requireAuth allowedRoles={["VENDOR"]}>
+          <Link href={`/dashboard/home`}>
+            <DropdownMenuItem className="cursor-pointer">
+              <Box className="mr-2 h-4 w-4" />
+              <span>Dashboard</span>
+            </DropdownMenuItem>
+          </Link>
+        </ComponentGuard>
         <DropdownMenuSeparator />
-        <div className="px-2 py-1.5">
+        <div className="flex items-center justify-between px-2 py-1.5">
+          <ModeToggle />
           <LanguageToggle />
         </div>
         <DropdownMenuSeparator />

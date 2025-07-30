@@ -123,9 +123,8 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     }),
   ],
   callbacks: {
-    authorized({ request, auth }) {
-      const { pathname } = request.nextUrl;
-      if (pathname === "/middleware-example") return !!auth;
+    authorized() {
+      // Let the middleware handle all authorization logic
       return true;
     },
 

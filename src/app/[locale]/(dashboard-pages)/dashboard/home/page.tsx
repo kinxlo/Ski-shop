@@ -10,7 +10,7 @@ import { formatCurrency } from "@/lib/utils";
 import { useHomeService } from "@/services/dashboard/home/use-home-service";
 import { useProductService } from "@/services/products/use-product-service";
 import { useSession } from "next-auth/react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { GiWallet } from "react-icons/gi";
 import { IoRibbonOutline } from "react-icons/io5";
@@ -29,6 +29,7 @@ const Page = () => {
   const { data: session } = useSession();
   const [showVerifyModal, setShowVerifyModal] = useState(false);
   const router = useRouter();
+  const pathname = usePathname();
   const searchParameters = useSearchParams();
 
   // Get initial values from URL params
@@ -42,12 +43,12 @@ const Page = () => {
 
   // Update URL when filters change
   useEffect(() => {
-    updateQueryParamameters(router, "/admin/home", new URLSearchParams(searchParameters), {
+    updateQueryParamameters(router, pathname, new URLSearchParams(searchParameters), {
       search: searchQuery || null,
       page: currentPage.toString(),
       status: status === "all" ? null : status,
     });
-  }, [searchQuery, currentPage, status, router, searchParameters]);
+  }, [searchQuery, currentPage, status, router, searchParameters, pathname]);
 
   // Update local state when URL params change (for browser back/forward)
   useEffect(() => {

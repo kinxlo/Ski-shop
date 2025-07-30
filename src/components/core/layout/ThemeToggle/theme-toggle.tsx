@@ -13,7 +13,7 @@ export function ModeToggle() {
   }, [resolvedTheme, setTheme]);
 
   return (
-    <Button variant="secondary" size="icon" className="group/toggle size-8" onClick={toggleTheme}>
+    <Button variant="accent" size="icon" className="group/toggle size-8" onClick={toggleTheme}>
       <IconBrightness />
       <span className="sr-only">Toggle theme</span>
     </Button>
