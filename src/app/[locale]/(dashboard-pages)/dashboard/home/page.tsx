@@ -9,7 +9,6 @@ import { updateQueryParamameters, useSearchParameters } from "@/hooks/use-search
 import { formatCurrency } from "@/lib/utils";
 import { useHomeService } from "@/services/dashboard/home/use-home-service";
 import { useProductService } from "@/services/products/use-product-service";
-import { useSession } from "next-auth/react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { GiWallet } from "react-icons/gi";
@@ -18,16 +17,13 @@ import { MdOutlineAddCard } from "react-icons/md";
 import { PiUsersThreeLight } from "react-icons/pi";
 import { RiShoppingCartLine } from "react-icons/ri";
 
-import { FilterDropdown } from "../_components/dashboard-table/_components/filter-dropdown";
-import { OverViewCard } from "../_components/overview-card";
+import { FilterDropdown } from "../../_components/dashboard-table/_components/filter-dropdown";
+import { OverViewCard } from "../../_components/overview-card";
 import { CurrencyDropdown } from "./_components/currency-dropdown";
 import { SectionTwo } from "./_components/currency-dropdown/section-two";
-import { VerifyEmailModal } from "./_components/verify-modal";
 import { AnalysisSkeleton, SectionTwoSkeleton, TableSkeleton } from "./page-skeleton";
 
 const Page = () => {
-  const { data: session } = useSession();
-  const [showVerifyModal, setShowVerifyModal] = useState(false);
   const router = useRouter();
   const pathname = usePathname();
   const searchParameters = useSearchParams();
@@ -88,7 +84,7 @@ const Page = () => {
 
   return (
     <>
-      <VerifyEmailModal email={session?.user?.email || null} open={showVerifyModal} onOpenChange={setShowVerifyModal} />
+      {/* <VerifyEmailModal email={session?.user?.email || null} open={showVerifyModal} onOpenChange={setShowVerifyModal} /> */}
       <main>
         <section className="mb-5 flex items-center justify-between">
           <h4 className="text-mid-grey-III text-[18px] lg:text-[30px]">Dashboard Overview</h4>

@@ -63,7 +63,7 @@ export const Hero = () => {
               {t("shopNow")}
             </SkiButton>
             <SkiButton
-              href={`/signup`}
+              href={`/signup/vendor`}
               size={`xl`}
               className={cn("w-[220px] text-white", session?.user?.role.name === "vendor" && "hidden")}
               variant="outline"

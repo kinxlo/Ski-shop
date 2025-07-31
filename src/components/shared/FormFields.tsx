@@ -5,21 +5,22 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
-import { Eye, EyeOff } from "lucide-react";
+import { Eye, EyeOff, File, PaperclipIcon, Trash2Icon } from "lucide-react";
 import Image from "next/image";
-import { useState } from "react";
+import { ChangeEvent, useRef, useState } from "react";
 import { Controller, useFormContext } from "react-hook-form";
 
 import { BlurImage } from "../core/miscellaneous/blur-image";
 import { Badge } from "../ui/badge";
 import { Checkbox } from "../ui/checkbox";
 import { Switch } from "../ui/switch";
+import MainButton from "./button";
 
 interface FormFieldProperties {
   label?: string;
   labelDetailedNode?: React.ReactNode;
   name: string;
-  type?: "text" | "textarea" | "select" | "number" | "password" | "email";
+  type?: "text" | "textarea" | "select" | "number" | "password" | "email" | "file";
   placeholder?: string;
   required?: boolean;
   disabled?: boolean;
@@ -29,7 +30,15 @@ interface FormFieldProperties {
   leftAddon?: React.ReactNode; // Add left icon or button
   rightAddon?: React.ReactNode; // Add right icon or button
   onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  acceptedFileTypes?: string;
+  maxFiles?: number;
+  showPreview?: boolean;
 }
+
+const handleDragOver = (event: React.DragEvent<HTMLDivElement>) => {
+  event.preventDefault();
+  event.stopPropagation();
+};
 
 export function FormField({
   label,
@@ -45,6 +54,9 @@ export function FormField({
   rightAddon,
   labelDetailedNode,
   onChange,
+  acceptedFileTypes,
+  maxFiles,
+  showPreview,
 }: FormFieldProperties) {
   const {
     control,
@@ -52,9 +64,28 @@ export function FormField({
   } = useFormContext();
   const error = errors[name];
   const [showPassword, setShowPassword] = useState(false);
+  const [isDragActive, setIsDragActive] = useState(false);
+  const [previews, setPreviews] = useState<string[]>([]);
+  const fileInputReference = useRef<HTMLInputElement>(null);
 
   const togglePasswordVisibility = () => {
     setShowPassword((previous) => !previous);
+  };
+
+  const generatePreviews = (newFiles: File[]) => {
+    const newPreviews: string[] = [];
+    for (const file of newFiles) {
+      if (file.type.startsWith("image/")) {
+        const reader = new FileReader();
+        reader.addEventListener("load", (event) => {
+          newPreviews.push(event.target?.result as string);
+          setPreviews([...newPreviews]);
+        });
+        reader.readAsDataURL(file);
+      } else {
+        newPreviews.push("");
+      }
+    }
   };
 
   return (
@@ -132,6 +163,115 @@ export function FormField({
                   >
                     {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                   </button>
+                </div>
+              ) : type === "file" ? (
+                <div className="w-full space-y-4">
+                  <div
+                    onDrop={(event) => {
+                      event.preventDefault();
+                      event.stopPropagation();
+                      setIsDragActive(false);
+
+                      const droppedFiles = event.dataTransfer.files;
+                      if (droppedFiles && droppedFiles.length > 0) {
+                        const newFiles = [...droppedFiles];
+                        const updatedFiles =
+                          (maxFiles || 1) > 1
+                            ? [...(field.value || []), ...newFiles].slice(0, maxFiles || 1)
+                            : newFiles;
+                        field.onChange(updatedFiles);
+                        if (showPreview) {
+                          generatePreviews(updatedFiles);
+                        }
+                      }
+                    }}
+                    onDragOver={handleDragOver}
+                    onDragEnter={(event) => {
+                      event.preventDefault();
+                      event.stopPropagation();
+                      setIsDragActive(true);
+                    }}
+                    onDragLeave={(event) => {
+                      event.preventDefault();
+                      event.stopPropagation();
+                      setIsDragActive(false);
+                    }}
+                    onClick={() => fileInputReference.current?.click()}
+                    className={`${
+                      isDragActive ? "border-primary-400 bg-primary-100" : "border-primary hover:border-primary-300"
+                    } bg-primary-50 flex min-h-[120px] w-full cursor-pointer items-center justify-center rounded-lg border-2 border-dashed p-6 text-center transition-colors`}
+                  >
+                    <div className="flex flex-col items-center justify-center">
+                      <div className={`flex items-center gap-2`}>
+                        <PaperclipIcon className="h-6 w-6" />
+                        <p className="cursor-pointer text-sm text-gray-600">
+                          <span className="font-medium text-blue-600">Browse files</span> or drag and drop here
+                        </p>
+                      </div>
+                      <p className="mt-2 text-[10px] text-gray-500">
+                        {acceptedFileTypes === "*" ? "Any file type" : `Supported: ${acceptedFileTypes}`}
+                      </p>
+                    </div>
+                    <input
+                      ref={fileInputReference}
+                      type="file"
+                      className="hidden"
+                      onChange={(event: ChangeEvent<HTMLInputElement>) => {
+                        if (event.target.files) {
+                          const newFiles = [...event.target.files];
+                          const updatedFiles =
+                            (maxFiles || 1) > 1
+                              ? [...(field.value || []), ...newFiles].slice(0, maxFiles || 1)
+                              : newFiles;
+                          field.onChange(updatedFiles);
+                          if (showPreview) {
+                            generatePreviews(updatedFiles);
+                          }
+                        }
+                      }}
+                      accept={acceptedFileTypes}
+                      multiple={(maxFiles || 1) > 1}
+                    />
+                  </div>
+
+                  {field.value && field.value.length > 0 && (
+                    <div className="space-y-2">
+                      {field.value.map((file: File, index: number) => (
+                        <div
+                          key={`${file.name}-${index}`}
+                          className="flex items-center justify-between rounded-md bg-gray-50 p-3"
+                        >
+                          <div className="flex items-center space-x-2">
+                            {showPreview && file.type.startsWith("image/") && previews[index] ? (
+                              <BlurImage
+                                src={previews[index]}
+                                alt={file.name}
+                                className="h-10 w-10 rounded object-cover"
+                                width={40}
+                                height={40}
+                              />
+                            ) : (
+                              <File className={`w-4`} />
+                            )}
+                            <span className="max-w-xs truncate text-sm font-medium text-gray-700">{file.name}</span>
+                          </div>
+                          <MainButton
+                            isIconOnly
+                            size={`icon`}
+                            icon={<Trash2Icon />}
+                            type="button"
+                            onClick={() => {
+                              const updatedFiles = field.value.filter((_: File, index_: number) => index_ !== index);
+                              field.onChange(updatedFiles);
+                              const updatedPreviews = previews.filter((_, index_) => index_ !== index);
+                              setPreviews(updatedPreviews);
+                            }}
+                            className="text-gray-500 hover:text-red-500"
+                          />
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </div>
               ) : (
                 <Input

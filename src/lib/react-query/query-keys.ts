@@ -10,7 +10,9 @@ export const queryKeys = {
     item: (id: string) => ["cart", "item", id] as const,
   },
   user: {
-    list: () => ["user", "list"] as const,
+    list: (filters?: IFilters) => ["user", "list", ...(filters ? Object.entries(filters) : [])],
+    profile: () => ["user", "profile"] as const,
+    details: (id: string) => ["user", "details", id] as const,
   },
   dashboard: {
     overview: () => ["dashboard", "overview"] as const,

@@ -345,6 +345,45 @@ declare global {
     image?: string;
     [key: string]: unknown;
   }
+
+  // Business Info interface based on the existing business info form
+  interface BusinessInfo {
+    type: string;
+    registrationNumber?: string;
+    contactNumber: string;
+    address: string;
+    country: string;
+    state: string;
+    kycVerificationType: string;
+    identificationNumber: string;
+  }
+
+  // Store interface for store creation
+  interface Store {
+    name: string;
+    description: string;
+    logo?: File;
+  }
+
+  // User profile interface
+  interface UserProfile {
+    id: string;
+    firstName: string;
+    lastName: string;
+    email: string;
+    phone?: string;
+    role: string;
+    businessInfo?: BusinessInfo;
+    createdAt: string;
+    updatedAt: string;
+  }
+
+  // Update user profile interface
+  interface UpdateUserProfile {
+    firstName?: string;
+    lastName?: string;
+    phone?: string;
+  }
 }
 
 // This export is needed to make the file a module

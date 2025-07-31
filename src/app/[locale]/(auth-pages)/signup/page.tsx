@@ -2,7 +2,7 @@
 
 import { BaseSignupForm } from "../_views/signup-form";
 
-const LoginPage = () => {
+const SignupPage = () => {
   return (
     <section>
       <div className="mb-[22px] space-y-[5px]">
@@ -15,4 +15,4 @@ const LoginPage = () => {
     </section>
   );
 };
-export default LoginPage;
+export default SignupPage;

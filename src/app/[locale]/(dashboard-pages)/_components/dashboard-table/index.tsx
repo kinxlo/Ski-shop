@@ -18,7 +18,7 @@ import { AiOutlinePlusCircle } from "react-icons/ai";
 import { IoEllipsisHorizontalSharp } from "react-icons/io5";
 import { LuChevronLeft, LuChevronRight } from "react-icons/lu";
 
-import { Modal } from "../modals/content-modal";
+import { Modal } from "../../../../../components/shared/dialog/content-modal";
 import { Delete } from "../modals/content/delete";
 import { FilterDropdown } from "./_components/filter-dropdown";
 

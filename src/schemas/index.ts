@@ -160,6 +160,30 @@ export const funnelSettingsSchema = z.object({
     .optional(),
 });
 
+export const businessInfoSchema = z.object({
+  type: z.string().min(1, "Business type is required"),
+  registrationNumber: z.string().optional(),
+  contactNumber: z.string().min(1, "Contact phone is required"),
+  address: z.string().min(1, "Business address is required"),
+  country: z.string().min(1, "Country is required"),
+  state: z.string().min(1, "State is required"),
+  kycVerificationType: z.string().min(1, "KYC verification is required"),
+  identificationNumber: z.string().min(1, "Identification number is required"),
+});
+
+export const storeSchema = z.object({
+  name: z.string().min(1, "Store name is required"),
+  description: z.string().min(1, "Store description is required"),
+  logo: z.any().refine((file) => file !== null, "Logo is required"),
+});
+
+export const bankPayoutSchema = z.object({
+  bankName: z.string().min(1, "Bank name is required"),
+  accountNumber: z.string().min(1, "Account number is required"),
+  accountName: z.string().min(1, "Account name is required"),
+});
+
+export type BankPayoutFormData = z.infer<typeof bankPayoutSchema>;
 export type RegisterFormData = z.infer<typeof registerSchema>;
 export type LoginFormData = z.infer<typeof loginSchema>;
 export type ForgotPasswordData = z.infer<typeof forgotPasswordSchema>;
@@ -178,5 +202,7 @@ export type EmailIntegrationFormData = z.infer<typeof emailIntegrationSchema>;
 export type FunnelFormData = z.infer<typeof funnelSchema>;
 export type FunnelSettingFormData = z.infer<typeof funnelSettingsSchema>;
 export type ExternalContactFormData = z.infer<typeof externalContactSchema>;
+export type BusinessInfoFormData = z.infer<typeof businessInfoSchema>;
+export type StoreFormData = z.infer<typeof storeSchema>;
 
 // export type ProductFormData = z.infer<typeof ProductFormSchema>;

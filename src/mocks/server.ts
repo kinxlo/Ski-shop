@@ -1,4 +1,5 @@
-// src/mocks/server.ts
+"use server";
+
 import { setupServer } from "msw/node";
 
 import { dashboardHandler } from "./handlers/dashboard/analytics";

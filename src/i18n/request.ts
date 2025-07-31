@@ -2,15 +2,27 @@ import { getRequestConfig } from "next-intl/server";
 
 import { locales } from "../lib/i18n/config";
 
-export default getRequestConfig(async ({ locale }) => {
+export default getRequestConfig(async ({ requestLocale }) => {
   // Validate that the incoming `locale` parameter is valid
-  if (!locales.includes(locale as (typeof locales)[number])) locale = "en";
+  const locale = await requestLocale;
+  const validLocale = locales.includes(locale as (typeof locales)[number]) ? locale : "en";
 
-  const messagesModule = await import(`../messages/${locale}.json`);
-  const messages = messagesModule.default;
+  try {
+    const messagesModule = await import(`../messages/${validLocale}.json`);
+    const messages = messagesModule.default;
 
-  return {
-    locale: locale as string,
-    messages,
-  };
+    return {
+      locale: validLocale as string,
+      messages,
+    };
+  } catch {
+    // Fallback to default locale if messages file doesn't exist
+    const defaultMessagesModule = await import(`../messages/en.json`);
+    const defaultMessages = defaultMessagesModule.default;
+
+    return {
+      locale: "en",
+      messages: defaultMessages,
+    };
+  }
 });

@@ -1,4 +1,5 @@
-export const publicRoutes: string[] = [
+// Define route patterns for different roles
+const PUBLIC_ROUTES = [
   "/",
   "/pricing",
   "/terms-and-conditions",
@@ -6,55 +7,20 @@ export const publicRoutes: string[] = [
   "/about",
   "/contact",
   "/shop",
-  "/shop/cart/*",
-  "/shop/product/*",
   "/home",
   "/earn",
-];
-
-export const authRoutes: string[] = [
   "/login",
   "/signup",
+  "/signup/vendor",
   "/forgot-password",
   "/reset-password",
-  "/fetching-data/*",
-  "/auth/*",
+  "/auth",
 ];
 
-export const customerRoutes: string[] = [
-  "/shop",
-  "/shop/cart/*",
-  "/shop/product/*",
-  "/shop/checkout/*",
-  "/shop/orders/*",
-];
+const VENDOR_ROUTES = ["/dashboard", "/onboarding/vendor"];
 
-export const vendorRoutes: string[] = [
-  "/dashboard/home",
-  "/dashboard/profile",
-  "/dashboard/settings",
-  "/dashboard/downloads",
-  "/dashboard/orders",
-  "/dashboard/products",
-  "/dashboard/users",
-];
+const ADMIN_ROUTES = ["/admin"];
 
-export const adminRoutes: string[] = [
-  "/admin/home",
-  "/admin/users",
-  "/admin/settings",
-  "/admin/reports",
-  "/admin/products",
-  "/admin/orders",
-  "/admin/analytics",
-];
+const SUPER_ADMIN_ROUTES = ["/super-admin"];
 
-export const superAdminRoutes: string[] = [
-  ...adminRoutes, // Has access to all admin routes
-  "/super-admin/dashboard",
-  "/super-admin/admin-management", // Can manage other admins
-  "/super-admin/system-settings", // Global system settings
-  "/super-admin/audit-logs", // View all system logs
-  "/super-admin/users",
-  "/super-admin/analytics",
-];
+export { PUBLIC_ROUTES, VENDOR_ROUTES, ADMIN_ROUTES, SUPER_ADMIN_ROUTES };
