@@ -3,13 +3,14 @@
 import SkiButton from "@/components/shared/button";
 import { Form, FormControl, FormDescription, FormField, FormItem, FormMessage } from "@/components/ui/form";
 import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp";
-import { useAuthService } from "@/services/auth/use-auth-service";
+import { useResendEmail } from "@/hooks/use-resend-email";
+import { useDecodedSearchParameters } from "@/hooks/use-search-parameters";
+import { useOnboardingUserService } from "@/services/onboarding/use-onboarding-user-service";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useRouter } from "next/navigation";
-import { useCallback, useEffect } from "react";
+import { useLocale } from "next-intl";
+import { usePathname, useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { MdEmail, MdRefresh, MdVerified } from "react-icons/md";
-import { PiShieldCheck } from "react-icons/pi";
 import { toast } from "sonner";
 import { z } from "zod";
 
@@ -21,20 +22,21 @@ const FormSchema = z.object({
 });
 
 interface VerifyEmailComponentProperties {
-  email: string | null;
   onVerificationSuccess?: () => void;
   onVerificationFailure?: () => void;
 }
 
 export const VerifyEmailComponent = ({
-  email,
   onVerificationSuccess,
   onVerificationFailure,
 }: VerifyEmailComponentProperties) => {
+  const locale = useLocale();
+  const email = useDecodedSearchParameters("email");
   const router = useRouter();
-  const { useResendOTP, useVerifyOTP } = useAuthService();
-  const { mutateAsync: resendOTP, isPending: isResending } = useResendOTP();
+  const pathname = usePathname();
+  const { useVerifyOTP } = useOnboardingUserService();
   const { mutateAsync: verifyOTP, isPending: isSubmitting } = useVerifyOTP();
+  const { handleResendEmail, isResending } = useResendEmail();
 
   // Initialize the form
   const form = useForm<z.infer<typeof FormSchema>>({
@@ -44,51 +46,36 @@ export const VerifyEmailComponent = ({
     },
   });
 
-  const handleResendEmail = useCallback(async () => {
-    try {
-      if (email) {
-        await resendOTP({ email });
-        toast.success("Verification code sent", {
-          description: "A new verification code has been sent to your email address.",
-        });
-      }
-    } catch {
-      toast.error("Failed to send verification email", {
-        description: "Please try again later.",
-      });
-    }
-  }, [email, resendOTP]);
-
   const onSubmit = async (data: z.infer<typeof FormSchema>) => {
-    try {
-      const response = await verifyOTP({ code: Number.parseInt(data.code) });
-      if (response?.success) {
-        toast.success("Email verified successfully");
-        onVerificationSuccess?.();
-        router.refresh();
-      }
-    } catch {
-      toast.error("Verification failed", {
-        description: "The code is invalid or has expired. Please try again.",
-      });
-      form.reset();
-      onVerificationFailure?.();
-    }
+    verifyOTP(
+      { code: Number.parseInt(data.code) },
+      {
+        onSuccess: (response) => {
+          if (response?.success && response?.data?.token) {
+            toast.success("Email verified successfully");
+            if (pathname.includes("/vendor")) {
+              onVerificationSuccess?.();
+              router.push(`/${locale}/onboarding/vendor?step=business-info&token=${response?.data?.token}`);
+            } else {
+              router.push("/login");
+            }
+          }
+        },
+        onError: () => {
+          toast.error("Verification failed", {
+            description: "The code is invalid or has expired. Please try again.",
+          });
+          form.reset();
+          onVerificationFailure?.();
+        },
+      },
+    );
   };
-
-  useEffect(() => {
-    if (email) {
-      //   handleResendEmail();
-    }
-  }, [email, handleResendEmail]);
 
   return (
     <div className="flex flex-col items-center space-y-6 px-4 py-6">
       {/* Header Section */}
       <div className="flex flex-col items-center space-y-4 text-center">
-        <div className="bg-primary/10 flex h-16 w-16 items-center justify-center rounded-full">
-          <PiShieldCheck className="text-primary h-8 w-8" />
-        </div>
         <div className="space-y-2">
           <h2 className="text-foreground !text-2xl font-semibold">Verify Your Email</h2>
           <p className="text-muted-foreground max-w-sm text-sm">
@@ -117,30 +104,30 @@ export const VerifyEmailComponent = ({
                 <FormControl>
                   <div className="flex justify-center">
                     <InputOTP maxLength={6} {...field} className="gap-2">
-                      <InputOTPGroup className="gap-2">
+                      <InputOTPGroup className="gap-1 sm:gap-2">
                         <InputOTPSlot
                           index={0}
-                          className="focus:border-primary focus:ring-primary/20 h-12 w-12 rounded-lg border-2 text-lg font-semibold transition-all duration-200 focus:ring-2"
+                          className="focus:border-primary focus:ring-primary/20 h-8 w-8 rounded-lg border-2 text-base font-semibold shadow-none transition-all duration-200 focus:ring-2 sm:h-12 sm:w-12 sm:text-lg"
                         />
                         <InputOTPSlot
                           index={1}
-                          className="focus:border-primary focus:ring-primary/20 h-12 w-12 rounded-lg border-2 text-lg font-semibold transition-all duration-200 focus:ring-2"
+                          className="focus:border-primary focus:ring-primary/20 h-8 w-8 rounded-lg border-2 text-base font-semibold shadow-none transition-all duration-200 focus:ring-2 sm:h-12 sm:w-12 sm:text-lg"
                         />
                         <InputOTPSlot
                           index={2}
-                          className="focus:border-primary focus:ring-primary/20 h-12 w-12 rounded-lg border-2 text-lg font-semibold transition-all duration-200 focus:ring-2"
+                          className="focus:border-primary focus:ring-primary/20 h-8 w-8 rounded-lg border-2 text-base font-semibold shadow-none transition-all duration-200 focus:ring-2 sm:h-12 sm:w-12 sm:text-lg"
                         />
                         <InputOTPSlot
                           index={3}
-                          className="focus:border-primary focus:ring-primary/20 h-12 w-12 rounded-lg border-2 text-lg font-semibold transition-all duration-200 focus:ring-2"
+                          className="focus:border-primary focus:ring-primary/20 h-8 w-8 rounded-lg border-2 text-base font-semibold shadow-none transition-all duration-200 focus:ring-2 sm:h-12 sm:w-12 sm:text-lg"
                         />
                         <InputOTPSlot
                           index={4}
-                          className="focus:border-primary focus:ring-primary/20 h-12 w-12 rounded-lg border-2 text-lg font-semibold transition-all duration-200 focus:ring-2"
+                          className="focus:border-primary focus:ring-primary/20 h-8 w-8 rounded-lg border-2 text-base font-semibold shadow-none transition-all duration-200 focus:ring-2 sm:h-12 sm:w-12 sm:text-lg"
                         />
                         <InputOTPSlot
                           index={5}
-                          className="focus:border-primary focus:ring-primary/20 h-12 w-12 rounded-lg border-2 text-lg font-semibold transition-all duration-200 focus:ring-2"
+                          className="focus:border-primary focus:ring-primary/20 h-8 w-8 rounded-lg border-2 text-base font-semibold shadow-none transition-all duration-200 focus:ring-2 sm:h-12 sm:w-12 sm:text-lg"
                         />
                       </InputOTPGroup>
                     </InputOTP>
@@ -158,21 +145,14 @@ export const VerifyEmailComponent = ({
           <div className="flex flex-col space-y-3">
             <SkiButton
               type="submit"
-              className="h-12 w-full rounded-lg font-medium transition-all duration-200 hover:shadow-md"
+              className="w-full font-medium transition-all duration-200 hover:shadow-md"
               variant={`primary`}
               isDisabled={!form.formState.isValid || form.formState.isSubmitting}
+              isLoading={isSubmitting}
+              isLeftIconVisible
+              icon={<MdVerified />}
             >
-              {isSubmitting ? (
-                <div className="flex items-center space-x-2">
-                  <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
-                  <span>Verifying...</span>
-                </div>
-              ) : (
-                <div className="flex items-center space-x-2">
-                  <MdVerified className="h-5 w-5" />
-                  <span>Verify Email</span>
-                </div>
-              )}
+              {isSubmitting ? "Verifying..." : "Verify Email"}
             </SkiButton>
 
             <SkiButton
@@ -183,19 +163,12 @@ export const VerifyEmailComponent = ({
                 handleResendEmail();
               }}
               isDisabled={isResending}
-              className="hover:bg-muted/50 h-12 w-full rounded-lg font-medium transition-all duration-200"
+              className="hover:bg-muted/50 w-full font-medium transition-all duration-200"
+              isLeftIconVisible
+              icon={<MdRefresh />}
+              isLoading={isResending}
             >
-              {isResending ? (
-                <div className="flex items-center space-x-2">
-                  <div className="border-primary h-4 w-4 animate-spin rounded-full border-2 border-t-transparent" />
-                  <span>Sending...</span>
-                </div>
-              ) : (
-                <div className="flex items-center space-x-2">
-                  <MdRefresh className="h-5 w-5" />
-                  <span>Resend Code</span>
-                </div>
-              )}
+              {isResending ? "Sending..." : "Resend Code"}
             </SkiButton>
           </div>
         </form>

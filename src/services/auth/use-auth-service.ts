@@ -24,17 +24,12 @@ export const useAuthService = () => {
 
   const useResetPassword = () => useServiceMutation((service, data: ResetPasswordData) => service.resetPassword(data));
 
-  const useResendOTP = () => useServiceMutation((service, data: { email: string }) => service.resendOTP(data));
-  const useVerifyOTP = () => useServiceMutation((service, data: { code: number }) => service.verifyOTP(data));
-
   return {
     // Queries
     // useGoogleSignIn,
     useHandleGoogleCallback,
 
     // Mutations
-    useResendOTP,
-    useVerifyOTP,
     useSignUp,
     useForgotPassword,
     useResetPassword,

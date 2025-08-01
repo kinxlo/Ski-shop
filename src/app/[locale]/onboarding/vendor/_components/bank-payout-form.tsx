@@ -2,32 +2,51 @@
 
 import SkiButton from "@/components/shared/button";
 import { FormField } from "@/components/shared/FormFields";
+import { ComboBox } from "@/components/shared/select-dropdown/combo-box";
 import { Form } from "@/components/ui/form";
 import { BankPayoutFormData, bankPayoutSchema } from "@/schemas";
-import { useUserService } from "@/services/user/use-user-service";
+import { useOnboardingUserService } from "@/services/onboarding/use-onboarding-user-service";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useLocale } from "next-intl";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
 interface BankPayoutFormProperties {
-  data: BankPayoutFormData;
-  onComplete: (data: BankPayoutFormData) => void;
+  onComplete: () => void;
 }
 
-export const BankPayoutForm = ({ data, onComplete }: BankPayoutFormProperties) => {
+export const BankPayoutForm = ({ onComplete }: BankPayoutFormProperties) => {
   const form = useForm<BankPayoutFormData>({
     resolver: zodResolver(bankPayoutSchema),
-    defaultValues: data,
+    defaultValues: {
+      bankName: "",
+      accountNumber: "",
+      accountName: "",
+      code: "",
+    },
   });
-  const { useSetupBankDetails } = useUserService();
+
+  const router = useRouter();
+  const locale = useLocale();
+
+  const { useSetupBankDetails, useGetAvailableBanks } = useOnboardingUserService();
+  const { data: availableBanks, isLoading: isLoadingAvailableBanks } = useGetAvailableBanks();
   const { mutateAsync: setupBankDetails, isPending } = useSetupBankDetails();
 
   const onSubmit = async (formData: BankPayoutFormData) => {
-    const response = await setupBankDetails(formData);
-    if (response?.success) {
-      toast.success("Bank details updated successfully, you can now start selling");
-      onComplete(formData);
-    }
+    setupBankDetails(formData, {
+      onSuccess: (response) => {
+        if (response?.success) {
+          toast.success("Bank details updated successfully, you can now start selling");
+          onComplete();
+          router.push(`/${locale}/onboarding/vendor?step=success&token=${response?.data?.token}`);
+        }
+      },
+      onError: () => {
+        toast.error("Failed to update bank details");
+      },
+    });
   };
 
   return (
@@ -39,7 +58,27 @@ export const BankPayoutForm = ({ data, onComplete }: BankPayoutFormProperties) =
 
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-          <FormField placeholder="Bank Name" className="h-14 w-full" name="bankName" />
+          <ComboBox
+            options={
+              availableBanks?.data?.map((bank) => ({
+                value: bank.code,
+                label: bank.name,
+              })) || []
+            }
+            value={form.watch("code")}
+            onValueChange={(value) => {
+              const selectedBank = availableBanks?.data?.find((bank) => bank.code === value);
+              if (selectedBank) {
+                form.setValue("bankName", selectedBank.name);
+                form.setValue("code", selectedBank.code);
+              }
+            }}
+            placeholder="Select bank..."
+            searchPlaceholder="Search bank..."
+            emptyMessage="No bank found."
+            className={`text-high-grey-II h-14 w-full rounded-lg bg-white shadow-none`}
+            contentClassName={`w-full`}
+          />
           <FormField placeholder="Account Number" className="h-14 w-full" name="accountNumber" />
           <FormField placeholder="Account Name" className="h-14 w-full" name="accountName" />
 
@@ -48,7 +87,7 @@ export const BankPayoutForm = ({ data, onComplete }: BankPayoutFormProperties) =
               type="submit"
               className="h-12 w-full font-medium"
               variant="primary"
-              isDisabled={!form.formState.isValid || isPending}
+              isDisabled={!form.formState.isValid || isPending || isLoadingAvailableBanks}
               isLoading={isPending}
             >
               Continue & Submit

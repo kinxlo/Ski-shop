@@ -15,7 +15,13 @@ export const registerSchema = z
   });
 
 export const loginSchema = z.object({
-  email: z.string().min(1, "Email is required").email("Please enter a valid email address"),
+  email: z
+    .string()
+    .min(1, "Email is required")
+    .email("Please enter a valid email address")
+    .refine((value) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value), {
+      message: "Invalid email format",
+    }),
   password: z.string().min(1, "Password is required"),
   // .min(8, "Password must be at least 8 characters"),
 });
@@ -162,7 +168,7 @@ export const funnelSettingsSchema = z.object({
 
 export const businessInfoSchema = z.object({
   type: z.string().min(1, "Business type is required"),
-  registrationNumber: z.string().optional(),
+  businessRegNumber: z.string().optional(),
   contactNumber: z.string().min(1, "Contact phone is required"),
   address: z.string().min(1, "Business address is required"),
   country: z.string().min(1, "Country is required"),
@@ -174,13 +180,14 @@ export const businessInfoSchema = z.object({
 export const storeSchema = z.object({
   name: z.string().min(1, "Store name is required"),
   description: z.string().min(1, "Store description is required"),
-  logo: z.any().refine((file) => file !== null, "Logo is required"),
+  image: z.any().refine((file) => file !== null, "Image is required"),
 });
 
 export const bankPayoutSchema = z.object({
   bankName: z.string().min(1, "Bank name is required"),
   accountNumber: z.string().min(1, "Account number is required"),
   accountName: z.string().min(1, "Account name is required"),
+  code: z.string().min(1, "Bank code is required"),
 });
 
 export type BankPayoutFormData = z.infer<typeof bankPayoutSchema>;

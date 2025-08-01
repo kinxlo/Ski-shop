@@ -384,6 +384,13 @@ declare global {
     lastName?: string;
     phone?: string;
   }
+
+  interface ShortTokenResponse {
+    success: boolean;
+    data: {
+      token: string;
+    };
+  }
 }
 
 // This export is needed to make the file a module

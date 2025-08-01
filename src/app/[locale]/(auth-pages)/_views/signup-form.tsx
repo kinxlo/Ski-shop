@@ -5,6 +5,7 @@ import { FormField } from "@/components/shared/FormFields";
 import { RegisterFormData, registerSchema } from "@/schemas";
 import { useAuthService } from "@/services/auth/use-auth-service";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useLocale } from "next-intl";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useTransition } from "react";
@@ -16,6 +17,7 @@ export const BaseSignupForm = () => {
   const [isGooglePending, startGoogleTransition] = useTransition();
   const router = useRouter();
   const pathname = usePathname();
+  const locale = useLocale();
   const { useSignUp } = useAuthService();
   const { mutateAsync: signUp, isPending: isSigningUp } = useSignUp();
 
@@ -40,24 +42,28 @@ export const BaseSignupForm = () => {
   } = methods;
 
   const handleSubmitForm = async (data: RegisterFormData) => {
-    try {
-      const response = await signUp(data);
-      if (response?.success && role === `customer`) {
-        toast.success(`Registration Successful`, {
-          description: `Registration Successful`,
+    await signUp(data, {
+      onSuccess: (response) => {
+        if (response?.success && !pathname.includes("/vendor")) {
+          toast.success("Registration Successful", {
+            description: "Registration Successful",
+          });
+          router.push(`/${locale}/onboarding/verify-email?email=${data?.email}&token=${response?.data?.token}`);
+        } else if (response?.success && pathname.includes("/vendor")) {
+          toast.success("Registration Successful", {
+            description: "Please verify your email to complete registration",
+          });
+          router.push(
+            `/${locale}/onboarding/vendor?step=verify-email&email=${data?.email}&token=${response?.data?.token}`,
+          );
+        }
+      },
+      onError: (error) => {
+        toast.error("Registration Failed", {
+          description: error instanceof Error ? error.message : "An unknown error occurred",
         });
-        router.push(`/login`);
-      } else if (response?.success && role === `vendor`) {
-        toast.success(`Registration Successful`, {
-          description: `Please verify your email to complete registration`,
-        });
-        router.push(`/onboarding/vendor`);
-      }
-    } catch (error) {
-      toast.error("Registration Failed", {
-        description: error instanceof Error ? error.message : "An unknown error occurred",
-      });
-    }
+      },
+    });
   };
 
   const handleGoogleSignIn = () => {
@@ -89,12 +95,12 @@ export const BaseSignupForm = () => {
               <div className="text-muted-foreground mb-4">
                 <p>
                   By signing up, you&apos;re agreeing to Skicom&apos;s
-                  <Link href="/privacy" className="text-primary hover:underline">
+                  <Link href={`/${locale}/privacy`} className="text-primary hover:underline">
                     {" "}
                     Privacy Policy
                   </Link>
                   , and{" "}
-                  <Link href="/terms" className="text-primary hover:underline">
+                  <Link href={`/${locale}/terms`} className="text-primary hover:underline">
                     Terms & Conditions.
                   </Link>
                 </p>
@@ -129,7 +135,7 @@ export const BaseSignupForm = () => {
             </section>
             <p className="mt-6 text-center text-gray-500">
               Already a user?{" "}
-              <Link href="/login" className="text-primary font-medium hover:underline">
+              <Link href={`/${locale}/login`} className="text-primary font-medium hover:underline">
                 Log In
               </Link>
             </p>

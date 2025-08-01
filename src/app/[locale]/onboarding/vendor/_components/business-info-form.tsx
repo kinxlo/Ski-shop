@@ -1,42 +1,44 @@
 "use client";
 
-import { AsyncSelect } from "@/components/shared/async-select";
 import SkiButton from "@/components/shared/button";
 import { FormField } from "@/components/shared/FormFields";
 import { PhoneInput } from "@/components/shared/inputs/phone-input";
+import { ComboBox } from "@/components/shared/select-dropdown/combo-box";
 import { FormControl, FormItem, FormField as UIFormField } from "@/components/ui/form";
-import { useCountries } from "@/hooks/use-countries";
+import { countries } from "@/lib/constants";
 import { BusinessInfoFormData, businessInfoSchema } from "@/schemas";
-import { useUserService } from "@/services/user/use-user-service";
+import { useOnboardingUserService } from "@/services/onboarding/use-onboarding-user-service";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useLocale } from "next-intl";
+import { useRouter } from "next/navigation";
 import { FormProvider, useForm } from "react-hook-form";
 import { toast } from "sonner";
 
 interface BusinessInfoFormProperties {
-  data: BusinessInfoFormData;
-  onComplete: (data: BusinessInfoFormData) => void;
+  onComplete: () => void;
 }
 
-export const BusinessInfoForm = ({ data, onComplete }: BusinessInfoFormProperties) => {
+export const BusinessInfoForm = ({ onComplete }: BusinessInfoFormProperties) => {
   const methods = useForm<BusinessInfoFormData>({
     resolver: zodResolver(businessInfoSchema),
-    defaultValues: data,
+    defaultValues: {
+      type: "",
+      businessRegNumber: "",
+      contactNumber: "",
+      address: "",
+      country: "",
+      state: "",
+      kycVerificationType: "",
+      identificationNumber: "",
+    },
   });
 
-  // User service hook
-  const { useUpdateBusinessInfo } = useUserService();
+  const router = useRouter();
+  const locale = useLocale();
+
+  // Onboarding user service hook
+  const { useUpdateBusinessInfo } = useOnboardingUserService();
   const { mutateAsync: updateBusinessInfo, isPending } = useUpdateBusinessInfo();
-
-  // Async countries hook
-  const {
-    countries,
-    isLoading: countriesLoading,
-    hasMore,
-    loadMore,
-  } = useCountries({
-    limit: 20,
-    delay: 200,
-  });
 
   const {
     handleSubmit,
@@ -44,11 +46,18 @@ export const BusinessInfoForm = ({ data, onComplete }: BusinessInfoFormPropertie
   } = methods;
 
   const handleSubmitForm = async (formData: BusinessInfoFormData) => {
-    const response = await updateBusinessInfo(formData);
-    if (response?.success) {
-      toast.success("Business information updated successfully");
-      onComplete(formData);
-    }
+    updateBusinessInfo(formData, {
+      onSuccess: (response) => {
+        if (response?.success) {
+          toast.success("Business information updated successfully");
+          onComplete?.();
+          router.push(`/${locale}/onboarding/vendor?step=store-setup&token=${response?.data?.token}`);
+        }
+      },
+      onError: () => {
+        toast.error("Failed to update business information");
+      },
+    });
   };
 
   return (
@@ -88,7 +97,7 @@ export const BusinessInfoForm = ({ data, onComplete }: BusinessInfoFormPropertie
               <FormField
                 placeholder="Business Registration Number (optional)"
                 className="h-14 w-full"
-                name="registrationNumber"
+                name="businessRegNumber"
               />
             </div>
 
@@ -124,16 +133,14 @@ export const BusinessInfoForm = ({ data, onComplete }: BusinessInfoFormPropertie
 
             {/* Country */}
             <div className="space-y-2">
-              <AsyncSelect
+              <ComboBox
+                options={countries}
                 value={methods.watch("country")}
                 onValueChange={(value) => methods.setValue("country", value)}
                 placeholder="Select country"
-                options={countries}
-                isLoading={countriesLoading}
-                hasMore={hasMore}
-                onLoadMore={loadMore}
                 searchPlaceholder="Search countries..."
-                className="mb-0 !h-14 w-full"
+                emptyMessage="No country found."
+                className={`h-14 w-full rounded-lg bg-white shadow-none`}
               />
               {methods.formState.errors.country && (
                 <p className="text-sm text-red-500">{methods.formState.errors.country.message}</p>

@@ -15,9 +15,11 @@ const PUBLIC_ROUTES = [
   "/forgot-password",
   "/reset-password",
   "/auth",
+  "/onboarding/verify-email",
+  "/onboarding/vendor",
 ];
 
-const VENDOR_ROUTES = ["/dashboard", "/onboarding/vendor"];
+const VENDOR_ROUTES = ["/dashboard"];
 
 const ADMIN_ROUTES = ["/admin"];
 

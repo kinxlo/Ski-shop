@@ -6,11 +6,10 @@ import { EmptyState } from "@/components/shared/empty-state";
 import { Paginations } from "@/components/shared/pagination/pagination";
 import { CustomSelect } from "@/components/shared/select-dropdown";
 import { Input } from "@/components/ui/input";
-import { updateQueryParamameters } from "@/hooks/use-search-parameters";
 import { VENDORS } from "@/lib/constants";
 import { useAppService } from "@/services/app/use-app-service";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useMemo, useState } from "react";
+import { useQueryState } from "nuqs";
+import { useMemo } from "react";
 import { useDebounce } from "use-debounce";
 
 import { MobileDownloadBanner } from "../_components/mobile-download-banner";
@@ -23,44 +22,46 @@ interface IFilters {
   page?: number;
   category?: string;
   search?: string;
+  vendor?: string;
+  sort?: string;
 }
 
 const Page = () => {
-  const router = useRouter();
-  const pathname = usePathname();
-  const searchParameters = useSearchParams();
   const { useGetAllProducts, useGetAllProductCategory } = useAppService();
 
-  // State management
-  const [currentPage, setCurrentPage] = useState<number>(1);
-  const [searchInput, setSearchInput] = useState<string>("");
-  const [vendor, setVendor] = useState<string>("All Vendor");
-  const [selectedCategory, setSelectedCategory] = useState<string>("All Categories");
+  // Use nuqs for URL parameter management
+  const [page, setPage] = useQueryState("page", { defaultValue: "1" });
+  const [search, setSearch] = useQueryState("search");
+  const [category, setCategory] = useQueryState("category");
+  const [vendor, setVendor] = useQueryState("vendor");
+  const [sort, setSort] = useQueryState("sort", { defaultValue: "newest" });
+
+  // Debounce search input for better UX
+  const [debouncedSearch] = useDebounce(search || "", 500);
+
   const {
     data: categoriesData,
     isError: isCategoriesError,
     isLoading: isCategoriesLoading,
   } = useGetAllProductCategory();
 
-  // Debounce search input
-  const [debouncedSearch] = useDebounce(searchInput, 500);
-
   // Prepare filters for API call
   const filters = useMemo<IFilters>(() => {
     return {
-      page: currentPage,
-      ...(selectedCategory !== "All Categories" && { categories: selectedCategory.toLowerCase() }),
+      page: page ? Number.parseInt(page) : 1,
+      ...(category && category !== "All Categories" && { categories: category.toLowerCase() }),
       ...(debouncedSearch && { search: debouncedSearch }),
+      ...(vendor && vendor !== "All Vendor" && { vendor }),
+      ...(sort && { sort }),
     };
-  }, [currentPage, selectedCategory, debouncedSearch]);
+  }, [page, category, debouncedSearch, vendor, sort]);
 
   // Queries
-  // const { data: productData, isLoading: isLoadingProducts, error: productsError } = useGetAllProducts(filters);
   const {
     data: productData,
     isLoading: isLoadingProducts,
     isError: isProductError,
-    refetch: refetchProducts, // Add this
+    refetch: refetchProducts,
   } = useGetAllProducts(filters);
 
   // Derived state
@@ -69,59 +70,44 @@ const Page = () => {
   const totalPages = productData?.data?.metadata.totalPages || 0;
   const categories = categoriesData?.data || [];
 
-  // Add this effect to refetch when filters change
-  useEffect(() => {
-    refetchProducts();
-  }, [filters, refetchProducts]);
-
-  // Update your category change handler
+  // Handle category change
   const handleCategoryChange = async (value: string) => {
-    setSelectedCategory(value);
-    setCurrentPage(1);
-
-    // Update URL
-    updateQueryParamameters(router, pathname, new URLSearchParams(searchParameters.toString()), {
-      category: value === "All Categories" ? null : value,
-      page: null,
-    });
-
-    await refetchProducts(); // Force refetch
+    setCategory(value === "All Categories" ? null : value);
+    setPage("1"); // Reset to first page when changing category
   };
 
   // Handle search input change
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchInput(event.target.value);
-    setCurrentPage(1);
+    const value = event.target.value;
+    setSearch(value || null);
+    setPage("1"); // Reset to first page when searching
   };
 
   // Handle vendor change
   const handleVendorChange = (value: string) => {
-    setVendor(value);
-    setCurrentPage(1);
+    setVendor(value === "All Vendor" ? null : value);
+    setPage("1"); // Reset to first page when changing vendor
+  };
+
+  // Handle sort change
+  const handleSortChange = (value: string) => {
+    setSort(value);
   };
 
   // Handle page change
-  const handlePageChange = (page: number) => {
-    setCurrentPage(page);
+  const handlePageChange = (newPage: number) => {
+    setPage(newPage.toString());
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
-
-  // Initialize from URL params
-  useEffect(() => {
-    const category = searchParameters.get("category");
-    if (category) {
-      setSelectedCategory(category);
-    }
-  }, [searchParameters]);
 
   if (isProductError) {
     return (
       <Wrapper className="py-12">
         <EmptyState
           images={[{ src: "/images/empty-state.svg", width: 80, height: 80, alt: "No featured products" }]}
-          description="Failed to load featured products"
+          description="Failed to load products"
           descriptionClassName="text-mid-danger"
-          className="space-y-0 rounded-lg py-10"
+          className="bg-low-warning/5 space-y-0 rounded-lg py-10"
           actionButton={
             <SkiButton
               onClick={() => refetchProducts()}
@@ -160,14 +146,14 @@ const Page = () => {
             <OptionsSelector
               title="Categories"
               categories={["All Categories", ...categories]}
-              value={selectedCategory}
+              value={category || "All Categories"}
               onChange={handleCategoryChange}
             />
           )}
           <OptionsSelector
             title="Vendor"
             categories={["All Vendor", ...VENDORS]}
-            value={vendor}
+            value={vendor || "All Vendor"}
             onChange={handleVendorChange}
           />
         </section>
@@ -177,21 +163,15 @@ const Page = () => {
           {/* Search and sort header */}
           <article className="flex items-center justify-between">
             <div className="w-[20rem]">
-              <Input
-                disabled
-                name="search"
-                placeholder="Search products..."
-                value={searchInput}
-                onChange={handleSearch}
-              />
+              <Input name="search" placeholder="Search products..." value={search || ""} onChange={handleSearch} />
             </div>
             <div className="flex items-center space-x-4">
               <p className="text-sm">Sort By:</p>
               <CustomSelect
-                options={["All Categories", ...categories]}
-                placeholder="Choose a category"
-                value={selectedCategory}
-                onChange={handleCategoryChange}
+                options={["newest", "name", "price", "rating"]}
+                placeholder="Choose sort option"
+                value={sort || "newest"}
+                onChange={handleSortChange}
               />
             </div>
           </article>
@@ -201,7 +181,7 @@ const Page = () => {
             <div>
               <span className="text-mid-grey-II text-sm">Active Filters: </span>
               <span className="space-x-4 text-sm">
-                {selectedCategory} / {vendor}
+                {category || "All Categories"} / {vendor || "All Vendor"}
                 {debouncedSearch && ` / Search: ${debouncedSearch}`}
               </span>
             </div>
@@ -254,7 +234,11 @@ const Page = () => {
             {/* Pagination */}
             {!isLoadingProducts && totalPages > 1 && (
               <div className="my-10">
-                <Paginations currentPage={currentPage} totalPages={totalPages} onPageChange={handlePageChange} />
+                <Paginations
+                  currentPage={page ? Number.parseInt(page) : 1}
+                  totalPages={totalPages}
+                  onPageChange={handlePageChange}
+                />
               </div>
             )}
           </section>

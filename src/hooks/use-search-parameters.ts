@@ -2,6 +2,14 @@
 
 import { useRouter, useSearchParams } from "next/navigation";
 
+export const useDecodedSearchParameters = (key: string) => {
+  const searchParameters = useSearchParams();
+
+  // Use the standard method which automatically decodes values
+  const value = searchParameters.get(key);
+  return value;
+};
+
 export const useSearchParameters = (key: string) => {
   const searchParameters = useSearchParams();
 

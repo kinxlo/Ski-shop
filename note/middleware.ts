@@ -10,6 +10,7 @@ const matchesRoute = (path: string, routePatterns: string[]): boolean => {
       const basePattern = pattern.slice(0, -1);
       return path.startsWith(basePattern);
     }
+    // Exact match or path starts with pattern followed by a slash
     return path === pattern || path.startsWith(pattern + "/");
   });
 };
@@ -36,9 +37,14 @@ export async function middleware(request: NextRequest) {
   const locale = segments[1];
   const pathWithoutLocale = `/${segments.slice(2).join("/")}`;
 
+  // Remove query parameters from path for route matching
+  const pathWithoutQuery = pathWithoutLocale.split("?")[0];
+
   // Check if locale is supported
   if (!SUPPORTED_LOCALES.includes(locale)) {
-    return NextResponse.redirect(new URL(`/en${pathWithoutLocale}`, request.url));
+    const url = new URL(request.url);
+    url.pathname = `/en${pathWithoutLocale}`;
+    return NextResponse.redirect(url);
   }
 
   // Get user token to check authentication and role
@@ -55,10 +61,10 @@ export async function middleware(request: NextRequest) {
       : (token?.role as string) || "customer";
 
   // Check if user is trying to access a protected route
-  const isVendorRoute = matchesRoute(pathWithoutLocale, VENDOR_ROUTES);
-  const isAdminRoute = matchesRoute(pathWithoutLocale, ADMIN_ROUTES);
-  const isSuperAdminRoute = matchesRoute(pathWithoutLocale, SUPER_ADMIN_ROUTES);
-  const isPublicRoute = matchesRoute(pathWithoutLocale, PUBLIC_ROUTES);
+  const isVendorRoute = matchesRoute(pathWithoutQuery, VENDOR_ROUTES);
+  const isAdminRoute = matchesRoute(pathWithoutQuery, ADMIN_ROUTES);
+  const isSuperAdminRoute = matchesRoute(pathWithoutQuery, SUPER_ADMIN_ROUTES);
+  const isPublicRoute = matchesRoute(pathWithoutQuery, PUBLIC_ROUTES);
 
   // Role-based access control
   if (isAuthenticated) {

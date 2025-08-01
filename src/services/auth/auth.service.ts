@@ -93,10 +93,7 @@ export class AuthService {
   async signUp(data: RegisterFormData) {
     return tryCatchWrapper(
       async () => {
-        const response = await this.http.post<{
-          data: string;
-          success: boolean;
-        }>("/auth/register", data);
+        const response = await this.http.post<ShortTokenResponse>("/auth/register", data);
 
         if (response?.status === 201) {
           return response.data;
@@ -182,42 +179,6 @@ export class AuthService {
           return new Error(error.response?.data?.message || "Password reset failed");
         }
         return new Error("Unknown error during password reset");
-      },
-    );
-  }
-
-  async resendOTP(data: { email: string }) {
-    return tryCatchWrapper(
-      async () => {
-        const response = await this.http.patch<{ data: string; success: boolean }>("/auth/resendotp", data);
-        if (response?.status === 200) {
-          return response.data;
-        }
-        throw new Error("Failed to resend OTP");
-      },
-      (error: unknown) => {
-        if (isAxiosError(error)) {
-          return new Error(error.response?.data?.message || "Failed to resend OTP");
-        }
-        return new Error("Unknown error during OTP resend");
-      },
-    );
-  }
-
-  async verifyOTP(data: { code: number }) {
-    return tryCatchWrapper(
-      async () => {
-        const response = await this.http.post<{ data: string; success: boolean }>("/auth/verifyemail", data);
-        if (response?.status === 200) {
-          return response.data;
-        }
-        throw new Error("OTP verification failed");
-      },
-      (error: unknown) => {
-        if (isAxiosError(error)) {
-          return new Error(error.response?.data?.message || "OTP verification failed");
-        }
-        return new Error("Unknown error during OTP verification");
       },
     );
   }

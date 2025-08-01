@@ -2,6 +2,8 @@
 "use client";
 
 import { Wrapper } from "@/components/core/layout/wrapper";
+import SkiButton from "@/components/shared/button";
+import { EmptyState } from "@/components/shared/empty-state";
 import { useAppService } from "@/services/app/use-app-service";
 
 import { ShopCard } from "../_components/shop-card/shop-card";
@@ -11,7 +13,7 @@ export const InterestedProducts = () => {
   const { useGetAllProducts } = useAppService();
 
   // Fetch products with default filters (first page)
-  const { data: productData, isLoading, error } = useGetAllProducts({ page: 1, limit: 4 });
+  const { data: productData, isLoading, error, refetch } = useGetAllProducts({ page: 1, limit: 4 });
 
   if (isLoading) {
     return (
@@ -29,9 +31,22 @@ export const InterestedProducts = () => {
   if (error) {
     console.error("Error fetching products:", error); // Debugging log
     return (
-      <Wrapper className="py-16">
-        <p className="mb-4 text-lg font-semibold sm:mb-8 sm:text-2xl">You May Be Interested In...</p>
-        <div className="text-center text-red-500">Failed to load products. Please try again later.</div>
+      <Wrapper className="py-12">
+        <EmptyState
+          images={[{ src: "/images/empty-state.svg", width: 80, height: 80, alt: "No featured products" }]}
+          description="Failed to load products"
+          descriptionClassName="text-mid-danger"
+          className="bg-low-warning/5 space-y-0 rounded-lg py-10"
+          actionButton={
+            <SkiButton
+              onClick={() => refetch()}
+              variant="outline"
+              className="border-mid-danger text-mid-danger hover:bg-mid-danger/10 mt-4 border"
+            >
+              Retry
+            </SkiButton>
+          }
+        />
       </Wrapper>
     );
   }
@@ -56,6 +71,7 @@ export const InterestedProducts = () => {
               price={product.price}
               oldPrice={product.discountPrice || product.price} // Fallback to price if no discount
               image={product.images?.[0] || "/placeholder-product.jpg"} // Fallback image
+              name={product.user.name || "Skicom"}
             />
           );
         })}

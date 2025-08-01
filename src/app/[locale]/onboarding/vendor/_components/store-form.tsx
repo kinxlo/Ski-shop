@@ -3,24 +3,32 @@
 import SkiButton from "@/components/shared/button";
 import { FormField } from "@/components/shared/FormFields";
 import { StoreFormData, storeSchema } from "@/schemas";
-import { useUserService } from "@/services/user/use-user-service";
+import { useOnboardingUserService } from "@/services/onboarding/use-onboarding-user-service";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useLocale } from "next-intl";
+import { useRouter } from "next/navigation";
 import { FormProvider, useForm } from "react-hook-form";
 import { toast } from "sonner";
 
 interface StoreFormProperties {
-  data: StoreFormData;
-  onComplete: (data: StoreFormData) => void;
+  onComplete: () => void;
 }
 
-export const StoreForm = ({ data, onComplete }: StoreFormProperties) => {
+export const StoreForm = ({ onComplete }: StoreFormProperties) => {
   const methods = useForm<StoreFormData>({
     resolver: zodResolver(storeSchema),
-    defaultValues: data,
+    defaultValues: {
+      name: "",
+      description: "",
+      image: null,
+    },
   });
 
-  // User service hook
-  const { useCreateStore } = useUserService();
+  const router = useRouter();
+  const locale = useLocale();
+
+  // Onboarding user service hook
+  const { useCreateStore } = useOnboardingUserService();
   const { mutateAsync: createStore, isPending } = useCreateStore();
 
   const {
@@ -29,11 +37,20 @@ export const StoreForm = ({ data, onComplete }: StoreFormProperties) => {
   } = methods;
 
   const handleSubmitForm = async (formData: StoreFormData) => {
-    const response = await createStore(formData);
-    if (response?.success) {
-      toast.success("Store created successfully");
-      onComplete(formData);
-    }
+    // eslint-disable-next-line no-console
+    console.log(formData);
+    createStore(formData, {
+      onSuccess: (response) => {
+        if (response?.success) {
+          toast.success("Store created successfully");
+          onComplete?.();
+          router.push(`/${locale}/onboarding/vendor?step=bank-payout&token=${response?.data?.token}`);
+        }
+      },
+      onError: () => {
+        toast.error("Failed to create store");
+      },
+    });
   };
 
   return (
@@ -68,7 +85,7 @@ export const StoreForm = ({ data, onComplete }: StoreFormProperties) => {
             <div className="!w-full space-y-2">
               <FormField
                 label="Store Logo"
-                name="logo"
+                name="image"
                 type="file"
                 acceptedFileTypes="image/*"
                 maxFiles={1}
@@ -85,7 +102,7 @@ export const StoreForm = ({ data, onComplete }: StoreFormProperties) => {
               type="submit"
               className="h-12 w-full sm:h-14"
               variant="primary"
-              isDisabled={isPending || !isValid}
+              isDisabled={!isValid || isPending}
               isLoading={isPending}
             >
               Create Store

@@ -41,7 +41,7 @@ export const PopularProducts = ({
           ]}
           description={t("failedToLoad")}
           descriptionClassName={`text-mid-danger`}
-          className={`space-y-0 rounded-lg`}
+          className={`bg-low-warning/5 space-y-0 rounded-lg`}
           actionButton={
             <SkiButton
               onClick={() => refetch()}
@@ -71,7 +71,7 @@ export const PopularProducts = ({
           ]}
           description={t("noProductsFound")}
           descriptionClassName={`text-primary`}
-          className="bg-mid-grey-I min-h-fit space-y-0 rounded-lg py-10"
+          className="bg-mid-grey-I space-y-0 rounded-lg py-10"
         />
       </Wrapper>
     );

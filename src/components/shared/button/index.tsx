@@ -95,7 +95,7 @@ const SkiButton = forwardRef<HTMLButtonElement, ButtonProperties>(
       </>
     );
 
-    const buttonClasses = `transition-all duration-300 ease-in-out rounded-full cursor-pointer ${
+    const buttonClasses = `transition-all duration-300 ease-in-out rounded-full cursor-pointer shadow-none ${
       isDisabled ? "opacity-50 cursor-not-allowed" : "hover:shadow-sneob dark:hover:shadow-sneobw focus:shadow-none"
     } ${className}`;
 

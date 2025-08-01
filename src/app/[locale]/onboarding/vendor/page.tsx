@@ -1,9 +1,8 @@
 "use client";
 
+import { Logo } from "@/components/shared/logo";
 import { useSearchParameters } from "@/hooks/use-search-parameters";
-import { RouteGuard } from "@/lib/routes/route-guard";
-import { useSession } from "next-auth/react";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 import { BankPayoutForm } from "./_components/bank-payout-form";
@@ -16,28 +15,18 @@ import { VerifyEmailComponent } from "./_components/verify-email";
 export type OnboardingStep = "verify-email" | "business-info" | "store-setup" | "bank-payout" | "success";
 
 const VendorOnboardingPage = () => {
-  const { data: session } = useSession();
   const router = useRouter();
-  const pathname = usePathname();
-  const searchParameters = useSearchParams();
 
   // Get current step from URL or default to verify-email
   const stepFromUrl = useSearchParameters("step");
   const [currentStep, setCurrentStep] = useState<OnboardingStep>((stepFromUrl as OnboardingStep) || "verify-email");
 
   const steps = [
-    { id: "verify-email", title: "Email Verification", step: 0 },
-    { id: "business-info", title: "Business Info", step: 1 },
-    { id: "store-setup", title: "Store Setup", step: 2 },
-    { id: "bank-payout", title: "Bank & Payout", step: 3 },
+    { id: "verify-email", title: "Email Verification", step: 1 },
+    { id: "business-info", title: "Business Info", step: 2 },
+    { id: "store-setup", title: "Store Setup", step: 3 },
+    { id: "bank-payout", title: "Bank & Payout", step: 4 },
   ];
-
-  // Update URL when step changes
-  const updateStepInUrl = (step: OnboardingStep) => {
-    const parameters = new URLSearchParams(searchParameters.toString());
-    parameters.set("step", step);
-    router.push(`${pathname}?${parameters.toString()}`, { scroll: false });
-  };
 
   // Update current step when URL changes
   useEffect(() => {
@@ -53,81 +42,39 @@ const VendorOnboardingPage = () => {
   const handleEmailVerified = () => {
     const nextStep = "business-info";
     setCurrentStep(nextStep);
-    updateStepInUrl(nextStep);
   };
 
   const handleBusinessInfoComplete = () => {
     const nextStep = "store-setup";
     setCurrentStep(nextStep);
-    updateStepInUrl(nextStep);
   };
 
   const handleStoreSetupComplete = () => {
     const nextStep = "bank-payout";
     setCurrentStep(nextStep);
-    updateStepInUrl(nextStep);
   };
 
   const handleBankPayoutComplete = () => {
     const nextStep = "success";
     setCurrentStep(nextStep);
-    updateStepInUrl(nextStep);
   };
 
   const renderCurrentStep = () => {
     switch (currentStep) {
       case "verify-email": {
-        return (
-          <VerifyEmailComponent
-            email={session?.user?.email ?? null}
-            onVerificationSuccess={handleEmailVerified}
-            onVerificationFailure={() => {}}
-          />
-        );
+        return <VerifyEmailComponent onVerificationSuccess={handleEmailVerified} onVerificationFailure={() => {}} />;
       }
 
       case "business-info": {
-        return (
-          <BusinessInfoForm
-            data={{
-              type: "",
-              registrationNumber: "",
-              contactNumber: "",
-              address: "",
-              country: "",
-              state: "",
-              kycVerificationType: "",
-              identificationNumber: "",
-            }}
-            onComplete={handleBusinessInfoComplete}
-          />
-        );
+        return <BusinessInfoForm onComplete={handleBusinessInfoComplete} />;
       }
 
       case "store-setup": {
-        return (
-          <StoreForm
-            data={{
-              name: "",
-              description: "",
-              logo: null,
-            }}
-            onComplete={handleStoreSetupComplete}
-          />
-        );
+        return <StoreForm onComplete={handleStoreSetupComplete} />;
       }
 
       case "bank-payout": {
-        return (
-          <BankPayoutForm
-            data={{
-              bankName: "",
-              accountNumber: "",
-              accountName: "",
-            }}
-            onComplete={handleBankPayoutComplete}
-          />
-        );
+        return <BankPayoutForm onComplete={handleBankPayoutComplete} />;
       }
 
       case "success": {
@@ -141,19 +88,20 @@ const VendorOnboardingPage = () => {
   };
 
   return (
-    <RouteGuard allowedRoles={["vendor"]}>
-      <div className="flex min-h-screen flex-col bg-gray-50">
-        {currentStep !== "verify-email" && currentStep !== "success" && (
-          <div className="mx-auto px-4 py-4">
-            <ProgressIndicator currentStep={getCurrentStepNumber()} totalSteps={3} steps={steps} />
-          </div>
-        )}
-        {/* Content */}
-        <div className="flex flex-1 items-center justify-center p-4">
-          <div className="w-full max-w-xl">{renderCurrentStep()}</div>
-        </div>
+    <div className="flex min-h-screen flex-col bg-gray-50">
+      <div className="bg-primary/10 mx-auto mt-20 flex h-16 w-16 items-center justify-center rounded-full">
+        <Logo width={40} height={40} className="text-primary" />
       </div>
-    </RouteGuard>
+      {currentStep !== "verify-email" && currentStep !== "success" && (
+        <div className="mx-auto px-4 py-4">
+          <ProgressIndicator currentStep={getCurrentStepNumber()} totalSteps={4} steps={steps} />
+        </div>
+      )}
+      {/* Content */}
+      <div className="flex flex-1 justify-center p-4">
+        <div className="w-full max-w-xl">{renderCurrentStep()}</div>
+      </div>
+    </div>
   );
 };
 
