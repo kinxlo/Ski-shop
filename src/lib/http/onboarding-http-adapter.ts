@@ -29,7 +29,11 @@ export class OnboardingHttpAdapter extends HttpAdapter {
     return super.get<T>(endpoint, query, this.getOnboardingHeaders());
   }
 
-  async post<T>(url: string, data: unknown, headers?: object): Promise<{ data: T; status: number } | undefined> {
+  async post<T>(
+    url: string,
+    data: unknown,
+    headers?: Record<string, string>,
+  ): Promise<{ data: T; status: number } | undefined> {
     return super.post<T>(url, data, { ...this.getOnboardingHeaders(), ...headers });
   }
 

@@ -358,9 +358,16 @@ declare global {
 
   // Store interface for store creation
   interface Store {
+    id: string;
     name: string;
     description: string;
-    logo?: File;
+    logo?: File | string;
+  }
+
+  // Store API response interface
+  interface StoreApiResponse {
+    success: boolean;
+    data: Store;
   }
 
   // User profile interface

@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
+import { LocaleLink } from "@/components/shared/locale-link";
 import { Logo } from "@/components/shared/logo";
 import { sideItems } from "@/lib/constants";
 import { LucideProps } from "lucide-react";
-import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { FC, ForwardRefExoticComponent, RefAttributes } from "react";
 
@@ -29,11 +29,10 @@ const Sidebar: FC<Iproperties> = ({ sideNavitems = sideItems }) => {
         </div>
         <section className="flex flex-col items-center gap-[35px] md:items-stretch">
           {sideNavitems.map((item: any) => (
-            <Link
+            <LocaleLink
               key={item.id}
               href={item.link}
               data-testid={item.id}
-              role="sidebar-link"
               className={`${
                 pathname.includes(item.id)
                   ? "border-primary bg-accent text-primary border-0 border-l-4"
@@ -42,7 +41,7 @@ const Sidebar: FC<Iproperties> = ({ sideNavitems = sideItems }) => {
             >
               <item.icon className="h-5 w-5" role="sidebar-icon" />
               <span className="hidden lg:block">{item.route}</span>
-            </Link>
+            </LocaleLink>
           ))}
         </section>
       </div>
@@ -50,18 +49,17 @@ const Sidebar: FC<Iproperties> = ({ sideNavitems = sideItems }) => {
       {/* Bottom navigation for small-to-medium screens */}
       <div className="fixed right-0 bottom-0 left-0 z-50 flex items-center justify-around border-t bg-white p-2 md:hidden">
         {sideNavitems.map((item: any) => (
-          <Link
+          <LocaleLink
             key={item.id}
             href={item.link}
             data-testid={item.id}
-            role="bottom-nav-link"
             className={`${
               pathname.includes(item.id) ? "text-primary" : "text-neutral-dark-2 hover:text-primary"
             } flex flex-col items-center justify-center transition-all duration-300 ease-in`}
           >
             <item.icon size="16px" role="bottom-nav-icon" />
             <span className="hidden text-xs sm:block">{item.route}</span>
-          </Link>
+          </LocaleLink>
         ))}
       </div>
     </>

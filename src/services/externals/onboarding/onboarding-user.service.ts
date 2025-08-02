@@ -67,21 +67,15 @@ export class OnboardingUserService {
   }
 
   async createStore(storeData: StoreFormData) {
+    const headers = { "Content-Type": "multipart/form-data" };
     return tryCatchWrapper(async () => {
-      const formData = new FormData();
-      formData.append("name", storeData.name);
-      formData.append("description", storeData.description);
-      if (Array.isArray(storeData.image) && storeData.image.length > 0) {
-        for (const file of storeData.image) {
-          formData.append("logo[]", file);
-        }
-      }
+      const requestData = {
+        name: storeData.name,
+        description: storeData.description,
+        logo: storeData.image,
+      };
 
-      const response = await this.http.post<ShortTokenResponse>("/auth/store", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
+      const response = await this.http.post<ShortTokenResponse>("/auth/store", requestData, headers);
       if (response?.status === 201) {
         return response.data;
       }

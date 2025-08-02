@@ -1,4 +1,3 @@
-import { Users } from "@/components/shared/dashboard-table/type";
 import { HttpAdapter } from "@/lib/http/http-adapter";
 import { tryCatchWrapper } from "@/lib/tools/tryCatchFunction";
 
@@ -18,18 +17,6 @@ export class ProductService {
         return response.data.data;
       }
       throw new Error("Failed to fetch products");
-    });
-  }
-
-  async getAllUsers(filters: IFilters) {
-    return tryCatchWrapper(async () => {
-      const queryParameters = this.buildQueryParameters(filters);
-      const response = await this.http.get<Users>(`/users?${queryParameters}`);
-
-      if (response?.status === 200) {
-        return response.data;
-      }
-      throw new Error("Failed to fetch users");
     });
   }
 

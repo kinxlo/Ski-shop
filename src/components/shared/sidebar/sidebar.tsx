@@ -12,9 +12,9 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar";
 import { cn } from "@/lib/utils";
-import Link from "next/link";
 import { usePathname } from "next/navigation";
 
+import { LocaleLink } from "../locale-link";
 import { Logo } from "../logo";
 
 // import { Logo } from "../logo";
@@ -61,7 +61,7 @@ export function DashboardSidebar({ navItems }: { navItems: any }) {
                       : "text-mid-grey-II hover:bg-low-grey-I",
                   )}
                 >
-                  <Link onClick={handleCloseOnMobile} href={link} data-testid={item.id} role="sidebar-link">
+                  <LocaleLink onClick={handleCloseOnMobile} href={link} data-testid={item.id}>
                     {renderIcon(item)}
                     <span className={`font-light dark:text-white`}>{item.route}</span>
                     {item.badge && (
@@ -75,7 +75,7 @@ export function DashboardSidebar({ navItems }: { navItems: any }) {
                         {item.badge.count}
                       </SidebarMenuBadge>
                     )}
-                  </Link>
+                  </LocaleLink>
                 </SidebarMenuButton>
               </SidebarMenuItem>
             );

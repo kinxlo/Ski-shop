@@ -6,6 +6,9 @@ import SkiButton from "@/components/shared/button";
 import MainButton from "@/components/shared/button";
 import { FormField } from "@/components/shared/FormFields";
 import { Label } from "@/components/ui/label";
+import { cn } from "@/lib/utils";
+import { useAppService } from "@/services/app/use-app-service";
+import { useDashboardProductService } from "@/services/dashboard/vendor/products/use-product-service";
 import {
   closestCenter,
   DndContext,
@@ -18,36 +21,38 @@ import {
 import { arrayMove, rectSortingStrategy, SortableContext, useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { PaperclipIcon, X } from "lucide-react";
+import { PaperclipIcon, Trash2Icon } from "lucide-react";
 import { useRef, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import * as z from "zod";
 
 const productSchema = z.object({
-  productName: z.string().min(1, "Product name is required"),
-  pricevent: z.number().min(0, "Price must be positive"),
+  name: z.string().min(1, "Product name is required"),
+  price: z.number().min(0, "Price must be positive"),
   discountPrice: z.number().min(0, "Discount price must be positive").optional(),
-  specifications: z.string().min(1, "Specifications are required"),
   description: z.string().min(1, "Description is required"),
   category: z.string().min(1, "Category is required"),
+  stockCount: z.number().min(0, "Stock count must be positive"),
   images: z.array(z.any()).min(1, "At least one image is required").max(4, "Maximum 4 images allowed"),
 });
 
-type ProductFormData = z.infer<typeof productSchema>;
+export type ProductFormData = z.infer<typeof productSchema>;
 
 interface SortableImageProperties {
   id: string;
   file: File;
   onRemove: (id: string) => void;
   isMain?: boolean;
+  onClick?: (id: string) => void;
+  isSelected?: boolean;
 }
 
 const handleDragOver = (event: React.DragEvent<HTMLDivElement>) => {
   event.preventDefault();
 };
 
-const SortableImage = ({ id, file, onRemove, isMain }: SortableImageProperties) => {
+const SortableImage = ({ id, file, onRemove, isMain, onClick, isSelected }: SortableImageProperties) => {
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id });
 
   const style = {
@@ -62,9 +67,10 @@ const SortableImage = ({ id, file, onRemove, isMain }: SortableImageProperties) 
       style={style}
       {...attributes}
       {...listeners}
-      className={`relative ${isMain ? "h-full w-full" : "h-20 w-full"} rounded-md border ${
+      onClick={() => onClick?.(id)}
+      className={`relative ${isMain ? "h-full w-full" : "h-20 w-full"} cursor-pointer rounded-md border ${
         isDragging ? "z-10 shadow-lg" : ""
-      }`}
+      } ${isSelected ? "ring-2 ring-blue-500" : ""}`}
     >
       <BlurImage
         src={URL.createObjectURL(file)}
@@ -77,33 +83,36 @@ const SortableImage = ({ id, file, onRemove, isMain }: SortableImageProperties) 
         type="button"
         isIconOnly
         size={`icon`}
-        icon={<X />}
+        icon={<Trash2Icon className={`!size-2`} />}
         onClick={(event) => {
           event.stopPropagation();
           onRemove(id);
         }}
-        className="absolute -top-2 -right-2 bg-red-500 text-sm text-white transition-opacity hover:opacity-90"
+        className={cn(
+          "bg-mid-danger absolute -top-2 -right-2 text-sm text-white transition-opacity hover:opacity-90",
+          isSelected && !isMain && "border-mid-danger border-2",
+        )}
       />
-      {/* {isMain && (
-        <SkiButton size={`sm`} variant={`outline`} className="absolute">
-          Main Image
-        </SkiButton>
-      )} */}
     </div>
   );
 };
 
 export const AddProductForm = () => {
+  const { useGetAllProductCategory } = useAppService();
+  const { useGetStoreInfo, useCreateProduct } = useDashboardProductService();
+  const { data: productCategories } = useGetAllProductCategory();
+  const { mutateAsync: createProduct, isPending: isCreatingProduct } = useCreateProduct();
+  const { data: storeInfo, isLoading: storeInfoLoading } = useGetStoreInfo();
   const methods = useForm<ProductFormData>({
     resolver: zodResolver(productSchema),
     defaultValues: {
-      productName: "",
-      pricevent: 0,
-      discountPrice: 0,
-      specifications: "",
-      description: "",
+      name: "",
+      price: 0,
       category: "",
+      stockCount: 0,
       images: [],
+      discountPrice: 0,
+      description: "",
     },
   });
 
@@ -116,6 +125,7 @@ export const AddProductForm = () => {
 
   const fileInputReference = useRef<HTMLInputElement>(null);
   const [activeId, setActiveId] = useState<string | null>(null);
+  const [selectedImageId, setSelectedImageId] = useState<string | null>(null);
   const images = watch("images");
 
   const sensors = useSensors(
@@ -156,8 +166,18 @@ export const AddProductForm = () => {
         id: `img-${Date.now()}-${Math.random().toString(36).slice(2, 9)}`,
         file,
       }));
+      // const uploadedFiles = newFiles.map((file) => ({
+      //   id: `img-${Date.now()}-${Math.random().toString(36).slice(2, 9)}`,
+      //   file,
+      // }));
 
-      setValue("images", [...images, ...uploadedFiles], { shouldValidate: true });
+      const newImages = [...images, ...uploadedFiles];
+      setValue("images", newImages, { shouldValidate: true });
+
+      // Set the first image as selected if no image is currently selected
+      if (!selectedImageId && newImages.length > 0) {
+        setSelectedImageId(newImages[0].id);
+      }
     }
   };
 
@@ -174,15 +194,42 @@ export const AddProductForm = () => {
   const handleRemoveImage = (id: string) => {
     const filteredImages = images.filter((img) => img.id !== id);
     setValue("images", filteredImages, { shouldValidate: true });
+    // If the removed image was selected, clear the selection
+    if (selectedImageId === id) {
+      setSelectedImageId(null);
+    }
+  };
+
+  const handleImageSelect = (id: string) => {
+    setSelectedImageId(id);
   };
 
   const handleSubmitForm = async (data: ProductFormData) => {
     try {
-      // eslint-disable-next-line no-console
-      console.log("Product data:", data);
-      toast.success("Product added successfully");
+      // Validate store info is available
+      if (!storeInfo?.data?.id) {
+        toast.error("Store information not available");
+        return;
+      }
+
+      createProduct(
+        { productData: data, storeID: storeInfo.data.id },
+        {
+          onSuccess: (response) => {
+            if (response?.success) {
+              toast.success("Product created successfully");
+              methods.reset();
+            } else {
+              toast.error("Failed to create product");
+            }
+          },
+          onError: () => {
+            toast.error("Failed to create product");
+          },
+        },
+      );
     } catch {
-      toast.error("Failed to add product");
+      toast.error("Failed to process product data");
     }
   };
 
@@ -191,75 +238,20 @@ export const AddProductForm = () => {
   return (
     <section className="">
       <div className="mb-8 space-y-2">
-        <h3 className="text-2xl font-semibold text-black">Add Product</h3>
+        <h3 className="!text-3xl font-bold text-black">Add Product</h3>
       </div>
 
       <FormProvider {...methods}>
         <form onSubmit={handleSubmit(handleSubmitForm)} className="grid grid-cols-1 gap-8 lg:grid-cols-12">
-          {/* Left column (form fields) - unchanged from your original */}
-          <section className="space-y-4 lg:col-span-6">
-            <FormField
-              placeholder="Enter name"
-              className="h-14 w-full"
-              label="Product Name"
-              name="productName"
-              required
-            />
-            <div className="grid grid-cols-2 gap-4">
-              <FormField placeholder="0.00" className="h-14 w-full" label="Price" name="price" type="number" required />
-              <FormField
-                placeholder="0.00"
-                className="h-14 w-full"
-                label="Discount Price"
-                name="discountPrice"
-                type="number"
-              />
+          {/* Image upload section - appears first on mobile, right column on desktop */}
+          <section className="order-1 lg:order-2 lg:col-span-6">
+            <div className="mb-2 gap-2">
+              <Label className="text-[16px] font-medium">
+                Product Images
+                <span className="text-mid-danger ml-1">*</span>
+              </Label>
+              <span className="text-xs text-gray-500">(At least one image is required)</span>
             </div>
-            <FormField
-              placeholder="Enter specifications"
-              className="h-40 w-full bg-white"
-              label="Product Specifications"
-              name="specifications"
-              required
-              type={`textarea`}
-            />
-            <FormField
-              placeholder="Enter description"
-              className="h-14 w-full"
-              label="Product Description"
-              name="description"
-              required
-            />
-            <FormField
-              placeholder="Select Category"
-              className="!h-14 w-full"
-              label="Product Category"
-              name="category"
-              required
-              type={`select`}
-              options={[
-                { value: "electronics", label: "Electronics" },
-                { value: "clothing", label: "Clothing" },
-                { value: "food", label: "Food" },
-              ]}
-            />
-            <div className="pt-4">
-              <MainButton
-                type="submit"
-                variant="primary"
-                isDisabled={isSubmitting || !isValid}
-                isLoading={isSubmitting}
-                className="w-full"
-                size="xl"
-              >
-                Add Product
-              </MainButton>
-            </div>
-          </section>
-
-          {/* Right column (image upload) - maintaining your preferred layout */}
-          <section className="lg:col-span-6">
-            <Label className="mb-2 text-[16px] font-medium">Product Images</Label>
             <div className="space-y-4">
               {/* Main image preview area */}
               <div
@@ -271,7 +263,20 @@ export const AddProductForm = () => {
                 }`}
               >
                 {images.length > 0 ? (
-                  <SortableImage id={images[0].id} file={images[0].file} onRemove={handleRemoveImage} isMain />
+                  <SortableImage
+                    id={
+                      selectedImageId
+                        ? images.find((img) => img.id === selectedImageId)?.id || images[0].id
+                        : images[0].id
+                    }
+                    file={
+                      selectedImageId
+                        ? images.find((img) => img.id === selectedImageId)?.file || images[0].file
+                        : images[0].file
+                    }
+                    onRemove={handleRemoveImage}
+                    isMain
+                  />
                 ) : (
                   <>
                     <div className="flex items-center gap-2">
@@ -293,10 +298,17 @@ export const AddProductForm = () => {
                   onDragStart={handleDragStart}
                   onDragEnd={handleDragEnd}
                 >
-                  <SortableContext items={images.slice(1).map((img) => img.id)} strategy={rectSortingStrategy}>
+                  <SortableContext items={images.map((img) => img.id)} strategy={rectSortingStrategy}>
                     <div className="grid grid-cols-4 gap-2">
-                      {images.slice(1).map((image) => (
-                        <SortableImage key={image.id} id={image.id} file={image.file} onRemove={handleRemoveImage} />
+                      {images.map((image) => (
+                        <SortableImage
+                          key={image.id}
+                          id={image.id}
+                          file={image.file}
+                          onRemove={handleRemoveImage}
+                          onClick={handleImageSelect}
+                          isSelected={selectedImageId === image.id}
+                        />
                       ))}
                       {images.length < 4 && (
                         <div
@@ -332,6 +344,64 @@ export const AddProductForm = () => {
                 onChange={handleFileInputChange}
                 accept="image/*"
               />
+            </div>
+          </section>
+
+          {/* Form fields section - appears second on mobile, left column on desktop */}
+          <section className="order-2 space-y-4 lg:order-1 lg:col-span-6">
+            <FormField placeholder="Enter name" className="h-14 w-full" label="Product Name" name="name" required />
+            <div className="grid grid-cols-3 gap-4">
+              <FormField placeholder="0.00" className="h-14 w-full" label="Price" name="price" type="number" required />
+              <FormField
+                placeholder="0.00"
+                className="h-14 w-full"
+                label="Discount Price"
+                name="discountPrice"
+                type="number"
+              />
+              <FormField
+                placeholder="0.00"
+                className="h-14 w-full"
+                label="Stock Quantity"
+                name="stockCount"
+                type="number"
+                required
+              />
+            </div>
+            <FormField
+              placeholder="Enter description"
+              className="h-40 w-full bg-white"
+              label="Product Description"
+              name="description"
+              required
+              type={`textarea`}
+            />
+            <FormField
+              placeholder="Select Category"
+              className="!h-14 w-full"
+              label="Product Category"
+              name="category"
+              required
+              type={`select`}
+              options={productCategories?.data.map((category) => ({
+                value: category,
+                label: category
+                  .replaceAll(/([A-Z])/g, " $1") // Add space before capital letters
+                  .replace(/^./, (string_) => string_.toUpperCase()) // Capitalize first letter
+                  .trim(), // Remove leading/trailing spaces
+              }))}
+            />
+            <div className="pt-4">
+              <MainButton
+                type="submit"
+                variant="primary"
+                isDisabled={isSubmitting || !isValid || storeInfoLoading || isCreatingProduct}
+                isLoading={isSubmitting || storeInfoLoading || isCreatingProduct}
+                className="w-full"
+                size="xl"
+              >
+                Add Product
+              </MainButton>
             </div>
           </section>
         </form>
