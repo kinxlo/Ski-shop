@@ -1,6 +1,7 @@
 import { AppService } from "@/services/app/app.service";
 import { AuthService } from "@/services/auth/auth.service";
 import { HomeService } from "@/services/dashboard/vendor/home/home.service";
+import { DashboardProductService } from "@/services/dashboard/vendor/products/product.service";
 import { OnboardingUserService } from "@/services/externals/onboarding/onboarding-user.service";
 import { ProductService } from "@/services/externals/products/product.service";
 import { UserService } from "@/services/externals/user/user.service";
@@ -15,6 +16,7 @@ const dependencies = {
   HOME_SERVICE: Symbol("HomeService"),
   USER_SERVICE: Symbol("UserService"),
   ONBOARDING_USER_SERVICE: Symbol("OnboardingUserService"),
+  DASHBOARD_PRODUCT_SERVICE: Symbol("DashboardProductService"),
 };
 
 interface IDependencyContainer {
@@ -29,6 +31,7 @@ const productService = new ProductService(httpAdapter);
 const homeService = new HomeService(httpAdapter);
 const userService = new UserService(httpAdapter);
 const onboardingUserService = new OnboardingUserService();
+const dashboardProductService = new DashboardProductService(httpAdapter);
 
 class DependencyContainer implements IDependencyContainer {
   _dependencies = {};
@@ -53,5 +56,6 @@ container.add(dependencies.PRODUCT_SERVICE, productService);
 container.add(dependencies.HOME_SERVICE, homeService);
 container.add(dependencies.USER_SERVICE, userService);
 container.add(dependencies.ONBOARDING_USER_SERVICE, onboardingUserService);
+container.add(dependencies.DASHBOARD_PRODUCT_SERVICE, dashboardProductService);
 
 export { container, dependencies };

@@ -4,10 +4,12 @@ import { Wrapper } from "@/components/core/layout/wrapper";
 import SkiButton from "@/components/shared/button";
 import { EmptyState } from "@/components/shared/empty-state";
 import { Skeleton } from "@/components/ui/skeleton";
-import { formatCurrency } from "@/lib/utils";
+import { Locale } from "@/lib/i18n/config";
+import { formatCurrency } from "@/lib/i18n/utils";
 import { useAppService } from "@/services/app/use-app-service";
 import { Minus, Plus, Trash2 } from "lucide-react";
 import { useSession } from "next-auth/react";
+import { useLocale } from "next-intl";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
@@ -15,6 +17,7 @@ export const CartView = () => {
   const router = useRouter();
   const { data: session } = useSession();
   const { useGetCart, useRemoveFromCart, useUpdateCartItem } = useAppService();
+  const locale = useLocale();
   // Mutations
   const { mutateAsync: updateQuantity, isPending: isUpdating } = useUpdateCartItem();
   const { mutateAsync: removeItem, isPending: isRemoving } = useRemoveFromCart();
@@ -243,11 +246,11 @@ export const CartView = () => {
                         </div>
                       </td>
                       <td className="px-4 py-4">
-                        {formatCurrency(item.product.price)}
+                        {formatCurrency(item.product.price, locale as Locale)}
                         <br />
                         {item.product.discountPrice && (
                           <span className="text-destructive ml-2 text-xs line-through">
-                            {formatCurrency(item.product?.discountPrice)}
+                            {formatCurrency(item.product?.discountPrice, locale as Locale)}
                           </span>
                         )}
                       </td>
@@ -271,7 +274,7 @@ export const CartView = () => {
                         </div>
                       </td>
                       <td className="px-4 py-4 font-medium">
-                        {formatCurrency((item.product.price || 0) * item.quantity)}
+                        {formatCurrency((item.product.price || 0) * item.quantity, locale as Locale)}
                       </td>
                       <td className="px-4 py-4">
                         <button
@@ -298,16 +301,16 @@ export const CartView = () => {
               <div className="space-y-4">
                 <div className="flex justify-between">
                   <span>Subtotal</span>
-                  <span>{formatCurrency(subtotal)}</span>
+                  <span>{formatCurrency(subtotal, locale as Locale)}</span>
                 </div>
                 <div className="flex justify-between">
                   <span>Shipping</span>
-                  <span>{shipping === 0 ? "Free" : `${formatCurrency(shipping)}`}</span>
+                  <span>{shipping === 0 ? "Free" : `${formatCurrency(shipping, locale as Locale)}`}</span>
                 </div>
                 <div className="border-t pt-4">
                   <div className="flex justify-between font-semibold">
                     <span>Total</span>
-                    <span>{formatCurrency(total)}</span>
+                    <span>{formatCurrency(total, locale as Locale)}</span>
                   </div>
                 </div>
               </div>

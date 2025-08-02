@@ -7,20 +7,22 @@ import { useProductColumn } from "@/components/shared/dashboard-table/table-data
 import { EmptyState, FilteredEmptyState } from "@/components/shared/empty-state";
 import { useDashboardSearchParameters } from "@/lib/nuqs/use-dashboard-search-parameters";
 import { useProductService } from "@/services/externals/products/use-product-service";
+import { useLocale } from "next-intl";
+import { useRouter } from "next/navigation";
 import { useCallback, useMemo } from "react";
 
 import empty1 from "~/images/empty-state.svg";
 import { TableSkeleton } from "../../home/page-skeleton";
 
-export const UnpublishedProducts = () => {
+export const OutOfStockProducts = () => {
   const productColumn = useProductColumn();
-
+  const locale = useLocale();
+  const router = useRouter();
   const { search: searchQuery, page, setSearch: setSearchQuery, resetToFirstPage } = useDashboardSearchParameters();
 
   const filters = useMemo(
     () => ({
       page,
-      status: "draft" as const,
       ...(searchQuery && { search: searchQuery }),
     }),
     [page, searchQuery],
@@ -29,7 +31,7 @@ export const UnpublishedProducts = () => {
   // Initialize product service
   const { useGetAllProducts } = useProductService();
 
-  // Fetch products data
+  // Fetch all products data
   const {
     data: productData,
     isLoading: isProductsLoading,
@@ -51,20 +53,27 @@ export const UnpublishedProducts = () => {
     [setSearchQuery, resetToFirstPage, searchQuery],
   );
 
+  // Filter out-of-stock products
+  const outOfStockProducts = useMemo(() => {
+    return productData?.items?.filter((product) => product.stockCount === 0) || [];
+  }, [productData?.items]);
+
+  // Calculate pagination for out-of-stock products
+  const totalOutOfStock = outOfStockProducts.length;
+  const itemsPerPage = 10; // Assuming 10 items per page
+  const totalPages = Math.ceil(totalOutOfStock / itemsPerPage);
+  const hasNextPage = page < totalPages;
+  const hasPreviousPage = page > 1;
+
   if (isError) {
     return (
       <EmptyState
-        images={[
-          {
-            src: "/images/empty-state.svg",
-            alt: "Empty Cart",
-            width: 80,
-            height: 80,
-          },
-        ]}
-        description={"Failed to load products"}
-        descriptionClassName={`text-mid-danger`}
-        className={`bg-low-warning/5 space-y-0 rounded-lg`}
+        images={[{ src: empty1.src, alt: "No out of stock products", width: 50, height: 50 }]}
+        className={`space-y-0`}
+        titleClassName={`!text-2xl text-primary font-semibold`}
+        descriptionClassName={`text-muted-foreground max-w-[500px] font-medium`}
+        title="No out of stock products."
+        description="Great! All your products are currently in stock."
         actionButton={
           <SkiButton
             onClick={() => refetch()}
@@ -78,35 +87,38 @@ export const UnpublishedProducts = () => {
     );
   }
 
-  // Extract data from the correct structure (similar to shop page)
-  const products = productData?.items || [];
-  const totalProducts = productData?.metadata?.total || 0;
-  const totalPages = productData?.metadata?.totalPages || 0;
-  const hasNextPage = productData?.metadata?.hasNextPage || false;
-  const hasPreviousPage = productData?.metadata?.hasPreviousPage || false;
-
   return (
-    <>
-      <div className="mb-2 flex items-center justify-between gap-2">
-        <h6 className={`!text-lg font-semibold`}>Draft</h6>
-        <div className={`flex items-center gap-2`}>
-          <SearchInput className={``} onSearch={handleSearchChange} initialValue={searchQuery} delay={500} />
+    <div className="space-y-4">
+      {/* Header */}
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <h6 className="text-lg font-semibold sm:text-xl">Out of Stock Products</h6>
+        <div className="w-full sm:w-auto">
+          <SearchInput
+            className="w-full sm:w-64"
+            onSearch={handleSearchChange}
+            initialValue={searchQuery}
+            delay={500}
+          />
         </div>
       </div>
-      <section>
+
+      {/* Content */}
+      <section className="min-h-[400px]">
         {isProductsLoading ? (
           <TableSkeleton />
-        ) : products.length > 0 ? (
-          <DashboardTable
-            data={products}
-            columns={productColumn}
-            totalPages={totalPages}
-            itemsPerPage={totalProducts}
-            hasPreviousPage={hasPreviousPage}
-            hasNextPage={hasNextPage}
-            showPagination
-            pageParameter="page"
-          />
+        ) : outOfStockProducts.length > 0 ? (
+          <div className="overflow-x-auto">
+            <DashboardTable
+              data={outOfStockProducts}
+              columns={productColumn}
+              totalPages={totalPages}
+              itemsPerPage={totalOutOfStock}
+              hasPreviousPage={hasPreviousPage}
+              hasNextPage={hasNextPage}
+              showPagination={totalOutOfStock > itemsPerPage}
+              pageParameter="page"
+            />
+          </div>
         ) : searchQuery ? (
           <FilteredEmptyState
             onReset={() => {
@@ -116,22 +128,21 @@ export const UnpublishedProducts = () => {
           />
         ) : (
           <EmptyState
-            images={[{ src: empty1.src, alt: "No products", width: 50, height: 50 }]}
+            images={[{ src: empty1.src, alt: "No out of stock products", width: 50, height: 50 }]}
             className={`space-y-0`}
             titleClassName={`!text-2xl text-primary font-semibold`}
             descriptionClassName={`text-muted-foreground max-w-[500px] font-medium`}
-            title="No draft products yet."
-            description="Once you create draft products, you'll see their details here, including name, category, price, stock, and more."
+            title="No out of stock products."
+            description="Great! All your products are currently in stock."
             button={{
-              text: "Add New Product",
+              text: "View All Products",
               onClick: () => {
-                return;
-                // router.push(`/dashboard/products/new`);
+                router.push(`/${locale}/dashboard/products`);
               },
             }}
           />
         )}
       </section>
-    </>
+    </div>
   );
 };

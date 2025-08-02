@@ -1,16 +1,9 @@
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Badge } from "@/components/ui/badge";
+import { currencies } from "@/lib/i18n/config";
+import { useLocale } from "next-intl";
 
 export const CurrencyDropdown = () => {
-  return (
-    <Select>
-      <SelectTrigger className="w-[123px] border-none bg-white shadow-none">
-        <SelectValue placeholder="NGN" />
-      </SelectTrigger>
-      <SelectContent>
-        <SelectItem value="NGN">NGN</SelectItem>
-        <SelectItem value="USD">USD</SelectItem>
-        <SelectItem value="EUR">EUR</SelectItem>
-      </SelectContent>
-    </Select>
-  );
+  const locale = useLocale();
+  const currency = currencies[locale as keyof typeof currencies];
+  return <Badge className="text-primary border-border border bg-white font-bold">{currency}</Badge>;
 };

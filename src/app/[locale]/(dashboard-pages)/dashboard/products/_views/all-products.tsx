@@ -7,12 +7,18 @@ import { useProductColumn } from "@/components/shared/dashboard-table/table-data
 import { EmptyState, FilteredEmptyState } from "@/components/shared/empty-state";
 import { useDashboardSearchParameters } from "@/lib/nuqs/use-dashboard-search-parameters";
 import { useProductService } from "@/services/externals/products/use-product-service";
+import { useLocale } from "next-intl";
+import { useRouter } from "next/navigation";
+// import { useTranslations } from "next-intl";
 import { useCallback, useMemo } from "react";
 
 import empty1 from "~/images/empty-state.svg";
 import { TableSkeleton } from "../../home/page-skeleton";
 
-export const UnpublishedProducts = () => {
+export const AllProducts = () => {
+  const locale = useLocale();
+  const router = useRouter();
+  // const t = useTranslations("products");
   const productColumn = useProductColumn();
 
   const { search: searchQuery, page, setSearch: setSearchQuery, resetToFirstPage } = useDashboardSearchParameters();
@@ -20,7 +26,6 @@ export const UnpublishedProducts = () => {
   const filters = useMemo(
     () => ({
       page,
-      status: "draft" as const,
       ...(searchQuery && { search: searchQuery }),
     }),
     [page, searchQuery],
@@ -86,27 +91,37 @@ export const UnpublishedProducts = () => {
   const hasPreviousPage = productData?.metadata?.hasPreviousPage || false;
 
   return (
-    <>
-      <div className="mb-2 flex items-center justify-between gap-2">
-        <h6 className={`!text-lg font-semibold`}>Draft</h6>
-        <div className={`flex items-center gap-2`}>
-          <SearchInput className={``} onSearch={handleSearchChange} initialValue={searchQuery} delay={500} />
+    <div className="space-y-4">
+      {/* Header */}
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <h6 className="text-lg font-semibold sm:text-xl">All Products</h6>
+        <div className="w-full sm:w-auto">
+          <SearchInput
+            className="w-full sm:w-64"
+            onSearch={handleSearchChange}
+            initialValue={searchQuery}
+            delay={500}
+          />
         </div>
       </div>
-      <section>
+
+      {/* Content */}
+      <section className="min-h-[400px]">
         {isProductsLoading ? (
           <TableSkeleton />
         ) : products.length > 0 ? (
-          <DashboardTable
-            data={products}
-            columns={productColumn}
-            totalPages={totalPages}
-            itemsPerPage={totalProducts}
-            hasPreviousPage={hasPreviousPage}
-            hasNextPage={hasNextPage}
-            showPagination
-            pageParameter="page"
-          />
+          <div className="overflow-x-auto">
+            <DashboardTable
+              data={products}
+              columns={productColumn}
+              totalPages={totalPages}
+              itemsPerPage={totalProducts}
+              hasPreviousPage={hasPreviousPage}
+              hasNextPage={hasNextPage}
+              showPagination
+              pageParameter="page"
+            />
+          </div>
         ) : searchQuery ? (
           <FilteredEmptyState
             onReset={() => {
@@ -117,21 +132,20 @@ export const UnpublishedProducts = () => {
         ) : (
           <EmptyState
             images={[{ src: empty1.src, alt: "No products", width: 50, height: 50 }]}
+            title="No products yet."
+            description="Once you add products, you'll see their details here, including name, category, price, stock, and more."
             className={`space-y-0`}
             titleClassName={`!text-2xl text-primary font-semibold`}
             descriptionClassName={`text-muted-foreground max-w-[500px] font-medium`}
-            title="No draft products yet."
-            description="Once you create draft products, you'll see their details here, including name, category, price, stock, and more."
             button={{
               text: "Add New Product",
               onClick: () => {
-                return;
-                // router.push(`/dashboard/products/new`);
+                router.push(`/${locale}/dashboard/products/new`);
               },
             }}
           />
         )}
       </section>
-    </>
+    </div>
   );
 };

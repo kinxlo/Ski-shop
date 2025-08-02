@@ -9,7 +9,7 @@ export const useDashboardSearchParameters = () => {
   const [search, setSearch] = useQueryState("search", parseAsString);
   const [status, setStatus] = useQueryState(
     "status",
-    parseAsStringEnum(["all", "published", "draft"]).withDefault("all"),
+    parseAsStringEnum(["all", "published", "draft", "out-of-stock"]).withDefault("all"),
   );
 
   return {

@@ -1,29 +1,32 @@
 "use client";
 
-import Loading from "@/app/Loading";
 import { SearchInput } from "@/components/core/miscellaneous/search-input";
 import { DashboardTable } from "@/components/shared/dashboard-table";
 import { useProductColumn } from "@/components/shared/dashboard-table/table-data";
 import { EmptyState, FilteredEmptyState } from "@/components/shared/empty-state";
+import { useDashboardSearchParameters } from "@/lib/nuqs/use-dashboard-search-parameters";
 import { useProductService } from "@/services/externals/products/use-product-service";
-import { useState } from "react";
+import { useCallback, useMemo } from "react";
 
 import empty1 from "~/images/empty-state.svg";
+import { TableSkeleton } from "../../home/page-skeleton";
 
 export const PublishedProducts = () => {
-  // const { data: session } = useSession();
-  const [searchQuery, setSearchQuery] = useState("");
-  const [currentPage, setCurrentPage] = useState(1);
-  const [status, setStatus] = useState<string>("all");
   const productColumn = useProductColumn();
+
+  const { search: searchQuery, page, setSearch: setSearchQuery, resetToFirstPage } = useDashboardSearchParameters();
+
+  const filters = useMemo(
+    () => ({
+      page,
+      status: "published" as const,
+      ...(searchQuery && { search: searchQuery }),
+    }),
+    [page, searchQuery],
+  );
+
   // Initialize product service
   const { useGetAllProducts } = useProductService();
-
-  const filters: IFilters = {
-    page: currentPage,
-    ...(status !== "all" && { status: status as "published" | "draft" }),
-    ...(searchQuery && { search: searchQuery }),
-  };
 
   // Fetch products data
   const {
@@ -35,11 +38,27 @@ export const PublishedProducts = () => {
     staleTime: 1000 * 60 * 5, // 5 minutes cache
   });
 
+  const handleSearchChange = useCallback(
+    (newSearch: string) => {
+      // Prevent rapid search changes that could cause throttling
+      if (newSearch !== searchQuery) {
+        setSearchQuery(newSearch);
+        resetToFirstPage(); // Reset to first page when search changes
+      }
+    },
+    [setSearchQuery, resetToFirstPage, searchQuery],
+  );
+
   if (isError) {
     return (
-      <div className="flex items-center justify-center p-20">
-        <p>Error loading products. Please try again later.</p>
-      </div>
+      <EmptyState
+        images={[{ src: empty1.src, alt: "No products", width: 50, height: 50 }]}
+        className={`space-y-0`}
+        titleClassName={`!text-2xl text-primary font-semibold`}
+        descriptionClassName={`text-muted-foreground max-w-[500px] font-medium`}
+        title="No published products yet."
+        description="Once you publish products, you'll see their details here, including name, category, price, stock, and more."
+      />
     );
   }
 
@@ -55,13 +74,13 @@ export const PublishedProducts = () => {
       <div className="mb-2 flex items-center justify-between gap-2">
         <h6 className={`!text-lg font-semibold`}>Published</h6>
         <div className={`flex items-center gap-2`}>
-          <SearchInput className={``} onSearch={setSearchQuery} />
+          <SearchInput className={``} onSearch={handleSearchChange} initialValue={searchQuery} delay={500} />
         </div>
       </div>
       <section>
         {isProductsLoading ? (
-          <Loading text="Loading products..." className="w-fill h-fit p-20" />
-        ) : productData?.items?.length ? (
+          <TableSkeleton />
+        ) : products.length > 0 ? (
           <DashboardTable
             data={products}
             columns={productColumn}
@@ -72,20 +91,23 @@ export const PublishedProducts = () => {
             showPagination
             pageParameter="page"
           />
-        ) : status === "all" ? (
+        ) : searchQuery ? (
           <FilteredEmptyState
             onReset={() => {
-              setStatus("all");
-              setCurrentPage(1);
+              setSearchQuery("");
+              resetToFirstPage();
             }}
           />
         ) : (
           <EmptyState
-            images={[{ src: empty1.src, alt: "No employees", width: 100, height: 100 }]}
-            title="No employee yet."
-            description="Once you add team members, you’ll see their details here, including department, role, work status, and more."
+            images={[{ src: empty1.src, alt: "No products", width: 50, height: 50 }]}
+            className={`space-y-0`}
+            titleClassName={`!text-2xl text-primary font-semibold`}
+            descriptionClassName={`text-muted-foreground max-w-[500px] font-medium`}
+            title="No published products yet."
+            description="Once you publish products, you'll see their details here, including name, category, price, stock, and more."
             button={{
-              text: "Add New Employee",
+              text: "Add New Product",
               onClick: () => {
                 return;
                 // router.push(`/dashboard/products/new`);

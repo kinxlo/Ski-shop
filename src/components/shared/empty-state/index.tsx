@@ -80,9 +80,12 @@ export const EmptyState = ({
 
 export const FilteredEmptyState = ({ onReset }: { onReset: () => void }) => (
   <EmptyState
-    images={[{ src: empty1.src, alt: "No filtered results", width: 100, height: 100 }]}
+    images={[{ src: empty1.src, alt: "No filtered results", width: 50, height: 50 }]}
     title="No matching results found"
     description="Try adjusting your date range or status filter to find what you're looking for."
+    className={`space-y-0`}
+    titleClassName={`!text-2xl text-primary font-semibold`}
+    descriptionClassName={`text-muted-foreground max-w-[500px] font-medium`}
     button={{
       text: "Reset Filters",
       onClick: onReset,
