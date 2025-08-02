@@ -1,9 +1,9 @@
 import { AppService } from "@/services/app/app.service";
 import { AuthService } from "@/services/auth/auth.service";
-import { HomeService } from "@/services/dashboard/home/home.service";
-import { OnboardingUserService } from "@/services/onboarding/onboarding-user.service";
-import { ProductService } from "@/services/products/product.service";
-import { UserService } from "@/services/user/user.service";
+import { HomeService } from "@/services/dashboard/vendor/home/home.service";
+import { OnboardingUserService } from "@/services/externals/onboarding/onboarding-user.service";
+import { ProductService } from "@/services/externals/products/product.service";
+import { UserService } from "@/services/externals/user/user.service";
 
 import { HttpAdapter } from "../http/http-adapter";
 

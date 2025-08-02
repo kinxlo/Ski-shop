@@ -7,7 +7,7 @@ import { ComboBox } from "@/components/shared/select-dropdown/combo-box";
 import { FormControl, FormItem, FormField as UIFormField } from "@/components/ui/form";
 import { countries } from "@/lib/constants";
 import { BusinessInfoFormData, businessInfoSchema } from "@/schemas";
-import { useOnboardingUserService } from "@/services/onboarding/use-onboarding-user-service";
+import { useOnboardingUserService } from "@/services/externals/onboarding/use-onboarding-user-service";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useLocale } from "next-intl";
 import { useRouter } from "next/navigation";

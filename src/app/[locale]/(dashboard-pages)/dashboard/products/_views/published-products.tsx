@@ -5,7 +5,7 @@ import { SearchInput } from "@/components/core/miscellaneous/search-input";
 import { DashboardTable } from "@/components/shared/dashboard-table";
 import { productColumn } from "@/components/shared/dashboard-table/table-data";
 import { EmptyState, FilteredEmptyState } from "@/components/shared/empty-state";
-import { useProductService } from "@/services/products/use-product-service";
+import { useProductService } from "@/services/externals/products/use-product-service";
 import { useState } from "react";
 
 import empty1 from "~/images/empty-state.svg";

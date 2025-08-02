@@ -3,7 +3,7 @@
 import SkiButton from "@/components/shared/button";
 import { FormField } from "@/components/shared/FormFields";
 import { StoreFormData, storeSchema } from "@/schemas";
-import { useOnboardingUserService } from "@/services/onboarding/use-onboarding-user-service";
+import { useOnboardingUserService } from "@/services/externals/onboarding/use-onboarding-user-service";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useLocale } from "next-intl";
 import { useRouter } from "next/navigation";

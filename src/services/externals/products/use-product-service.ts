@@ -12,11 +12,24 @@ export const useProductService = () => {
   // Queries
   const useGetAllProducts = (filters?: IFilters, options?: any) => {
     const appliedFilters = filters ?? { page: 1 };
-    return useServiceQuery(
-      queryKeys.product.list(appliedFilters),
-      (service) => service.getAllProducts(appliedFilters),
-      { staleTime: 0, ...options },
-    );
+    const queryKey = [
+      "products",
+      "list",
+      appliedFilters.page || 1,
+      appliedFilters.search || "",
+      appliedFilters.status || "",
+      appliedFilters.categories || "",
+      appliedFilters.limit || "",
+    ];
+
+    return useServiceQuery(queryKey, (service) => service.getAllProducts(appliedFilters), {
+      staleTime: 0,
+      gcTime: 0,
+      refetchOnMount: true,
+      refetchOnWindowFocus: false,
+      refetchOnReconnect: true,
+      ...options,
+    });
   };
 
   const useGetAllUsers = (filters: IFilters = Object.create({ page: 1 }), options?: any) =>

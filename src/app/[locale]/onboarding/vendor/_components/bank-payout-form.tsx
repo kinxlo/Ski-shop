@@ -5,7 +5,7 @@ import { FormField } from "@/components/shared/FormFields";
 import { ComboBox } from "@/components/shared/select-dropdown/combo-box";
 import { Form } from "@/components/ui/form";
 import { BankPayoutFormData, bankPayoutSchema } from "@/schemas";
-import { useOnboardingUserService } from "@/services/onboarding/use-onboarding-user-service";
+import { useOnboardingUserService } from "@/services/externals/onboarding/use-onboarding-user-service";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useLocale } from "next-intl";
 import { useRouter } from "next/navigation";

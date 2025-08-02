@@ -1,6 +1,5 @@
 "use client";
 
-import MainButton from "@/components/shared/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -10,14 +9,14 @@ import {
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { cn } from "@/lib/utils";
 import { ChevronLeftIcon, ChevronRightIcon, MoreHorizontal, MoreHorizontalIcon } from "lucide-react";
+import { useQueryState } from "nuqs";
 
+import SkiButton from "../button";
 import { SetToolTip } from "../tool-tip";
 
 export const DashboardTable = <T extends DataItem>({
   data,
   columns,
-  currentPage = 1,
-  onPageChange,
   totalPages = 1,
   itemsPerPage = 10,
   hasNextPage,
@@ -25,13 +24,25 @@ export const DashboardTable = <T extends DataItem>({
   rowActions,
   onRowClick,
   showPagination = false,
-}: IDashboardTableProperties<T>) => {
+  pageParameter = "page", // Allow custom page parameter name
+}: IDashboardTableProperties<T> & { pageParameter?: string }) => {
+  // Use nuqs directly for pagination (same approach as shop page)
+  const [currentPage, setCurrentPage] = useQueryState(pageParameter, { defaultValue: "1" });
+
   const renderColumn = (column: IColumnDefinition<T>, item: T) => {
     if (!column) return "N/A"; // Handle undefined column
     return column.render
       ? column.render(item[column.accessorKey ?? ""], item)
       : (item[column.accessorKey ?? ""] ?? "N/A");
   };
+
+  const handlePageChange = (newPage: number) => {
+    setCurrentPage(newPage.toString());
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  // Convert currentPage string to number for comparisons
+  const currentPageNumber = currentPage ? Number.parseInt(currentPage) : 1;
 
   return (
     <div className="w-full space-y-4">
@@ -165,32 +176,40 @@ export const DashboardTable = <T extends DataItem>({
           <div className={`flex items-center justify-between md:w-[50%]`}>
             <div>{itemsPerPage} Entries per page</div>
             <div>
-              Page {currentPage} of {totalPages}
+              Page {currentPageNumber} of {totalPages}
             </div>
           </div>
           <div className="flex items-center gap-2">
-            <MainButton
+            <SkiButton
               variant="outline"
               isLeftIconVisible
               size={`lg`}
               icon={<ChevronLeftIcon />}
-              className={cn(currentPage === 1 ? "opacity-50" : "", "w-full rounded-sm sm:w-[137px]")}
-              onClick={() => onPageChange?.(currentPage - 1)}
-              isDisabled={!hasPreviousPage}
+              className={cn(currentPageNumber === 1 ? "opacity-50" : "", "w-full rounded-sm sm:w-[137px]")}
+              onClick={() => {
+                if (hasPreviousPage && currentPageNumber > 1) {
+                  handlePageChange(currentPageNumber - 1);
+                }
+              }}
+              isDisabled={!hasPreviousPage || currentPageNumber === 1}
             >
               Previous
-            </MainButton>
-            <MainButton
+            </SkiButton>
+            <SkiButton
               variant="outline"
               isRightIconVisible
               size={`lg`}
               icon={<ChevronRightIcon />}
-              className={cn(currentPage === totalPages ? "opacity-50" : "", "w-full rounded-sm sm:w-[137px]")}
-              onClick={() => onPageChange?.(currentPage + 1)}
-              isDisabled={!hasNextPage}
+              className={cn(currentPageNumber === totalPages ? "opacity-50" : "", "w-full rounded-sm sm:w-[137px]")}
+              onClick={() => {
+                if (hasNextPage && currentPageNumber < totalPages) {
+                  handlePageChange(currentPageNumber + 1);
+                }
+              }}
+              isDisabled={!hasNextPage || currentPageNumber === totalPages}
             >
               Next
-            </MainButton>
+            </SkiButton>
           </div>
         </div>
       )}

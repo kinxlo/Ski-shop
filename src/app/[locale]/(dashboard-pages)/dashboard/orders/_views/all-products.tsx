@@ -4,7 +4,7 @@ import Loading from "@/app/Loading";
 import { SearchInput } from "@/components/core/miscellaneous/search-input";
 import { DashboardTable } from "@/components/shared/dashboard-table";
 import { orderColumn } from "@/components/shared/dashboard-table/table-data";
-import { useProductService } from "@/services/products/use-product-service";
+import { useProductService } from "@/services/externals/products/use-product-service";
 import { useState } from "react";
 
 import { FilterDropdown } from "../../_components/dashboard-table/_components/filter-dropdown";

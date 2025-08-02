@@ -33,7 +33,7 @@ const VendorOnboardingPage = () => {
     if (stepFromUrl && stepFromUrl !== currentStep) {
       setCurrentStep(stepFromUrl as OnboardingStep);
     }
-  }, [stepFromUrl, currentStep]);
+  }, [stepFromUrl, currentStep, router]);
 
   const getCurrentStepNumber = () => {
     return steps.findIndex((step) => step.id === currentStep) + 1;

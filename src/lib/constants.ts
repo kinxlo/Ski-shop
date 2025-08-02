@@ -250,6 +250,12 @@ export const employeeColumns = [
   },
 ];
 
+export const productStatusOptions = [
+  { value: "all", label: "All" },
+  { value: "published", label: "Published" },
+  { value: "draft", label: "Draft" },
+];
+
 export const countries = [
   { value: "afghanistan", label: "🇦🇫 Afghanistan" },
   { value: "albania", label: "🇦🇱 Albania" },

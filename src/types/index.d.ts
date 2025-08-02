@@ -137,8 +137,6 @@ declare global {
   interface IDashboardTableProperties<T extends DataItem> {
     data: T[];
     columns: IColumnDefinition<T>[];
-    currentPage?: number;
-    onPageChange?: (page: number) => void;
     totalPages?: number;
     itemsPerPage?: number;
     hasPreviousPage?: boolean;

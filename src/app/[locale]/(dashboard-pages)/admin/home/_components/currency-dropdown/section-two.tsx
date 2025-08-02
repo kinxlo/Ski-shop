@@ -3,7 +3,7 @@ import { BlurImage } from "@/components/core/miscellaneous/blur-image";
 import { PayrollLineChart } from "@/components/shared/chart/payrool-linechart";
 import { Card, CardTitle } from "@/components/ui/card";
 import { formatCurrency } from "@/lib/utils";
-import { useProductService } from "@/services/products/use-product-service";
+import { useProductService } from "@/services/externals/products/use-product-service";
 
 export function SectionTwo() {
   return (

@@ -145,10 +145,54 @@ export const productHandlers = [
   // Get all products
   http.get(`/products`, async ({ request }) => {
     const url = new URL(request.url);
-    url.searchParams.get("page") || "1";
+    const page = Number.parseInt(url.searchParams.get("page") || "1");
+    const limit = Number.parseInt(url.searchParams.get("limit") || "10");
+    const search = url.searchParams.get("search") || "";
+    const status = url.searchParams.get("status") || "";
 
     await delay(150); // optional delay to simulate network latency
-    return HttpResponse.json(products, { status: 200 });
+
+    // Filter products based on search and status
+    let filteredProducts = products.data.items;
+
+    if (search) {
+      filteredProducts = filteredProducts.filter(
+        (product) =>
+          product.name.toLowerCase().includes(search.toLowerCase()) ||
+          product.description.toLowerCase().includes(search.toLowerCase()),
+      );
+    }
+
+    if (status && status !== "all") {
+      filteredProducts = filteredProducts.filter((product) => product.status === status);
+    }
+
+    // Calculate pagination
+    const total = filteredProducts.length;
+    const totalPages = Math.ceil(total / limit);
+    const startIndex = (page - 1) * limit;
+    const endIndex = startIndex + limit;
+    const paginatedProducts = filteredProducts.slice(startIndex, endIndex);
+
+    const metadata = {
+      total,
+      page,
+      limit,
+      totalPages,
+      hasNextPage: page < totalPages,
+      hasPreviousPage: page > 1,
+    };
+
+    return HttpResponse.json(
+      {
+        success: true,
+        data: {
+          items: paginatedProducts,
+          metadata,
+        },
+      },
+      { status: 200 },
+    );
   }),
 
   // Get single product

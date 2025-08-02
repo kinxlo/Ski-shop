@@ -5,12 +5,11 @@ import { SearchInput } from "@/components/core/miscellaneous/search-input";
 import { DashboardTable } from "@/components/shared/dashboard-table";
 import { orderColumn } from "@/components/shared/dashboard-table/table-data";
 import { EmptyState } from "@/components/shared/empty-state";
-import { updateQueryParamameters, useSearchParameters } from "@/hooks/use-search-parameters";
+import { productStatusOptions } from "@/lib/constants";
+import { useDashboardSearchParameters } from "@/lib/nuqs/use-dashboard-search-parameters";
 import { formatCurrency } from "@/lib/utils";
-import { useHomeService } from "@/services/dashboard/home/use-home-service";
-import { useProductService } from "@/services/products/use-product-service";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useHomeService } from "@/services/dashboard/vendor/home/use-home-service";
+import { useProductService } from "@/services/externals/products/use-product-service";
 import { GiWallet } from "react-icons/gi";
 import { IoRibbonOutline } from "react-icons/io5";
 import { MdOutlineAddCard } from "react-icons/md";
@@ -24,42 +23,19 @@ import { SectionTwo } from "./_components/currency-dropdown/section-two";
 import { AnalysisSkeleton, SectionTwoSkeleton, TableSkeleton } from "./page-skeleton";
 
 const Page = () => {
-  const router = useRouter();
-  const pathname = usePathname();
-  const searchParameters = useSearchParams();
-
-  // Get initial values from URL params
-  const initialSearch = useSearchParameters("search") || "";
-  const initialPage = Number.parseInt(useSearchParameters("page") || "1");
-  const initialStatus = useSearchParameters("status") || "all";
-
-  const [searchQuery, setSearchQuery] = useState(initialSearch);
-  const [currentPage, setCurrentPage] = useState(initialPage);
-  const [status, setStatus] = useState(initialStatus);
-
-  // Update URL when filters change
-  useEffect(() => {
-    updateQueryParamameters(router, pathname, new URLSearchParams(searchParameters), {
-      search: searchQuery || null,
-      page: currentPage.toString(),
-      status: status === "all" ? null : status,
-    });
-  }, [searchQuery, currentPage, status, router, searchParameters, pathname]);
-
-  // Update local state when URL params change (for browser back/forward)
-  useEffect(() => {
-    const urlSearch = searchParameters.get("search") || "";
-    const urlPage = Number.parseInt(searchParameters.get("page") || "1");
-    const urlStatus = searchParameters.get("status") || "all";
-
-    setSearchQuery(urlSearch);
-    setCurrentPage(urlPage);
-    setStatus(urlStatus);
-  }, [searchParameters]);
+  const {
+    page: currentPage,
+    search: searchQuery,
+    status,
+    setPage: setCurrentPage,
+    setSearch: setSearchQuery,
+    setStatus,
+    resetToFirstPage,
+  } = useDashboardSearchParameters();
 
   const filters: IFilters = {
     page: currentPage,
-    ...(status !== "all" && { status: status as "completed" | "failed" | "pending" }),
+    ...(status !== "all" && { status: status as "published" | "draft" }),
     ...(searchQuery && { search: searchQuery }),
   };
 
@@ -74,12 +50,12 @@ const Page = () => {
 
   const handleSearchChange = (newSearch: string) => {
     setSearchQuery(newSearch);
-    setCurrentPage(1); // Reset to first page when search changes
+    resetToFirstPage(); // Reset to first page when search changes
   };
 
   const handleStatusChange = (newStatus: string) => {
-    setStatus(newStatus);
-    setCurrentPage(1); // Reset to first page when status changes
+    setStatus(newStatus as "all" | "published" | "draft");
+    resetToFirstPage(); // Reset to first page when status changes
   };
 
   return (
@@ -184,7 +160,7 @@ const Page = () => {
               <div className="">
                 <div className="flex items-center gap-2">
                   <SearchInput className={``} onSearch={handleSearchChange} initialValue={searchQuery} />
-                  <FilterDropdown value={status} onValueChange={handleStatusChange} />
+                  <FilterDropdown options={productStatusOptions} value={status} onValueChange={handleStatusChange} />
                 </div>
               </div>
             </section>

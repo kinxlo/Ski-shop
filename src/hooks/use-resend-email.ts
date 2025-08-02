@@ -1,7 +1,7 @@
 "use client";
 
 import { updateQueryParamameters, useDecodedSearchParameters } from "@/hooks/use-search-parameters";
-import { useOnboardingUserService } from "@/services/onboarding/use-onboarding-user-service";
+import { useOnboardingUserService } from "@/services/externals/onboarding/use-onboarding-user-service";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useCallback } from "react";
 import { toast } from "sonner";

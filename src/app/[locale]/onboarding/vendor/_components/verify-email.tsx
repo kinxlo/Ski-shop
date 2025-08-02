@@ -5,7 +5,7 @@ import { Form, FormControl, FormDescription, FormField, FormItem, FormMessage } 
 import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp";
 import { useResendEmail } from "@/hooks/use-resend-email";
 import { useDecodedSearchParameters } from "@/hooks/use-search-parameters";
-import { useOnboardingUserService } from "@/services/onboarding/use-onboarding-user-service";
+import { useOnboardingUserService } from "@/services/externals/onboarding/use-onboarding-user-service";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useLocale } from "next-intl";
 import { usePathname, useRouter } from "next/navigation";
