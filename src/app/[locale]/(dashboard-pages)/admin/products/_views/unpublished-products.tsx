@@ -9,7 +9,6 @@ import { useProductService } from "@/services/externals/products/use-product-ser
 import { useState } from "react";
 
 import empty1 from "~/images/empty-state.svg";
-import { FilterDropdown } from "../../_components/dashboard-table/_components/filter-dropdown";
 
 export const UnpublishedProducts = () => {
   // const { data: session } = useSession();
@@ -54,7 +53,7 @@ export const UnpublishedProducts = () => {
         <h6 className={`!text-lg font-semibold`}>Unpublished</h6>
         <div className={`flex items-center gap-2`}>
           <SearchInput className={``} onSearch={setSearchQuery} />
-          <FilterDropdown />
+          {/* <FilterDropdown /> */}
         </div>
       </div>
       <section>

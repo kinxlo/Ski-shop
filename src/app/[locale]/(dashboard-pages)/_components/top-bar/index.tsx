@@ -2,6 +2,7 @@
 
 import { SearchInput } from "@/components/core/miscellaneous/search-input";
 import { UserAvatarProfile } from "@/components/core/miscellaneous/user-avatar-profile";
+import { LanguageToggle } from "@/components/shared/language-toggle";
 import { BellDot } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { useEffect } from "react";
@@ -39,6 +40,7 @@ export default function TopBar({ notificationsCount = 0, className = "" }: TopBa
         <div className="relative border-l border-black/20 pl-4">
           <UserAvatarProfile showInfo />
         </div>
+        <LanguageToggle />
       </div>
     </header>
   );

@@ -1,8 +1,11 @@
+import { LocaleLink } from "@/components/shared/locale-link";
 import { Ratings } from "@/components/shared/ratings";
-import { cn, formatCurrency } from "@/lib/utils";
+import { Locale } from "@/lib/i18n/config";
+import { formatCurrency } from "@/lib/i18n/utils";
+import { cn } from "@/lib/utils";
 import { useSaveProduct } from "@/mocks/handlers/products/use-save-product";
+import { useLocale } from "next-intl";
 import Image from "next/image";
-import Link from "next/link";
 import { HTMLAttributes } from "react";
 import { PiHeart, PiHeartFill } from "react-icons/pi";
 
@@ -35,12 +38,12 @@ export const ShopCard = ({
 }: ShopCardProperties) => {
   const oldPrice = discount ? price / (1 - discount / 100) : null;
   const { isSaved, isPending, toggleSave } = useSaveProduct(id || "");
-
+  const locale = useLocale() as Locale;
   // Don't render save button if no ID
   const shouldShowSaveButton = showSaveButton && id;
 
   return (
-    <Link
+    <LocaleLink
       href={`/shop/products/${id}`}
       className={cn(
         "relative block rounded-lg border bg-no-repeat p-4", // Added 'relative' for positioning
@@ -90,12 +93,12 @@ export const ShopCard = ({
         <Ratings rating={rating} />
         <p className={`text-mid-grey-II text-[10px] underline lg:text-sm`}>By {name}</p>
         <div className="flex items-baseline gap-2">
-          <p className="text-primary text-xs font-medium lg:text-[16px]">{formatCurrency(price)}</p>
+          <p className="text-primary text-xs font-medium lg:text-[16px]">{formatCurrency(price, locale)}</p>
           {oldPrice && (
-            <p className="text-mid-danger text-[10px] line-through lg:text-sm">{formatCurrency(oldPrice)}</p>
+            <p className="text-mid-danger text-[10px] line-through lg:text-sm">{formatCurrency(oldPrice, locale)}</p>
           )}
         </div>
       </div>
-    </Link>
+    </LocaleLink>
   );
 };

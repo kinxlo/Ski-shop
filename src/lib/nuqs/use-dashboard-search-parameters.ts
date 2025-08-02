@@ -1,6 +1,7 @@
 "use client";
 
 import { parseAsInteger, parseAsString, parseAsStringEnum, useQueryState } from "nuqs";
+import { useCallback } from "react";
 
 export const useDashboardSearchParameters = () => {
   const [page, setPage] = useQueryState("page", { defaultValue: "1" });
@@ -21,14 +22,17 @@ export const useDashboardSearchParameters = () => {
     // Setters
     setPage,
     setPerPage,
-    setSearch: (value: string | null) => {
-      // Remove search parameter if value is empty
-      if (!value || value.trim() === "") {
-        setSearch(null);
-      } else {
-        setSearch(value);
-      }
-    },
+    setSearch: useCallback(
+      (value: string | null) => {
+        // Remove search parameter if value is empty
+        if (!value || value.trim() === "") {
+          setSearch(null);
+        } else {
+          setSearch(value);
+        }
+      },
+      [setSearch],
+    ),
     setStatus,
 
     // Utility functions
@@ -38,8 +42,8 @@ export const useDashboardSearchParameters = () => {
       setPage(null);
     },
 
-    resetToFirstPage: () => {
+    resetToFirstPage: useCallback(() => {
       setPage(null);
-    },
+    }, [setPage]),
   };
 };

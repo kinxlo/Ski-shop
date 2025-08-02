@@ -4,7 +4,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { LucidePlusCircle } from "lucide-react";
 import { TbShoppingBag } from "react-icons/tb";
 
-import { OverViewCard } from "../_components/overview-card";
+import { OverViewCard } from "../../_components/overview-card";
 import { PublishedProducts } from "./_views/published-products";
 import { UnpublishedProducts } from "./_views/unpublished-products";
 

@@ -53,3 +53,14 @@ export function getLocaleDirection(locale: Locale): "ltr" | "rtl" {
 export function isValidLocale(locale: string): locale is Locale {
   return ["en", "fr", "es", "ar"].includes(locale);
 }
+
+export const formatTime = (date: Date | string, locale: Locale = "en", options?: Intl.DateTimeFormatOptions) => {
+  const dateObject = typeof date === "string" ? new Date(date) : date;
+  const formatOptions: Intl.DateTimeFormatOptions = {
+    hour: "numeric",
+    minute: "numeric",
+    hour12: true,
+    ...options,
+  };
+  return new Intl.DateTimeFormat(locale, formatOptions).format(dateObject);
+};

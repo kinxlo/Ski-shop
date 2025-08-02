@@ -2,11 +2,11 @@
 
 import SkiButton from "@/components/shared/button";
 import { FormField } from "@/components/shared/FormFields";
+import { LocaleLink } from "@/components/shared/locale-link";
 import { RegisterFormData, registerSchema } from "@/schemas";
 import { useAuthService } from "@/services/auth/use-auth-service";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useLocale } from "next-intl";
-import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useTransition } from "react";
 import { FormProvider, useForm } from "react-hook-form";
@@ -95,14 +95,14 @@ export const BaseSignupForm = () => {
               <div className="text-muted-foreground mb-4">
                 <p>
                   By signing up, you&apos;re agreeing to Skicom&apos;s
-                  <Link href={`/${locale}/privacy`} className="text-primary hover:underline">
+                  <LocaleLink href={`/${locale}/privacy`} className="text-primary hover:underline">
                     {" "}
                     Privacy Policy
-                  </Link>
+                  </LocaleLink>
                   , and{" "}
-                  <Link href={`/${locale}/terms`} className="text-primary hover:underline">
+                  <LocaleLink href={`/${locale}/terms`} className="text-primary hover:underline">
                     Terms & Conditions.
-                  </Link>
+                  </LocaleLink>
                 </p>
               </div>
             </section>
@@ -135,9 +135,9 @@ export const BaseSignupForm = () => {
             </section>
             <p className="mt-6 text-center text-gray-500">
               Already a user?{" "}
-              <Link href={`/${locale}/login`} className="text-primary font-medium hover:underline">
+              <LocaleLink href={`/${locale}/login`} className="text-primary font-medium hover:underline">
                 Log In
-              </Link>
+              </LocaleLink>
             </p>
           </form>
         </FormProvider>

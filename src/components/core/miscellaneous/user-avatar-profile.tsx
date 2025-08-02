@@ -1,6 +1,6 @@
 "use client";
 
-import { LanguageToggle } from "@/components/shared/language-toggle";
+import { LocaleLink } from "@/components/shared/locale-link";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   DropdownMenu,
@@ -12,7 +12,6 @@ import {
 import { ComponentGuard } from "@/lib/routes/component-guard";
 import { Box, ListOrdered, LogOut, Users } from "lucide-react";
 import { signOut, useSession } from "next-auth/react";
-import Link from "next/link";
 import { useState } from "react";
 import { PiCaretDown, PiHeart } from "react-icons/pi";
 import { toast } from "sonner";
@@ -59,36 +58,35 @@ export function UserAvatarProfile({ className, showInfo = false }: UserAvatarPro
       </DropdownMenuTrigger>
 
       <DropdownMenuContent className="w-56" align="end">
-        <Link href={`/shop/cart/saved-items`}>
+        <LocaleLink href={`/shop/cart/saved-items`}>
           <DropdownMenuItem className="cursor-pointer">
             <PiHeart className="mr-2 h-4 w-4" />
             <span>Save Items</span>
           </DropdownMenuItem>
-        </Link>
-        <Link href={`/shop/cart/orders`}>
+        </LocaleLink>
+        <LocaleLink href={`/shop/cart/orders`}>
           <DropdownMenuItem className="cursor-pointer">
             <ListOrdered className="mr-2 h-4 w-4" />
             <span>My Orders</span>
           </DropdownMenuItem>
-        </Link>
-        <Link href={`/earn`}>
+        </LocaleLink>
+        <LocaleLink href={`/earn`}>
           <DropdownMenuItem className="cursor-pointer">
             <Users className="mr-2 h-4 w-4" />
             <span>Invest & Earn</span>
           </DropdownMenuItem>
-        </Link>
+        </LocaleLink>
         <ComponentGuard requireAuth allowedRoles={["VENDOR"]}>
-          <Link href={`/dashboard/home`}>
+          <LocaleLink href={`/dashboard/home`}>
             <DropdownMenuItem className="cursor-pointer">
               <Box className="mr-2 h-4 w-4" />
               <span>Dashboard</span>
             </DropdownMenuItem>
-          </Link>
+          </LocaleLink>
         </ComponentGuard>
         <DropdownMenuSeparator />
         <div className="flex items-center justify-between px-2 py-1.5">
           <ModeToggle />
-          <LanguageToggle />
         </div>
         <DropdownMenuSeparator />
         <DropdownMenuItem className="text-destructive focus:text-destructive cursor-pointer" onClick={handleLogout}>

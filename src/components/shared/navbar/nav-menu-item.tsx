@@ -1,5 +1,6 @@
 "use client";
 
+import { LocaleLink } from "@/components/shared/locale-link";
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -10,7 +11,7 @@ import {
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
 import { cn } from "@/lib/utils";
-import Link, { LinkProps } from "next/link";
+import { LinkProps } from "next/link";
 import * as React from "react";
 
 interface NavItemProperties extends React.HTMLAttributes<HTMLElement> {
@@ -64,12 +65,12 @@ export const NavItems: React.FC<NavItemProperties> = ({ links, isMobile, classNa
                 className={`transition-all hover:bg-transparent hover:text-black hover:underline focus:bg-transparent focus:text-black`}
                 asChild
               >
-                <Link
+                <LocaleLink
                   href={link.href}
                   className={cn(navigationMenuTriggerStyle(), "w-full", isActive && "text-primary underline")}
                 >
                   {link.title}
-                </Link>
+                </LocaleLink>
               </NavigationMenuLink>
             </NavigationMenuItem>
           );
@@ -84,7 +85,7 @@ const ListItem = React.forwardRef<HTMLAnchorElement, ListItemProperties>(
     return (
       <li>
         <NavigationMenuLink asChild>
-          <Link
+          <LocaleLink
             ref={reference}
             href={href}
             className={cn(
@@ -95,7 +96,7 @@ const ListItem = React.forwardRef<HTMLAnchorElement, ListItemProperties>(
           >
             <div className="text-sm leading-none font-medium">{title}</div>
             <p className="text-muted-foreground line-clamp-2 text-sm leading-snug">{children}</p>
-          </Link>
+          </LocaleLink>
         </NavigationMenuLink>
       </li>
     );

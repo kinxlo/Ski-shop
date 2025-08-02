@@ -2,10 +2,10 @@
 
 import SkiButton from "@/components/shared/button";
 import { FormField } from "@/components/shared/FormFields";
+import { LocaleLink } from "@/components/shared/locale-link";
 import { Checkbox } from "@/components/ui/checkbox";
 import { LoginFormData, loginSchema } from "@/schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useTransition } from "react";
 import { FormProvider, useForm } from "react-hook-form";
@@ -88,9 +88,9 @@ export const LoginForm = () => {
                 Remember Me
               </label>
             </div>
-            <Link href="/forgot-password">
+            <LocaleLink href="/forgot-password">
               <p className="text-mid-danger text-sm">Forgot Password ?</p>
-            </Link>
+            </LocaleLink>
           </section>
 
           {/* CTA */}
@@ -121,9 +121,9 @@ export const LoginForm = () => {
           </section>
           <p className="mt-6 text-center text-gray-500">
             New user?{" "}
-            <Link href="/signup" className="text-primary font-medium hover:underline">
+            <LocaleLink href="/signup" className="text-primary font-medium hover:underline">
               Sign up
-            </Link>
+            </LocaleLink>
           </p>
         </form>
       </FormProvider>

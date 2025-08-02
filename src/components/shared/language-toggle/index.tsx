@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 "use client";
 
 import { Button } from "@/components/ui/button";
@@ -36,14 +37,16 @@ export function LanguageToggle() {
         // Construct the new path with the new locale
         const newPath = `/${newLocale}${pathWithoutLocale}`;
 
-        // Navigate to the new path
-        router.push(newPath);
+        // Use replace to avoid adding to history stack and ensure proper navigation
+        router.replace(newPath);
 
         // Close the dropdown
         setIsOpen(false);
-      } catch {
-        // You could add a toast notification here for better UX
-        // console.error("Failed to change language:", error);
+      } catch (error) {
+        console.error("Failed to change language:", error);
+        // Fallback navigation
+        const fallbackPath = `/${newLocale}${getPathWithoutLocale(pathname)}`;
+        router.replace(fallbackPath);
       }
     });
   };
@@ -64,7 +67,7 @@ export function LanguageToggle() {
           <span role="img" aria-label={`${localeNames[currentLocale]} flag`}>
             {localeFlags[currentLocale]}
           </span>
-          <span className="hidden sm:inline">{localeNames[currentLocale]}</span>
+          {/* <span className="hidden sm:inline">{localeNames[currentLocale]}</span> */}
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="min-w-[200px]">

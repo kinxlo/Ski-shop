@@ -3,19 +3,19 @@
 import Loading from "@/app/Loading";
 import { SearchInput } from "@/components/core/miscellaneous/search-input";
 import { DashboardTable } from "@/components/shared/dashboard-table";
-import { productColumn } from "@/components/shared/dashboard-table/table-data";
+import { useProductColumn } from "@/components/shared/dashboard-table/table-data";
 import { EmptyState, FilteredEmptyState } from "@/components/shared/empty-state";
 import { useProductService } from "@/services/externals/products/use-product-service";
 import { useState } from "react";
 
 import empty1 from "~/images/empty-state.svg";
-import { FilterDropdown } from "../../_components/dashboard-table/_components/filter-dropdown";
 
 export const UnpublishedProducts = () => {
   // const { data: session } = useSession();
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [status, setStatus] = useState<string>("all");
+  const productColumn = useProductColumn();
 
   // Initialize product service
   const { useGetAllProducts } = useProductService();
@@ -36,10 +36,6 @@ export const UnpublishedProducts = () => {
     staleTime: 1000 * 60 * 5, // 5 minutes cache
   });
 
-  const handlePageChange = (page: number) => {
-    setCurrentPage(page);
-  };
-
   if (isError) {
     return (
       <div className="flex items-center justify-center p-20">
@@ -48,28 +44,34 @@ export const UnpublishedProducts = () => {
     );
   }
 
+  // Extract data from the correct structure (similar to shop page)
+  const products = productData?.items || [];
+  const totalProducts = productData?.metadata?.total || 0;
+  const totalPages = productData?.metadata?.totalPages || 0;
+  const hasNextPage = productData?.metadata?.hasNextPage || false;
+  const hasPreviousPage = productData?.metadata?.hasPreviousPage || false;
+
   return (
     <>
       <div className="mb-2 flex items-center justify-between gap-2">
         <h6 className={`!text-lg font-semibold`}>Unpublished</h6>
         <div className={`flex items-center gap-2`}>
           <SearchInput className={``} onSearch={setSearchQuery} />
-          <FilterDropdown />
         </div>
       </div>
       <section>
         {isProductsLoading ? (
           <Loading text="Loading products..." className="w-fill h-fit p-20" />
-        ) : productData?.products?.length ? (
+        ) : products.length > 0 ? (
           <DashboardTable
-            data={productData.products.slice(0, 2)}
+            data={products}
             columns={productColumn}
-            currentPage={currentPage}
-            totalPages={productData.total || 1}
-            itemsPerPage={productData.limit || 10}
-            hasPreviousPage={false}
-            hasNextPage={false}
-            onPageChange={handlePageChange}
+            totalPages={totalPages}
+            itemsPerPage={totalProducts}
+            hasPreviousPage={hasPreviousPage}
+            hasNextPage={hasNextPage}
+            showPagination
+            pageParameter="page"
           />
         ) : status === "all" ? (
           <FilteredEmptyState

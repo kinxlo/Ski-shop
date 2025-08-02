@@ -15,10 +15,25 @@ export function getLocalizedPath(path: string, locale?: string): string {
 
 export function getPathWithoutLocale(pathname: string): string {
   const localePattern = new RegExp(`^/(${locales.join("|")})`);
-  return pathname.replace(localePattern, "") || "/";
+  const result = pathname.replace(localePattern, "") || "/";
+  return result;
 }
 
 export function getLocaleFromPath(pathname: string): string {
   const localeMatch = pathname.match(new RegExp(`^/(${locales.join("|")})`));
   return localeMatch?.[1] || defaultLocale;
+}
+
+/**
+ * Automatically localize an href with the current locale
+ * @param href - The href to localize
+ * @param currentLocale - The current locale
+ * @returns The localized href
+ */
+export function localizeHref(href: string, currentLocale: string): string {
+  // If href already starts with a locale, use it as is
+  const isLocalized = locales.some((locale) => href.startsWith(`/${locale}/`));
+
+  // If href starts with a locale, use it as is, otherwise add the current locale
+  return isLocalized ? href : `/${currentLocale}${href.startsWith("/") ? href : `/${href}`}`;
 }

@@ -11,6 +11,7 @@ import { usePathname } from "next/navigation";
 import { forwardRef, useEffect, useState } from "react";
 
 import SkiButton from "../button";
+import { LanguageToggle } from "../language-toggle";
 import { Logo } from "../logo";
 import { SearchDialog } from "./_components/search-modal";
 import { NavItems } from "./nav-menu-item";
@@ -112,6 +113,7 @@ export const Navbar = forwardRef<HTMLElement, NavbarProperties>(
                   </SkiButton>
                 </div>
               )}
+              <LanguageToggle />
             </div>
           </div>
         </Wrapper>

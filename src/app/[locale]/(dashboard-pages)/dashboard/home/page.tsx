@@ -2,15 +2,16 @@
 
 import { SearchInput } from "@/components/core/miscellaneous/search-input";
 import { DashboardTable } from "@/components/shared/dashboard-table";
-import { orderColumn } from "@/components/shared/dashboard-table/table-data";
+import { useOrderColumn } from "@/components/shared/dashboard-table/table-data";
 import { EmptyState } from "@/components/shared/empty-state";
 import { productStatusOptions } from "@/lib/constants";
+import type { Locale } from "@/lib/i18n/config";
+import { formatCurrency } from "@/lib/i18n/utils";
 import { useDashboardSearchParameters } from "@/lib/nuqs/use-dashboard-search-parameters";
-import { formatCurrency } from "@/lib/utils";
 import { useHomeService } from "@/services/dashboard/vendor/home/use-home-service";
 import { useProductService } from "@/services/externals/products/use-product-service";
-import { useQueryState } from "nuqs";
-import { useCallback } from "react";
+import { useLocale } from "next-intl";
+import { useCallback, useMemo } from "react";
 import { GiWallet } from "react-icons/gi";
 import { IoBag } from "react-icons/io5";
 import { RiShoppingCartLine } from "react-icons/ri";
@@ -21,40 +22,30 @@ import { CurrencyDropdown } from "./_components/currency-dropdown";
 import { AnalysisSkeleton, TableSkeleton } from "./page-skeleton";
 
 const Page = () => {
+  const locale = useLocale();
+  const orderColumn = useOrderColumn();
   const {
     search: searchQuery,
     status,
+    page,
     setSearch: setSearchQuery,
     setStatus,
     resetToFirstPage,
   } = useDashboardSearchParameters();
 
-  // Get the current page from the table's URL parameter
-  const [tablePage] = useQueryState("tp", { defaultValue: "1" });
-
-  const filters: IFilters = {
-    page: tablePage ? Number.parseInt(tablePage) : 1,
-    ...(status !== "all" && { status: status as "published" | "draft" }),
-    ...(searchQuery && { search: searchQuery }),
-  };
-
-  // Debug: Log the current state
-  // console.log("Dashboard state:", {
-  //   currentPage,
-  //   searchQuery,
-  //   status,
-  //   filters,
-  // });
+  const filters = useMemo(
+    () => ({
+      page,
+      ...(status !== "all" && { status: status as "published" | "draft" }),
+      ...(searchQuery && { search: searchQuery }),
+    }),
+    [page, status, searchQuery],
+  );
 
   const { useGetAllProducts } = useProductService();
   const { useGetOverview } = useHomeService();
   const { data: productData, isLoading: isProductsLoading, isError: isProductsError } = useGetAllProducts(filters);
   const { data: overviewData, isLoading: isOverviewLoading, isError: isOverviewError } = useGetOverview();
-
-  // Force refetch when page changes
-  // useEffect(() => {
-  //   refetchProducts();
-  // }, [currentPage, refetchProducts]);
 
   // Extract data from the correct structure (similar to shop page)
   const products = productData?.items || [];
@@ -65,25 +56,34 @@ const Page = () => {
 
   const handleSearchChange = useCallback(
     (newSearch: string) => {
-      setSearchQuery(newSearch);
-      resetToFirstPage(); // Reset to first page when search changes
+      // Prevent rapid search changes that could cause throttling
+      if (newSearch !== searchQuery) {
+        setSearchQuery(newSearch);
+        resetToFirstPage(); // Reset to first page when search changes
+      }
     },
-    [setSearchQuery, resetToFirstPage],
+    [setSearchQuery, resetToFirstPage, searchQuery],
   );
 
   const handleStatusChange = useCallback(
     (newStatus: string) => {
-      setStatus(newStatus as "all" | "published" | "draft");
-      resetToFirstPage(); // Reset to first page when status changes
+      // Prevent rapid status changes that could cause throttling
+      if (newStatus !== status) {
+        setStatus(newStatus as "all" | "published" | "draft");
+        resetToFirstPage(); // Reset to first page when status changes
+      }
     },
-    [setStatus, resetToFirstPage],
+    [setStatus, resetToFirstPage, status],
   );
 
-  // No need for page change handler since table manages its own state
+  // Memoize the formatted revenue value to prevent unnecessary re-renders
+  const formattedRevenue = useMemo(
+    () => formatCurrency(overviewData?.data?.overview?.totalRevenue || 0, locale as Locale),
+    [locale, overviewData?.data?.overview?.totalRevenue],
+  );
 
   return (
     <>
-      {/* <VerifyEmailModal email={session?.user?.email || null} open={showVerifyModal} onOpenChange={setShowVerifyModal} /> */}
       <main>
         <section className="mb-5 flex items-center justify-between">
           <h4 className="text-mid-grey-III text-[18px] !font-bold lg:text-[30px]">Dashboard Overview</h4>
@@ -108,7 +108,7 @@ const Page = () => {
           <section className="grid grid-cols-1 gap-5 lg:grid-cols-3">
             <OverViewCard
               title={"Total Sales"}
-              value={formatCurrency(overviewData?.data?.overview?.totalRevenue || 0)}
+              value={formattedRevenue}
               icon={<GiWallet />}
               iconClassName="bg-[#F2EBFB] text-[24px] text-purple"
             />
@@ -136,7 +136,7 @@ const Page = () => {
               </div>
               <div className="">
                 <div className="flex items-center gap-2">
-                  <SearchInput className={``} onSearch={handleSearchChange} initialValue={searchQuery} />
+                  <SearchInput className={``} onSearch={handleSearchChange} initialValue={searchQuery} delay={500} />
                   <FilterDropdown options={productStatusOptions} value={status} onValueChange={handleStatusChange} />
                 </div>
               </div>
@@ -162,7 +162,7 @@ const Page = () => {
                   hasPreviousPage={hasPreviousPage}
                   hasNextPage={hasNextPage}
                   showPagination
-                  pageParameter="tp"
+                  pageParameter="page"
                 />
               ) : (
                 <div className="flex items-center justify-center p-20">

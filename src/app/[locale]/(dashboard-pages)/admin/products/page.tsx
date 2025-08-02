@@ -4,8 +4,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { LucidePlusCircle } from "lucide-react";
 import { TbShoppingBag } from "react-icons/tb";
 
-import { OverViewCard } from "../_components/overview-card";
-import { PublishedProducts } from "./_views/published-products";
+import { OverViewCard } from "../../_components/overview-card";
 import { UnpublishedProducts } from "./_views/unpublished-products";
 
 const Page = () => {
@@ -62,9 +61,7 @@ const Page = () => {
             </TabsTrigger>
           </TabsList>
           <Separator className="bg-muted mt-[-1px] mb-[26px]" />
-          <TabsContent value="published">
-            <PublishedProducts />
-          </TabsContent>
+          <TabsContent value="published"></TabsContent>
           <TabsContent value="unpublished">
             <UnpublishedProducts />
           </TabsContent>

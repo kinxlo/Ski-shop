@@ -3,7 +3,7 @@
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import { SearchIcon } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useDebounce } from "use-debounce";
 
 interface SearchInputProperties {
@@ -23,15 +23,28 @@ export const SearchInput = ({
 }: SearchInputProperties) => {
   const [searchQuery, setSearchQuery] = useState(initialValue);
   const [debouncedQuery] = useDebounce(searchQuery, delay);
+  const isUserTyping = useRef(false);
 
   // Update internal state when initialValue changes (for URL sync)
   useEffect(() => {
-    setSearchQuery(initialValue);
+    if (!isUserTyping.current) {
+      setSearchQuery(initialValue);
+    }
   }, [initialValue]);
 
   useEffect(() => {
-    onSearch(debouncedQuery);
-  }, [debouncedQuery, onSearch]);
+    // Only call onSearch if the user is actively typing (not just syncing with URL)
+    if (isUserTyping.current && debouncedQuery !== initialValue) {
+      onSearch(debouncedQuery);
+      // Reset the flag after calling onSearch
+      isUserTyping.current = false;
+    }
+  }, [debouncedQuery, onSearch, initialValue]);
+
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    isUserTyping.current = true;
+    setSearchQuery(event.target.value);
+  };
 
   return (
     <div className={`relative w-fit`}>
@@ -41,7 +54,7 @@ export const SearchInput = ({
         placeholder={placeholder}
         className={cn("rounded-sm border border-black/10 pr-4 pl-10 shadow-none", className)}
         value={searchQuery}
-        onChange={(event) => setSearchQuery(event.target.value)}
+        onChange={handleInputChange}
       />
     </div>
   );

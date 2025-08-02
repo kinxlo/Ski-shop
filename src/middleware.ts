@@ -20,6 +20,16 @@ const SUPPORTED_LOCALES = ["en", "fr", "es", "ar"];
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
+  // Skip middleware for static files and API routes
+  if (
+    pathname.startsWith("/_next/") ||
+    pathname.startsWith("/api/") ||
+    pathname.startsWith("/static/") ||
+    pathname.includes(".") // Skip files with extensions
+  ) {
+    return NextResponse.next();
+  }
+
   // Extract locale from pathname
   const pathnameHasLocale = SUPPORTED_LOCALES.some(
     (locale) => pathname.startsWith(`/${locale}/`) || pathname === `/${locale}`,
@@ -100,7 +110,7 @@ export async function middleware(request: NextRequest) {
       }
 
       default: {
-        // Unknown role - redirect to login
+        // Unknown role - redirect to login with current locale
         const url = new URL(request.url);
         url.pathname = `/${locale}/login`;
         return NextResponse.redirect(url);
