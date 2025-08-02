@@ -6,7 +6,7 @@ import { DashboardTable } from "@/components/shared/dashboard-table";
 import { useProductColumn } from "@/components/shared/dashboard-table/table-data";
 import { EmptyState, FilteredEmptyState } from "@/components/shared/empty-state";
 import { useDashboardSearchParameters } from "@/lib/nuqs/use-dashboard-search-parameters";
-import { useProductService } from "@/services/externals/products/use-product-service";
+import { useDashboardProductService } from "@/services/dashboard/vendor/products/use-product-service";
 import { useLocale } from "next-intl";
 import { useRouter } from "next/navigation";
 // import { useTranslations } from "next-intl";
@@ -32,7 +32,7 @@ export const AllProducts = () => {
   );
 
   // Initialize product service
-  const { useGetAllProducts } = useProductService();
+  const { useGetAllProducts } = useDashboardProductService();
 
   // Fetch products data
   const {
@@ -54,6 +54,13 @@ export const AllProducts = () => {
       }
     },
     [setSearchQuery, resetToFirstPage, searchQuery],
+  );
+
+  const handleRowClick = useCallback(
+    (product: Product) => {
+      router.push(`/${locale}/dashboard/products/${product.id}`);
+    },
+    [router, locale],
   );
 
   if (isError) {
@@ -120,6 +127,7 @@ export const AllProducts = () => {
               hasNextPage={hasNextPage}
               showPagination
               pageParameter="page"
+              onRowClick={handleRowClick}
             />
           </div>
         ) : searchQuery ? (

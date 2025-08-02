@@ -5,7 +5,9 @@ import { DashboardTable } from "@/components/shared/dashboard-table";
 import { useProductColumn } from "@/components/shared/dashboard-table/table-data";
 import { EmptyState, FilteredEmptyState } from "@/components/shared/empty-state";
 import { useDashboardSearchParameters } from "@/lib/nuqs/use-dashboard-search-parameters";
-import { useProductService } from "@/services/externals/products/use-product-service";
+import { useDashboardProductService } from "@/services/dashboard/vendor/products/use-product-service";
+import { useLocale } from "next-intl";
+import { useRouter } from "next/navigation";
 import { useCallback, useMemo } from "react";
 
 import empty1 from "~/images/empty-state.svg";
@@ -13,7 +15,8 @@ import { TableSkeleton } from "../../home/page-skeleton";
 
 export const PublishedProducts = () => {
   const productColumn = useProductColumn();
-
+  const locale = useLocale();
+  const router = useRouter();
   const { search: searchQuery, page, setSearch: setSearchQuery, resetToFirstPage } = useDashboardSearchParameters();
 
   const filters = useMemo(
@@ -26,7 +29,7 @@ export const PublishedProducts = () => {
   );
 
   // Initialize product service
-  const { useGetAllProducts } = useProductService();
+  const { useGetAllProducts } = useDashboardProductService();
 
   // Fetch products data
   const {
@@ -47,6 +50,13 @@ export const PublishedProducts = () => {
       }
     },
     [setSearchQuery, resetToFirstPage, searchQuery],
+  );
+
+  const handleRowClick = useCallback(
+    (product: Product) => {
+      router.push(`/${locale}/dashboard/products/${product.id}`);
+    },
+    [router, locale],
   );
 
   if (isError) {
@@ -90,6 +100,7 @@ export const PublishedProducts = () => {
             hasNextPage={hasNextPage}
             showPagination
             pageParameter="page"
+            onRowClick={handleRowClick}
           />
         ) : searchQuery ? (
           <FilteredEmptyState
@@ -109,8 +120,7 @@ export const PublishedProducts = () => {
             button={{
               text: "Add New Product",
               onClick: () => {
-                return;
-                // router.push(`/dashboard/products/new`);
+                router.push(`/${locale}/dashboard/products/new`);
               },
             }}
           />

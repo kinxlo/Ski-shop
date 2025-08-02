@@ -1,4 +1,4 @@
-import { AddProductForm } from "../../_components/forms/add-product-form";
+import { AddProductForm } from "../../../_components/forms/add-product-form";
 
 const page = () => {
   return (

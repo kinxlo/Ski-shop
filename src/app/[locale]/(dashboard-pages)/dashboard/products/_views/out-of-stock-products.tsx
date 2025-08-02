@@ -6,7 +6,7 @@ import { DashboardTable } from "@/components/shared/dashboard-table";
 import { useProductColumn } from "@/components/shared/dashboard-table/table-data";
 import { EmptyState, FilteredEmptyState } from "@/components/shared/empty-state";
 import { useDashboardSearchParameters } from "@/lib/nuqs/use-dashboard-search-parameters";
-import { useProductService } from "@/services/externals/products/use-product-service";
+import { useDashboardProductService } from "@/services/dashboard/vendor/products/use-product-service";
 import { useLocale } from "next-intl";
 import { useRouter } from "next/navigation";
 import { useCallback, useMemo } from "react";
@@ -29,7 +29,7 @@ export const OutOfStockProducts = () => {
   );
 
   // Initialize product service
-  const { useGetAllProducts } = useProductService();
+  const { useGetAllProducts } = useDashboardProductService();
 
   // Fetch all products data
   const {
@@ -51,6 +51,13 @@ export const OutOfStockProducts = () => {
       }
     },
     [setSearchQuery, resetToFirstPage, searchQuery],
+  );
+
+  const handleRowClick = useCallback(
+    (product: Product) => {
+      router.push(`/${locale}/dashboard/products/${product.id}`);
+    },
+    [router, locale],
   );
 
   // Filter out-of-stock products
@@ -117,6 +124,7 @@ export const OutOfStockProducts = () => {
               hasNextPage={hasNextPage}
               showPagination={totalOutOfStock > itemsPerPage}
               pageParameter="page"
+              onRowClick={handleRowClick}
             />
           </div>
         ) : searchQuery ? (

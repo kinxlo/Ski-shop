@@ -131,6 +131,7 @@ export const useProductColumn = (): IColumnDefinition<Product>[] => {
     {
       header: "Product Name",
       accessorKey: "name",
+      render: (_, product: Product) => <span className="font-medium text-gray-900">{product.name}</span>,
     },
     {
       header: "Category",

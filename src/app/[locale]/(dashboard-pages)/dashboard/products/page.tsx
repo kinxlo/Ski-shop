@@ -5,8 +5,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useDashboardSearchParameters } from "@/lib/nuqs/use-dashboard-search-parameters";
-import { useProductService } from "@/services/externals/products/use-product-service";
+import { useDashboardProductService } from "@/services/dashboard/vendor/products/use-product-service";
 import { LucidePlusCircle } from "lucide-react";
+import { useLocale } from "next-intl";
 import { useMemo } from "react";
 import { TbShoppingBag } from "react-icons/tb";
 
@@ -17,13 +18,14 @@ import { PublishedProducts } from "./_views/published-products";
 import { UnpublishedProducts } from "./_views/unpublished-products";
 
 const Page = () => {
+  const locale = useLocale();
   const { status: activeTab, setStatus } = useDashboardSearchParameters();
 
   const setActiveTab = (value: string) => {
     setStatus(value as "all" | "published" | "draft" | "out-of-stock");
   };
 
-  const { useGetAllProducts } = useProductService();
+  const { useGetAllProducts } = useDashboardProductService();
 
   // Fetch all products for overview stats
   const { data: allProductsData } = useGetAllProducts({ page: 1, limit: 1000 });
@@ -58,7 +60,7 @@ const Page = () => {
         <h4 className="text-mid-grey-III text-[18px] lg:text-[30px]">Products</h4>
         <div>
           <SkiButton
-            href={`/admin/products/new`}
+            href={`/${locale}/dashboard/products/new`}
             isLeftIconVisible
             icon={<LucidePlusCircle />}
             variant="primary"
