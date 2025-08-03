@@ -72,7 +72,7 @@ export class OnboardingUserService {
       const requestData = {
         name: storeData.name,
         description: storeData.description,
-        logo: storeData.image,
+        logo: storeData.image[0],
       };
 
       const response = await this.http.post<ShortTokenResponse>("/auth/store", requestData, headers);

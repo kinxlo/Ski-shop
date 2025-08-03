@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable unicorn/no-array-for-each */
 import { useSavedProductsStorage } from "@/mocks/handlers/products/use-saved-products-storage";
-import { useAppService } from "@/services/app/use-app-service";
+import { useAppService } from "@/services/externals/app/use-app-service";
 import { useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";
 

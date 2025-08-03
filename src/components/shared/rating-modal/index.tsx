@@ -5,7 +5,7 @@ import { useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 
 import { AlertModal } from "../dialog/alert-modal";
-import { FormField } from "../FormFields";
+import { FormField } from "../inputs/FormFields";
 import { Ratings } from "../ratings";
 
 interface RatingModalProperties {

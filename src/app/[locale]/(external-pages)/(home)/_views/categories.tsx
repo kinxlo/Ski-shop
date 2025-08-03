@@ -2,7 +2,7 @@
 
 import { Wrapper } from "@/components/core/layout/wrapper";
 import { formatCategory } from "@/lib/utils";
-import { useAppService } from "@/services/app/use-app-service";
+import { useAppService } from "@/services/externals/app/use-app-service";
 import { useTranslations } from "next-intl";
 import Image from "next/image";
 import Link from "next/link";

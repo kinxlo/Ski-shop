@@ -1,19 +1,17 @@
 "use client";
 
 import SkiButton from "@/components/shared/button";
-import { FormField } from "@/components/shared/FormFields";
+import { FormField } from "@/components/shared/inputs/FormFields";
 import { ComboBox } from "@/components/shared/select-dropdown/combo-box";
 import { Form } from "@/components/ui/form";
 import { BankPayoutFormData, bankPayoutSchema } from "@/schemas";
 import { useOnboardingUserService } from "@/services/externals/onboarding/use-onboarding-user-service";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useLocale } from "next-intl";
-import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
 interface BankPayoutFormProperties {
-  onComplete: () => void;
+  onComplete: (token?: string) => void;
 }
 
 export const BankPayoutForm = ({ onComplete }: BankPayoutFormProperties) => {
@@ -27,9 +25,6 @@ export const BankPayoutForm = ({ onComplete }: BankPayoutFormProperties) => {
     },
   });
 
-  const router = useRouter();
-  const locale = useLocale();
-
   const { useSetupBankDetails, useGetAvailableBanks } = useOnboardingUserService();
   const { data: availableBanks, isLoading: isLoadingAvailableBanks } = useGetAvailableBanks();
   const { mutateAsync: setupBankDetails, isPending } = useSetupBankDetails();
@@ -39,8 +34,7 @@ export const BankPayoutForm = ({ onComplete }: BankPayoutFormProperties) => {
       onSuccess: (response) => {
         if (response?.success) {
           toast.success("Bank details updated successfully, you can now start selling");
-          onComplete();
-          router.push(`/${locale}/onboarding/vendor?step=success&token=${response?.data?.token}`);
+          onComplete(response?.data?.token);
         }
       },
       onError: () => {

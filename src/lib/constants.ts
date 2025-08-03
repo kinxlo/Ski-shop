@@ -255,6 +255,12 @@ export const productStatusOptions = [
   { value: "published", label: "Published" },
   { value: "draft", label: "Draft" },
 ];
+export const orderStatusOptions = [
+  { value: "all", label: "All" },
+  { value: "completed", label: "Completed" },
+  { value: "pending", label: "Pending" },
+  { value: "cancelled", label: "Cancelled" },
+];
 
 export const countries = [
   { value: "afghanistan", label: "🇦🇫 Afghanistan" },

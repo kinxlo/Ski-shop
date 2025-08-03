@@ -23,6 +23,8 @@ export const OutOfStockProducts = () => {
   const filters = useMemo(
     () => ({
       page,
+      limit: 10,
+      sort: "newest",
       ...(searchQuery && { search: searchQuery }),
     }),
     [page, searchQuery],
@@ -62,8 +64,8 @@ export const OutOfStockProducts = () => {
 
   // Filter out-of-stock products
   const outOfStockProducts = useMemo(() => {
-    return productData?.items?.filter((product) => product.stockCount === 0) || [];
-  }, [productData?.items]);
+    return productData?.data?.items?.filter((product) => product.stockCount === 0) || [];
+  }, [productData?.data?.items]);
 
   // Calculate pagination for out-of-stock products
   const totalOutOfStock = outOfStockProducts.length;

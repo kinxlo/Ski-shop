@@ -19,25 +19,25 @@ import { UnpublishedProducts } from "./_views/unpublished-products";
 
 const Page = () => {
   const locale = useLocale();
-  const { status: activeTab, setStatus } = useDashboardSearchParameters();
+  const { productStatus: activeTab, setProductStatus } = useDashboardSearchParameters();
 
   const setActiveTab = (value: string) => {
-    setStatus(value as "all" | "published" | "draft" | "out-of-stock");
+    setProductStatus(value as "all" | "published" | "draft");
   };
 
   const { useGetAllProducts } = useDashboardProductService();
 
   // Fetch all products for overview stats
-  const { data: allProductsData } = useGetAllProducts({ page: 1, limit: 1000 });
-  const { data: publishedProductsData } = useGetAllProducts({ page: 1, status: "published", limit: 1000 });
-  const { data: draftProductsData } = useGetAllProducts({ page: 1, status: "draft", limit: 1000 });
+  const { data: allProductsData } = useGetAllProducts({ page: 1, limit: 10 });
+  const { data: publishedProductsData } = useGetAllProducts({ page: 1, status: "published", limit: 10 });
+  const { data: draftProductsData } = useGetAllProducts({ page: 1, status: "draft", limit: 10 });
 
   // Calculate stats
   const stats = useMemo(() => {
-    const totalProducts = allProductsData?.metadata?.total || 0;
-    const publishedProducts = publishedProductsData?.metadata?.total || 0;
-    const draftProducts = draftProductsData?.metadata?.total || 0;
-    const outOfStockProducts = allProductsData?.items?.filter((product) => product.stockCount === 0).length || 0;
+    const totalProducts = allProductsData?.data?.metadata?.total || 0;
+    const publishedProducts = publishedProductsData?.data?.metadata?.total || 0;
+    const draftProducts = draftProductsData?.data?.metadata?.total || 0;
+    const outOfStockProducts = allProductsData?.data?.items?.filter((product) => product.stockCount === 0).length || 0;
 
     return {
       totalProducts,
@@ -51,7 +51,7 @@ const Page = () => {
     { value: "all", label: "All Products", count: stats.totalProducts },
     { value: "published", label: "Published Products", count: stats.publishedProducts },
     { value: "draft", label: "Draft Products", count: stats.draftProducts },
-    { value: "out-of-stock", label: "Out of Stock", count: stats.outOfStockProducts },
+    { value: "out-of-stock", label: "Out of Stock Products", count: stats.outOfStockProducts },
   ];
 
   return (

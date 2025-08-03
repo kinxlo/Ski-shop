@@ -8,9 +8,11 @@ export class AppService {
     this.http = httpAdapter;
   }
 
-  async getAllProducts(filters: IFilters = Object.create({ page: 1 })) {
+  async getAllProducts(filters?: IFilters) {
+    const defaultFilters: IFilters = { page: 1, limit: 10 };
+    const appliedFilters = filters ?? defaultFilters;
     return tryCatchWrapper(async () => {
-      const queryParameters = this.buildQueryParameters(filters);
+      const queryParameters = this.buildQueryParameters(appliedFilters);
       const response = await this.http.get<ProductApiResponse>(`/products?${queryParameters}`);
 
       if (response?.status === 200) {

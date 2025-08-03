@@ -1,17 +1,15 @@
 "use client";
 
 import SkiButton from "@/components/shared/button";
-import { FormField } from "@/components/shared/FormFields";
+import { FormField } from "@/components/shared/inputs/FormFields";
 import { StoreFormData, storeSchema } from "@/schemas";
 import { useOnboardingUserService } from "@/services/externals/onboarding/use-onboarding-user-service";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useLocale } from "next-intl";
-import { useRouter } from "next/navigation";
 import { FormProvider, useForm } from "react-hook-form";
 import { toast } from "sonner";
 
 interface StoreFormProperties {
-  onComplete: () => void;
+  onComplete: (token?: string) => void;
 }
 
 export const StoreForm = ({ onComplete }: StoreFormProperties) => {
@@ -23,9 +21,6 @@ export const StoreForm = ({ onComplete }: StoreFormProperties) => {
       image: null,
     },
   });
-
-  const router = useRouter();
-  const locale = useLocale();
 
   // Onboarding user service hook
   const { useCreateStore } = useOnboardingUserService();
@@ -43,8 +38,7 @@ export const StoreForm = ({ onComplete }: StoreFormProperties) => {
       onSuccess: (response) => {
         if (response?.success) {
           toast.success("Store created successfully");
-          onComplete?.();
-          router.push(`/${locale}/onboarding/vendor?step=bank-payout&token=${response?.data?.token}`);
+          onComplete?.(response?.data?.token);
         }
       },
       onError: () => {

@@ -4,7 +4,7 @@ import { Wrapper } from "@/components/core/layout/wrapper";
 import SkiButton from "@/components/shared/button";
 import { EmptyState } from "@/components/shared/empty-state";
 import { cn } from "@/lib/utils";
-import { useAppService } from "@/services/app/use-app-service";
+import { useAppService } from "@/services/externals/app/use-app-service";
 
 import { ProductBreadcrumb } from "../../../(home)/_components/product-breadcrumb";
 import { OrderCard } from "../../../(home)/_components/shop-card/order-card";

@@ -2,7 +2,7 @@
 "use client";
 
 import { BlurImage } from "@/components/core/miscellaneous/blur-image";
-import { FormField } from "@/components/shared/FormFields";
+import { FormField } from "@/components/shared/inputs/FormFields";
 import { Camera, User } from "lucide-react";
 import { useRef, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";

@@ -4,12 +4,12 @@ import { SearchInput } from "@/components/core/miscellaneous/search-input";
 import { DashboardTable } from "@/components/shared/dashboard-table";
 import { useOrderColumn } from "@/components/shared/dashboard-table/table-data";
 import { EmptyState } from "@/components/shared/empty-state";
-import { productStatusOptions } from "@/lib/constants";
+import { orderStatusOptions } from "@/lib/constants";
 import type { Locale } from "@/lib/i18n/config";
 import { formatCurrency } from "@/lib/i18n/utils";
 import { useDashboardSearchParameters } from "@/lib/nuqs/use-dashboard-search-parameters";
 import { useHomeService } from "@/services/dashboard/vendor/home/use-home-service";
-import { useProductService } from "@/services/externals/products/use-product-service";
+import { useDashboardProductService } from "@/services/dashboard/vendor/products/use-product-service";
 import { useLocale } from "next-intl";
 import { useCallback, useMemo } from "react";
 import { GiWallet } from "react-icons/gi";
@@ -26,33 +26,35 @@ const Page = () => {
   const orderColumn = useOrderColumn();
   const {
     search: searchQuery,
-    status,
+    orderStatus,
+    limit,
     page,
     setSearch: setSearchQuery,
-    setStatus,
+    setOrderStatus,
     resetToFirstPage,
   } = useDashboardSearchParameters();
 
   const filters = useMemo(
     () => ({
       page,
-      ...(status !== "all" && { status: status as "published" | "draft" }),
+      ...(orderStatus !== "all" && { status: orderStatus as "completed" | "pending" | "cancelled" }),
       ...(searchQuery && { search: searchQuery }),
+      ...(limit && { limit }),
     }),
-    [page, status, searchQuery],
+    [page, orderStatus, searchQuery, limit],
   );
 
-  const { useGetAllProducts } = useProductService();
+  const { useGetAllProducts } = useDashboardProductService();
   const { useGetOverview } = useHomeService();
   const { data: productData, isLoading: isProductsLoading, isError: isProductsError } = useGetAllProducts(filters);
   const { data: overviewData, isLoading: isOverviewLoading, isError: isOverviewError } = useGetOverview();
 
   // Extract data from the correct structure (similar to shop page)
-  const products = productData?.items || [];
-  const totalProducts = productData?.metadata?.total || 0;
-  const totalPages = productData?.metadata?.totalPages || 0;
-  const hasNextPage = productData?.metadata?.hasNextPage || false;
-  const hasPreviousPage = productData?.metadata?.hasPreviousPage || false;
+  const products = productData?.data?.items || [];
+  const totalProducts = productData?.data?.metadata?.total || 0;
+  const totalPages = productData?.data?.metadata?.totalPages || 0;
+  const hasNextPage = productData?.data?.metadata?.hasNextPage || false;
+  const hasPreviousPage = productData?.data?.metadata?.hasPreviousPage || false;
 
   const handleSearchChange = useCallback(
     (newSearch: string) => {
@@ -68,12 +70,12 @@ const Page = () => {
   const handleStatusChange = useCallback(
     (newStatus: string) => {
       // Prevent rapid status changes that could cause throttling
-      if (newStatus !== status) {
-        setStatus(newStatus as "all" | "published" | "draft");
+      if (newStatus !== orderStatus) {
+        setOrderStatus(newStatus as "all" | "completed" | "pending" | "cancelled");
         resetToFirstPage(); // Reset to first page when status changes
       }
     },
-    [setStatus, resetToFirstPage, status],
+    [setOrderStatus, resetToFirstPage, orderStatus],
   );
 
   // Memoize the formatted revenue value to prevent unnecessary re-renders
@@ -137,7 +139,7 @@ const Page = () => {
               <div className="">
                 <div className="flex items-center gap-2">
                   <SearchInput className={``} onSearch={handleSearchChange} initialValue={searchQuery} delay={500} />
-                  <FilterDropdown options={productStatusOptions} value={status} onValueChange={handleStatusChange} />
+                  <FilterDropdown options={orderStatusOptions} value={orderStatus} onValueChange={handleStatusChange} />
                 </div>
               </div>
             </section>

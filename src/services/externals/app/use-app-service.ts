@@ -7,15 +7,19 @@ import { dependencies } from "@/lib/tools/dependencies";
 
 import { AppService } from "./app.service";
 
+// Stable default filters object to avoid object reference issues
+const DEFAULT_FILTERS: IFilters = { page: 1, limit: 10 };
+
 export const useAppService = () => {
   const { useServiceQuery, useServiceMutation } = createServiceHooks<AppService>(dependencies.APP_SERVICE);
 
   // Queries
   const useGetAllProducts = (filters?: IFilters, options?: any) => {
-    const appliedFilters = filters ?? { page: 1 };
+    const appliedFilters = filters ?? DEFAULT_FILTERS;
+
     return useServiceQuery(
-      queryKeys.product.list(appliedFilters), // Changed from filtered to list
-      (service) => service.getAllProducts(appliedFilters),
+      [...queryKeys.product.list(appliedFilters)],
+      (service) => service.getAllProducts(filters), // Use original filters, let service handle defaults
       { staleTime: 0, ...options },
     );
   };

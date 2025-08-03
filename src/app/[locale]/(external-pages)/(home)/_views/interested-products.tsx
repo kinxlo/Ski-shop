@@ -4,7 +4,7 @@
 import { Wrapper } from "@/components/core/layout/wrapper";
 import SkiButton from "@/components/shared/button";
 import { EmptyState } from "@/components/shared/empty-state";
-import { useAppService } from "@/services/app/use-app-service";
+import { useAppService } from "@/services/externals/app/use-app-service";
 
 import { ShopCard } from "../_components/shop-card/shop-card";
 import { ShopCardSkeleton } from "./popular-products";

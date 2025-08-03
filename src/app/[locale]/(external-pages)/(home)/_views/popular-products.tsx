@@ -5,7 +5,7 @@ import SkiButton from "@/components/shared/button";
 import { EmptyState } from "@/components/shared/empty-state";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
-import { useAppService } from "@/services/app/use-app-service";
+import { useAppService } from "@/services/externals/app/use-app-service";
 import { useTranslations } from "next-intl";
 
 import { ShopCard } from "../_components/shop-card/shop-card";

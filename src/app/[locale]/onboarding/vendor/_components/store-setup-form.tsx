@@ -1,7 +1,7 @@
 "use client";
 
 import SkiButton from "@/components/shared/button";
-import { FormField } from "@/components/shared/FormFields";
+import { FormField } from "@/components/shared/inputs/FormFields";
 import { Form, FormControl, FormItem, FormLabel, FormMessage, FormField as UIFormField } from "@/components/ui/form";
 import { Textarea } from "@/components/ui/textarea";
 import { zodResolver } from "@hookform/resolvers/zod";

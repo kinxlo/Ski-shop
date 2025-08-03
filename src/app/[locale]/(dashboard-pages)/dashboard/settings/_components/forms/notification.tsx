@@ -3,7 +3,7 @@
 
 // NotificationSettingsForm.tsx
 import MainButton from "@/components/shared/button";
-import { SwitchField } from "@/components/shared/FormFields";
+import { SwitchField } from "@/components/shared/inputs/FormFields";
 import { FormProvider, useForm } from "react-hook-form";
 
 type NotificationSettingsData = {

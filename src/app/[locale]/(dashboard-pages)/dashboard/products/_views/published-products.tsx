@@ -22,6 +22,8 @@ export const PublishedProducts = () => {
   const filters = useMemo(
     () => ({
       page,
+      limit: 10,
+      sort: "newest",
       status: "published" as const,
       ...(searchQuery && { search: searchQuery }),
     }),
@@ -73,11 +75,11 @@ export const PublishedProducts = () => {
   }
 
   // Extract data from the correct structure (similar to shop page)
-  const products = productData?.items || [];
-  const totalProducts = productData?.metadata?.total || 0;
-  const totalPages = productData?.metadata?.totalPages || 0;
-  const hasNextPage = productData?.metadata?.hasNextPage || false;
-  const hasPreviousPage = productData?.metadata?.hasPreviousPage || false;
+  const products = productData?.data?.items || [];
+  const totalProducts = productData?.data?.metadata?.total || 0;
+  const totalPages = productData?.data?.metadata?.totalPages || 0;
+  const hasNextPage = productData?.data?.metadata?.hasNextPage || false;
+  const hasPreviousPage = productData?.data?.metadata?.hasPreviousPage || false;
 
   return (
     <>

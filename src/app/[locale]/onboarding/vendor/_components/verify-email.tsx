@@ -7,8 +7,6 @@ import { useResendEmail } from "@/hooks/use-resend-email";
 import { useDecodedSearchParameters } from "@/hooks/use-search-parameters";
 import { useOnboardingUserService } from "@/services/externals/onboarding/use-onboarding-user-service";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useLocale } from "next-intl";
-import { usePathname, useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { MdEmail, MdRefresh, MdVerified } from "react-icons/md";
 import { toast } from "sonner";
@@ -22,7 +20,7 @@ const FormSchema = z.object({
 });
 
 interface VerifyEmailComponentProperties {
-  onVerificationSuccess?: () => void;
+  onVerificationSuccess?: (token?: string) => void;
   onVerificationFailure?: () => void;
 }
 
@@ -30,10 +28,7 @@ export const VerifyEmailComponent = ({
   onVerificationSuccess,
   onVerificationFailure,
 }: VerifyEmailComponentProperties) => {
-  const locale = useLocale();
   const email = useDecodedSearchParameters("email");
-  const router = useRouter();
-  const pathname = usePathname();
   const { useVerifyOTP } = useOnboardingUserService();
   const { mutateAsync: verifyOTP, isPending: isSubmitting } = useVerifyOTP();
   const { handleResendEmail, isResending } = useResendEmail();
@@ -53,12 +48,7 @@ export const VerifyEmailComponent = ({
         onSuccess: (response) => {
           if (response?.success && response?.data?.token) {
             toast.success("Email verified successfully");
-            if (pathname.includes("/vendor")) {
-              onVerificationSuccess?.();
-              router.push(`/${locale}/onboarding/vendor?step=business-info&token=${response?.data?.token}`);
-            } else {
-              router.push("/login");
-            }
+            onVerificationSuccess?.(response?.data?.token);
           }
         },
         onError: () => {

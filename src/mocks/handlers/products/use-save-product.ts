@@ -1,4 +1,4 @@
-import { useAppService } from "@/services/app/use-app-service";
+import { useAppService } from "@/services/externals/app/use-app-service";
 import { useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";
 

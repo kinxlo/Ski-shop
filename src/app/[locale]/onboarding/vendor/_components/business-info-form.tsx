@@ -1,7 +1,7 @@
 "use client";
 
 import SkiButton from "@/components/shared/button";
-import { FormField } from "@/components/shared/FormFields";
+import { FormField } from "@/components/shared/inputs/FormFields";
 import { PhoneInput } from "@/components/shared/inputs/phone-input";
 import { ComboBox } from "@/components/shared/select-dropdown/combo-box";
 import { FormControl, FormItem, FormField as UIFormField } from "@/components/ui/form";
@@ -9,13 +9,11 @@ import { countries } from "@/lib/constants";
 import { BusinessInfoFormData, businessInfoSchema } from "@/schemas";
 import { useOnboardingUserService } from "@/services/externals/onboarding/use-onboarding-user-service";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useLocale } from "next-intl";
-import { useRouter } from "next/navigation";
 import { FormProvider, useForm } from "react-hook-form";
 import { toast } from "sonner";
 
 interface BusinessInfoFormProperties {
-  onComplete: () => void;
+  onComplete: (token?: string) => void;
 }
 
 export const BusinessInfoForm = ({ onComplete }: BusinessInfoFormProperties) => {
@@ -33,9 +31,6 @@ export const BusinessInfoForm = ({ onComplete }: BusinessInfoFormProperties) => 
     },
   });
 
-  const router = useRouter();
-  const locale = useLocale();
-
   // Onboarding user service hook
   const { useUpdateBusinessInfo } = useOnboardingUserService();
   const { mutateAsync: updateBusinessInfo, isPending } = useUpdateBusinessInfo();
@@ -50,8 +45,7 @@ export const BusinessInfoForm = ({ onComplete }: BusinessInfoFormProperties) => 
       onSuccess: (response) => {
         if (response?.success) {
           toast.success("Business information updated successfully");
-          onComplete?.();
-          router.push(`/${locale}/onboarding/vendor?step=store-setup&token=${response?.data?.token}`);
+          onComplete?.(response?.data?.token);
         }
       },
       onError: () => {

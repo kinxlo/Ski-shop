@@ -10,11 +10,11 @@ import Image from "next/image";
 import { ChangeEvent, useRef, useState } from "react";
 import { Controller, useFormContext } from "react-hook-form";
 
-import { BlurImage } from "../core/miscellaneous/blur-image";
-import { Badge } from "../ui/badge";
-import { Checkbox } from "../ui/checkbox";
-import { Switch } from "../ui/switch";
-import MainButton from "./button";
+import { BlurImage } from "../../core/miscellaneous/blur-image";
+import { Badge } from "../../ui/badge";
+import { Checkbox } from "../../ui/checkbox";
+import { Switch } from "../../ui/switch";
+import MainButton from "../button";
 
 interface FormFieldProperties {
   label?: string;

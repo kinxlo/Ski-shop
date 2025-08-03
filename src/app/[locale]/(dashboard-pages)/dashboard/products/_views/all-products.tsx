@@ -26,10 +26,16 @@ export const AllProducts = () => {
   const filters = useMemo(
     () => ({
       page,
+      limit: 10,
+      sort: "newest", // Add default sort parameter
       ...(searchQuery && { search: searchQuery }),
     }),
     [page, searchQuery],
   );
+
+  // Debug log to check if filters are updating
+  // eslint-disable-next-line no-console
+  console.log("Dashboard filters:", filters);
 
   // Initialize product service
   const { useGetAllProducts } = useDashboardProductService();
@@ -41,8 +47,7 @@ export const AllProducts = () => {
     isError,
     refetch,
   } = useGetAllProducts(filters, {
-    keepPreviousData: true,
-    staleTime: 1000 * 60 * 5, // 5 minutes cache
+    staleTime: 0, // No cache to ensure fresh data on search
   });
 
   const handleSearchChange = useCallback(
@@ -91,11 +96,11 @@ export const AllProducts = () => {
   }
 
   // Extract data from the correct structure (similar to shop page)
-  const products = productData?.items || [];
-  const totalProducts = productData?.metadata?.total || 0;
-  const totalPages = productData?.metadata?.totalPages || 0;
-  const hasNextPage = productData?.metadata?.hasNextPage || false;
-  const hasPreviousPage = productData?.metadata?.hasPreviousPage || false;
+  const products = productData?.data?.items || [];
+  const totalProducts = productData?.data?.metadata?.total || 0;
+  const totalPages = productData?.data?.metadata?.totalPages || 0;
+  const hasNextPage = productData?.data?.metadata?.hasNextPage || false;
+  const hasPreviousPage = productData?.data?.metadata?.hasPreviousPage || false;
 
   return (
     <div className="space-y-4">

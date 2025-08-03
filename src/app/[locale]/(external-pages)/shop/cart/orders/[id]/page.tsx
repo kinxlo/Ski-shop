@@ -1,6 +1,6 @@
 "use client";
 
-import { useAppService } from "@/services/app/use-app-service";
+import { useAppService } from "@/services/externals/app/use-app-service";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 

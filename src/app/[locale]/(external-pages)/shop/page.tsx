@@ -7,7 +7,7 @@ import { Paginations } from "@/components/shared/pagination/pagination";
 import { CustomSelect } from "@/components/shared/select-dropdown";
 import { Input } from "@/components/ui/input";
 import { VENDORS } from "@/lib/constants";
-import { useAppService } from "@/services/app/use-app-service";
+import { useAppService } from "@/services/externals/app/use-app-service";
 import { useQueryState } from "nuqs";
 import { useMemo } from "react";
 import { useDebounce } from "use-debounce";
@@ -18,14 +18,6 @@ import { ShopCard } from "../(home)/_components/shop-card/shop-card";
 import { OptionsSelector } from "./_components/option/options";
 import { Hero } from "./_views/hero";
 
-interface IFilters {
-  page?: number;
-  category?: string;
-  search?: string;
-  vendor?: string;
-  sort?: string;
-}
-
 const Page = () => {
   const { useGetAllProducts, useGetAllProductCategory } = useAppService();
 
@@ -35,6 +27,7 @@ const Page = () => {
   const [category, setCategory] = useQueryState("category");
   const [vendor, setVendor] = useQueryState("vendor");
   const [sort, setSort] = useQueryState("sort", { defaultValue: "newest" });
+  const [limit] = useQueryState("limit", { defaultValue: "12" });
 
   // Debounce search input for better UX
   const [debouncedSearch] = useDebounce(search || "", 500);
@@ -43,7 +36,7 @@ const Page = () => {
     data: categoriesData,
     isError: isCategoriesError,
     isLoading: isCategoriesLoading,
-  } = useGetAllProductCategory();
+  } = useGetAllProductCategory({ enabled: true });
 
   // Prepare filters for API call
   const filters = useMemo<IFilters>(() => {
@@ -53,8 +46,9 @@ const Page = () => {
       ...(debouncedSearch && { search: debouncedSearch }),
       ...(vendor && vendor !== "All Vendor" && { vendor }),
       ...(sort && { sort }),
+      ...(limit && { limit: Number.parseInt(limit) }),
     };
-  }, [page, category, debouncedSearch, vendor, sort]);
+  }, [page, category, debouncedSearch, vendor, sort, limit]);
 
   // Queries
   const {
@@ -62,7 +56,7 @@ const Page = () => {
     isLoading: isLoadingProducts,
     isError: isProductError,
     refetch: refetchProducts,
-  } = useGetAllProducts(filters);
+  } = useGetAllProducts(filters, { enabled: true });
 
   // Derived state
   const products = productData?.data?.items || [];

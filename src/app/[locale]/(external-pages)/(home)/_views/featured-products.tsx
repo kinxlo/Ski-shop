@@ -5,7 +5,7 @@ import SkiButton from "@/components/shared/button";
 import { EmptyState } from "@/components/shared/empty-state";
 import { Ratings } from "@/components/shared/ratings";
 import { Badge } from "@/components/ui/badge";
-import { useAppService } from "@/services/app/use-app-service";
+import { useAppService } from "@/services/externals/app/use-app-service";
 import { memo, useMemo } from "react";
 import { toast } from "sonner";
 

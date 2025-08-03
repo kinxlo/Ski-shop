@@ -6,11 +6,14 @@ import { BlurImage } from "@/components/core/miscellaneous/blur-image";
 import SkiButton from "@/components/shared/button";
 import { Ratings } from "@/components/shared/ratings";
 import { Skeleton } from "@/components/ui/skeleton";
-import { cn, formatCurrency } from "@/lib/utils";
+import { Locale } from "@/lib/i18n/config";
+import { formatCurrency } from "@/lib/i18n/utils";
+import { cn } from "@/lib/utils";
 import { useSaveProduct } from "@/mocks/handlers/products/use-save-product";
-import { useAppService } from "@/services/app/use-app-service";
+import { useAppService } from "@/services/externals/app/use-app-service";
 import { useQueryClient } from "@tanstack/react-query";
 import { Heart, Minus, Plus, ShoppingCart, Star } from "lucide-react";
+import { useLocale } from "next-intl";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { MdStarBorderPurple500 } from "react-icons/md";
@@ -24,6 +27,7 @@ type Tab = "description" | "reviews";
 
 export const ProductDetail = ({ product }: any) => {
   const router = useRouter();
+  const locale = useLocale();
   const [selectedImage, setSelectedImage] = useState(0);
   const [quantity, setQuantity] = useState(1);
   const { useAddToCart } = useAppService();
@@ -163,9 +167,13 @@ export const ProductDetail = ({ product }: any) => {
                 </p>
               </div>
               <div className="mt-8 flex items-baseline gap-4">
-                <span className="text-primary text-4xl font-semibold">{formatCurrency(product.price)}</span>
+                <span className="text-primary text-4xl font-semibold">
+                  {formatCurrency(product.price, locale as Locale)}
+                </span>
                 {product.discountPrice && (
-                  <span className="text-destructive text-xl line-through">{formatCurrency(product.discountPrice)}</span>
+                  <span className="text-destructive text-xl line-through">
+                    {formatCurrency(product.discountPrice, locale as Locale)}
+                  </span>
                 )}
               </div>
               <div>{product.description}</div>

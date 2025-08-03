@@ -3,7 +3,7 @@
 
 // PasswordForm.tsx
 import MainButton from "@/components/shared/button";
-import { FormField } from "@/components/shared/FormFields";
+import { FormField } from "@/components/shared/inputs/FormFields";
 import { FormProvider, useForm } from "react-hook-form";
 
 type PasswordFormData = {

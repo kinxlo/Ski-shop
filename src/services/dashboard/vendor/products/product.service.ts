@@ -9,20 +9,20 @@ export class DashboardProductService {
     this.http = httpAdapter;
   }
 
-  async getAllProducts(filters: IFilters) {
+  async getAllProducts(filters?: IFilters) {
+    const defaultFilters: IFilters = { page: 1, limit: 10 };
+    const appliedFilters = filters ?? defaultFilters;
     return tryCatchWrapper(async () => {
-      const queryParameters = this.buildQueryParameters(filters);
+      const queryParameters = this.buildQueryParameters(appliedFilters);
       const response = await this.http.get<ProductApiResponse>(`/products?${queryParameters}`);
 
       if (response?.status === 200) {
-        return response.data.data;
+        return response.data;
       }
       throw new Error("Failed to fetch products");
     });
   }
 
-  // impl get store id
-  // {{base_url}}/stores/current
   async getStoreInfo() {
     return tryCatchWrapper(async () => {
       const response = await this.http.get<StoreApiResponse>(`/stores/current`);
@@ -45,8 +45,9 @@ export class DashboardProductService {
       description: data.description,
       storeId: storeID,
       status: "draft",
-      discountPrice: data.discountPrice || null,
-      images: data.images.map((image) => image.file), // Array of File objects
+      // discountPrice: data.discountPrice || null,
+      images: data.images[0].file, // Array of File objects
+      // images: data.images.map((image) => image.file), // Array of File objects
     };
 
     return tryCatchWrapper(async () => {

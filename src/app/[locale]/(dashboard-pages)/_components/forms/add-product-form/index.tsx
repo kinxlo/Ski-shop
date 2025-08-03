@@ -4,11 +4,12 @@
 import { BlurImage } from "@/components/core/miscellaneous/blur-image";
 import SkiButton from "@/components/shared/button";
 import MainButton from "@/components/shared/button";
-import { FormField } from "@/components/shared/FormFields";
+import { FormField } from "@/components/shared/inputs/FormFields";
 import { Label } from "@/components/ui/label";
+import { Editor } from "@/lib/rich-text-editor";
 import { cn } from "@/lib/utils";
-import { useAppService } from "@/services/app/use-app-service";
 import { useDashboardProductService } from "@/services/dashboard/vendor/products/use-product-service";
+import { useAppService } from "@/services/externals/app/use-app-service";
 import {
   closestCenter,
   DndContext,
@@ -21,6 +22,7 @@ import {
 import { arrayMove, rectSortingStrategy, SortableContext, useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { SerializedEditorState } from "lexical";
 import { PaperclipIcon, Trash2Icon } from "lucide-react";
 import { useRef, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
@@ -50,6 +52,34 @@ interface SortableImageProperties {
 
 const handleDragOver = (event: React.DragEvent<HTMLDivElement>) => {
   event.preventDefault();
+};
+
+const extractTextFromEditorState = (editorState: SerializedEditorState): string => {
+  try {
+    const root = editorState?.root;
+    if (!root?.children) return "";
+
+    let text = "";
+    const extractTextFromNode = (node: any) => {
+      if (node.text) {
+        text += node.text;
+      }
+      if (node.children) {
+        for (const child of node.children) {
+          extractTextFromNode(child);
+        }
+      }
+    };
+
+    for (const child of root.children) {
+      extractTextFromNode(child);
+    }
+    return text;
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error("Error extracting text from editor state:", error);
+    return "";
+  }
 };
 
 const SortableImage = ({ id, file, onRemove, isMain, onClick, isSelected }: SortableImageProperties) => {
@@ -126,6 +156,7 @@ export const AddProductForm = () => {
   const fileInputReference = useRef<HTMLInputElement>(null);
   const [activeId, setActiveId] = useState<string | null>(null);
   const [selectedImageId, setSelectedImageId] = useState<string | null>(null);
+  const [descriptionEditorState, setDescriptionEditorState] = useState<SerializedEditorState>();
   const images = watch("images");
 
   const sensors = useSensors(
@@ -218,6 +249,7 @@ export const AddProductForm = () => {
           onSuccess: (response) => {
             if (response?.success) {
               toast.success("Product created successfully");
+              setValue("description", "", { shouldValidate: true });
               methods.reset();
             } else {
               toast.error("Failed to create product");
@@ -368,14 +400,23 @@ export const AddProductForm = () => {
                 required
               />
             </div>
-            <FormField
-              placeholder="Enter description"
-              className="h-40 w-full bg-white"
-              label="Product Description"
-              name="description"
-              required
-              type={`textarea`}
-            />
+            <div className="space-y-2">
+              <Label className="text-[16px] font-medium">
+                Product Description
+                <span className="text-mid-danger ml-1">*</span>
+              </Label>
+              <div>
+                <Editor
+                  editorSerializedState={descriptionEditorState}
+                  onSerializedChange={(value) => {
+                    setDescriptionEditorState(value);
+                    // Convert rich text content to plain text for form validation
+                    const plainText = extractTextFromEditorState(value);
+                    setValue("description", plainText, { shouldValidate: true });
+                  }}
+                />
+              </div>
+            </div>
             <FormField
               placeholder="Select Category"
               className="!h-14 w-full"

@@ -1,7 +1,7 @@
 "use client";
 
 import SkiButton from "@/components/shared/button";
-import { FormField } from "@/components/shared/FormFields";
+import { FormField } from "@/components/shared/inputs/FormFields";
 import { LocaleLink } from "@/components/shared/locale-link";
 import { RegisterFormData, registerSchema } from "@/schemas";
 import { useAuthService } from "@/services/auth/use-auth-service";

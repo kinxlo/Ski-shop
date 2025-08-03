@@ -7,9 +7,14 @@ export const useDashboardSearchParameters = () => {
   const [page, setPage] = useQueryState("page", { defaultValue: "1" });
   const [perPage, setPerPage] = useQueryState("perPage", parseAsInteger.withDefault(10));
   const [search, setSearch] = useQueryState("search", parseAsString);
-  const [status, setStatus] = useQueryState(
+  const [limit, setLimit] = useQueryState("limit", parseAsInteger.withDefault(10));
+  const [orderStatus, setOrderStatus] = useQueryState(
     "status",
-    parseAsStringEnum(["all", "published", "draft", "out-of-stock"]).withDefault("all"),
+    parseAsStringEnum(["all", "completed", "pending", "cancelled"]).withDefault("all"),
+  );
+  const [productStatus, setProductStatus] = useQueryState(
+    "status",
+    parseAsStringEnum(["all", "published", "draft"]).withDefault("all"),
   );
 
   return {
@@ -17,11 +22,13 @@ export const useDashboardSearchParameters = () => {
     page: page ? Number.parseInt(page) : 1,
     perPage: (perPage as number) ?? 10,
     search: (search as string) ?? "",
-    status: (status as string) ?? "all",
-
+    limit: (limit as number) ?? 10,
+    orderStatus: (orderStatus as string) ?? "all",
+    productStatus: (productStatus as string) ?? "all",
     // Setters
     setPage,
     setPerPage,
+    setLimit,
     setSearch: useCallback(
       (value: string | null) => {
         // Remove search parameter if value is empty
@@ -33,13 +40,15 @@ export const useDashboardSearchParameters = () => {
       },
       [setSearch],
     ),
-    setStatus,
-
+    setOrderStatus,
+    setProductStatus,
     // Utility functions
     resetFilters: () => {
       setSearch(null);
-      setStatus(null);
+      setOrderStatus(null);
       setPage(null);
+      setLimit(10);
+      setProductStatus(null);
     },
 
     resetToFirstPage: useCallback(() => {

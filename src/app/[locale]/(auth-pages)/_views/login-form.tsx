@@ -1,7 +1,7 @@
 "use client";
 
 import SkiButton from "@/components/shared/button";
-import { FormField } from "@/components/shared/FormFields";
+import { FormField } from "@/components/shared/inputs/FormFields";
 import { LocaleLink } from "@/components/shared/locale-link";
 import { Checkbox } from "@/components/ui/checkbox";
 import { LoginFormData, loginSchema } from "@/schemas";

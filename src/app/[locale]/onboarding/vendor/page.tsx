@@ -2,6 +2,7 @@
 
 import { Logo } from "@/components/shared/logo";
 import { useSearchParameters } from "@/hooks/use-search-parameters";
+import { useLocale } from "next-intl";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -16,6 +17,7 @@ export type OnboardingStep = "verify-email" | "business-info" | "store-setup" | 
 
 const VendorOnboardingPage = () => {
   const router = useRouter();
+  const locale = useLocale();
 
   // Get current step from URL or default to verify-email
   const stepFromUrl = useSearchParameters("step");
@@ -33,30 +35,42 @@ const VendorOnboardingPage = () => {
     if (stepFromUrl && stepFromUrl !== currentStep) {
       setCurrentStep(stepFromUrl as OnboardingStep);
     }
-  }, [stepFromUrl, currentStep, router]);
+  }, [stepFromUrl, currentStep]);
 
   const getCurrentStepNumber = () => {
     return steps.findIndex((step) => step.id === currentStep) + 1;
   };
 
-  const handleEmailVerified = () => {
+  const handleEmailVerified = (token?: string) => {
     const nextStep = "business-info";
-    setCurrentStep(nextStep);
+    const url = token
+      ? `/${locale}/onboarding/vendor?step=${nextStep}&token=${token}`
+      : `/${locale}/onboarding/vendor?step=${nextStep}`;
+    window.location.href = url;
   };
 
-  const handleBusinessInfoComplete = () => {
+  const handleBusinessInfoComplete = (token?: string) => {
     const nextStep = "store-setup";
-    setCurrentStep(nextStep);
+    const url = token
+      ? `/${locale}/onboarding/vendor?step=${nextStep}&token=${token}`
+      : `/${locale}/onboarding/vendor?step=${nextStep}`;
+    window.location.href = url;
   };
 
-  const handleStoreSetupComplete = () => {
+  const handleStoreSetupComplete = (token?: string) => {
     const nextStep = "bank-payout";
-    setCurrentStep(nextStep);
+    const url = token
+      ? `/${locale}/onboarding/vendor?step=${nextStep}&token=${token}`
+      : `/${locale}/onboarding/vendor?step=${nextStep}`;
+    window.location.href = url;
   };
 
-  const handleBankPayoutComplete = () => {
+  const handleBankPayoutComplete = (token?: string) => {
     const nextStep = "success";
-    setCurrentStep(nextStep);
+    const url = token
+      ? `/${locale}/onboarding/vendor?step=${nextStep}&token=${token}`
+      : `/${locale}/onboarding/vendor?step=${nextStep}`;
+    window.location.href = url;
   };
 
   const renderCurrentStep = () => {

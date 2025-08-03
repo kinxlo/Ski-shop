@@ -5,7 +5,7 @@ import { BlurImage } from "@/components/core/miscellaneous/blur-image";
 import { UniversalSwiper } from "@/components/shared/carousel";
 import { EmptyState } from "@/components/shared/empty-state";
 import { Ratings } from "@/components/shared/ratings";
-import { useAppService } from "@/services/app/use-app-service";
+import { useAppService } from "@/services/externals/app/use-app-service";
 import { StarFilledIcon } from "@radix-ui/react-icons";
 import { toast } from "sonner";
 

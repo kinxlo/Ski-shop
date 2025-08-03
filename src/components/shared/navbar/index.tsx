@@ -4,7 +4,7 @@ import { Wrapper } from "@/components/core/layout/wrapper";
 import { UserAvatarProfile } from "@/components/core/miscellaneous/user-avatar-profile";
 import { NAV_LINKS } from "@/lib/constants";
 import { cn } from "@/lib/utils";
-import { useAppService } from "@/services/app/use-app-service";
+import { useAppService } from "@/services/externals/app/use-app-service";
 import { Menu, ShoppingCartIcon, X } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { usePathname } from "next/navigation";

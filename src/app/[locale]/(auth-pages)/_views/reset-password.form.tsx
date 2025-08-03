@@ -1,7 +1,7 @@
 "use client";
 
 import SkiButton from "@/components/shared/button";
-import { FormField } from "@/components/shared/FormFields";
+import { FormField } from "@/components/shared/inputs/FormFields";
 import { useSearchParameters } from "@/hooks/use-search-parameters";
 import { ResetPasswordData, resetPasswordSchema } from "@/schemas";
 import { useAuthService } from "@/services/auth/use-auth-service";

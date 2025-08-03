@@ -120,6 +120,8 @@ declare global {
     categories?: string;
     search?: string;
     limit?: number;
+    vendor?: string;
+    sort?: string;
   }
 
   interface IColumnDefinition<T extends DataItem> {
