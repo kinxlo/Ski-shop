@@ -2,14 +2,16 @@
 
 import { BlurImage } from "@/components/core/miscellaneous/blur-image";
 import SkiButton from "@/components/shared/button";
+import { AlertModal } from "@/components/shared/dialog/alert-modal";
 import { EmptyState } from "@/components/shared/empty-state";
 import { Locale } from "@/lib/i18n/config";
 import { formatCurrency, formatDate } from "@/lib/i18n/utils";
-import { useAppService } from "@/services/externals/app/use-app-service";
+import { useDashboardProductService } from "@/services/dashboard/vendor/products/use-product-service";
 import { ArrowLeft, EyeOff, Megaphone, Star } from "lucide-react";
 import { useLocale } from "next-intl";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
+import { toast } from "sonner";
 
 import { ProductActionsDropdown } from "../_components/product-actions-dropdown";
 import { PromoteProductModal } from "../_components/promote-product-modal";
@@ -31,13 +33,18 @@ const isStarSeller = (product: Product) => {
 export default function ProductDetailPage() {
   const parameters = useParams();
   const locale = useLocale();
+  const router = useRouter();
   const productId = parameters.id as string;
   const [isPromoteModalOpen, setIsPromoteModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
   // Fetch product by ID
-  const { useGetSingleProduct } = useAppService();
+  const { useGetSingleProduct, useDeleteProduct, useUpdateProductStatus, useEditProduct } =
+    useDashboardProductService();
   const { data: productResponse, isLoading, isError, refetch } = useGetSingleProduct(productId);
-
+  const { mutateAsync: deleteProduct } = useDeleteProduct();
+  const { mutateAsync: updateProductStatus } = useUpdateProductStatus();
+  const { mutateAsync: editProduct } = useEditProduct();
   const product = productResponse?.data;
 
   // Determine if this is a star seller product
@@ -47,31 +54,65 @@ export default function ProductDetailPage() {
     setIsPromoteModalOpen(true);
   };
 
-  const handleUnpublishProduct = () => {
+  const handleUnpublishProduct = async () => {
     // Handle unpublish product action
     if (product) {
-      // TODO: Implement unpublish functionality
+      try {
+        await updateProductStatus({ id: product.id, status: "draft" });
+        toast.success("Product unpublished successfully");
+        refetch();
+      } catch {
+        toast.error("Failed to unpublish product");
+      }
     }
   };
 
   const handleEditProduct = () => {
     // Handle edit product action
     if (product) {
-      // TODO: Implement edit functionality
+      router.push(`/${locale}/dashboard/products/${product.id}/edit`);
     }
   };
 
-  const handleDeleteProduct = () => {
+  const handleDeleteProduct = async () => {
     // Handle delete product action
     if (product) {
-      // TODO: Implement delete functionality
+      setIsDeleteModalOpen(true);
     }
   };
 
-  const handleMarkOutOfStock = () => {
+  const handleConfirmDelete = async () => {
+    if (product) {
+      try {
+        await deleteProduct({ id: product.id });
+        toast.success("Product deleted successfully");
+        router.push(`/${locale}/dashboard/products`);
+      } catch {
+        toast.error("Failed to delete product");
+      }
+    }
+  };
+
+  const handleMarkOutOfStock = async () => {
+    const submitData = {
+      stockCount: 0,
+    };
     // Handle mark out of stock action
     if (product) {
-      // TODO: Implement mark out of stock functionality
+      await editProduct(
+        { id: product.id, data: submitData },
+        {
+          onSuccess: (response) => {
+            if (response.success) {
+              toast.success("Product marked as out of stock");
+              refetch();
+            }
+          },
+          onError: () => {
+            toast.error("Failed to mark product as out of stock");
+          },
+        },
+      );
     }
   };
 
@@ -130,6 +171,7 @@ export default function ProductDetailPage() {
               </div>
             )}
             <ProductActionsDropdown
+              product={product}
               onEdit={handleEditProduct}
               onPromote={handlePromoteProduct}
               onUnpublish={handleUnpublishProduct}
@@ -201,6 +243,15 @@ export default function ProductDetailPage() {
             <div className="space-y-2">
               <h4 className="text-2xl font-bold text-gray-900">{product.name}</h4>
               <p className="text-sm text-gray-500 capitalize">{product.category}</p>
+              <div className="flex items-center space-x-2">
+                <span
+                  className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${
+                    product.status === "published" ? "bg-green-100 text-green-800" : "bg-yellow-100 text-yellow-800"
+                  }`}
+                >
+                  {product.status === "published" ? "Published" : "Draft"}
+                </span>
+              </div>
             </div>
 
             {/* Product Details */}
@@ -268,15 +319,17 @@ export default function ProductDetailPage() {
             <div className="space-y-3 pt-4">
               <SkiButton
                 onClick={handlePromoteProduct}
-                className="bg-primary hover:bg-primary/70 w-full px-6 py-3 font-medium text-white"
+                isDisabled={product.status === "draft" || product.stockCount === 0}
+                className="bg-primary hover:bg-primary/70 w-full px-6 py-3 font-medium text-white disabled:cursor-not-allowed disabled:opacity-50"
               >
                 <Megaphone className="mr-2 h-4 w-4" />
                 Promote Product
               </SkiButton>
               <SkiButton
                 onClick={handleUnpublishProduct}
+                isDisabled={product.status === "draft"}
                 variant="outline"
-                className="border-mid-danger text-mid-danger hover:bg-mid-danger/10 w-full px-6 py-3 font-medium"
+                className="border-mid-danger text-mid-danger hover:bg-mid-danger/10 w-full px-6 py-3 font-medium disabled:cursor-not-allowed disabled:opacity-50"
               >
                 <EyeOff className="mr-2 h-4 w-4" />
                 Unpublish Product
@@ -322,6 +375,18 @@ export default function ProductDetailPage() {
           name: product.name,
           price: product.price,
         }}
+      />
+
+      {/* Delete Confirmation Modal */}
+      <AlertModal
+        isOpen={isDeleteModalOpen}
+        onClose={() => setIsDeleteModalOpen(false)}
+        onConfirm={handleConfirmDelete}
+        type="warning"
+        title="Delete Product"
+        description="Are you sure you want to delete this product? This action cannot be undone."
+        confirmText="Delete"
+        cancelText="Cancel"
       />
     </div>
   );

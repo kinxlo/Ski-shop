@@ -1,10 +1,10 @@
-import { Modal } from "@/app/[locale]/(dashboard-pages)/admin/_components/modals/content-modal";
 import SkiButton from "@/components/shared/button";
 import Image from "next/image";
 import { useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 
 import { AlertModal } from "../dialog/alert-modal";
+import { Modal } from "../dialog/content-modal";
 import { FormField } from "../inputs/FormFields";
 import { Ratings } from "../ratings";
 

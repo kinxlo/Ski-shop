@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 // use-product-service.ts
 import { ProductFormData } from "@/app/[locale]/(dashboard-pages)/_components/forms/add-product-form";
+import { EditProductFormData } from "@/app/[locale]/(dashboard-pages)/_components/forms/edit-product-form";
 import { queryKeys } from "@/lib/react-query/query-keys";
 import { createServiceHooks } from "@/lib/react-query/use-service-query";
 import { dependencies } from "@/lib/tools/dependencies";
@@ -38,6 +39,13 @@ export const useDashboardProductService = () => {
     });
   };
 
+  const useGetSingleProduct = (id: string, options?: any) =>
+    useServiceQuery([...queryKeys.dashboard.products.details(id)], (service) => service.getSingleProduct(id), {
+      staleTime: 5 * 60 * 1000, // 5 minutes
+      gcTime: 10 * 60 * 1000, // 10 minutes
+      ...options,
+    });
+
   // Mutations
   const useCreateProduct = () => {
     const queryClient = useQueryClient();
@@ -54,11 +62,54 @@ export const useDashboardProductService = () => {
     );
   };
 
+  const useDeleteProduct = () => {
+    const queryClient = useQueryClient();
+    return useServiceMutation((service, { id }: { id: string }) => service.deleteProduct(id), {
+      onSuccess: (_, { id }) => {
+        queryClient.invalidateQueries({ queryKey: ["dashboard", "products", "list"] });
+        queryClient.invalidateQueries({ queryKey: ["dashboard", "products", "details", id] });
+      },
+    });
+  };
+
+  const useEditProduct = () => {
+    const queryClient = useQueryClient();
+    return useServiceMutation(
+      (service, { id, data }: { id: string; data: EditProductFormData }) => service.editProduct(id, data),
+      {
+        onSuccess: (_, { id }) => {
+          // Invalidate products list and specific product details
+          queryClient.invalidateQueries({ queryKey: ["dashboard", "products", "list"] });
+          queryClient.invalidateQueries({ queryKey: ["dashboard", "products", "details", id] });
+        },
+      },
+    );
+  };
+
+  const useUpdateProductStatus = () => {
+    const queryClient = useQueryClient();
+    return useServiceMutation(
+      (service, { id, status }: { id: string; status: "published" | "draft" }) =>
+        service.updateProductStatus(id, status),
+      {
+        onSuccess: (_, { id }) => {
+          // Invalidate products list and specific product details
+          queryClient.invalidateQueries({ queryKey: ["dashboard", "products", "list"] });
+          queryClient.invalidateQueries({ queryKey: ["dashboard", "products", "details", id] });
+        },
+      },
+    );
+  };
+
   return {
     // Queries
     useGetAllProducts,
     useGetStoreInfo,
+    useGetSingleProduct,
     // Mutations
     useCreateProduct,
+    useDeleteProduct,
+    useEditProduct,
+    useUpdateProductStatus,
   };
 };

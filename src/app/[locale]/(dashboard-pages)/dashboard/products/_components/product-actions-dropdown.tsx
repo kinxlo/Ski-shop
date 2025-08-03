@@ -4,7 +4,14 @@ import { cn } from "@/lib/utils";
 import { Edit, EyeOff, MoreVertical, Package, Trash2, TrendingUp } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
+interface Product {
+  id: string;
+  status: "published" | "draft";
+  stockCount: number;
+}
+
 interface ProductActionsDropdownProperties {
+  product: Product;
   onEdit: () => void;
   onPromote: () => void;
   onUnpublish: () => void;
@@ -13,6 +20,7 @@ interface ProductActionsDropdownProperties {
 }
 
 export function ProductActionsDropdown({
+  product,
   onEdit,
   onPromote,
   onUnpublish,
@@ -33,41 +41,51 @@ export function ProductActionsDropdown({
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const handleAction = (action: () => void) => {
-    action();
-    setIsOpen(false);
+  const handleAction = (action: () => void, disabled: boolean) => {
+    if (!disabled) {
+      action();
+      setIsOpen(false);
+    }
   };
+
+  const isUnpublished = product.status === "draft";
+  const isOutOfStock = product.stockCount === 0;
 
   const actions = [
     {
       label: "Edit",
       icon: Edit,
       onClick: onEdit,
-      className: "text-gray-700 hover:bg-gray-50",
+      className: "hover:bg-gray-50",
+      disabled: false,
     },
     {
       label: "Promote Product",
       icon: TrendingUp,
       onClick: onPromote,
-      className: "text-blue-600 hover:bg-blue-50",
+      className: "text-primary hover:bg-blue-50",
+      disabled: isUnpublished || isOutOfStock,
     },
     {
       label: "Unpublish Product",
       icon: EyeOff,
       onClick: onUnpublish,
-      className: "text-orange-600 hover:bg-orange-50",
+      className: "hover:bg-orange-50",
+      disabled: isUnpublished,
     },
     {
       label: "Mark as Out of Stock",
       icon: Package,
       onClick: onMarkOutOfStock,
-      className: "text-yellow-600 hover:bg-yellow-50",
+      className: "hover:bg-yellow-50",
+      disabled: isOutOfStock,
     },
     {
       label: "Delete",
       icon: Trash2,
       onClick: onDelete,
-      className: "text-red-600 hover:bg-red-50",
+      className: "text-mid-danger hover:bg-red-50",
+      disabled: false,
     },
   ];
 
@@ -84,10 +102,12 @@ export function ProductActionsDropdown({
             return (
               <button
                 key={index}
-                onClick={() => handleAction(action.onClick)}
+                onClick={() => handleAction(action.onClick, action.disabled)}
+                disabled={action.disabled}
                 className={cn(
                   "flex w-full items-center space-x-3 px-4 py-3 text-sm font-medium transition-colors",
                   action.className,
+                  action.disabled && "cursor-not-allowed opacity-50 hover:bg-transparent",
                 )}
               >
                 <Icon className="h-4 w-4" />

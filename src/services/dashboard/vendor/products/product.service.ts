@@ -1,4 +1,5 @@
 import { ProductFormData } from "@/app/[locale]/(dashboard-pages)/_components/forms/add-product-form";
+import { EditProductFormData } from "@/app/[locale]/(dashboard-pages)/_components/forms/edit-product-form";
 import { HttpAdapter } from "@/lib/http/http-adapter";
 import { tryCatchWrapper } from "@/lib/tools/tryCatchFunction";
 
@@ -33,6 +34,16 @@ export class DashboardProductService {
     });
   }
 
+  async getSingleProduct(id: string) {
+    return tryCatchWrapper(async () => {
+      const response = await this.http.get<{ success: boolean; data: Product }>(`/products/${id}`);
+      if (response?.status === 200) {
+        return response.data;
+      }
+      throw new Error(`Failed to fetch product with ID: ${id}`);
+    });
+  }
+
   // Create product
   async createProduct(data: ProductFormData, storeID: string) {
     const headers = { "Content-Type": "multipart/form-data" };
@@ -44,7 +55,7 @@ export class DashboardProductService {
       stockCount: data.stockCount,
       description: data.description,
       storeId: storeID,
-      status: "draft",
+      status: data.status || "published",
       // discountPrice: data.discountPrice || null,
       images: data.images[0].file, // Array of File objects
       // images: data.images.map((image) => image.file), // Array of File objects
@@ -56,6 +67,38 @@ export class DashboardProductService {
         return response.data;
       }
       throw new Error("Failed to create product");
+    });
+  }
+
+  // handle delete product and edit product
+
+  async deleteProduct(id: string) {
+    return tryCatchWrapper(async () => {
+      const response = await this.http.delete<ProductApiResponse>(`/products/${id}`);
+      if (response?.status === 200) {
+        return response.data;
+      }
+      throw new Error("Failed to delete product");
+    });
+  }
+
+  async editProduct(id: string, data: EditProductFormData) {
+    return tryCatchWrapper(async () => {
+      const response = await this.http.patch<ProductApiResponse>(`/products/${id}`, data);
+      if (response?.status === 200) {
+        return response.data;
+      }
+      throw new Error("Failed to edit product");
+    });
+  }
+
+  async updateProductStatus(id: string, status: "published" | "draft") {
+    return tryCatchWrapper(async () => {
+      const response = await this.http.patch<ProductApiResponse>(`/products/${id}`, { status });
+      if (response?.status === 200) {
+        return response.data;
+      }
+      throw new Error("Failed to update product status");
     });
   }
 

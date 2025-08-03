@@ -9,7 +9,7 @@ import { Label } from "@/components/ui/label";
 import { Editor } from "@/lib/rich-text-editor";
 import { cn } from "@/lib/utils";
 import { useDashboardProductService } from "@/services/dashboard/vendor/products/use-product-service";
-import { useAppService } from "@/services/externals/app/use-app-service";
+// import { useAppService } from "@/services/externals/app/use-app-service";
 import {
   closestCenter,
   DndContext,
@@ -24,23 +24,23 @@ import { CSS } from "@dnd-kit/utilities";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { SerializedEditorState } from "lexical";
 import { PaperclipIcon, Trash2Icon } from "lucide-react";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import * as z from "zod";
 
 const productSchema = z.object({
-  name: z.string().min(1, "Product name is required"),
-  price: z.number().min(0, "Price must be positive"),
+  name: z.string().min(1, "Product name is required").optional(),
+  price: z.number().min(0, "Price must be positive").optional(),
   discountPrice: z.number().min(0, "Discount price must be positive").optional(),
-  description: z.string().min(1, "Description is required"),
-  category: z.string().min(1, "Category is required"),
-  stockCount: z.number().min(0, "Stock count must be positive"),
-  images: z.array(z.any()).min(1, "At least one image is required").max(4, "Maximum 4 images allowed"),
-  status: z.enum(["published", "draft"]).default("published"),
+  description: z.string().optional(),
+  // category: z.string().optional(),
+  stockCount: z.number().min(0, "Stock count must be positive").optional(),
+  images: z.array(z.any()).optional(),
+  status: z.enum(["published", "draft"]).default("published").optional(),
 });
 
-export type ProductFormData = z.infer<typeof productSchema>;
+export type EditProductFormData = z.infer<typeof productSchema>;
 
 interface SortableImageProperties {
   id: string;
@@ -49,6 +49,21 @@ interface SortableImageProperties {
   isMain?: boolean;
   onClick?: (id: string) => void;
   isSelected?: boolean;
+}
+
+interface EditProductFormProperties {
+  product: Product;
+  onSuccess?: () => void;
+  onCancel?: () => void;
+  isSubmitting?: boolean;
+  setIsSubmitting?: (submitting: boolean) => void;
+}
+
+interface ProductImage {
+  id: string;
+  file?: File;
+  url?: string;
+  isExisting?: boolean;
 }
 
 const handleDragOver = (event: React.DragEvent<HTMLDivElement>) => {
@@ -83,7 +98,15 @@ const extractTextFromEditorState = (editorState: SerializedEditorState): string 
   }
 };
 
-const SortableImage = ({ id, file, onRemove, isMain, onClick, isSelected }: SortableImageProperties) => {
+const SortableImage = ({
+  id,
+  file,
+  url,
+  onRemove,
+  isMain,
+  onClick,
+  isSelected,
+}: SortableImageProperties & { url?: string }) => {
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id });
 
   const style = {
@@ -91,6 +114,8 @@ const SortableImage = ({ id, file, onRemove, isMain, onClick, isSelected }: Sort
     transition,
     opacity: isDragging ? 0.5 : 1,
   };
+
+  const imageSource = file ? URL.createObjectURL(file) : url;
 
   return (
     <div
@@ -104,7 +129,7 @@ const SortableImage = ({ id, file, onRemove, isMain, onClick, isSelected }: Sort
       } ${isSelected ? "ring-2 ring-blue-500" : ""}`}
     >
       <BlurImage
-        src={URL.createObjectURL(file)}
+        src={imageSource || ""}
         alt={`Preview ${id}`}
         width={isMain ? 600 : 100}
         height={isMain ? 400 : 100}
@@ -128,38 +153,75 @@ const SortableImage = ({ id, file, onRemove, isMain, onClick, isSelected }: Sort
   );
 };
 
-export const AddProductForm = () => {
-  const { useGetAllProductCategory } = useAppService();
-  const { useGetStoreInfo, useCreateProduct } = useDashboardProductService();
-  const { data: productCategories } = useGetAllProductCategory();
-  const { mutateAsync: createProduct, isPending: isCreatingProduct } = useCreateProduct();
-  const { data: storeInfo, isLoading: storeInfoLoading } = useGetStoreInfo();
-  const methods = useForm<ProductFormData>({
+// Convert existing images to the format expected by the form
+const convertExistingImages = (imageUrls: string[]): ProductImage[] => {
+  return imageUrls.map((url, index) => ({
+    id: `existing-${index}`,
+    url,
+    isExisting: true,
+  }));
+};
+
+export const EditProductForm = ({ product, onSuccess, onCancel }: EditProductFormProperties) => {
+  // const { useGetAllProductCategory } = useAppService();
+  const { useEditProduct } = useDashboardProductService();
+  // const { data: productCategories } = useGetAllProductCategory();
+  const { mutateAsync: editProduct, isPending: isEditingProduct } = useEditProduct();
+
+  const methods = useForm<EditProductFormData>({
     resolver: zodResolver(productSchema),
     defaultValues: {
-      name: "",
-      price: 0,
-      category: "",
-      stockCount: 0,
-      images: [],
-      discountPrice: 0,
-      description: "",
-      status: "published",
+      name: product.name,
+      price: product.price,
+      // category: product.category || "",
+      stockCount: product.stockCount,
+      images: product.images ? convertExistingImages(product.images) : [],
+      discountPrice: product.discountPrice || 0,
+      description: product.description || "",
+      status: product.status || "published",
     },
   });
 
-  const {
-    handleSubmit,
-    formState: { isSubmitting, isValid },
-    setValue,
-    watch,
-  } = methods;
+  const { handleSubmit, setValue, watch, reset } = methods;
 
   const fileInputReference = useRef<HTMLInputElement>(null);
   const [activeId, setActiveId] = useState<string | null>(null);
   const [selectedImageId, setSelectedImageId] = useState<string | null>(null);
-  const [descriptionEditorState, setDescriptionEditorState] = useState<SerializedEditorState>();
-  const images = watch("images");
+  const [descriptionEditorState, setDescriptionEditorState] = useState<SerializedEditorState>(() => {
+    if (product.description) {
+      return {
+        root: {
+          children: [
+            {
+              children: [
+                {
+                  detail: 0,
+                  format: 0,
+                  mode: "normal",
+                  style: "",
+                  text: product.description,
+                  type: "text",
+                  version: 1,
+                },
+              ],
+              direction: "ltr",
+              format: "",
+              indent: 0,
+              type: "paragraph",
+              version: 1,
+            },
+          ],
+          direction: "ltr",
+          format: "",
+          indent: 0,
+          type: "root",
+          version: 1,
+        },
+      } as unknown as SerializedEditorState;
+    }
+    return {} as SerializedEditorState;
+  });
+  const images = watch("images") || [];
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -169,6 +231,22 @@ export const AddProductForm = () => {
     }),
     useSensor(KeyboardSensor),
   );
+
+  // Initialize form with product data when component mounts
+  useEffect(() => {
+    if (product) {
+      reset({
+        name: product.name,
+        price: product.price,
+        // category: product.category || "",
+        stockCount: product.stockCount,
+        images: product.images ? convertExistingImages(product.images) : [],
+        discountPrice: product.discountPrice || 0,
+        description: product.description || "",
+        status: product.status || "published",
+      });
+    }
+  }, [product, reset]);
 
   const handleDragStart = (event: any) => {
     setActiveId(event.activevent.id);
@@ -199,10 +277,6 @@ export const AddProductForm = () => {
         id: `img-${Date.now()}-${Math.random().toString(36).slice(2, 9)}`,
         file,
       }));
-      // const uploadedFiles = newFiles.map((file) => ({
-      //   id: `img-${Date.now()}-${Math.random().toString(36).slice(2, 9)}`,
-      //   file,
-      // }));
 
       const newImages = [...images, ...uploadedFiles];
       setValue("images", newImages, { shouldValidate: true });
@@ -237,28 +311,28 @@ export const AddProductForm = () => {
     setSelectedImageId(id);
   };
 
-  const handleSubmitForm = async (data: ProductFormData) => {
+  const handleSubmitForm = async (data: EditProductFormData) => {
     try {
-      // Validate store info is available
-      if (!storeInfo?.data?.id) {
-        toast.error("Store information not available");
-        return;
-      }
+      // Ensure all required fields are provided with defaults
+      const submitData = {
+        ...data,
+        images: data?.images?.map((img) => img.url) || [],
+        description: data.description || "",
+      };
 
-      createProduct(
-        { productData: data, storeID: storeInfo.data.id },
+      editProduct(
+        { id: product.id, data: submitData },
         {
           onSuccess: (response) => {
             if (response?.success) {
-              toast.success("Product created successfully");
-              setValue("description", "", { shouldValidate: true });
-              methods.reset();
+              toast.success("Product updated successfully");
+              onSuccess?.();
             } else {
-              toast.error("Failed to create product");
+              toast.error("Failed to update product");
             }
           },
           onError: () => {
-            toast.error("Failed to create product");
+            toast.error("Failed to update product");
           },
         },
       );
@@ -272,7 +346,7 @@ export const AddProductForm = () => {
   return (
     <section className="">
       <div className="mb-8 space-y-2">
-        <h3 className="!text-3xl font-bold text-black">Add Product</h3>
+        <h3 className="!text-3xl font-bold text-black">Edit Product</h3>
       </div>
 
       <FormProvider {...methods}>
@@ -308,6 +382,11 @@ export const AddProductForm = () => {
                         ? images.find((img) => img.id === selectedImageId)?.file || images[0].file
                         : images[0].file
                     }
+                    url={
+                      selectedImageId
+                        ? images.find((img) => img.id === selectedImageId)?.url || images[0].url
+                        : images[0].url
+                    }
                     onRemove={handleRemoveImage}
                     isMain
                   />
@@ -339,6 +418,7 @@ export const AddProductForm = () => {
                           key={image.id}
                           id={image.id}
                           file={image.file}
+                          url={image.url}
                           onRemove={handleRemoveImage}
                           onClick={handleImageSelect}
                           isSelected={selectedImageId === image.id}
@@ -383,9 +463,9 @@ export const AddProductForm = () => {
 
           {/* Form fields section - appears second on mobile, left column on desktop */}
           <section className="order-2 space-y-4 lg:order-1 lg:col-span-6">
-            <FormField placeholder="Enter name" className="h-14 w-full" label="Product Name" name="name" required />
+            <FormField placeholder="Enter name" className="h-14 w-full" label="Product Name" name="name" />
             <div className="grid grid-cols-3 gap-4">
-              <FormField placeholder="0.00" className="h-14 w-full" label="Price" name="price" type="number" required />
+              <FormField placeholder="0.00" className="h-14 w-full" label="Price" name="price" type="number" />
               <FormField
                 placeholder="0.00"
                 className="h-14 w-full"
@@ -399,16 +479,13 @@ export const AddProductForm = () => {
                 label="Stock Quantity"
                 name="stockCount"
                 type="number"
-                required
               />
             </div>
             <div className="space-y-2">
-              <Label className="text-[16px] font-medium">
-                Product Description
-                <span className="text-mid-danger ml-1">*</span>
-              </Label>
+              <Label className="text-[16px] font-medium">Product Description</Label>
               <div>
                 <Editor
+                  key={`editor-${product.id}-${product.description}`}
                   editorSerializedState={descriptionEditorState}
                   onSerializedChange={(value) => {
                     setDescriptionEditorState(value);
@@ -419,12 +496,11 @@ export const AddProductForm = () => {
                 />
               </div>
             </div>
-            <FormField
+            {/* <FormField
               placeholder="Select Category"
               className="!h-14 w-full"
               label="Product Category"
               name="category"
-              required
               type={`select`}
               options={productCategories?.data.map((category) => ({
                 value: category,
@@ -433,29 +509,31 @@ export const AddProductForm = () => {
                   .replace(/^./, (string_) => string_.toUpperCase()) // Capitalize first letter
                   .trim(), // Remove leading/trailing spaces
               }))}
-            />
+            /> */}
             <FormField
               placeholder="Select Status"
               className="!h-14 w-full"
               label="Product Status"
               name="status"
-              required
               type={`select`}
               options={[
                 { value: "published", label: "Published" },
                 { value: "draft", label: "Draft" },
               ]}
             />
-            <div className="pt-4">
+            <div className="flex gap-4 pt-4">
+              <MainButton type="button" variant="outline" onClick={onCancel} className="flex-1" size="xl">
+                Cancel
+              </MainButton>
               <MainButton
                 type="submit"
                 variant="primary"
-                isDisabled={isSubmitting || !isValid || storeInfoLoading || isCreatingProduct}
-                isLoading={isSubmitting || storeInfoLoading || isCreatingProduct}
-                className="w-full"
+                isDisabled={isEditingProduct}
+                isLoading={isEditingProduct}
+                className="flex-1"
                 size="xl"
               >
-                Add Product
+                Update Product
               </MainButton>
             </div>
           </section>
