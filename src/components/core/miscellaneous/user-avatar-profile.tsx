@@ -10,6 +10,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { ComponentGuard } from "@/lib/routes/component-guard";
+import { useAppService } from "@/services/externals/app/use-app-service";
 import { Box, ListOrdered, LogOut, Users } from "lucide-react";
 import { signOut, useSession } from "next-auth/react";
 import { useState } from "react";
@@ -38,6 +39,16 @@ const handleLogout = async () => {
 export function UserAvatarProfile({ className, showInfo = false }: UserAvatarProfileProperties) {
   const { data: session } = useSession();
   const [open, setOpen] = useState(false);
+  const { useGetSavedProducts, useGetOrders } = useAppService();
+
+  // Fetch saved products and orders data
+  const { data: savedProductsResponse } = useGetSavedProducts();
+  const { data: ordersResponse } = useGetOrders();
+
+  // Get counts
+  const savedItemsCount = savedProductsResponse?.data?.metadata?.total || 0;
+  const ordersCount = ordersResponse?.data?.metadata?.total || 0;
+
   return (
     <DropdownMenu open={open} onOpenChange={setOpen}>
       <DropdownMenuTrigger className="flex items-center gap-2 focus:outline-none">
@@ -62,12 +73,22 @@ export function UserAvatarProfile({ className, showInfo = false }: UserAvatarPro
           <DropdownMenuItem className="cursor-pointer">
             <PiHeart className="mr-2 h-4 w-4" />
             <span>Save Items</span>
+            {savedItemsCount > 0 && (
+              <span className="bg-primary text-primary-foreground ml-auto flex h-5 w-5 items-center justify-center rounded-full text-xs font-medium">
+                {savedItemsCount > 9 ? "9+" : savedItemsCount}
+              </span>
+            )}
           </DropdownMenuItem>
         </LocaleLink>
         <LocaleLink href={`/shop/cart/orders`}>
           <DropdownMenuItem className="cursor-pointer">
             <ListOrdered className="mr-2 h-4 w-4" />
             <span>My Orders</span>
+            {ordersCount > 0 && (
+              <span className="bg-primary text-primary-foreground ml-auto flex h-5 w-5 items-center justify-center rounded-full text-xs font-medium">
+                {ordersCount > 9 ? "9+" : ordersCount}
+              </span>
+            )}
           </DropdownMenuItem>
         </LocaleLink>
         <LocaleLink href={`/earn`}>
