@@ -33,9 +33,8 @@ http.interceptors.response.use(
     const originalRequest = error.config;
     // Handle 401 Unauthorized from /api/v1/carts
     if (
-      error.response?.status === 401 &&
-      originalRequest?.url?.includes("/api/v1/carts") &&
-      originalRequest?.url?.includes("/api/v1/orders") &&
+      (error.response?.status === 401 && originalRequest?.url?.includes("/api/v1/carts")) ||
+      originalRequest?.url?.includes("/api/v1/orders") ||
       originalRequest?.url?.includes("/api/v1/saves")
     ) {
       return; // Just return without throwing error
