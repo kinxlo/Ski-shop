@@ -1,3 +1,5 @@
+"use client";
+
 import { Wrapper } from "@/components/core/layout/wrapper";
 
 import { MobileDownloadBanner } from "../_components/mobile-download-banner";

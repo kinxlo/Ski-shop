@@ -4,10 +4,10 @@ import SkiButton from "@/components/shared/button";
 import { RatingModal } from "@/components/shared/rating-modal";
 import { Ratings } from "@/components/shared/ratings";
 import { Badge } from "@/components/ui/badge";
-import { Locale } from "@/lib/i18n/config";
-import { formatCurrency } from "@/lib/i18n/utils";
+// import { Locale } from "@/lib/i18n/config";
+// import { formatCurrency } from "@/lib/i18n/utils";
 import { cn } from "@/lib/utils";
-import { useLocale } from "next-intl";
+// import { useLocale } from "next-intl";
 import Image from "next/image";
 
 interface ProductOrderDetailProperties {
@@ -44,7 +44,7 @@ const handleRatingSubmit = (rating: number, review: string, productId: string) =
 };
 
 export const ProductOrderDetail = ({ order }: ProductOrderDetailProperties) => {
-  const locale = useLocale();
+  // const locale = useLocale();
   // Get the first product from the order (assuming single product orders for now)
   const product = order.products[0];
   const orderDate = new Date(order.createdAt).toLocaleDateString("en-GB");
@@ -78,11 +78,11 @@ export const ProductOrderDetail = ({ order }: ProductOrderDetailProperties) => {
             <p className="line-clamp-2 text-xs font-medium lg:text-2xl">{product.name}</p>
             <Ratings rating={4} />
             <p>QTY: {product.quantity}</p>
-            <div className="flex items-baseline gap-2">
+            {/* <div className="flex items-baseline gap-2">
               <p className="text-primary text-xs font-medium lg:text-xl">
                 {formatCurrency(product.price, locale as Locale)}
               </p>
-            </div>
+            </div> */}
             <p className={`text-mid-grey-II text-[10px] underline lg:text-sm`}>By {product.vendor.name}</p>
             <div className="mt-8 space-y-2 text-xl">
               <p className={`text-mid-grey-II text-sm`}>Placed On {orderDate}</p>

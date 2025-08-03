@@ -3,11 +3,13 @@
 import { BlurImage } from "@/components/core/miscellaneous/blur-image";
 import { Ratings } from "@/components/shared/ratings";
 import { testimonialImages } from "@/lib/constants";
+import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
 
 export const Testimonial = () => {
   const [selectedTestimonialIndex, setSelectedTestimonialIndex] = useState(1);
   const [fade, setFade] = useState(true);
+  const t = useTranslations("home.testimonial");
 
   const handleImageClick = (index: number) => {
     setSelectedTestimonialIndex(index);
@@ -35,8 +37,8 @@ export const Testimonial = () => {
       <section className="my-9 xl:my-14">
         <section className="items-center gap-3 md:flex">
           <div className="flex-1">
-            <h6 className="text-primary">Our Testimonials</h6>
-            <h1 className="text-high-grey-II mt-2 font-medium">What People Say About Us</h1>
+            <h6 className="text-primary">{t("tagTitle")}</h6>
+            <h1 className="text-high-grey-II mt-2 font-medium">{t("title")}</h1>
           </div>
           <div className="flex justify-end gap-[15px] xl:gap-[35px]">
             {testimonialImages.map((t, index) =>

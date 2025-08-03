@@ -7,6 +7,7 @@ import { cn } from "@/lib/utils";
 import { useAppService } from "@/services/externals/app/use-app-service";
 import { Menu, ShoppingCartIcon, X } from "lucide-react";
 import { useSession } from "next-auth/react";
+import { useTranslations } from "next-intl";
 import { usePathname } from "next/navigation";
 import { forwardRef, useEffect, useState } from "react";
 
@@ -34,6 +35,7 @@ export const Navbar = forwardRef<HTMLElement, NavbarProperties>(
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const [, setIsScrolled] = useState(false);
     const { useGetCart } = useAppService();
+    const t = useTranslations("navbar");
 
     // Fetch cart data
     const { data: cartResponse } = useGetCart();
@@ -82,7 +84,7 @@ export const Navbar = forwardRef<HTMLElement, NavbarProperties>(
                   size="icon"
                   isIconOnly
                   icon={<ShoppingCartIcon size={20} />}
-                  aria-label={`Shopping cart (${cartItemCount} items)`}
+                  aria-label={t("cart.ariaLabel", { count: cartItemCount })}
                 />
                 {cartItemCount > 0 && (
                   <span className="bg-primary absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full text-xs font-medium text-white">
@@ -95,7 +97,7 @@ export const Navbar = forwardRef<HTMLElement, NavbarProperties>(
                 size="icon"
                 className="lg:hidden"
                 onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                aria-label="Toggle menu"
+                aria-label={t("menu.toggleMenu")}
               >
                 {isMobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
               </SkiButton>
@@ -106,10 +108,10 @@ export const Navbar = forwardRef<HTMLElement, NavbarProperties>(
               ) : (
                 <div className="hidden gap-3 lg:flex">
                   <SkiButton href="/login" variant="outline" size="xl">
-                    Sign in
+                    {t("auth.signIn")}
                   </SkiButton>
                   <SkiButton className={`bg-accent`} variant="primary" href="/signup" size="xl">
-                    Sign up
+                    {t("auth.signUp")}
                   </SkiButton>
                 </div>
               )}
@@ -135,16 +137,16 @@ export const Navbar = forwardRef<HTMLElement, NavbarProperties>(
                   <div className="flex flex-col gap-4">
                     <UserAvatarProfile showInfo className="w-full" />
                     <SkiButton href="/account" variant="outline" className="w-full">
-                      My Account
+                      {t("menu.myAccount")}
                     </SkiButton>
                   </div>
                 ) : (
                   <div className="flex flex-col gap-3">
                     <SkiButton href="/login" className="w-full">
-                      Sign in
+                      {t("auth.signIn")}
                     </SkiButton>
                     <SkiButton variant="primary" href="/register" className="w-full">
-                      Create account
+                      {t("auth.createAccount")}
                     </SkiButton>
                   </div>
                 )}

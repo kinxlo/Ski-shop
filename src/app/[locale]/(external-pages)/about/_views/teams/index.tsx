@@ -1,15 +1,17 @@
+"use client";
+
 import { BlurImage } from "@/components/core/miscellaneous/blur-image";
+import { useTranslations } from "next-intl";
 
 export const Teams = () => {
+  const t = useTranslations("about.teams");
+
   return (
     <section className="mx-auto mt-3">
       <div className="text-center">
         <div className={`px-4`}>
-          <h2 className="text-mid-grey-II mb-2 text-[28px] xl:text-[44px]">Meet Our Team</h2>
-          <p className="mx-auto max-w-xl text-[16px] text-[#292929] xl:text-xl">
-            Lorem ipsum dolor sit amet consectetur. Lorem libero arcu ut venenatis feugiat lacus. Elit tellus morbi quis
-            a aliquam mi pretium nam donec. Duis posuere venenatis et amet sed.
-          </p>
+          <h2 className="text-mid-grey-II mb-2 text-[28px] xl:text-[44px]">{t("title")}</h2>
+          <p className="mx-auto max-w-xl text-[16px] text-[#292929] xl:text-xl">{t("description")}</p>
         </div>
 
         <div className="relative mt-[56px]">

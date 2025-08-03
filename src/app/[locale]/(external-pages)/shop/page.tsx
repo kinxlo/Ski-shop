@@ -8,6 +8,7 @@ import { CustomSelect } from "@/components/shared/select-dropdown";
 import { Input } from "@/components/ui/input";
 import { VENDORS } from "@/lib/constants";
 import { useAppService } from "@/services/externals/app/use-app-service";
+import { useTranslations } from "next-intl";
 import { useQueryState } from "nuqs";
 import { useMemo } from "react";
 import { useDebounce } from "use-debounce";
@@ -20,6 +21,7 @@ import { Hero } from "./_views/hero";
 
 const Page = () => {
   const { useGetAllProducts, useGetAllProductCategory } = useAppService();
+  const t = useTranslations("shopPage");
 
   // Use nuqs for URL parameter management
   const [page, setPage] = useQueryState("page", { defaultValue: "1" });
@@ -42,13 +44,13 @@ const Page = () => {
   const filters = useMemo<IFilters>(() => {
     return {
       page: page ? Number.parseInt(page) : 1,
-      ...(category && category !== "All Categories" && { categories: category.toLowerCase() }),
+      ...(category && category !== t("filters.allCategories") && { categories: category.toLowerCase() }),
       ...(debouncedSearch && { search: debouncedSearch }),
-      ...(vendor && vendor !== "All Vendor" && { vendor }),
+      ...(vendor && vendor !== t("filters.allVendor") && { vendor }),
       ...(sort && { sort }),
       ...(limit && { limit: Number.parseInt(limit) }),
     };
-  }, [page, category, debouncedSearch, vendor, sort, limit]);
+  }, [page, category, debouncedSearch, vendor, sort, limit, t]);
 
   // Queries
   const {
@@ -66,7 +68,7 @@ const Page = () => {
 
   // Handle category change
   const handleCategoryChange = async (value: string) => {
-    setCategory(value === "All Categories" ? null : value);
+    setCategory(value === t("filters.allCategories") ? null : value);
     setPage("1"); // Reset to first page when changing category
   };
 
@@ -79,7 +81,7 @@ const Page = () => {
 
   // Handle vendor change
   const handleVendorChange = (value: string) => {
-    setVendor(value === "All Vendor" ? null : value);
+    setVendor(value === t("filters.allVendor") ? null : value);
     setPage("1"); // Reset to first page when changing vendor
   };
 
@@ -99,7 +101,7 @@ const Page = () => {
       <Wrapper className="py-12">
         <EmptyState
           images={[{ src: "/images/empty-state.svg", width: 80, height: 80, alt: "No featured products" }]}
-          description="Failed to load products"
+          description={t("errors.failedToLoadProducts")}
           descriptionClassName="text-mid-danger"
           className="bg-low-warning/5 space-y-0 rounded-lg py-10"
           actionButton={
@@ -108,7 +110,7 @@ const Page = () => {
               variant="outline"
               className="border-mid-danger text-mid-danger hover:bg-mid-danger/10 mt-4 border"
             >
-              Retry
+              {t("errors.retry")}
             </SkiButton>
           }
         />
@@ -126,7 +128,7 @@ const Page = () => {
         <section className="col-span-2 space-y-10">
           {isCategoriesLoading ? (
             <div className="space-y-2">
-              <h6 className="font-semibold uppercase">Categories</h6>
+              <h6 className="font-semibold uppercase">{t("filters.categories")}</h6>
               <div className="space-y-4">
                 {Array.from({ length: 7 }).map((_, index) => (
                   <div key={index} className="flex items-center space-x-2">
@@ -138,16 +140,16 @@ const Page = () => {
             </div>
           ) : (
             <OptionsSelector
-              title="Categories"
-              categories={["All Categories", ...categories]}
-              value={category || "All Categories"}
+              title={t("filters.categories")}
+              categories={[t("filters.allCategories"), ...categories]}
+              value={category || t("filters.allCategories")}
               onChange={handleCategoryChange}
             />
           )}
           <OptionsSelector
-            title="Vendor"
-            categories={["All Vendor", ...VENDORS]}
-            value={vendor || "All Vendor"}
+            title={t("filters.vendor")}
+            categories={[t("filters.allVendor"), ...VENDORS]}
+            value={vendor || t("filters.allVendor")}
             onChange={handleVendorChange}
           />
         </section>
@@ -157,13 +159,13 @@ const Page = () => {
           {/* Search and sort header */}
           <article className="flex items-center justify-between">
             <div className="w-[20rem]">
-              <Input name="search" placeholder="Search products..." value={search || ""} onChange={handleSearch} />
+              <Input name="search" placeholder={t("search.placeholder")} value={search || ""} onChange={handleSearch} />
             </div>
             <div className="flex items-center space-x-4">
-              <p className="text-sm">Sort By:</p>
+              <p className="text-sm">{t("search.sortBy")}</p>
               <CustomSelect
                 options={["newest", "name", "price", "rating"]}
-                placeholder="Choose sort option"
+                placeholder={t("search.chooseSortOption")}
                 value={sort || "newest"}
                 onChange={handleSortChange}
               />
@@ -173,15 +175,16 @@ const Page = () => {
           {/* Active filters info */}
           <article className="bg-high-grey-I my-4 flex items-center justify-between rounded-md p-4">
             <div>
-              <span className="text-mid-grey-II text-sm">Active Filters: </span>
+              <span className="text-mid-grey-II text-sm">{t("activeFilters.title")} </span>
               <span className="space-x-4 text-sm">
-                {category || "All Categories"} / {vendor || "All Vendor"}
+                {category || t("filters.allCategories")} / {vendor || t("filters.allVendor")}
                 {debouncedSearch && ` / Search: ${debouncedSearch}`}
               </span>
             </div>
             <div>
               <p className="text-mid-grey-II text-sm">
-                <span className="text-high-grey-II text-sm font-semibold">{totalProducts}</span> results found
+                <span className="text-high-grey-II text-sm font-semibold">{totalProducts}</span>{" "}
+                {t("activeFilters.resultsFound")}
               </p>
             </div>
           </article>
@@ -202,7 +205,7 @@ const Page = () => {
                         height: 80,
                       },
                     ]}
-                    description={"No products found matching your filters"}
+                    description={t("errors.noProductsFound")}
                     descriptionClassName="text-primary"
                     className={`bg-mid-grey-I min-h-fit space-y-0 rounded-lg py-10`}
                   />

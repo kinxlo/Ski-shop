@@ -400,13 +400,173 @@
         "title": "MONEY BACK GUARANTEE",
         "description": "We return money within 30 days"
       }
+    },
+    "testimonial": {
+      "tagTitle": "Our Testimonials",
+      "title": "What People Say About Us"
+    },
+    "mobileDownload": {
+      "title": "Shop Smarter and Faster Anywhere You Are.",
+      "description": "Get the Ski-Shop app and unlock seamless shopping, faster deliveries, wallet access, and exclusive deals all in your pocket.",
+      "appStore": {
+        "subtitle": "Download on the",
+        "title": "App Store"
+      },
+      "googlePlay": {
+        "subtitle": "Download on the",
+        "title": "Google Play"
+      }
+    },
+    "playToWin": {
+      "badge": "Win Big",
+      "title": "Play-2-Win",
+      "description": "Enjoy freebies when you participate in our play-2-win",
+      "action": "Get The App"
     }
   },
+  "about": {
+    "hero": {
+      "title": "About Us"
+    },
+    "sectionOne": {
+      "tagTitle": "About Ski-Shop",
+      "title": "The New Face of Digital Commerce in Africa",
+      "description": "Our mission is to power African commerce by creating a digital marketplace where every seller — from a neighborhood vendor to a global brand — can thrive. We provide the tools, visibility, and infrastructure needed to make commerce seamless, secure, and scalable."
+    },
+    "sectionTwo": {
+      "title": "What Make Us Different",
+      "description": "Our mission is to power African commerce by creating a digital marketplace where every seller can thrive. We provide the tools, visibility, and infrastructure needed to make commerce better.",
+      "strengths": {
+        "securedPayment": {
+          "title": "Secured Payment",
+          "description": "Secure, instant payments and transactions with our integrated financial solution."
+        },
+        "fastDelivery": {
+          "title": "Fast Delivery",
+          "description": "Secure, instant payments and transactions with our integrated financial solution."
+        },
+        "verifiedVendors": {
+          "title": "Verified Vendors",
+          "description": "Secure, instant payments and transactions with our integrated financial solution."
+        },
+        "seamlessExperience": {
+          "title": "Seamless Experience",
+          "description": "Secure, instant payments and transactions with our integrated financial solution."
+        }
+      }
+    },
+    "sectionThree": {
+      "title": "Who We Serve",
+      "description": "Our mission is to power African commerce by creating a digital marketplace where every seller —can thrive. We provide the tools, visibility, and infrastructure needed to m",
+      "services": {
+        "vendors": {
+          "title": "Vendors",
+          "description": "Businesses looking to expand their reach and access new customers digitally."
+        },
+        "buyers": {
+          "title": "Buyers",
+          "description": "Businesses looking to expand their reach and access new customers digitally."
+        },
+        "deliveryPartners": {
+          "title": "Delivery Partners",
+          "description": "Businesses looking to expand their reach and access new customers digitally."
+        }
+      }
+    },
+    "teams": {
+      "title": "Meet Our Team",
+      "description": "Lorem ipsum dolor sit amet consectetur. Lorem libero arcu ut venenatis feugiat lacus. Elit tellus morbi quis a aliquam mi pretium nam donec. Duis posuere venenatis et amet sed."
+    }
+  },
+  "contact": {
+    "hero": {
+      "title": "Contact Us"
+    },
+    "sectionOne": {
+      "title": "Feel Free To Reach Out",
+      "description": "We're here for you! Whether you have questions about shopping, selling, deliveries, or just want to learn more about how Ski-Shop is shaping the future of commerce, feel free to reach out — we're happy to help.",
+      "contactInfo": {
+        "title": "Contact Information",
+        "phone": "+2348130054558",
+        "email": "seanlawson@skicomltd.com",
+        "address": "49, Adeyemi Street, Otubu Bus Stop, Agege, Lagos."
+      },
+      "form": {
+        "fullName": "Full Name",
+        "emailAddress": "Email Address",
+        "subject": "Subject",
+        "message": "Message",
+        "sendMessage": "Send Message"
+      },
+      "map": {
+        "title": "Find Us Here",
+        "apiKeyNotConfigured": "Google Maps API key not configured",
+        "apiKeyInstructions": "Please add NEXT_PUBLIC_GOOGLE_MAPS_API_KEY to your environment variables"
+      }
+    }
+  },
+  "shopPage": {
+    "hero": {
+      "title": "Shop"
+    },
+    "filters": {
+      "categories": "Categories",
+      "vendor": "Vendor",
+      "allCategories": "All Categories",
+      "allVendor": "All Vendor"
+    },
+    "search": {
+      "placeholder": "Search products...",
+      "sortBy": "Sort By:",
+      "sortOptions": {
+        "newest": "newest",
+        "name": "name",
+        "price": "price",
+        "rating": "rating"
+      },
+      "chooseSortOption": "Choose sort option"
+    },
+    "activeFilters": {
+      "title": "Active Filters:",
+      "resultsFound": "results found"
+    },
+    "errors": {
+      "failedToLoadProducts": "Failed to load products",
+      "retry": "Retry",
+      "noProductsFound": "No products found matching your filters"
+    }
+  },
+  "navbar": {
+    "cart": {
+      "ariaLabel": "Shopping cart ({count} items)",
+      "items": "items"
+    },
+    "menu": {
+      "toggleMenu": "Toggle menu",
+      "myAccount": "My Account"
+    },
+    "auth": {
+      "signIn": "Sign in",
+      "signUp": "Sign up",
+      "createAccount": "Create account"
+    }
+  },
+  "userProfile": {
+    "userAvatar": "User avatar",
+    "user": "User",
+    "saveItems": "Save Items",
+    "myOrders": "My Orders",
+    "investEarn": "Invest & Earn",
+    "dashboard": "Dashboard",
+    "logout": "Log out",
+    "logoutSuccess": "Logged out successfully",
+    "logoutFailed": "Failed to log out"
+  },
   "footer": {
-    "about": "About Us",
+    "about": "About",
     "contact": "Contact Us",
-    "help": "Help & Support",
-    "terms": "Terms of Service",
+    "help": "Help",
+    "terms": "Terms & Condition",
     "privacy": "Privacy Policy",
     "cookies": "Cookie Policy",
     "shipping": "Shipping Information",
@@ -418,9 +578,25 @@
     "emailPlaceholder": "Enter your email",
     "followUs": "Follow Us",
     "socialMedia": "Social Media",
-    "copyright": "© 2024 Ski Shop. All rights reserved.",
+    "copyright": "© Copyright {year}. All Rights Reserved by SKICOM",
     "poweredBy": "Powered by",
-    "madeWith": "Made with ❤️ by"
+    "madeWith": "Made with ❤️ by",
+    "getItOn": "GET IT ON",
+    "googlePlay": "Google Play",
+    "downloadOnThe": "Download on the",
+    "appStore": "App Store",
+    "explore": "Explore",
+    "shop": "Shop",
+    "liveChat": "Live Chat",
+    "contactInfo": {
+      "title": "Contact",
+      "address": "Plot 1, Kwara Osun Street, Lagos.",
+      "phone1": "08130054558",
+      "phone2": "08123456443"
+    },
+    "quickLinks": {
+      "title": "Quick Links"
+    }
   },
   "errors": {
     "404": "Page Not Found",

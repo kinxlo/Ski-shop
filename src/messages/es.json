@@ -400,13 +400,173 @@
         "title": "GARANTÍA DE DEVOLUCIÓN",
         "description": "Devolvemos el dinero en 30 días"
       }
+    },
+    "testimonial": {
+      "tagTitle": "Nuestros Testimonios",
+      "title": "Lo Que Dicen Sobre Nosotros"
+    },
+    "mobileDownload": {
+      "title": "Compra Más Inteligente y Rápido Donde Estés.",
+      "description": "Obtén la aplicación Ski-Shop y desbloquea compras sin problemas, entregas más rápidas, acceso a la billetera y ofertas exclusivas todo en tu bolsillo.",
+      "appStore": {
+        "subtitle": "Descarga en",
+        "title": "App Store"
+      },
+      "googlePlay": {
+        "subtitle": "Descarga en",
+        "title": "Google Play"
+      }
+    },
+    "playToWin": {
+      "badge": "Gana Grande",
+      "title": "Juega-2-Gana",
+      "description": "Disfruta de regalos cuando participes en nuestro juego-2-gana",
+      "action": "Obtén La App"
     }
   },
+  "about": {
+    "hero": {
+      "title": "Sobre Nosotros"
+    },
+    "sectionOne": {
+      "tagTitle": "Sobre Ski-Shop",
+      "title": "La Nueva Cara del Comercio Digital en África",
+      "description": "Nuestra misión es impulsar el comercio africano creando un mercado digital donde cada vendedor — desde un vendedor del vecindario hasta una marca global — puede prosperar. Proporcionamos las herramientas, visibilidad e infraestructura necesarias para hacer el comercio sin problemas, seguro y escalable."
+    },
+    "sectionTwo": {
+      "title": "Lo Que Nos Hace Diferentes",
+      "description": "Nuestra misión es impulsar el comercio africano creando un mercado digital donde cada vendedor puede prosperar. Proporcionamos las herramientas, visibilidad e infraestructura necesarias para hacer el comercio mejor.",
+      "strengths": {
+        "securedPayment": {
+          "title": "Pago Seguro",
+          "description": "Pagos y transacciones seguras e instantáneas con nuestra solución financiera integrada."
+        },
+        "fastDelivery": {
+          "title": "Entrega Rápida",
+          "description": "Pagos y transacciones seguras e instantáneas con nuestra solución financiera integrada."
+        },
+        "verifiedVendors": {
+          "title": "Vendedores Verificados",
+          "description": "Pagos y transacciones seguras e instantáneas con nuestra solución financiera integrada."
+        },
+        "seamlessExperience": {
+          "title": "Experiencia Sin Problemas",
+          "description": "Pagos y transacciones seguras e instantáneas con nuestra solución financiera integrada."
+        }
+      }
+    },
+    "sectionThree": {
+      "title": "A Quienes Servimos",
+      "description": "Nuestra misión es impulsar el comercio africano creando un mercado digital donde cada vendedor puede prosperar. Proporcionamos las herramientas, visibilidad e infraestructura necesarias para hacer el comercio mejor.",
+      "services": {
+        "vendors": {
+          "title": "Vendedores",
+          "description": "Empresas que buscan expandir su alcance y acceder a nuevos clientes digitalmente."
+        },
+        "buyers": {
+          "title": "Compradores",
+          "description": "Empresas que buscan expandir su alcance y acceder a nuevos clientes digitalmente."
+        },
+        "deliveryPartners": {
+          "title": "Socios de Entrega",
+          "description": "Empresas que buscan expandir su alcance y acceder a nuevos clientes digitalmente."
+        }
+      }
+    },
+    "teams": {
+      "title": "Conoce Nuestro Equipo",
+      "description": "Lorem ipsum dolor sit amet consectetur. Lorem libero arcu ut venenatis feugiat lacus. Elit tellus morbi quis a aliquam mi pretium nam donec. Duis posuere venenatis et amet sed."
+    }
+  },
+  "contact": {
+    "hero": {
+      "title": "Contáctanos"
+    },
+    "sectionOne": {
+      "title": "No Dudes En Contactarnos",
+      "description": "¡Estamos aquí para ti! Ya sea que tengas preguntas sobre compras, ventas, entregas, o simplemente quieras saber más sobre cómo Ski-Shop está moldeando el futuro del comercio, no dudes en contactarnos — estamos felices de ayudar.",
+      "contactInfo": {
+        "title": "Información de Contacto",
+        "phone": "+2348130054558",
+        "email": "seanlawson@skicomltd.com",
+        "address": "49, Adeyemi Street, Otubu Bus Stop, Agege, Lagos."
+      },
+      "form": {
+        "fullName": "Nombre Completo",
+        "emailAddress": "Dirección de Correo",
+        "subject": "Asunto",
+        "message": "Mensaje",
+        "sendMessage": "Enviar Mensaje"
+      },
+      "map": {
+        "title": "Encuéntranos Aquí",
+        "apiKeyNotConfigured": "Clave de API de Google Maps no configurada",
+        "apiKeyInstructions": "Por favor agrega NEXT_PUBLIC_GOOGLE_MAPS_API_KEY a tus variables de entorno"
+      }
+    }
+  },
+  "shopPage": {
+    "hero": {
+      "title": "Tienda"
+    },
+    "filters": {
+      "categories": "Categorías",
+      "vendor": "Vendedor",
+      "allCategories": "Todas las Categorías",
+      "allVendor": "Todos los Vendedores"
+    },
+    "search": {
+      "placeholder": "Buscar productos...",
+      "sortBy": "Ordenar Por:",
+      "sortOptions": {
+        "newest": "más reciente",
+        "name": "nombre",
+        "price": "precio",
+        "rating": "calificación"
+      },
+      "chooseSortOption": "Elegir opción de ordenamiento"
+    },
+    "activeFilters": {
+      "title": "Filtros Activos:",
+      "resultsFound": "resultados encontrados"
+    },
+    "errors": {
+      "failedToLoadProducts": "Error al cargar productos",
+      "retry": "Reintentar",
+      "noProductsFound": "No se encontraron productos que coincidan con tus filtros"
+    }
+  },
+  "navbar": {
+    "cart": {
+      "ariaLabel": "Carrito de compras ({count} artículos)",
+      "items": "artículos"
+    },
+    "menu": {
+      "toggleMenu": "Alternar menú",
+      "myAccount": "Mi Cuenta"
+    },
+    "auth": {
+      "signIn": "Iniciar sesión",
+      "signUp": "Registrarse",
+      "createAccount": "Crear cuenta"
+    }
+  },
+  "userProfile": {
+    "userAvatar": "Avatar del usuario",
+    "user": "Usuario",
+    "saveItems": "Guardar Artículos",
+    "myOrders": "Mis Pedidos",
+    "investEarn": "Invertir y Ganar",
+    "dashboard": "Panel de Control",
+    "logout": "Cerrar sesión",
+    "logoutSuccess": "Sesión cerrada exitosamente",
+    "logoutFailed": "Error al cerrar sesión"
+  },
   "footer": {
-    "about": "Acerca de nosotros",
+    "about": "Acerca de",
     "contact": "Contáctanos",
-    "help": "Ayuda y soporte",
-    "terms": "Términos de servicio",
+    "help": "Ayuda",
+    "terms": "Términos y condiciones",
     "privacy": "Política de privacidad",
     "cookies": "Política de cookies",
     "shipping": "Información de envío",
@@ -418,9 +578,25 @@
     "emailPlaceholder": "Ingresa tu correo",
     "followUs": "Síguenos",
     "socialMedia": "Redes sociales",
-    "copyright": "© 2024 Ski Shop. Todos los derechos reservados.",
+    "copyright": "© Copyright {year}. Todos los derechos reservados por SKICOM",
     "poweredBy": "Desarrollado por",
-    "madeWith": "Hecho con ❤️ por"
+    "madeWith": "Hecho con ❤️ por",
+    "getItOn": "OBTÉNLO EN",
+    "googlePlay": "Google Play",
+    "downloadOnThe": "Descarga en",
+    "appStore": "App Store",
+    "explore": "Explorar",
+    "shop": "Tienda",
+    "liveChat": "Chat en vivo",
+    "contactInfo": {
+      "title": "Contacto",
+      "address": "Parcela 1, Calle Kwara Osun, Lagos.",
+      "phone1": "08130054558",
+      "phone2": "08123456443"
+    },
+    "quickLinks": {
+      "title": "Enlaces rápidos"
+    }
   },
   "errors": {
     "404": "Página no encontrada",

@@ -1,8 +1,12 @@
+/* eslint-disable unicorn/no-negated-condition */
+"use client";
+
 import { Wrapper } from "@/components/core/layout/wrapper";
 import { BlurImage } from "@/components/core/miscellaneous/blur-image";
 import SkiButton from "@/components/shared/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { useTranslations } from "next-intl";
 import { LuFacebook, LuInstagram, LuMail, LuMapPin, LuPhoneCall, LuTwitter } from "react-icons/lu";
 
 import { GoogleMap } from "../map/google-map";
@@ -18,44 +22,44 @@ const location = {
 const GOOGLE_MAPS_API_KEY = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || "";
 
 export const SectionOne = () => {
+  const t = useTranslations("contact.sectionOne");
+
   return (
     <section className="bg-high-grey-I pt-14">
       <Wrapper>
         <div className="mx-auto max-w-[1000px] text-center">
           <h1 className="text-high-grey-II my-2 mb-6 text-[28px] leading-[44px] font-semibold lg:text-[44px] xl:leading-[39px]">
-            Feel Free To Reach Out
+            {t("title")}
           </h1>
 
           <p className="mx-auto max-w-[792px] text-[17px] leading-[25px] xl:text-[20px] xl:leading-[30px]">
-            We&apos;re here for you! Whether you have questions about shopping, selling, deliveries, or just want to
-            learn more about how Ski-Shop is shaping the future of commerce, feel free to reach out — we’re happy to
-            help.
+            {t("description")}
           </p>
         </div>
 
         <section className="mx-auto mt-[53px] gap-[66px] rounded-[10px] px-0 py-[29px] lg:flex lg:justify-center lg:bg-white lg:px-[42px]">
           {/* contact form */}
           <div className="bg-mid-grey-III relative hidden h-[600px] w-full flex-col rounded-tl-xl rounded-bl-xl p-8 text-white lg:flex">
-            <h4 className="text-[28px] font-semibold !text-white">Contact Information</h4>
+            <h4 className="text-[28px] font-semibold !text-white">{t("contactInfo.title")}</h4>
 
             <div className="mt-32 space-y-9">
               <div className="flex items-center gap-5">
                 <LuPhoneCall size={18} />
                 <a href="tel:+2348130054558" className="text-[17px] xl:text-[20px]">
-                  +2348130054558
+                  {t("contactInfo.phone")}
                 </a>
               </div>
 
               <div className="flex items-center gap-5">
                 <LuMail size={18} />
                 <a href="mailto:skicom001@gmail.com" className="text-[17px] xl:text-[20px]">
-                  seanlawson@skicomltd.com
+                  {t("contactInfo.email")}
                 </a>
               </div>
 
               <div className="flex items-center gap-5">
                 <LuMapPin size={18} />
-                <p className="text-[17px] xl:text-[20px]">49, Adeyemi Street, Otubu Bus Stop, Agege, Lagos.</p>
+                <p className="text-[17px] xl:text-[20px]">{t("contactInfo.address")}</p>
               </div>
             </div>
 
@@ -103,25 +107,25 @@ export const SectionOne = () => {
               <Input
                 type="text"
                 className="h-11 bg-[#FFFFFF] placeholder:text-sm lg:w-[500px] lg:bg-transparent"
-                placeholder="Full Name"
+                placeholder={t("form.fullName")}
               />
               <Input
                 type="email"
                 className="h-11 bg-[#FFFFFF] placeholder:text-sm lg:w-[500px] lg:bg-transparent"
-                placeholder="Email Address"
+                placeholder={t("form.emailAddress")}
               />
               <Input
                 type="text"
                 className="h-11 bg-[#FFFFFF] placeholder:text-sm lg:w-[500px] lg:bg-transparent"
-                placeholder="Subject"
+                placeholder={t("form.subject")}
               />
 
               <Textarea
                 className="resize-non1 h-[280px] resize-none bg-[#FFFFFF] placeholder:text-sm lg:w-[500px] lg:bg-transparent"
-                placeholder="Message"
+                placeholder={t("form.message")}
               />
               <SkiButton variant="primary" className="mt-5 w-full rounded-full lg:h-[50px] lg:w-[300px]">
-                Send Message
+                {t("form.sendMessage")}
               </SkiButton>
             </form>
             {/* form */}
@@ -130,16 +134,16 @@ export const SectionOne = () => {
       </Wrapper>
       <div className="mt-5 px-4 lg:mt-20 lg:px-0">
         <div className="">
-          <h2 className="text-high-grey-II mb-6 text-center text-[24px] font-semibold lg:text-[32px]">Find Us Here</h2>
-          {GOOGLE_MAPS_API_KEY ? (
+          <h2 className="text-high-grey-II mb-6 text-center text-[24px] font-semibold lg:text-[32px]">
+            {t("map.title")}
+          </h2>
+          {!GOOGLE_MAPS_API_KEY ? (
             <GoogleMap location={location} apiKey={GOOGLE_MAPS_API_KEY} />
           ) : (
             <div className="flex h-[400px] w-full items-center justify-center rounded-lg bg-gray-100 lg:h-[500px]">
               <div className="text-center">
-                <p className="mb-2 text-gray-500">Google Maps API key not configured</p>
-                <p className="text-sm text-gray-400">
-                  Please add NEXT_PUBLIC_GOOGLE_MAPS_API_KEY to your environment variables
-                </p>
+                <p className="mb-2 text-gray-500">{t("map.apiKeyNotConfigured")}</p>
+                <p className="text-sm text-gray-400">{t("map.apiKeyInstructions")}</p>
               </div>
             </div>
           )}

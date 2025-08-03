@@ -400,13 +400,173 @@
         "title": "ضمان استرداد الأموال",
         "description": "نعيد الأموال خلال 30 يوماً"
       }
+    },
+    "testimonial": {
+      "tagTitle": "آراء عملائنا",
+      "title": "ماذا يقول الناس عنا"
+    },
+    "mobileDownload": {
+      "title": "تسوق بذكاء وسرعة أينما كنت.",
+      "description": "احصل على تطبيق سكي شوب وافتح التسوق السلس والتوصيل الأسرع والوصول إلى المحفظة والعروض الحصرية كل ذلك في جيبك.",
+      "appStore": {
+        "subtitle": "حمل من",
+        "title": "متجر التطبيقات"
+      },
+      "googlePlay": {
+        "subtitle": "حمل من",
+        "title": "جوجل بلاي"
+      }
+    },
+    "playToWin": {
+      "badge": "اربح كبير",
+      "title": "العب-2-اربح",
+      "description": "استمتع بالهدايا المجانية عندما تشارك في لعبة العب-2-اربح",
+      "action": "احصل على التطبيق"
     }
+  },
+  "about": {
+    "hero": {
+      "title": "حولنا"
+    },
+    "sectionOne": {
+      "tagTitle": "حول سكي شوب",
+      "title": "الوجه الجديد للتجارة الرقمية في أفريقيا",
+      "description": "مهمتنا هي دفع التجارة الأفريقية من خلال إنشاء سوق رقمية حيث يمكن لكل بائع — من بائع الحي إلى العلامة التجارية العالمية — أن يزدهر. نقدم الأدوات والرؤية والبنية التحتية اللازمة لجعل التجارة سلسة وآمنة وقابلة للتطوير."
+    },
+    "sectionTwo": {
+      "title": "ما الذي يجعلنا مختلفين",
+      "description": "مهمتنا هي دفع التجارة الأفريقية من خلال إنشاء سوق رقمية حيث يمكن لكل بائع أن يزدهر. نقدم الأدوات والرؤية والبنية التحتية اللازمة لجعل التجارة أفضل.",
+      "strengths": {
+        "securedPayment": {
+          "title": "دفع آمن",
+          "description": "مدفوعات ومعاملات آمنة وفورية مع حلنا المالي المتكامل."
+        },
+        "fastDelivery": {
+          "title": "توصيل سريع",
+          "description": "مدفوعات ومعاملات آمنة وفورية مع حلنا المالي المتكامل."
+        },
+        "verifiedVendors": {
+          "title": "بائعون موثقون",
+          "description": "مدفوعات ومعاملات آمنة وفورية مع حلنا المالي المتكامل."
+        },
+        "seamlessExperience": {
+          "title": "تجربة سلسة",
+          "description": "مدفوعات ومعاملات آمنة وفورية مع حلنا المالي المتكامل."
+        }
+      }
+    },
+    "sectionThree": {
+      "title": "من نخدم",
+      "description": "مهمتنا هي دفع التجارة الأفريقية من خلال إنشاء سوق رقمية حيث يمكن لكل بائع أن يزدهر. نقدم الأدوات والرؤية والبنية التحتية اللازمة لجعل التجارة أفضل.",
+      "services": {
+        "vendors": {
+          "title": "البائعون",
+          "description": "الشركات التي تسعى لتوسيع نطاقها والوصول إلى عملاء جدد رقمياً."
+        },
+        "buyers": {
+          "title": "المشترون",
+          "description": "الشركات التي تسعى لتوسيع نطاقها والوصول إلى عملاء جدد رقمياً."
+        },
+        "deliveryPartners": {
+          "title": "شركاء التوصيل",
+          "description": "الشركات التي تسعى لتوسيع نطاقها والوصول إلى عملاء جدد رقمياً."
+        }
+      }
+    },
+    "teams": {
+      "title": "تعرف على فريقنا",
+      "description": "Lorem ipsum dolor sit amet consectetur. Lorem libero arcu ut venenatis feugiat lacus. Elit tellus morbi quis a aliquam mi pretium nam donec. Duis posuere venenatis et amet sed."
+    }
+  },
+  "contact": {
+    "hero": {
+      "title": "اتصل بنا"
+    },
+    "sectionOne": {
+      "title": "لا تتردد في التواصل معنا",
+      "description": "نحن هنا من أجلك! سواء كان لديك أسئلة حول التسوق أو البيع أو التوصيل، أو تريد فقط معرفة المزيد عن كيفية تشكيل سكي شوب لمستقبل التجارة، لا تتردد في التواصل معنا — نحن سعداء للمساعدة.",
+      "contactInfo": {
+        "title": "معلومات الاتصال",
+        "phone": "+2348130054558",
+        "email": "seanlawson@skicomltd.com",
+        "address": "49, Adeyemi Street, Otubu Bus Stop, Agege, Lagos."
+      },
+      "form": {
+        "fullName": "الاسم الكامل",
+        "emailAddress": "عنوان البريد الإلكتروني",
+        "subject": "الموضوع",
+        "message": "الرسالة",
+        "sendMessage": "إرسال الرسالة"
+      },
+      "map": {
+        "title": "اعثر علينا هنا",
+        "apiKeyNotConfigured": "مفتاح API خرائط Google غير مُعد",
+        "apiKeyInstructions": "يرجى إضافة NEXT_PUBLIC_GOOGLE_MAPS_API_KEY إلى متغيرات البيئة الخاصة بك"
+      }
+    }
+  },
+  "shopPage": {
+    "hero": {
+      "title": "المتجر"
+    },
+    "filters": {
+      "categories": "الفئات",
+      "vendor": "البائع",
+      "allCategories": "جميع الفئات",
+      "allVendor": "جميع البائعين"
+    },
+    "search": {
+      "placeholder": "البحث عن المنتجات...",
+      "sortBy": "ترتيب حسب:",
+      "sortOptions": {
+        "newest": "الأحدث",
+        "name": "الاسم",
+        "price": "السعر",
+        "rating": "التقييم"
+      },
+      "chooseSortOption": "اختر خيار الترتيب"
+    },
+    "activeFilters": {
+      "title": "المرشحات النشطة:",
+      "resultsFound": "نتيجة وجدت"
+    },
+    "errors": {
+      "failedToLoadProducts": "فشل في تحميل المنتجات",
+      "retry": "إعادة المحاولة",
+      "noProductsFound": "لم يتم العثور على منتجات تطابق المرشحات الخاصة بك"
+    }
+  },
+  "navbar": {
+    "cart": {
+      "ariaLabel": "عربة التسوق ({count} عنصر)",
+      "items": "عناصر"
+    },
+    "menu": {
+      "toggleMenu": "تبديل القائمة",
+      "myAccount": "حسابي"
+    },
+    "auth": {
+      "signIn": "تسجيل الدخول",
+      "signUp": "إنشاء حساب",
+      "createAccount": "إنشاء حساب"
+    }
+  },
+  "userProfile": {
+    "userAvatar": "صورة المستخدم",
+    "user": "المستخدم",
+    "saveItems": "حفظ العناصر",
+    "myOrders": "طلباتي",
+    "investEarn": "استثمر واربح",
+    "dashboard": "لوحة التحكم",
+    "logout": "تسجيل الخروج",
+    "logoutSuccess": "تم تسجيل الخروج بنجاح",
+    "logoutFailed": "فشل في تسجيل الخروج"
   },
   "footer": {
     "about": "حولنا",
     "contact": "اتصل بنا",
-    "help": "المساعدة والدعم",
-    "terms": "شروط الخدمة",
+    "help": "المساعدة",
+    "terms": "الشروط والأحكام",
     "privacy": "سياسة الخصوصية",
     "cookies": "سياسة ملفات تعريف الارتباط",
     "shipping": "معلومات الشحن",
@@ -418,9 +578,25 @@
     "emailPlaceholder": "أدخل بريدك الإلكتروني",
     "followUs": "تابعنا",
     "socialMedia": "وسائل التواصل الاجتماعي",
-    "copyright": "© 2024 متجر التزلج. جميع الحقوق محفوظة.",
+    "copyright": "© جميع الحقوق محفوظة {year}. جميع الحقوق محفوظة لشركة SKICOM",
     "poweredBy": "مدعوم بـ",
-    "madeWith": "صنع بـ ❤️ بواسطة"
+    "madeWith": "صنع بـ ❤️ بواسطة",
+    "getItOn": "احصل عليه من",
+    "googlePlay": "جوجل بلاي",
+    "downloadOnThe": "حمل من",
+    "appStore": "متجر التطبيقات",
+    "explore": "استكشف",
+    "shop": "المتجر",
+    "liveChat": "الدردشة المباشرة",
+    "contactInfo": {
+      "title": "اتصل بنا",
+      "address": "قطعة 1، شارع كوارا أوسون، لاغوس.",
+      "phone1": "08130054558",
+      "phone2": "08123456443"
+    },
+    "quickLinks": {
+      "title": "روابط سريعة"
+    }
   },
   "errors": {
     "404": "الصفحة غير موجودة",

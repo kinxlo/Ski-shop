@@ -4,6 +4,8 @@ import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { formatCategory } from "@/lib/utils";
 
+// import { useTranslations } from "next-intl";
+
 type SelectorProperties = {
   categories: string[];
   value?: string;
@@ -12,6 +14,8 @@ type SelectorProperties = {
 };
 
 export const OptionsSelector = ({ categories, value, onChange, title }: SelectorProperties) => {
+  // const t = useTranslations("shopPage.filters");
+
   return (
     <div className="space-y-4">
       <h6 className="font-semibold uppercase">{title}</h6>

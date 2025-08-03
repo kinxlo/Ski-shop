@@ -1,3 +1,5 @@
+"use client";
+
 import { Hero } from "./_views/Hero";
 import { SectionOne } from "./_views/section-one";
 
