@@ -4,10 +4,12 @@ import { Wrapper } from "@/components/core/layout/wrapper";
 import SkiButton from "@/components/shared/button";
 import { ReusableDialog } from "@/components/shared/dialog/Dialog";
 import { FormField } from "@/components/shared/inputs/FormFields";
-import { formatCurrency } from "@/lib/utils";
+import { Locale } from "@/lib/i18n/config";
+import { formatCurrency } from "@/lib/i18n/utils";
 import { useAppService } from "@/services/externals/app/use-app-service";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ChevronRight, Plus } from "lucide-react";
+import { useLocale } from "next-intl";
 import Image from "next/image";
 import { useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
@@ -123,6 +125,7 @@ const mockAddresses: Address[] = [
 ];
 
 const CheckoutPage = () => {
+  const locale = useLocale();
   const [paymentMethod, setPaymentMethod] = useState<"bank" | "paystack">("bank");
   const [deliveryMethod, setDeliveryMethod] = useState<"station" | "door">("station");
   const [showPickupModal, setShowPickupModal] = useState(false);
@@ -271,7 +274,9 @@ const CheckoutPage = () => {
                       <div className="p-4">
                         <span className="font-semibold">{selectedStation.place}</span>
                         <div className="text-xs text-gray-500">{selectedStation.address}</div>
-                        <div className="mt-1 font-bold text-[#FF9900]">{formatCurrency(selectedStation.price)}</div>
+                        <div className="mt-1 font-bold text-[#FF9900]">
+                          {formatCurrency(selectedStation.price, locale as Locale)}
+                        </div>
                       </div>
                     )}
                   </div>
@@ -406,13 +411,13 @@ const CheckoutPage = () => {
                             {item.product.name} × {item.quantity}
                           </span>
                         </div>
-                        <span>{formatCurrency(item.product.price * item.quantity)}</span>
+                        <span>{formatCurrency(item.product.price * item.quantity, locale as Locale)}</span>
                       </div>
                     ))}
 
                     <div className="flex justify-between border-t pt-4">
                       <span>Subtotal</span>
-                      <span>{formatCurrency(subtotal)}</span>
+                      <span>{formatCurrency(subtotal, locale as Locale)}</span>
                     </div>
 
                     <div className="flex justify-between pt-4">
@@ -422,13 +427,13 @@ const CheckoutPage = () => {
                           ({deliveryMethod === "door" ? "Door Delivery" : "Pick-up Station"})
                         </span>
                         <br />
-                        {formatCurrency(shippingFee)}
+                        {formatCurrency(shippingFee, locale as Locale)}
                       </span>
                     </div>
 
                     <div className="flex justify-between border-t pt-4 font-semibold">
                       <span>Total</span>
-                      <span className="text-primary">{formatCurrency(total)}</span>
+                      <span className="text-primary">{formatCurrency(total, locale as Locale)}</span>
                     </div>
                   </>
                 ) : (
@@ -468,7 +473,7 @@ const CheckoutPage = () => {
                 required
                 options={pickupStations.map((station) => ({
                   value: station.id,
-                  label: `${station.place} (₦${station.price.toLocaleString()})`,
+                  label: `${station.place} (${formatCurrency(station.price, locale as Locale)})`,
                 }))}
               />
             </div>
@@ -487,7 +492,9 @@ const CheckoutPage = () => {
                   <div>
                     <span className="font-semibold">{station.place}</span>
                     <div className="text-xs text-gray-500">{station.address}</div>
-                    <div className="mt-1 font-bold text-[#FF9900]">₦{station.price.toLocaleString()}</div>
+                    <div className="mt-1 font-bold text-[#FF9900]">
+                      {formatCurrency(station.price, locale as Locale)}
+                    </div>
                   </div>
                 </label>
               ))}
@@ -523,7 +530,7 @@ const CheckoutPage = () => {
                     <strong>Station:</strong> {selectedStation.station}
                   </p>
                   <p className="font-bold text-[#FF9900]">
-                    <strong>Price:</strong> ₦{selectedStation.price.toLocaleString()}
+                    <strong>Price:</strong> {formatCurrency(selectedStation.price, locale as Locale)}
                   </p>
                 </div>
               </div>
