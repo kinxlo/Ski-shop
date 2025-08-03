@@ -2,8 +2,10 @@ import Loading from "@/app/Loading";
 import { BlurImage } from "@/components/core/miscellaneous/blur-image";
 import { PayrollLineChart } from "@/components/shared/chart/payrool-linechart";
 import { Card, CardTitle } from "@/components/ui/card";
-import { formatCurrency } from "@/lib/utils";
-import { useProductService } from "@/services/externals/products/use-product-service";
+import { Locale } from "@/lib/i18n/config";
+import { formatCurrency } from "@/lib/i18n/utils";
+import { useDashboardProductService } from "@/services/dashboard/vendor/products/use-product-service";
+import { useLocale } from "next-intl";
 
 export function SectionTwo() {
   return (
@@ -19,8 +21,8 @@ export function SectionTwo() {
 }
 
 const BestSellerLayout = () => {
-  const { useGetAllProducts } = useProductService();
-
+  const { useGetAllProducts } = useDashboardProductService();
+  const locale = useLocale();
   const { data: productData, isLoading: isProductsLoading, isError } = useGetAllProducts();
 
   if (isError) {
@@ -37,8 +39,8 @@ const BestSellerLayout = () => {
       <section className={`h-[290px] space-y-4 overflow-auto`}>
         {isProductsLoading ? (
           <Loading text="Loading best selling products..." className="w-fill h-fit p-20" />
-        ) : productData?.items?.length ? (
-          productData.items.slice(0, 3).map((product) => (
+        ) : productData?.data?.items?.length ? (
+          productData.data.items.slice(0, 3).map((product) => (
             <div key={product.id} className={`flex items-center justify-between gap-4`}>
               <div className={`flex items-center gap-4`}>
                 <div className={`flex size-[64px] items-center justify-center overflow-hidden rounded-lg bg-black/30`}>
@@ -54,7 +56,7 @@ const BestSellerLayout = () => {
                   <h6 title={product.name} className={`max-w-[140px] truncate !text-sm font-black`}>
                     {product.name}
                   </h6>
-                  <p className={`text-sm text-gray-400`}>{formatCurrency(product.price)}</p>
+                  <p className={`text-sm text-gray-400`}>{formatCurrency(product.price, locale as Locale)}</p>
                 </div>
               </div>
               <p className={`text-sm text-gray-600`}>999 sales</p>
