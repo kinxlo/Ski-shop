@@ -13,7 +13,7 @@ export class AppService {
     const appliedFilters = filters ?? defaultFilters;
     return tryCatchWrapper(async () => {
       const queryParameters = this.buildQueryParameters(appliedFilters);
-      const response = await this.http.get<ProductApiResponse>(`/products?${queryParameters}`);
+      const response = await this.http.get<ProductApiResponse>(`/products?status=published&${queryParameters}`);
 
       if (response?.status === 200) {
         return response.data;

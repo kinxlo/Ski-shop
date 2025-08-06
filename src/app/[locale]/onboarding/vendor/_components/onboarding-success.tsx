@@ -2,12 +2,10 @@
 
 import { BlurImage } from "@/components/core/miscellaneous/blur-image";
 import SkiButton from "@/components/shared/button";
+import { useLocale } from "next-intl";
 
-interface OnboardingSuccessProperties {
-  onComplete: () => void;
-}
-
-export const OnboardingSuccess = ({ onComplete }: OnboardingSuccessProperties) => {
+export const OnboardingSuccess = () => {
+  const locale = useLocale();
   return (
     <div className="flex flex-col items-center space-y-6 px-4 py-6 text-center">
       {/* Success Icon */}
@@ -26,7 +24,7 @@ export const OnboardingSuccess = ({ onComplete }: OnboardingSuccessProperties) =
 
       {/* Action Button */}
       <div className="pt-4">
-        <SkiButton onClick={onComplete} className="" variant="primary">
+        <SkiButton href={`/${locale}/dashboard/home`} className="" variant="primary">
           Go to Dashboard
         </SkiButton>
       </div>

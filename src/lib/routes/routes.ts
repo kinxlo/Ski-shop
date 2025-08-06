@@ -17,6 +17,11 @@ const PUBLIC_ROUTES = [
   "/auth",
   "/onboarding/verify-email",
   "/onboarding/vendor",
+  "/onboarding/vendor/verify-email",
+  "/onboarding/vendor/business-info",
+  "/onboarding/vendor/store-setup",
+  "/onboarding/vendor/bank-payout",
+  "/onboarding/vendor/success",
 ];
 
 const VENDOR_ROUTES = ["/dashboard"];

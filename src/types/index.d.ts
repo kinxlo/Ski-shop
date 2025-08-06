@@ -122,6 +122,9 @@ declare global {
     limit?: number;
     vendor?: string;
     sort?: string;
+    storeId?: string;
+    stockCount?: number;
+    flag?: string;
   }
 
   interface IColumnDefinition<T extends DataItem> {

@@ -27,7 +27,7 @@ export async function handleGoogleCallback(code: string) {
       code,
       redirect: false,
     });
-    return result ? { success: true } : { error: "Google authentication failed" };
+    return result?.ok ? { success: true } : { error: "Google authentication failed" };
   } catch (error) {
     if (error instanceof CredentialsSignin) {
       return { error: error.message || "Google authentication failed" };

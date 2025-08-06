@@ -10,7 +10,7 @@ interface SimilarProductsProperties {
 
 export const SimilarProducts = ({ category }: SimilarProductsProperties) => {
   const { useGetAllProducts } = useAppService();
-  const { isLoading, data } = useGetAllProducts();
+  const { isLoading, data } = useGetAllProducts({ flag: "similar" });
   const similarProducts = data?.data?.items?.filter((product) => product.category === category).slice(0, 4);
 
   return (
@@ -37,6 +37,7 @@ export const SimilarProducts = ({ category }: SimilarProductsProperties) => {
               price={product.price}
               discount={product.discountPrice || 0}
               image={product.images[0]}
+              name={""}
             />
           );
         })}

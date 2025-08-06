@@ -13,7 +13,7 @@ export const InterestedProducts = () => {
   const { useGetAllProducts } = useAppService();
 
   // Fetch products with default filters (first page)
-  const { data: productData, isLoading, error, refetch } = useGetAllProducts({ page: 1, limit: 4 });
+  const { data: productData, isLoading, error, refetch } = useGetAllProducts({ page: 1, limit: 4, flag: "interested" });
 
   if (isLoading) {
     return (

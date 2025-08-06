@@ -59,6 +59,8 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 
           if (response.data.success) {
             console.log("Google OAuth successful, returning user data");
+            console.log("User role from backend:", response.data.data.user.role);
+            console.log("Full response data:", response.data.data);
             return {
               id: response.data.data.user.id,
               name: response.data.data.user.fullName,
@@ -131,6 +133,8 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     async jwt({ token, user, trigger, session }) {
       // Initial sign in
       if (user) {
+        console.log("JWT callback - User:", user);
+        console.log("JWT callback - User role:", user.role);
         return {
           ...token,
           id: user.id,
@@ -155,6 +159,8 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     },
 
     session({ session, token }): Promise<any> {
+      console.log("Session callback - Token:", token);
+      console.log("Session callback - Token role:", token.role);
       return Promise.resolve({
         ...session,
         user: {

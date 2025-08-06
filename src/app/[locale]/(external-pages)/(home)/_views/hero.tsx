@@ -65,7 +65,7 @@ export const Hero = () => {
             <SkiButton
               href={`/signup/vendor`}
               size={`xl`}
-              className={cn("w-[220px] text-white", session?.user?.role.name === "vendor" && "hidden")}
+              className={cn("w-[220px] text-white", session?.user?.role?.name === "vendor" && "hidden")}
               variant="outline"
             >
               {t("becomeSeller")}

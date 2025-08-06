@@ -10,6 +10,7 @@ export const queryKeys = {
       filters?.vendor || "",
       filters?.sort || "",
       filters?.limit || 10,
+      filters?.flag || "", // Add flag parameter to query key
     ],
     details: (id: string) => ["products", "details", id] as const,
     categories: () => ["products", "categories"] as const,

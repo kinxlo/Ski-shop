@@ -111,7 +111,7 @@ ProductCard.displayName = "ProductCard";
 // Main Component
 export const FeaturedProducts = memo(() => {
   const { useGetAllProducts } = useAppService();
-  const { isLoading, isError, error, data, refetch } = useGetAllProducts();
+  const { isLoading, isError, error, data, refetch } = useGetAllProducts({ flag: "featured" });
 
   // Memoize featured products to prevent unnecessary re-renders
   const featuredProducts = useMemo(() => {

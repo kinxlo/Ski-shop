@@ -11,7 +11,7 @@ import { toast } from "sonner";
 
 export const TopVendors = () => {
   const { useGetAllProducts } = useAppService();
-  const { isLoading, isError, error, data } = useGetAllProducts();
+  const { isLoading, isError, error, data } = useGetAllProducts({ flag: "top" });
 
   const products: Product[] = data?.data?.items || [];
 

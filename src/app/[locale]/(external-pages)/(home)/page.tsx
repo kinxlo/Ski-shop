@@ -24,15 +24,15 @@ const Page = () => {
   return (
     <>
       <Hero />
-      <PopularProducts fullList={`/shop`} title={t("skicomProducts")} />
-      <PopularProducts title={t("topSellers")} hasAction={false} />
+      <PopularProducts fullList={`/shop`} title={t("skicomProducts")} flag="skicom" />
+      <PopularProducts title={t("topSellers")} hasAction={false} flag="top" />
       <Wrapper>
         <PlayToWinBanner />
       </Wrapper>
       <Categories />
       <FeaturedProducts />
-      <PopularProducts title={t("featuredProducts")} />
-      <PopularProducts title={t("handPickedForYou")} hasAction={false} />
+      <PopularProducts title={t("featuredProducts")} flag="featured" />
+      <PopularProducts title={t("handPickedForYou")} hasAction={false} flag="handPicked" />
       <TopVendors />
       <Wrapper className={`my-[78px]`}>
         <ReusableBanner
@@ -80,6 +80,7 @@ const Page = () => {
         headerStyle={`bg-black !text-white rounded-se-lg rounded-ss-lg p-[10px]`}
         title={t("blackFridayDeals")}
         hasAction={false}
+        flag="blackFriday"
       />
       <Wrapper className={`my-[78px]`}>
         <ReusableBanner

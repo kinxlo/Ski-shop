@@ -9,14 +9,14 @@ import { countries } from "@/lib/constants";
 import { BusinessInfoFormData, businessInfoSchema } from "@/schemas";
 import { useOnboardingUserService } from "@/services/externals/onboarding/use-onboarding-user-service";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useLocale } from "next-intl";
+import { useRouter } from "next/navigation";
 import { FormProvider, useForm } from "react-hook-form";
 import { toast } from "sonner";
 
-interface BusinessInfoFormProperties {
-  onComplete: (token?: string) => void;
-}
-
-export const BusinessInfoForm = ({ onComplete }: BusinessInfoFormProperties) => {
+export const BusinessInfoForm = () => {
+  const locale = useLocale();
+  const router = useRouter();
   const methods = useForm<BusinessInfoFormData>({
     resolver: zodResolver(businessInfoSchema),
     defaultValues: {
@@ -41,15 +41,12 @@ export const BusinessInfoForm = ({ onComplete }: BusinessInfoFormProperties) => 
   } = methods;
 
   const handleSubmitForm = async (formData: BusinessInfoFormData) => {
-    updateBusinessInfo(formData, {
+    await updateBusinessInfo(formData, {
       onSuccess: (response) => {
-        if (response?.success) {
+        if (response?.success && response?.data?.token) {
           toast.success("Business information updated successfully");
-          onComplete?.(response?.data?.token);
+          router.push(`/${locale}/onboarding/vendor/store-setup?token=${response?.data?.token}`);
         }
-      },
-      onError: () => {
-        toast.error("Failed to update business information");
       },
     });
   };

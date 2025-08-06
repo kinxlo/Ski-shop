@@ -1,13 +1,15 @@
 "use client";
 
 import SkiButton from "@/components/shared/button";
-import { Form, FormControl, FormDescription, FormField, FormItem, FormMessage } from "@/components/ui/form";
+import { FormControl, FormDescription, FormField, FormItem, FormMessage } from "@/components/ui/form";
 import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp";
 import { useResendEmail } from "@/hooks/use-resend-email";
 import { useDecodedSearchParameters } from "@/hooks/use-search-parameters";
 import { useOnboardingUserService } from "@/services/externals/onboarding/use-onboarding-user-service";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+import { useLocale } from "next-intl";
+import { useRouter } from "next/navigation";
+import { FormProvider, useForm } from "react-hook-form";
 import { MdEmail, MdRefresh, MdVerified } from "react-icons/md";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -19,44 +21,36 @@ const FormSchema = z.object({
   }),
 });
 
-interface VerifyEmailComponentProperties {
-  onVerificationSuccess?: (token?: string) => void;
-  onVerificationFailure?: () => void;
-}
-
-export const VerifyEmailComponent = ({
-  onVerificationSuccess,
-  onVerificationFailure,
-}: VerifyEmailComponentProperties) => {
+export const VerifyEmailComponent = () => {
   const email = useDecodedSearchParameters("email");
+  const locale = useLocale();
+  const router = useRouter();
   const { useVerifyOTP } = useOnboardingUserService();
   const { mutateAsync: verifyOTP, isPending: isSubmitting } = useVerifyOTP();
   const { handleResendEmail, isResending } = useResendEmail();
 
   // Initialize the form
-  const form = useForm<z.infer<typeof FormSchema>>({
+  const methods = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
       code: "",
     },
   });
 
-  const onSubmit = async (data: z.infer<typeof FormSchema>) => {
-    verifyOTP(
+  const {
+    handleSubmit,
+    formState: { isValid },
+  } = methods;
+
+  const handleSubmitForm = async (data: z.infer<typeof FormSchema>) => {
+    await verifyOTP(
       { code: Number.parseInt(data.code) },
       {
         onSuccess: (response) => {
           if (response?.success && response?.data?.token) {
             toast.success("Email verified successfully");
-            onVerificationSuccess?.(response?.data?.token);
+            router.push(`/${locale}/onboarding/vendor/business-info?token=${response?.data?.token}`);
           }
-        },
-        onError: () => {
-          toast.error("Verification failed", {
-            description: "The code is invalid or has expired. Please try again.",
-          });
-          form.reset();
-          onVerificationFailure?.();
         },
       },
     );
@@ -83,10 +77,10 @@ export const VerifyEmailComponent = ({
       )}
 
       {/* Form Section */}
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="w-full space-y-6">
+      <FormProvider {...methods}>
+        <form onSubmit={handleSubmit(handleSubmitForm)} className="w-full space-y-6">
           <FormField
-            control={form.control}
+            control={methods.control}
             name="code"
             render={({ field }) => (
               <FormItem className="space-y-4">
@@ -137,7 +131,7 @@ export const VerifyEmailComponent = ({
               type="submit"
               className="w-full font-medium transition-all duration-200 hover:shadow-md"
               variant={`primary`}
-              isDisabled={!form.formState.isValid || form.formState.isSubmitting}
+              isDisabled={!isValid || isSubmitting}
               isLoading={isSubmitting}
               isLeftIconVisible
               icon={<MdVerified />}
@@ -162,7 +156,7 @@ export const VerifyEmailComponent = ({
             </SkiButton>
           </div>
         </form>
-      </Form>
+      </FormProvider>
 
       {/* Footer Note */}
       <div className="text-center">

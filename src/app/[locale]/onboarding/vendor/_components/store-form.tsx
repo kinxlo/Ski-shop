@@ -5,14 +5,14 @@ import { FormField } from "@/components/shared/inputs/FormFields";
 import { StoreFormData, storeSchema } from "@/schemas";
 import { useOnboardingUserService } from "@/services/externals/onboarding/use-onboarding-user-service";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useLocale } from "next-intl";
+import { useRouter } from "next/navigation";
 import { FormProvider, useForm } from "react-hook-form";
 import { toast } from "sonner";
 
-interface StoreFormProperties {
-  onComplete: (token?: string) => void;
-}
-
-export const StoreForm = ({ onComplete }: StoreFormProperties) => {
+export const StoreForm = () => {
+  const locale = useLocale();
+  const router = useRouter();
   const methods = useForm<StoreFormData>({
     resolver: zodResolver(storeSchema),
     defaultValues: {
@@ -32,17 +32,12 @@ export const StoreForm = ({ onComplete }: StoreFormProperties) => {
   } = methods;
 
   const handleSubmitForm = async (formData: StoreFormData) => {
-    // eslint-disable-next-line no-console
-    console.log(formData);
-    createStore(formData, {
+    await createStore(formData, {
       onSuccess: (response) => {
-        if (response?.success) {
+        if (response?.success && response?.data?.token) {
           toast.success("Store created successfully");
-          onComplete?.(response?.data?.token);
+          router.push(`/${locale}/onboarding/vendor/bank-payout?token=${response?.data?.token}`);
         }
-      },
-      onError: () => {
-        toast.error("Failed to create store");
       },
     });
   };

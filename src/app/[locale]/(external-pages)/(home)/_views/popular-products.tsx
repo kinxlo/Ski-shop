@@ -15,14 +15,16 @@ export const PopularProducts = ({
   headerStyle,
   fullList,
   hasAction = true,
+  flag = "popular",
 }: {
   title: string;
   fullList?: string;
   headerStyle?: string;
   hasAction?: boolean;
+  flag?: string;
 }) => {
   const { useGetAllProducts } = useAppService();
-  const { isLoading, isError, data, refetch } = useGetAllProducts();
+  const { isLoading, isError, data, refetch } = useGetAllProducts({ flag });
   const t = useTranslations("home.popularProducts");
 
   // Handle error state

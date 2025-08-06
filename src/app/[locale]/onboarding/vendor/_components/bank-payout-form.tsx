@@ -3,19 +3,18 @@
 import SkiButton from "@/components/shared/button";
 import { FormField } from "@/components/shared/inputs/FormFields";
 import { ComboBox } from "@/components/shared/select-dropdown/combo-box";
-import { Form } from "@/components/ui/form";
 import { BankPayoutFormData, bankPayoutSchema } from "@/schemas";
 import { useOnboardingUserService } from "@/services/externals/onboarding/use-onboarding-user-service";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+import { useLocale } from "next-intl";
+import { useRouter } from "next/navigation";
+import { FormProvider, useForm } from "react-hook-form";
 import { toast } from "sonner";
 
-interface BankPayoutFormProperties {
-  onComplete: (token?: string) => void;
-}
-
-export const BankPayoutForm = ({ onComplete }: BankPayoutFormProperties) => {
-  const form = useForm<BankPayoutFormData>({
+export const BankPayoutForm = () => {
+  const locale = useLocale();
+  const router = useRouter();
+  const methods = useForm<BankPayoutFormData>({
     resolver: zodResolver(bankPayoutSchema),
     defaultValues: {
       bankName: "",
@@ -29,16 +28,20 @@ export const BankPayoutForm = ({ onComplete }: BankPayoutFormProperties) => {
   const { data: availableBanks, isLoading: isLoadingAvailableBanks } = useGetAvailableBanks();
   const { mutateAsync: setupBankDetails, isPending } = useSetupBankDetails();
 
-  const onSubmit = async (formData: BankPayoutFormData) => {
-    setupBankDetails(formData, {
+  const {
+    handleSubmit,
+    formState: { isValid },
+  } = methods;
+
+  const handleSubmitForm = async (formData: BankPayoutFormData) => {
+    await setupBankDetails(formData, {
       onSuccess: (response) => {
         if (response?.success) {
           toast.success("Bank details updated successfully, you can now start selling");
-          onComplete(response?.data?.token);
+          if (response?.data?.token) {
+            router.push(`/${locale}/onboarding/vendor/success?token=${response?.data?.token}`);
+          }
         }
-      },
-      onError: () => {
-        toast.error("Failed to update bank details");
       },
     });
   };
@@ -50,8 +53,8 @@ export const BankPayoutForm = ({ onComplete }: BankPayoutFormProperties) => {
         <p className="text-sm text-gray-600">To receive your payments, please provide accurate bank details.</p>
       </div>
 
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+      <FormProvider {...methods}>
+        <form onSubmit={handleSubmit(handleSubmitForm)} className="space-y-4">
           <ComboBox
             options={
               availableBanks?.data?.map((bank) => ({
@@ -59,12 +62,12 @@ export const BankPayoutForm = ({ onComplete }: BankPayoutFormProperties) => {
                 label: bank.name,
               })) || []
             }
-            value={form.watch("code")}
+            value={methods.watch("code")}
             onValueChange={(value) => {
               const selectedBank = availableBanks?.data?.find((bank) => bank.code === value);
               if (selectedBank) {
-                form.setValue("bankName", selectedBank.name);
-                form.setValue("code", selectedBank.code);
+                methods.setValue("bankName", selectedBank.name);
+                methods.setValue("code", selectedBank.code);
               }
             }}
             placeholder="Select bank..."
@@ -81,14 +84,14 @@ export const BankPayoutForm = ({ onComplete }: BankPayoutFormProperties) => {
               type="submit"
               className="h-12 w-full font-medium"
               variant="primary"
-              isDisabled={!form.formState.isValid || isPending || isLoadingAvailableBanks}
+              isDisabled={!isValid || isPending || isLoadingAvailableBanks}
               isLoading={isPending}
             >
               Continue & Submit
             </SkiButton>
           </div>
         </form>
-      </Form>
+      </FormProvider>
     </div>
   );
 };

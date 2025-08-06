@@ -35,7 +35,7 @@ const products: ProductApiResponse = {
       {
         id: "f509b52a-0178-4342-a241-0796987e01b2",
         name: "Tasty Plastic Towels",
-        status: "draft",
+        status: "published",
         category: "clothings",
         description:
           "The slim & simple Maple Gaming Keyboard from Dev Byte comes with a sleek body and 7- Color RGB LED Back-lighting for smart functionality",
@@ -59,7 +59,7 @@ const products: ProductApiResponse = {
       {
         id: "f509b52a-0178-4342-a241-0596989e01b2",
         name: "Tasty Plastic Towels",
-        status: "draft",
+        status: "published",
         category: "clothings",
         description:
           "The slim & simple Maple Gaming Keyboard from Dev Byte comes with a sleek body and 7- Color RGB LED Back-lighting for smart functionality",
@@ -83,7 +83,7 @@ const products: ProductApiResponse = {
       {
         id: "f509b52a-0178-4342-a241-0796989e01f2",
         name: "Tasty Plastic Towels",
-        status: "draft",
+        status: "published",
         category: "clothings",
         description:
           "The slim & simple Maple Gaming Keyboard from Dev Byte comes with a sleek body and 7- Color RGB LED Back-lighting for smart functionality",
@@ -107,7 +107,7 @@ const products: ProductApiResponse = {
       {
         id: "f509b52a-0178-4342-a241-0796989e01b4",
         name: "Tasty Plastic Towels",
-        status: "draft",
+        status: "published",
         category: "clothings",
         description:
           "The slim & simple Maple Gaming Keyboard from Dev Byte comes with a sleek body and 7- Color RGB LED Back-lighting for smart functionality",
