@@ -2,10 +2,7 @@ import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { PiUsersThreeLight } from "react-icons/pi";
 
-import { OverViewCard } from "../_components/overview-card";
-import { ActiveUsers } from "./_views/active-users";
-import { AllUsers } from "./_views/all-users";
-import { InactiveUsers } from "./_views/inactive-users";
+import { OverViewCard } from "../../_components/overview-card";
 
 const Page = () => {
   return (
@@ -56,15 +53,9 @@ const Page = () => {
             </TabsTrigger>
           </TabsList>
           <Separator className="bg-muted mt-[-1px] mb-[26px]" />
-          <TabsContent value="all">
-            <AllUsers />
-          </TabsContent>
-          <TabsContent value="pending">
-            <ActiveUsers />
-          </TabsContent>
-          <TabsContent value="completed">
-            <InactiveUsers />
-          </TabsContent>
+          <TabsContent value="all">{/* <AllUsers /> */}</TabsContent>
+          <TabsContent value="pending">{/* <ActiveUsers /> */}</TabsContent>
+          <TabsContent value="completed">{/* <InactiveUsers /> */}</TabsContent>
         </Tabs>
       </section>
     </main>

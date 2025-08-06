@@ -2,10 +2,10 @@ import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { RiShoppingCartLine } from "react-icons/ri";
 
-import { OverViewCard } from "../_components/overview-card";
-import { AllProducts } from "./_views/all-products";
-import { CompletedProducts } from "./_views/complete-products";
-import { PendingProducts } from "./_views/pending-products";
+import { OverViewCard } from "../../_components/overview-card";
+import { AllOrders } from "../../dashboard/orders/_views/all-orders";
+import { DeliveredOrders } from "../../dashboard/orders/_views/delivered-orders";
+import { PendingOrders } from "../../dashboard/orders/_views/pending-orders";
 
 const Page = () => {
   return (
@@ -57,13 +57,13 @@ const Page = () => {
           </TabsList>
           <Separator className="bg-muted mt-[-1px] mb-[26px]" />
           <TabsContent value="all">
-            <AllProducts />
+            <AllOrders />
           </TabsContent>
           <TabsContent value="pending">
-            <PendingProducts />
+            <PendingOrders />
           </TabsContent>
           <TabsContent value="completed">
-            <CompletedProducts />
+            <DeliveredOrders />
           </TabsContent>
         </Tabs>
       </section>
