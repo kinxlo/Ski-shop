@@ -156,14 +156,23 @@ export const FeaturedProducts = memo(() => {
   }
 
   // Handle empty state
-  if (featuredProducts.length === 0) {
+  if (!featuredProducts?.length) {
     return (
       <Wrapper className={`my-[78px] min-h-[308px]`}>
         <EmptyState
-          images={[{ src: "/images/empty-state.svg", width: 80, height: 80, alt: "No featured products" }]}
-          description="No featured products found"
-          descriptionClassName="text-primary"
-          className="bg-mid-grey-I min-h-fit space-y-0 rounded-lg py-10"
+          images={[
+            {
+              src: "/images/empty-state.svg",
+              alt: "Empty Cart",
+              width: 80,
+              height: 80,
+            },
+          ]}
+          title="No products found"
+          titleClassName={`!text-lg font-bold !text-mid-warning`}
+          description={"There are no products in the database. Please add a product to get started."}
+          descriptionClassName={`text-mid-grey-II`}
+          className="bg-mid-grey-I space-y-0 rounded-lg py-10"
         />
       </Wrapper>
     );

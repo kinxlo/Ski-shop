@@ -40,6 +40,18 @@ export const queryKeys = {
       ],
       details: (id: string) => ["dashboard", "products", "details", id] as const,
     },
+    orders: {
+      list: (filters?: IFilters) => [
+        "dashboard",
+        "orders",
+        "list",
+        filters?.page || 1,
+        filters?.search || "",
+        filters?.status || "",
+        filters?.limit || 10,
+      ],
+      details: (id: string) => ["dashboard", "orders", "details", id] as const,
+    },
   },
 
   order: {

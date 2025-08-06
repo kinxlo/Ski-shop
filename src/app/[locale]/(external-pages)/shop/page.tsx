@@ -18,6 +18,11 @@ import { ShopCard } from "../(home)/_components/shop-card/shop-card";
 import { OptionsSelector } from "./_components/option/options";
 import { Hero } from "./_views/hero";
 
+// Convert category to API format (lowercase, no spaces)
+const toCamelCase = (string_: string) => {
+  return string_.toLowerCase().replaceAll(/[^\dA-Za-z]+/g, ""); // Remove all non-alphanumeric characters
+};
+
 const Page = () => {
   const { useGetAllProducts, useGetAllProductCategory, useGetTopVendors } = useAppService();
   const t = useTranslations("shopPage");
@@ -51,7 +56,7 @@ const Page = () => {
   const filters = useMemo<IFilters>(() => {
     return {
       page: page ? Number.parseInt(page) : 1,
-      ...(category && category !== t("filters.allCategories") && { categories: category.toLowerCase() }),
+      ...(category && category !== t("filters.allCategories") && { categories: toCamelCase(category) }),
       ...(debouncedSearch && { search: debouncedSearch }),
       ...(storeId && { storeId }),
       ...(sort && { sort }),
@@ -228,7 +233,7 @@ const Page = () => {
             <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
               {isLoadingProducts && Array.from({ length: 12 }).map((_, index) => <ShopCardSkeleton key={index} />)}
 
-              {!isLoadingProducts && products.length === 0 && (
+              {!isLoadingProducts && !products?.length && (
                 <div className="col-span-full py-10 text-center">
                   <EmptyState
                     images={[
@@ -239,9 +244,11 @@ const Page = () => {
                         height: 80,
                       },
                     ]}
+                    title="No products found"
+                    titleClassName={`!text-lg font-bold !text-mid-warning`}
                     description={t("errors.noProductsFound")}
-                    descriptionClassName="text-primary"
-                    className={`bg-mid-grey-I min-h-fit space-y-0 rounded-lg py-10`}
+                    descriptionClassName={`text-mid-grey-II`}
+                    className="bg-mid-grey-I space-y-0 rounded-lg py-10"
                   />
                 </div>
               )}

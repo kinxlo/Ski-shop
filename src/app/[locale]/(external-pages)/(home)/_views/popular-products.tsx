@@ -58,7 +58,7 @@ export const PopularProducts = ({
     );
   }
 
-  if (data?.data?.items?.length === 0) {
+  if (!data?.data?.items?.length) {
     return (
       <Wrapper className="min-h-[480px] pt-16">
         <h2 className={cn("text-high-grey-II text-sm font-black lg:text-3xl", headerStyle)}>{title}</h2>
@@ -71,8 +71,10 @@ export const PopularProducts = ({
               height: 80,
             },
           ]}
-          description={t("noProductsFound")}
-          descriptionClassName={`text-primary`}
+          title="No products found"
+          titleClassName={`!text-lg font-bold !text-mid-warning`}
+          description={"There are no products in the database. Please add a product to get started."}
+          descriptionClassName={`text-mid-grey-II`}
           className="bg-mid-grey-I space-y-0 rounded-lg py-10"
         />
       </Wrapper>
@@ -109,7 +111,7 @@ export const PopularProducts = ({
                 price={product.price}
                 discount={product.discountPrice || 0}
                 image={product.images[0]}
-                name={product.user.name || "Skicom"}
+                name={product.store.name || "Skicom"}
               />
             );
           })}

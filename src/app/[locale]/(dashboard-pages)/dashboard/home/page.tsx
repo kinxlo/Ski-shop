@@ -5,12 +5,9 @@ import { DashboardTable } from "@/components/shared/dashboard-table";
 import { useOrderColumn } from "@/components/shared/dashboard-table/table-data";
 import { EmptyState } from "@/components/shared/empty-state";
 import { orderStatusOptions } from "@/lib/constants";
-import type { Locale } from "@/lib/i18n/config";
-import { formatCurrency } from "@/lib/i18n/utils";
 import { useDashboardSearchParameters } from "@/lib/nuqs/use-dashboard-search-parameters";
-import { useHomeService } from "@/services/dashboard/vendor/home/use-home-service";
 import { useDashboardProductService } from "@/services/dashboard/vendor/products/use-product-service";
-import { useLocale } from "next-intl";
+import { useRouter } from "next/navigation";
 import { useCallback, useMemo } from "react";
 import { GiWallet } from "react-icons/gi";
 import { IoBag } from "react-icons/io5";
@@ -22,7 +19,7 @@ import { CurrencyDropdown } from "./_components/currency-dropdown";
 import { AnalysisSkeleton, TableSkeleton } from "./page-skeleton";
 
 const Page = () => {
-  const locale = useLocale();
+  const router = useRouter();
   const orderColumn = useOrderColumn();
   const {
     search: searchQuery,
@@ -37,7 +34,7 @@ const Page = () => {
   const filters = useMemo(
     () => ({
       page,
-      ...(orderStatus !== "all" && { status: orderStatus as "completed" | "pending" | "cancelled" }),
+      ...(orderStatus !== "all" && { status: orderStatus as "delivered" | "pending" | "cancelled" }),
       ...(searchQuery && { search: searchQuery }),
       ...(limit && { limit }),
     }),
@@ -45,9 +42,9 @@ const Page = () => {
   );
 
   const { useGetAllProducts } = useDashboardProductService();
-  const { useGetOverview } = useHomeService();
+  // const { useGetOverview } = useHomeService();
   const { data: productData, isLoading: isProductsLoading, isError: isProductsError } = useGetAllProducts(filters);
-  const { data: overviewData, isLoading: isOverviewLoading, isError: isOverviewError } = useGetOverview();
+  // const { data: overviewData, isLoading: isOverviewLoading, isError: isOverviewError } = useGetOverview();
 
   // Extract data from the correct structure (similar to shop page)
   const products = productData?.data?.items || [];
@@ -71,7 +68,7 @@ const Page = () => {
     (newStatus: string) => {
       // Prevent rapid status changes that could cause throttling
       if (newStatus !== orderStatus) {
-        setOrderStatus(newStatus as "all" | "completed" | "pending" | "cancelled");
+        setOrderStatus(newStatus as "all" | "delivered" | "pending" | "cancelled");
         resetToFirstPage(); // Reset to first page when status changes
       }
     },
@@ -79,10 +76,10 @@ const Page = () => {
   );
 
   // Memoize the formatted revenue value to prevent unnecessary re-renders
-  const formattedRevenue = useMemo(
-    () => formatCurrency(overviewData?.data?.overview?.totalRevenue || 0, locale as Locale),
-    [locale, overviewData?.data?.overview?.totalRevenue],
-  );
+  // const formattedRevenue = useMemo(
+  //   () => formatCurrency(overviewData?.data?.overview?.totalRevenue || 0, locale as Locale),
+  //   [locale, overviewData?.data?.overview?.totalRevenue],
+  // );
 
   return (
     <>
@@ -95,9 +92,9 @@ const Page = () => {
         </section>
 
         {/* Overview Cards Section */}
-        {isOverviewLoading ? (
+        {isProductsLoading ? (
           <AnalysisSkeleton />
-        ) : isOverviewError ? (
+        ) : isProductsError ? (
           <EmptyState
             title="Error loading data"
             description="There was a problem fetching the overview data. Please try again later."
@@ -110,19 +107,19 @@ const Page = () => {
           <section className="grid grid-cols-1 gap-5 lg:grid-cols-3">
             <OverViewCard
               title={"Total Sales"}
-              value={formattedRevenue}
+              value={totalProducts || "0"}
               icon={<GiWallet />}
               iconClassName="bg-[#F2EBFB] text-[24px] text-purple"
             />
             <OverViewCard
               title={"Total Orders"}
-              value={overviewData?.data?.overview?.totalOrders || "0"}
+              value={totalProducts || "0"}
               icon={<RiShoppingCartLine />}
               iconClassName="bg-low-blue text-[24px] blue text-primary"
             />
             <OverViewCard
               title={"Total Products"}
-              value={overviewData?.data?.overview?.totalUsers || "0"}
+              value={totalProducts || "0"}
               icon={<IoBag />}
               iconClassName="bg-low-success text-[24px] text-mid-success"
             />
@@ -167,9 +164,25 @@ const Page = () => {
                   pageParameter="page"
                 />
               ) : (
-                <div className="flex items-center justify-center p-20">
-                  <p>No products found. Add your first product to get started.</p>
-                </div>
+                <EmptyState
+                  images={[
+                    {
+                      src: "/images/empty-state.svg",
+                      alt: "Empty Cart",
+                      width: 80,
+                      height: 80,
+                    },
+                  ]}
+                  title="No products found"
+                  titleClassName={`!text-xl font-bold`}
+                  description={"There are no products in the database. Please add a product to get started."}
+                  descriptionClassName={`text-mid-grey-II`}
+                  className="bg-mid-grey-I space-y-0 rounded-lg py-10"
+                  button={{
+                    text: "Add Product",
+                    onClick: () => router.push(`/dashboard/products/new`),
+                  }}
+                />
               )}
             </section>
           </section>

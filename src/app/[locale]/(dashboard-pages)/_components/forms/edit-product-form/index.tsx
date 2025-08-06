@@ -4,6 +4,7 @@
 import { BlurImage } from "@/components/core/miscellaneous/blur-image";
 import SkiButton from "@/components/shared/button";
 import MainButton from "@/components/shared/button";
+import { AlertModal } from "@/components/shared/dialog/alert-modal";
 import { FormField } from "@/components/shared/inputs/FormFields";
 import { Label } from "@/components/ui/label";
 import { Editor } from "@/lib/rich-text-editor";
@@ -187,6 +188,7 @@ export const EditProductForm = ({ product, onSuccess, onCancel }: EditProductFor
   const fileInputReference = useRef<HTMLInputElement>(null);
   const [activeId, setActiveId] = useState<string | null>(null);
   const [selectedImageId, setSelectedImageId] = useState<string | null>(null);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [descriptionEditorState, setDescriptionEditorState] = useState<SerializedEditorState>(() => {
     if (product.description) {
       return {
@@ -311,6 +313,11 @@ export const EditProductForm = ({ product, onSuccess, onCancel }: EditProductFor
     setSelectedImageId(id);
   };
 
+  const handleSuccessModalConfirm = () => {
+    setShowSuccessModal(false);
+    onSuccess?.();
+  };
+
   const handleSubmitForm = async (data: EditProductFormData) => {
     try {
       // Ensure all required fields are provided with defaults
@@ -325,14 +332,10 @@ export const EditProductForm = ({ product, onSuccess, onCancel }: EditProductFor
         {
           onSuccess: (response) => {
             if (response?.success) {
-              toast.success("Product updated successfully");
-              onSuccess?.();
+              setShowSuccessModal(true);
             } else {
               toast.error("Failed to update product");
             }
-          },
-          onError: () => {
-            toast.error("Failed to update product");
           },
         },
       );
@@ -539,6 +542,19 @@ export const EditProductForm = ({ product, onSuccess, onCancel }: EditProductFor
           </section>
         </form>
       </FormProvider>
+
+      {/* Success Modal */}
+      <AlertModal
+        isOpen={showSuccessModal}
+        onClose={() => setShowSuccessModal(false)}
+        onConfirm={handleSuccessModalConfirm}
+        type="success"
+        title="Product Updated Successfully!"
+        description="Your product has been updated and the changes are now live in your store."
+        confirmText="Continue"
+        showCancelButton={false}
+        autoClose={false}
+      />
     </section>
   );
 };

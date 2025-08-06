@@ -65,7 +65,7 @@ export class DashboardProductService {
     };
 
     return tryCatchWrapper(async () => {
-      const response = await this.http.post<ProductApiResponse>(`/products`, productData, headers);
+      const response = await this.http.post<{ success: boolean; data: Product }>(`/products`, productData, headers);
       if (response?.status === 201) {
         return response.data;
       }

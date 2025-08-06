@@ -10,7 +10,7 @@ export const useDashboardSearchParameters = () => {
   const [limit, setLimit] = useQueryState("limit", parseAsInteger.withDefault(10));
   const [orderStatus, setOrderStatus] = useQueryState(
     "status",
-    parseAsStringEnum(["all", "completed", "pending", "cancelled"]).withDefault("all"),
+    parseAsStringEnum(["all", "delivered", "pending", "cancelled"]).withDefault("all"),
   );
   const [productStatus, setProductStatus] = useQueryState(
     "status",

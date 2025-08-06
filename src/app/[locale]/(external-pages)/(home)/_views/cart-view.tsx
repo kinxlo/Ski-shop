@@ -35,15 +35,15 @@ export const CartView = () => {
             {
               src: "/images/empty-state.svg",
               alt: "Empty Cart",
-              width: 100,
-              height: 100,
+              width: 80,
+              height: 80,
             },
           ]}
-          description={"Please log in to view your cart"}
-          button={{
-            text: "Log In",
-            onClick: () => router.push("/login"),
-          }}
+          title="Can't view cart"
+          titleClassName={`!text-lg font-bold !text-mid-warning`}
+          description={"Please login to view your cart"}
+          descriptionClassName={`text-mid-grey-II`}
+          className="bg-mid-grey-I space-y-0 rounded-lg py-10"
         />
       </Wrapper>
     );
@@ -117,10 +117,11 @@ export const CartView = () => {
               height: 100,
             },
           ]}
-          description={"Your cart is empty"}
+          description={"There was an error loading your cart"}
+          className="bg-mid-grey-I space-y-0 rounded-lg py-10"
           button={{
-            text: "Continue Shopping",
-            onClick: () => router.push("/shop"),
+            text: "Try again",
+            onClick: () => refetch(),
           }}
         />
       </Wrapper>
@@ -133,192 +134,216 @@ export const CartView = () => {
         Cart {cartMetadata && `(${cartMetadata.total} items)`}
       </p>
 
-      {cartItems.length === 0 ? (
-        <div className="flex flex-col items-center py-12">
-          <p className="mb-6 text-lg text-gray-600">Your cart is empty</p>
-          <SkiButton href="/shop" variant="primary" size="lg" className="rounded-full">
-            Continue Shopping
-          </SkiButton>
-        </div>
+      {cartItems?.length === 0 ? (
+        <EmptyState
+          images={[
+            {
+              src: "/images/empty-state.svg",
+              alt: "Empty Cart",
+              width: 80,
+              height: 80,
+            },
+          ]}
+          title="Your cart is empty"
+          titleClassName={`!text-2xl font-bold`}
+          description={"Add products to your cart to get started"}
+          descriptionClassName={`text-mid-grey-II`}
+          className="bg-mid-grey-I space-y-0 rounded-lg py-10"
+          button={{
+            text: "Continue Shopping",
+            onClick: () => router.push("/shop"),
+          }}
+        />
       ) : (
         <div className="grid gap-8 lg:grid-cols-3">
-          {/* Mobile Card View */}
-          <div className="space-y-4 lg:hidden">
-            {cartItems.map((item: CartItem) => (
-              <div key={item.id} className="rounded-lg border p-4">
-                <div className="flex justify-between">
-                  <div className="flex items-start gap-4">
-                    <div className="relative h-16 w-16 flex-shrink-0 overflow-hidden rounded bg-gray-100">
-                      <div className="flex h-full items-center justify-center text-gray-400">
-                        <svg className="h-8 w-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
-                          />
-                        </svg>
-                      </div>
-                    </div>
-                    <div>
-                      <p className="font-medium">{item.product.name}</p>
-                      <p className="text-xs text-gray-500">SKU: {item.product.id}</p>
-                      <div className="mt-2">
-                        <p className="font-medium">
-                          ${item.product.price?.toFixed(2)}
-                          {item.product.discountPrice && (
-                            <span className="ml-2 text-sm text-gray-500 line-through">
-                              ${item.product.discountPrice.toFixed(2)}
-                            </span>
-                          )}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                  <button
-                    onClick={() => handleRemoveItem(item.id)}
-                    disabled={isRemoving}
-                    className="text-red-500 hover:text-red-700 disabled:opacity-50"
-                    aria-label="Remove item"
-                  >
-                    <Trash2 className="h-5 w-5" />
-                  </button>
-                </div>
+          {isLoading && <CartViewSkeleton />}
 
-                <div className="mt-4 flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <button
-                      onClick={() => handleQuantityChange(item.id, "decrease")}
-                      disabled={isUpdating}
-                      className="flex h-8 w-8 items-center justify-center rounded border bg-gray-50 hover:bg-gray-100 disabled:opacity-50"
-                    >
-                      <Minus className="h-4 w-4" />
-                    </button>
-                    <span className="w-8 text-center">{item.quantity}</span>
-                    <button
-                      onClick={() => handleQuantityChange(item.id, "increase")}
-                      disabled={isUpdating}
-                      className="flex h-8 w-8 items-center justify-center rounded border bg-gray-50 hover:bg-gray-100 disabled:opacity-50"
-                    >
-                      <Plus className="h-4 w-4" />
-                    </button>
-                  </div>
-                  <p className="font-medium">${((item.product.price || 0) * item.quantity).toFixed(2)}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          {/* Desktop Table View */}
-          <div className="hidden lg:col-span-2 lg:block">
-            <div className="overflow-hidden rounded-lg border">
-              <table className="w-full">
-                <thead className="bg-gray-50">
-                  <tr>
-                    <th className="px-4 py-3 text-left text-sm font-medium">Product</th>
-                    <th className="px-4 py-3 text-left text-sm font-medium">Price</th>
-                    <th className="px-4 py-3 text-left text-sm font-medium">Quantity</th>
-                    <th className="px-4 py-3 text-left text-sm font-medium">Total</th>
-                    <th className="px-4 py-3 text-left text-sm font-medium"></th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-gray-200">
-                  {cartItems.map((item: CartItem) => (
-                    <tr key={item.id}>
-                      <td className="px-4 py-4">
-                        <div className="flex items-center gap-4">
-                          <div className="relative h-16 w-16 flex-shrink-0 overflow-hidden rounded bg-gray-100">
-                            <div className="flex h-full items-center justify-center text-gray-400">
-                              <svg className="h-8 w-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                  strokeWidth={2}
-                                  d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
-                                />
-                              </svg>
-                            </div>
-                          </div>
-                          <div>
-                            <p className="font-medium">{item.product.name}</p>
-                            <p className="text-xs text-gray-500">SKU: {item.product.id}</p>
+          {!isLoading && (
+            <>
+              {/* Mobile Card View */}
+              <div className="space-y-4 lg:hidden">
+                {cartItems.map((item: CartItem) => (
+                  <div key={item.id} className="rounded-lg border p-4">
+                    <div className="flex justify-between">
+                      <div className="flex items-start gap-4">
+                        <div className="relative h-16 w-16 flex-shrink-0 overflow-hidden rounded bg-gray-100">
+                          <div className="flex h-full items-center justify-center text-gray-400">
+                            <svg className="h-8 w-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                              />
+                            </svg>
                           </div>
                         </div>
-                      </td>
-                      <td className="px-4 py-4">
-                        {formatCurrency(item.product.price, locale as Locale)}
-                        <br />
-                        {item.product.discountPrice && (
-                          <span className="text-destructive ml-2 text-xs line-through">
-                            {formatCurrency(item.product?.discountPrice, locale as Locale)}
-                          </span>
-                        )}
-                      </td>
-                      <td className="px-4 py-4">
-                        <div className="flex items-center gap-2">
-                          <button
-                            onClick={() => handleQuantityChange(item.id, "decrease")}
-                            disabled={isUpdating}
-                            className="flex h-8 w-8 items-center justify-center rounded border bg-gray-50 hover:bg-gray-100 disabled:opacity-50"
-                          >
-                            <Minus className="h-4 w-4" />
-                          </button>
-                          <span className="w-8 text-center">{item.quantity}</span>
-                          <button
-                            onClick={() => handleQuantityChange(item.id, "increase")}
-                            disabled={isUpdating}
-                            className="flex h-8 w-8 items-center justify-center rounded border bg-gray-50 hover:bg-gray-100 disabled:opacity-50"
-                          >
-                            <Plus className="h-4 w-4" />
-                          </button>
+                        <div>
+                          <p className="font-medium">{item.product.name}</p>
+                          <p className="text-xs text-gray-500">SKU: {item.product.id}</p>
+                          <div className="mt-2">
+                            <p className="font-medium">
+                              ${item.product.price?.toFixed(2)}
+                              {item.product.discountPrice && (
+                                <span className="ml-2 text-sm text-gray-500 line-through">
+                                  ${item.product.discountPrice.toFixed(2)}
+                                </span>
+                              )}
+                            </p>
+                          </div>
                         </div>
-                      </td>
-                      <td className="px-4 py-4 font-medium">
-                        {formatCurrency((item.product.price || 0) * item.quantity, locale as Locale)}
-                      </td>
-                      <td className="px-4 py-4">
+                      </div>
+                      <button
+                        onClick={() => handleRemoveItem(item.id)}
+                        disabled={isRemoving}
+                        className="text-red-500 hover:text-red-700 disabled:opacity-50"
+                        aria-label="Remove item"
+                      >
+                        <Trash2 className="h-5 w-5" />
+                      </button>
+                    </div>
+
+                    <div className="mt-4 flex items-center justify-between">
+                      <div className="flex items-center gap-2">
                         <button
-                          onClick={() => handleRemoveItem(item.id)}
-                          disabled={isRemoving}
-                          className="text-red-500 hover:text-red-700 disabled:opacity-50"
-                          aria-label="Remove item"
+                          onClick={() => handleQuantityChange(item.id, "decrease")}
+                          disabled={isUpdating}
+                          className="flex h-8 w-8 items-center justify-center rounded border bg-gray-50 hover:bg-gray-100 disabled:opacity-50"
                         >
-                          <Trash2 className="h-5 w-5" />
+                          <Minus className="h-4 w-4" />
                         </button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
-
-          {/* Order Summary (Visible on both mobile and desktop) */}
-          <div className="lg:col-span-1">
-            <div className="rounded-lg border bg-gray-50 p-6">
-              <p className="mb-4 text-lg font-semibold sm:text-2xl">Cart Summary</p>
-              <hr className={`mb-5`} />
-              <div className="space-y-4">
-                <div className="flex justify-between">
-                  <span>Subtotal</span>
-                  <span>{formatCurrency(subtotal, locale as Locale)}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>Shipping</span>
-                  <span>{shipping === 0 ? "Free" : `${formatCurrency(shipping, locale as Locale)}`}</span>
-                </div>
-                <div className="border-t pt-4">
-                  <div className="flex justify-between font-semibold">
-                    <span>Total</span>
-                    <span>{formatCurrency(total, locale as Locale)}</span>
+                        <span className="w-8 text-center">{item.quantity}</span>
+                        <button
+                          onClick={() => handleQuantityChange(item.id, "increase")}
+                          disabled={isUpdating}
+                          className="flex h-8 w-8 items-center justify-center rounded border bg-gray-50 hover:bg-gray-100 disabled:opacity-50"
+                        >
+                          <Plus className="h-4 w-4" />
+                        </button>
+                      </div>
+                      <p className="font-medium">${((item.product.price || 0) * item.quantity).toFixed(2)}</p>
+                    </div>
                   </div>
+                ))}
+              </div>
+
+              {/* Desktop Table View */}
+              <div className="hidden lg:col-span-2 lg:block">
+                <div className="overflow-hidden rounded-lg border">
+                  <table className="w-full">
+                    <thead className="bg-gray-50">
+                      <tr>
+                        <th className="px-4 py-3 text-left text-sm font-medium">Product</th>
+                        <th className="px-4 py-3 text-left text-sm font-medium">Price</th>
+                        <th className="px-4 py-3 text-left text-sm font-medium">Quantity</th>
+                        <th className="px-4 py-3 text-left text-sm font-medium">Total</th>
+                        <th className="px-4 py-3 text-left text-sm font-medium"></th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-gray-200">
+                      {cartItems.map((item: CartItem) => (
+                        <tr key={item.id}>
+                          <td className="px-4 py-4">
+                            <div className="flex items-center gap-4">
+                              <div className="relative h-16 w-16 flex-shrink-0 overflow-hidden rounded bg-gray-100">
+                                <div className="flex h-full items-center justify-center text-gray-400">
+                                  <svg className="h-8 w-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path
+                                      strokeLinecap="round"
+                                      strokeLinejoin="round"
+                                      strokeWidth={2}
+                                      d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                                    />
+                                  </svg>
+                                </div>
+                              </div>
+                              <div>
+                                <p className="font-medium">{item.product.name}</p>
+                                <p className="text-xs text-gray-500">SKU: {item.product.id}</p>
+                              </div>
+                            </div>
+                          </td>
+                          <td className="px-4 py-4">
+                            {formatCurrency(item.product.price, locale as Locale)}
+                            <br />
+                            {item.product.discountPrice && (
+                              <span className="text-destructive ml-2 text-xs line-through">
+                                {formatCurrency(item.product?.discountPrice, locale as Locale)}
+                              </span>
+                            )}
+                          </td>
+                          <td className="px-4 py-4">
+                            <div className="flex items-center gap-2">
+                              <button
+                                onClick={() => handleQuantityChange(item.id, "decrease")}
+                                disabled={isUpdating}
+                                className="flex h-8 w-8 items-center justify-center rounded border bg-gray-50 hover:bg-gray-100 disabled:opacity-50"
+                              >
+                                <Minus className="h-4 w-4" />
+                              </button>
+                              <span className="w-8 text-center">{item.quantity}</span>
+                              <button
+                                onClick={() => handleQuantityChange(item.id, "increase")}
+                                disabled={isUpdating}
+                                className="flex h-8 w-8 items-center justify-center rounded border bg-gray-50 hover:bg-gray-100 disabled:opacity-50"
+                              >
+                                <Plus className="h-4 w-4" />
+                              </button>
+                            </div>
+                          </td>
+                          <td className="px-4 py-4 font-medium">
+                            {formatCurrency((item.product.price || 0) * item.quantity, locale as Locale)}
+                          </td>
+                          <td className="px-4 py-4">
+                            <button
+                              onClick={() => handleRemoveItem(item.id)}
+                              disabled={isRemoving}
+                              className="text-red-500 hover:text-red-700 disabled:opacity-50"
+                              aria-label="Remove item"
+                            >
+                              <Trash2 className="h-5 w-5" />
+                            </button>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
                 </div>
               </div>
-              <SkiButton href={`/shop/cart/checkout`} variant="primary" size="lg" className="mt-6 w-full rounded-full">
-                Proceed to Checkout
-              </SkiButton>
-            </div>
-          </div>
+
+              {/* Order Summary (Visible on both mobile and desktop) */}
+              <div className="lg:col-span-1">
+                <div className="rounded-lg border bg-gray-50 p-6">
+                  <p className="mb-4 text-lg font-semibold sm:text-2xl">Cart Summary</p>
+                  <hr className={`mb-5`} />
+                  <div className="space-y-4">
+                    <div className="flex justify-between">
+                      <span>Subtotal</span>
+                      <span>{formatCurrency(subtotal, locale as Locale)}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span>Shipping</span>
+                      <span>{shipping === 0 ? "Free" : `${formatCurrency(shipping, locale as Locale)}`}</span>
+                    </div>
+                    <div className="border-t pt-4">
+                      <div className="flex justify-between font-semibold">
+                        <span>Total</span>
+                        <span>{formatCurrency(total, locale as Locale)}</span>
+                      </div>
+                    </div>
+                  </div>
+                  <SkiButton
+                    href={`/shop/cart/checkout`}
+                    variant="primary"
+                    size="lg"
+                    className="mt-6 w-full rounded-full"
+                  >
+                    Proceed to Checkout
+                  </SkiButton>
+                </div>
+              </div>
+            </>
+          )}
         </div>
       )}
     </Wrapper>

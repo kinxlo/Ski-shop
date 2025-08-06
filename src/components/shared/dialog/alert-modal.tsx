@@ -47,7 +47,7 @@ const alertConfig = {
     iconColor: "text-green-600",
     bgColor: "bg-green-100",
     borderColor: "border-green-500",
-    buttonVariant: "outline" as const,
+    buttonVariant: "primary" as const,
   },
   error: {
     icon: ErrorIcon,
@@ -124,7 +124,7 @@ export const AlertModal: React.FC<AlertModalProperties> = ({
 
         {/* Content */}
         <div className="space-y-2 text-center">
-          <h3 className="text-xl font-bold text-gray-900">{title}</h3>
+          <h3 className="!text-2xl font-bold text-gray-900">{title}</h3>
           <p className="text-sm text-gray-600">{description}</p>
         </div>
 

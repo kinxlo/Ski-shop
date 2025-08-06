@@ -1,75 +1,122 @@
-// import { Separator } from "@/components/ui/separator";
-// import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-// import { RiShoppingCartLine } from "react-icons/ri";
+"use client";
 
-// // import { OverViewCard } from "../_components/overview-card";
-// // import { AllProducts } from "./_views/all-products";
-// // import { CompletedProducts } from "./_views/complete-products";
-// // import { PendingProducts } from "./_views/pending-products";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Separator } from "@/components/ui/separator";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useDashboardSearchParameters } from "@/lib/nuqs/use-dashboard-search-parameters";
+import { useDashboardOrderService } from "@/services/dashboard/vendor/orders/use-order-service";
+import { useMemo } from "react";
+import { RiShoppingCartLine } from "react-icons/ri";
 
-// const Page = () => {
-//   return (
-//     <main>
-//       <section className="flex items-center justify-between">
-//         <h4 className="text-mid-grey-III text-[18px] lg:text-[30px]">Orders</h4>
-//       </section>
-//       <section className="my-[38px] grid grid-cols-1 gap-[31px] lg:grid-cols-3">
-//         <OverViewCard
-//           title={"All Order"}
-//           value={"500"}
-//           icon={<RiShoppingCartLine />}
-//           iconClassName="bg-primary/10 text-primary text-[24px]"
-//         />
-//         <OverViewCard
-//           title={"Pending Orders"}
-//           value={"250"}
-//           icon={<RiShoppingCartLine />}
-//           iconClassName="bg-low-warning/20 text-mid-warning text-[24px]"
-//         />
-//         <OverViewCard
-//           title={"Completed Orders"}
-//           value={"250"}
-//           icon={<RiShoppingCartLine />}
-//           iconClassName="bg-low-success text-mid-success text-[24px]"
-//         />
-//       </section>
-//       <section>
-//         <Tabs defaultValue="all" className="rounded-lg bg-white p-4">
-//           <TabsList className="bg-white p-0">
-//             <TabsTrigger
-//               value="all"
-//               className="data-[state=active]:border-primary data-[state=active]:text-primary text-high-grey-II relative h-13 rounded-none border-0 border-b-2 px-4 text-sm font-medium !shadow-none data-[state=active]:border-b-2 data-[state=active]:bg-transparent"
-//             >
-//               All Orders
-//             </TabsTrigger>
-//             <TabsTrigger
-//               value="pending"
-//               className="data-[state=active]:border-primary data-[state=active]:text-primary text-mid-grey-II relative h-13 rounded-none border-0 border-b-2 px-4 text-sm font-medium !shadow-none data-[state=active]:border-b-2 data-[state=active]:bg-transparent"
-//             >
-//               Pending Orders
-//             </TabsTrigger>
-//             <TabsTrigger
-//               value="completed"
-//               className="data-[state=active]:border-primary data-[state=active]:text-primary text-mid-grey-II relative h-13 rounded-none border-0 border-b-2 px-4 text-sm font-medium !shadow-none data-[state=active]:border-b-2 data-[state=active]:bg-transparent"
-//             >
-//               Completed Orders
-//             </TabsTrigger>
-//           </TabsList>
-//           <Separator className="bg-muted mt-[-1px] mb-[26px]" />
-//           <TabsContent value="all">
-//             <AllProducts />
-//           </TabsContent>
-//           <TabsContent value="pending">
-//             <PendingProducts />
-//           </TabsContent>
-//           <TabsContent value="completed">
-//             <CompletedProducts />
-//           </TabsContent>
-//         </Tabs>
-//       </section>
-//     </main>
-//   );
-// };
+import { OverViewCard } from "../../_components/overview-card";
+import { AllOrders } from "./_views/all-orders";
+import { DeliveredOrders } from "./_views/delivered-orders";
+import { PendingOrders } from "./_views/pending-orders";
 
-// export default Page;
-export {};
+const Page = () => {
+  const { orderStatus: activeTab, setOrderStatus } = useDashboardSearchParameters();
+
+  const setActiveTab = (value: string) => {
+    setOrderStatus(value as "all" | "pending" | "delivered");
+  };
+
+  const { useGetAllOrders } = useDashboardOrderService();
+
+  // Fetch all orders for overview stats
+  const { data: allOrdersData } = useGetAllOrders({ page: 1, limit: 10 });
+  const { data: pendingOrdersData } = useGetAllOrders({ page: 1, status: "pending", limit: 10 });
+  const { data: deliveredOrdersData } = useGetAllOrders({ page: 1, status: "delivered", limit: 10 });
+
+  // Calculate stats
+  const stats = useMemo(() => {
+    const totalOrders = allOrdersData?.data?.metadata?.total || 0;
+    const pendingOrders = pendingOrdersData?.data?.metadata?.total || 0;
+    const deliveredOrders = deliveredOrdersData?.data?.metadata?.total || 0;
+
+    return {
+      totalOrders,
+      pendingOrders,
+      deliveredOrders,
+    };
+  }, [allOrdersData, pendingOrdersData, deliveredOrdersData]);
+
+  const tabOptions = [
+    { value: "all", label: "All Orders", count: stats.totalOrders },
+    { value: "pending", label: "Pending Orders", count: stats.pendingOrders },
+    { value: "delivered", label: "Delivered Orders", count: stats.deliveredOrders },
+  ];
+
+  return (
+    <main>
+      <section className="flex items-center justify-between">
+        <h4 className="text-mid-grey-III text-[18px] lg:text-[30px]">Orders</h4>
+      </section>
+      <section className="my-[38px] grid grid-cols-1 gap-[31px] lg:grid-cols-3">
+        <OverViewCard
+          title="All Orders"
+          value={stats.totalOrders.toString()}
+          icon={<RiShoppingCartLine />}
+          iconClassName="bg-primary/10 text-primary text-[24px]"
+        />
+        <OverViewCard
+          title="Pending Orders"
+          value={stats.pendingOrders.toString()}
+          icon={<RiShoppingCartLine />}
+          iconClassName="bg-low-warning/20 text-mid-warning text-[24px]"
+        />
+        <OverViewCard
+          title="Delivered Orders"
+          value={stats.deliveredOrders.toString()}
+          icon={<RiShoppingCartLine />}
+          iconClassName="bg-low-success text-mid-success text-[24px]"
+        />
+      </section>
+      <section>
+        <div className="rounded-lg bg-white p-4">
+          {/* Mobile Dropdown */}
+          <div className="block sm:hidden">
+            <Select value={activeTab} onValueChange={setActiveTab}>
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Select a tab" />
+              </SelectTrigger>
+              <SelectContent>
+                {tabOptions.map((option) => (
+                  <SelectItem key={option.value} value={option.value}>
+                    {option.label} ({option.count})
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+          {/* Desktop Tabs */}
+          <div className="hidden sm:block">
+            <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+              <TabsList className="bg-white p-0">
+                {tabOptions.map((option) => (
+                  <TabsTrigger
+                    key={option.value}
+                    value={option.value}
+                    className="data-[state=active]:border-primary data-[state=active]:text-primary text-high-grey-II relative h-13 rounded-none border-0 border-b-2 px-4 text-sm font-medium !shadow-none data-[state=active]:border-b-2 data-[state=active]:bg-transparent"
+                  >
+                    {option.label} ({option.count})
+                  </TabsTrigger>
+                ))}
+              </TabsList>
+              <Separator className="bg-muted mt-[-1px] mb-[26px]" />
+            </Tabs>
+          </div>
+
+          {/* Content */}
+          <div className="mt-6">
+            {activeTab === "all" && <AllOrders />}
+            {activeTab === "pending" && <PendingOrders />}
+            {activeTab === "delivered" && <DeliveredOrders />}
+          </div>
+        </div>
+      </section>
+    </main>
+  );
+};
+
+export default Page;

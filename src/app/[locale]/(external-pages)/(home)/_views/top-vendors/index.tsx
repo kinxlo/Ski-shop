@@ -31,15 +31,24 @@ export const TopVendors = () => {
     );
   }
 
-  if (products.length === 0) {
+  if (!products?.length) {
     return (
       <Wrapper className={`my-[78px] min-h-[308px]`}>
         <h1 className="text-h3 sm:text-h3-sm md:text-h3-md text-high-grey-II">Top Vendors</h1>
         <EmptyState
-          className="bg-mid-grey-I min-h-fit space-y-0 rounded-lg py-10"
-          description="There are no best selling products yet."
-          descriptionClassName={`text-primary`}
-          images={[{ src: "/images/empty-state.svg", width: 80, height: 80, alt: "No vendors" }]}
+          images={[
+            {
+              src: "/images/empty-state.svg",
+              alt: "Empty Cart",
+              width: 80,
+              height: 80,
+            },
+          ]}
+          title="No products found"
+          titleClassName={`!text-lg font-bold !text-mid-warning`}
+          description={"There are no products in the database. Please add a product to get started."}
+          descriptionClassName={`text-mid-grey-II`}
+          className="bg-mid-grey-I space-y-0 rounded-lg py-10"
         />
       </Wrapper>
     );

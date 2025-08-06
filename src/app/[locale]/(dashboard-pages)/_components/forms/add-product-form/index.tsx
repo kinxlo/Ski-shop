@@ -4,6 +4,7 @@
 import { BlurImage } from "@/components/core/miscellaneous/blur-image";
 import SkiButton from "@/components/shared/button";
 import MainButton from "@/components/shared/button";
+import { AlertModal } from "@/components/shared/dialog/alert-modal";
 import { FormField } from "@/components/shared/inputs/FormFields";
 import { Label } from "@/components/ui/label";
 import { Editor } from "@/lib/rich-text-editor";
@@ -24,6 +25,7 @@ import { CSS } from "@dnd-kit/utilities";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { SerializedEditorState } from "lexical";
 import { PaperclipIcon, Trash2Icon } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useRef, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -129,6 +131,7 @@ const SortableImage = ({ id, file, onRemove, isMain, onClick, isSelected }: Sort
 };
 
 export const AddProductForm = () => {
+  const router = useRouter();
   const { useGetAllProductCategory } = useAppService();
   const { useGetStoreInfo, useCreateProduct } = useDashboardProductService();
   const { data: productCategories } = useGetAllProductCategory();
@@ -159,6 +162,8 @@ export const AddProductForm = () => {
   const [activeId, setActiveId] = useState<string | null>(null);
   const [selectedImageId, setSelectedImageId] = useState<string | null>(null);
   const [descriptionEditorState, setDescriptionEditorState] = useState<SerializedEditorState>();
+  const [showSuccessModal, setShowSuccessModal] = useState(true);
+  const [createdProductId, setCreatedProductId] = useState<string | null>(null);
   const images = watch("images");
 
   const sensors = useSensors(
@@ -237,6 +242,15 @@ export const AddProductForm = () => {
     setSelectedImageId(id);
   };
 
+  const handleSuccessModalConfirm = () => {
+    setShowSuccessModal(false);
+    setValue("description", "", { shouldValidate: true });
+    methods.reset();
+    if (createdProductId) {
+      router.push(`/dashboard/products/${createdProductId}`);
+    }
+  };
+
   const handleSubmitForm = async (data: ProductFormData) => {
     try {
       // Validate store info is available
@@ -250,15 +264,11 @@ export const AddProductForm = () => {
         {
           onSuccess: (response) => {
             if (response?.success) {
-              toast.success("Product created successfully");
-              setValue("description", "", { shouldValidate: true });
-              methods.reset();
+              setCreatedProductId(response?.data.id);
+              setShowSuccessModal(true);
             } else {
               toast.error("Failed to create product");
             }
-          },
-          onError: () => {
-            toast.error("Failed to create product");
           },
         },
       );
@@ -461,6 +471,19 @@ export const AddProductForm = () => {
           </section>
         </form>
       </FormProvider>
+
+      {/* Success Modal */}
+      <AlertModal
+        isOpen={showSuccessModal}
+        onClose={() => setShowSuccessModal(false)}
+        onConfirm={handleSuccessModalConfirm}
+        type="success"
+        title="Product Created Successfully!"
+        description="Your product has been created and is now available in your store."
+        confirmText="View Product"
+        showCancelButton={false}
+        autoClose={false}
+      />
     </section>
   );
 };
