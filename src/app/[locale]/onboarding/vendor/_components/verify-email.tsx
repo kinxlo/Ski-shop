@@ -8,7 +8,7 @@ import { useDecodedSearchParameters } from "@/hooks/use-search-parameters";
 import { useOnboardingUserService } from "@/services/externals/onboarding/use-onboarding-user-service";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useLocale } from "next-intl";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { FormProvider, useForm } from "react-hook-form";
 import { MdEmail, MdRefresh, MdVerified } from "react-icons/md";
 import { toast } from "sonner";
@@ -28,7 +28,7 @@ export const VerifyEmailComponent = () => {
   const { useVerifyOTP } = useOnboardingUserService();
   const { mutateAsync: verifyOTP, isPending: isSubmitting } = useVerifyOTP();
   const { handleResendEmail, isResending } = useResendEmail();
-
+  const pathname = usePathname();
   // Initialize the form
   const methods = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
@@ -48,8 +48,12 @@ export const VerifyEmailComponent = () => {
       {
         onSuccess: (response) => {
           if (response?.success && response?.data?.token) {
-            toast.success("Email verified successfully");
-            router.push(`/${locale}/onboarding/vendor/business-info?token=${response?.data?.token}`);
+            if (pathname.includes("/vendor")) {
+              toast.success("Email verified successfully");
+              router.push(`/${locale}/onboarding/vendor/business-info?token=${response?.data?.token}`);
+            } else {
+              router.push(`/${locale}/shop`);
+            }
           }
         },
       },

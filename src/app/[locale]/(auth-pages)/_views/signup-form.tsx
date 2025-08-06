@@ -53,15 +53,8 @@ export const BaseSignupForm = () => {
           toast.success("Registration Successful", {
             description: "Please verify your email to complete registration",
           });
-          router.push(
-            `/${locale}/onboarding/vendor?step=verify-email&email=${data?.email}&token=${response?.data?.token}`,
-          );
+          router.push(`/${locale}/onboarding/vendor/verify-email?email=${data?.email}&token=${response?.data?.token}`);
         }
-      },
-      onError: (error) => {
-        toast.error("Registration Failed", {
-          description: error instanceof Error ? error.message : "An unknown error occurred",
-        });
       },
     });
   };
