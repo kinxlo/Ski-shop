@@ -53,9 +53,16 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           if (!credentials.code) {
             throw new CredentialsSignin("Missing Google authentication data");
           }
-          const response = await axios.get(
-            `${process.env.NEXT_PUBLIC_BASE_URL}/auth/oauth/google/callback?code=${credentials.code}`,
-          );
+
+          if (!process.env.NEXT_PUBLIC_BASE_URL) {
+            console.error("NEXT_PUBLIC_BASE_URL environment variable is not set");
+            throw new CredentialsSignin("Backend configuration error");
+          }
+
+          const callbackUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/auth/oauth/google/callback?code=${credentials.code}`;
+          console.log("Google OAuth callback URL:", callbackUrl);
+
+          const response = await axios.get(callbackUrl);
 
           if (response.data.success) {
             console.log("Google OAuth successful, returning user data");
@@ -74,6 +81,17 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         } catch (error) {
           if (axios.isAxiosError(error)) {
             console.log("Google OAuth error:", error.response?.data || error.message);
+            console.log("Google OAuth error status:", error.response?.status);
+            console.log("Google OAuth error statusText:", error.response?.statusText);
+
+            // Handle specific HTTP errors
+            if (error.response?.status === 404) {
+              throw new CredentialsSignin("Backend service not found. Please check your configuration.");
+            }
+            if (error.response?.status === 500) {
+              throw new CredentialsSignin("Backend service error. Please try again later.");
+            }
+
             const message = error.response?.data?.message || "Google authentication failed";
             throw new CredentialsSignin(message);
           }

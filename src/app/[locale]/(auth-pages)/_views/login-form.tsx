@@ -9,7 +9,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { useTransition } from "react";
 import { FormProvider, useForm } from "react-hook-form";
-import { FaGoogle } from "react-icons/fa";
+import { FcGoogle } from "react-icons/fc";
 import { toast } from "sonner";
 
 import { login } from "../actions/auth-action";
@@ -111,7 +111,7 @@ export const LoginForm = () => {
               className="border-primary text-primary h-[56px] w-full rounded-full"
               variant="outline"
               isRightIconVisible
-              icon={<FaGoogle />}
+              icon={<FcGoogle />}
               isDisabled={isGooglePending}
               isLoading={isGooglePending}
               onClick={handleGoogleSignIn}

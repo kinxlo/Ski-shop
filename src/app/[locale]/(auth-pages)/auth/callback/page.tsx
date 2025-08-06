@@ -61,8 +61,17 @@ const BasePreLoader = () => {
         .catch((error) => {
           console.error("Google callback error:", error);
           const locale = parameters.locale as string;
-          router.push(`/${locale}/login?error=` + encodeURIComponent("Google authentication failed"));
+          const errorMessage = error.message || "Google authentication failed";
+          router.push(`/${locale}/login?error=` + encodeURIComponent(errorMessage));
+          toast.error("Authentication Error", {
+            description: errorMessage,
+          });
         });
+    } else {
+      // No code received, redirect to login
+      console.error("No Google auth code received");
+      const locale = parameters.locale as string;
+      router.push(`/${locale}/login?error=` + encodeURIComponent("No authentication code received"));
     }
   }, [code, router, parameters.locale]);
 

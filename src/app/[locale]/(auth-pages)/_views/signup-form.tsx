@@ -8,13 +8,13 @@ import { useAuthService } from "@/services/auth/use-auth-service";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useLocale } from "next-intl";
 import { usePathname, useRouter } from "next/navigation";
-import { useTransition } from "react";
+// import { useTransition } from "react";
 import { FormProvider, useForm } from "react-hook-form";
-import { FaGoogle } from "react-icons/fa";
+// import { FaGoogle } from "react-icons/fa";
 import { toast } from "sonner";
 
 export const BaseSignupForm = () => {
-  const [isGooglePending, startGoogleTransition] = useTransition();
+  // const [isGooglePending, startGoogleTransition] = useTransition();
   const router = useRouter();
   const pathname = usePathname();
   const locale = useLocale();
@@ -66,11 +66,11 @@ export const BaseSignupForm = () => {
     });
   };
 
-  const handleGoogleSignIn = () => {
-    startGoogleTransition(async () => {
-      router.push(`${process.env.NEXT_PUBLIC_BASE_URL}/auth/oauth/google/redirect`);
-    });
-  };
+  // const handleGoogleSignIn = () => {
+  //   startGoogleTransition(async () => {
+  //     router.push(`${process.env.NEXT_PUBLIC_BASE_URL}/auth/oauth/google/redirect`);
+  //   });
+  // };
 
   return (
     <>
@@ -119,7 +119,7 @@ export const BaseSignupForm = () => {
               >
                 {isSigningUp ? `Signing up..` : ` Sign up`}
               </SkiButton>
-              <span className="text-mid-grey-II">-------------------- OR --------------------</span>
+              {/* <span className="text-mid-grey-II">-------------------- OR --------------------</span>
               <SkiButton
                 size="lg"
                 className="border-primary text-primary h-[56px] w-full rounded-full"
@@ -131,7 +131,7 @@ export const BaseSignupForm = () => {
                 onClick={handleGoogleSignIn}
               >
                 Signup with Google
-              </SkiButton>
+              </SkiButton> */}
             </section>
             <p className="mt-6 text-center text-gray-500">
               Already a user?{" "}

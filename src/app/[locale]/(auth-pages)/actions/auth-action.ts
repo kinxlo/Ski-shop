@@ -27,11 +27,21 @@ export async function handleGoogleCallback(code: string) {
       code,
       redirect: false,
     });
-    return result?.ok ? { success: true } : { error: "Google authentication failed" };
+
+    return result?.ok ? { success: true } : { error: result?.error || "Google authentication failed" };
   } catch (error) {
     if (error instanceof CredentialsSignin) {
       return { error: error.message || "Google authentication failed" };
     }
+
+    // Handle server action specific errors
+    if (error instanceof Error) {
+      if (error.message.includes("unexpected response")) {
+        return { error: "Backend service unavailable. Please try again later." };
+      }
+      return { error: error.message };
+    }
+
     return { error: "An unexpected error occurred during Google authentication." };
   }
 }
