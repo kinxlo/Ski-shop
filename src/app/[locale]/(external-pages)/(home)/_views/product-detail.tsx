@@ -160,7 +160,7 @@ export const ProductDetail = ({ product }: any) => {
                 <p className={`text-high-grey-II text-2xl font-medium`}>(4.5) 10 Reviews</p>
               </div>
               <div className="flex items-center gap-4">
-                <p className={`text-high-grey-II text-[22px] underline`}>By {product.user.name}</p>
+                <p className={`text-high-grey-II text-[22px] underline`}>By {product.store.name}</p>
                 <p className={`text-primary flex items-end font-medium`}>
                   <MdStarBorderPurple500 className={`text-2xl`} size={24} />
                   <span className={`text-xl leading-4.5 font-semibold`}>Star Seller</span>

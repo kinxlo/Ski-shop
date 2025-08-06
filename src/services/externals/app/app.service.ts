@@ -164,6 +164,17 @@ export class AppService {
     });
   }
 
+  //top venore
+  async getTopVendors() {
+    return tryCatchWrapper(async () => {
+      const response = await this.http.get<VendorApiResponse>("/stores?flag=top");
+      if (response?.status === 200) {
+        return response.data;
+      }
+      throw new Error("Failed to fetch top vendors");
+    });
+  }
+
   private buildQueryParameters(filters: IFilters): string {
     const queryParameters = new URLSearchParams();
     for (const [key, value] of Object.entries(filters)) {

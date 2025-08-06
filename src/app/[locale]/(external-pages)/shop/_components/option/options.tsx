@@ -7,7 +7,7 @@ import { formatCategory } from "@/lib/utils";
 // import { useTranslations } from "next-intl";
 
 type SelectorProperties = {
-  categories: string[];
+  categories: (string | { value: string; label: string })[];
   value?: string;
   onChange?: (value: string) => void;
   title: string;
@@ -20,14 +20,20 @@ export const OptionsSelector = ({ categories, value, onChange, title }: Selector
     <div className="space-y-4">
       <h6 className="font-semibold uppercase">{title}</h6>
       <RadioGroup value={value} onValueChange={onChange} className="flex flex-col gap-3">
-        {categories.map((cat) => (
-          <div key={cat} className="flex items-center space-x-2">
-            <RadioGroupItem value={cat} id={cat} />
-            <Label htmlFor={cat} className="text-mid-grey-II">
-              {formatCategory(cat)}
-            </Label>
-          </div>
-        ))}
+        {categories.map((cat) => {
+          const isObject = typeof cat === "object";
+          const catValue = isObject ? cat.value : cat;
+          const catLabel = isObject ? cat.label : formatCategory(cat);
+
+          return (
+            <div key={catValue} className="flex items-center space-x-2">
+              <RadioGroupItem value={catValue} id={catValue} />
+              <Label htmlFor={catValue} className="text-mid-grey-II">
+                {catLabel}
+              </Label>
+            </div>
+          );
+        })}
       </RadioGroup>
     </div>
   );

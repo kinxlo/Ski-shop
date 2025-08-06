@@ -6,7 +6,6 @@ import { EmptyState } from "@/components/shared/empty-state";
 import { Paginations } from "@/components/shared/pagination/pagination";
 import { CustomSelect } from "@/components/shared/select-dropdown";
 import { Input } from "@/components/ui/input";
-import { VENDORS } from "@/lib/constants";
 import { useAppService } from "@/services/externals/app/use-app-service";
 import { useTranslations } from "next-intl";
 import { useQueryState } from "nuqs";
@@ -20,14 +19,14 @@ import { OptionsSelector } from "./_components/option/options";
 import { Hero } from "./_views/hero";
 
 const Page = () => {
-  const { useGetAllProducts, useGetAllProductCategory } = useAppService();
+  const { useGetAllProducts, useGetAllProductCategory, useGetTopVendors } = useAppService();
   const t = useTranslations("shopPage");
 
   // Use nuqs for URL parameter management
   const [page, setPage] = useQueryState("page", { defaultValue: "1" });
   const [search, setSearch] = useQueryState("search");
   const [category, setCategory] = useQueryState("category");
-  const [vendor, setVendor] = useQueryState("vendor");
+  const [storeId, setStoreId] = useQueryState("storeId");
   const [sort, setSort] = useQueryState("sort", { defaultValue: "newest" });
   const [limit] = useQueryState("limit", { defaultValue: "12" });
 
@@ -40,17 +39,25 @@ const Page = () => {
     isLoading: isCategoriesLoading,
   } = useGetAllProductCategory({ enabled: true });
 
+  const {
+    data: topVendorsData,
+    isLoading: isTopVendorsLoading,
+    isError: isTopVendorsError,
+  } = useGetTopVendors({
+    enabled: true,
+  });
+
   // Prepare filters for API call
   const filters = useMemo<IFilters>(() => {
     return {
       page: page ? Number.parseInt(page) : 1,
       ...(category && category !== t("filters.allCategories") && { categories: category.toLowerCase() }),
       ...(debouncedSearch && { search: debouncedSearch }),
-      ...(vendor && vendor !== t("filters.allVendor") && { vendor }),
+      ...(storeId && { storeId }),
       ...(sort && { sort }),
       ...(limit && { limit: Number.parseInt(limit) }),
     };
-  }, [page, category, debouncedSearch, vendor, sort, limit, t]);
+  }, [page, category, debouncedSearch, storeId, sort, limit, t]);
 
   // Queries
   const {
@@ -81,7 +88,7 @@ const Page = () => {
 
   // Handle vendor change
   const handleVendorChange = (value: string) => {
-    setVendor(value === t("filters.allVendor") ? null : value);
+    setStoreId(value === t("filters.allVendor") ? null : value);
     setPage("1"); // Reset to first page when changing vendor
   };
 
@@ -118,7 +125,7 @@ const Page = () => {
     );
   }
 
-  if (isCategoriesError) return;
+  if (isCategoriesError || isTopVendorsError) return;
 
   return (
     <>
@@ -146,12 +153,32 @@ const Page = () => {
               onChange={handleCategoryChange}
             />
           )}
-          <OptionsSelector
-            title={t("filters.vendor")}
-            categories={[t("filters.allVendor"), ...VENDORS]}
-            value={vendor || t("filters.allVendor")}
-            onChange={handleVendorChange}
-          />
+          {isTopVendorsLoading ? (
+            <div className="space-y-2">
+              <h6 className="font-semibold uppercase">{t("filters.vendor")}</h6>
+              <div className="space-y-4">
+                {Array.from({ length: 7 }).map((_, index) => (
+                  <div key={index} className="flex items-center space-x-2">
+                    <div className="bg-muted h-4 w-4 animate-pulse rounded-full" />
+                    <div className="bg-muted h-4 w-24 animate-pulse rounded" />
+                  </div>
+                ))}
+              </div>
+            </div>
+          ) : (
+            <OptionsSelector
+              title={t("filters.vendor")}
+              categories={[
+                t("filters.allVendor"),
+                ...(topVendorsData?.data?.items.map((vendor) => ({
+                  value: vendor.id,
+                  label: vendor.name,
+                })) || []),
+              ]}
+              value={storeId || t("filters.allVendor")}
+              onChange={handleVendorChange}
+            />
+          )}
         </section>
 
         {/* Main content */}
@@ -177,7 +204,14 @@ const Page = () => {
             <div>
               <span className="text-mid-grey-II text-sm">{t("activeFilters.title")} </span>
               <span className="space-x-4 text-sm">
-                {category || t("filters.allCategories")} / {vendor || t("filters.allVendor")}
+                {category || t("filters.allCategories")} /{" "}
+                {(() => {
+                  if (!storeId || storeId === t("filters.allVendor")) {
+                    return t("filters.allVendor");
+                  }
+                  const selectedVendor = topVendorsData?.data?.items.find((vendor) => vendor.id === storeId);
+                  return selectedVendor?.name || storeId;
+                })()}
                 {debouncedSearch && ` / Search: ${debouncedSearch}`}
               </span>
             </div>
@@ -223,7 +257,7 @@ const Page = () => {
                     price={product.price}
                     discount={product.discountPrice || 0}
                     image={product.images[0]}
-                    name={product.user.name || "Skicom"}
+                    name={product.store.name || "Skicom"}
                   />
                 ))}
             </div>

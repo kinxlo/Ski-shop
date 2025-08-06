@@ -7,7 +7,7 @@ export const queryKeys = {
       filters?.search || "",
       filters?.status || "",
       filters?.categories || "",
-      filters?.vendor || "",
+      filters?.storeId || "",
       filters?.sort || "",
       filters?.limit || 10,
       filters?.flag || "", // Add flag parameter to query key
@@ -45,5 +45,9 @@ export const queryKeys = {
   order: {
     list: () => ["order", "list"] as const,
     details: (id: string) => ["order", "details", id] as const,
+  },
+
+  vendor: {
+    top: () => ["vendor", "top"] as const,
   },
 };

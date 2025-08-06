@@ -13,15 +13,18 @@ export class DashboardProductService {
   async getAllProducts(filters?: IFilters) {
     const defaultFilters: IFilters = { page: 1, limit: 10 };
     const appliedFilters = filters ?? defaultFilters;
-    return tryCatchWrapper(async () => {
-      const queryParameters = this.buildQueryParameters(appliedFilters);
-      const response = await this.http.get<ProductApiResponse>(`/products?${queryParameters}`);
-
+    const queryParameters = this.buildQueryParameters(appliedFilters);
+    const storeId = await this.getMyStore();
+    if (storeId.success) {
+      const response = await this.http.get<ProductApiResponse>(
+        `/products?storeId=${storeId.data.id}&${queryParameters}`,
+      );
       if (response?.status === 200) {
         return response.data;
       }
       throw new Error("Failed to fetch products");
-    });
+    }
+    throw new Error("Failed to fetch products");
   }
 
   async getStoreInfo() {
@@ -102,17 +105,16 @@ export class DashboardProductService {
     });
   }
 
-  // async getAllUsers(filters: IFilters) {
-  //   return tryCatchWrapper(async () => {
-  //     const queryParameters = this.buildQueryParameters(filters);
-  //     const response = await this.http.get<Users>(`/users?${queryParameters}`);
-
-  //     if (response?.status === 200) {
-  //       return response.data;
-  //     }
-  //     throw new Error("Failed to fetch users");
-  //   });
-  // }
+  //get my store /stores/current
+  async getMyStore() {
+    return tryCatchWrapper(async () => {
+      const response = await this.http.get<StoreApiResponse>(`/stores/current`);
+      if (response?.status === 200) {
+        return response.data;
+      }
+      throw new Error("Failed to fetch store id");
+    });
+  }
 
   private buildQueryParameters(filters: IFilters): string {
     const queryParameters = new URLSearchParams();

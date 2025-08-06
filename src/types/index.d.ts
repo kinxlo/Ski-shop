@@ -367,6 +367,10 @@ declare global {
     name: string;
     description: string;
     logo?: File | string;
+    isStarSeller?: boolean;
+    createdAt?: string;
+    updatedAt?: string;
+    type?: string;
   }
 
   // Store API response interface
@@ -399,6 +403,14 @@ declare global {
     success: boolean;
     data: {
       token: string;
+    };
+  }
+
+  interface VendorApiResponse {
+    success: boolean;
+    data: {
+      items: Store[];
+      metadata: Metadata;
     };
   }
 }

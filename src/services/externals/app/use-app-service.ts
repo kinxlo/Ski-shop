@@ -123,6 +123,9 @@ export const useAppService = () => {
       ...options,
     });
 
+  const useGetTopVendors = (options?: any) =>
+    useServiceQuery([...queryKeys.vendor.top()], (service) => service.getTopVendors(), options);
+
   return {
     // Product Queries
     useGetAllProducts,
@@ -147,5 +150,8 @@ export const useAppService = () => {
     // Product Mutations
     useSaveProduct,
     useRemoveFromFavorites,
+
+    // Vendor Queries
+    useGetTopVendors,
   };
 };
