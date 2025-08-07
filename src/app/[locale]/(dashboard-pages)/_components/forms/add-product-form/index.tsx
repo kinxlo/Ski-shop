@@ -162,7 +162,7 @@ export const AddProductForm = () => {
   const [activeId, setActiveId] = useState<string | null>(null);
   const [selectedImageId, setSelectedImageId] = useState<string | null>(null);
   const [descriptionEditorState, setDescriptionEditorState] = useState<SerializedEditorState>();
-  const [showSuccessModal, setShowSuccessModal] = useState(true);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [createdProductId, setCreatedProductId] = useState<string | null>(null);
   const images = watch("images");
 

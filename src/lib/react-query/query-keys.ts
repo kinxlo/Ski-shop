@@ -20,10 +20,17 @@ export const queryKeys = {
     list: () => ["cart"] as const,
     item: (id: string) => ["cart", "item", id] as const,
   },
+  vendor: {
+    top: () => ["vendor", "top"] as const,
+  },
   user: {
     list: (filters?: IFilters) => ["user", "list", ...(filters ? Object.entries(filters) : [])],
     profile: () => ["user", "profile"] as const,
     details: (id: string) => ["user", "details", id] as const,
+  },
+  order: {
+    list: () => ["order", "list"] as const,
+    details: (id: string) => ["order", "details", id] as const,
   },
   dashboard: {
     overview: () => ["dashboard", "overview"] as const,
@@ -49,17 +56,9 @@ export const queryKeys = {
         filters?.search || "",
         filters?.status || "",
         filters?.limit || 10,
+        filters?.deliveryStatus || "",
       ],
       details: (id: string) => ["dashboard", "orders", "details", id] as const,
     },
-  },
-
-  order: {
-    list: () => ["order", "list"] as const,
-    details: (id: string) => ["order", "details", id] as const,
-  },
-
-  vendor: {
-    top: () => ["vendor", "top"] as const,
   },
 };

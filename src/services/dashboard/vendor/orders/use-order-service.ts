@@ -5,7 +5,7 @@ import { createServiceHooks } from "@/lib/react-query/use-service-query";
 import { dependencies } from "@/lib/tools/dependencies";
 import { useQueryClient } from "@tanstack/react-query";
 
-import { DashboardOrderService } from "./order.service";
+import { DashboardOrderService, IFilters } from "./order.service";
 
 export const useDashboardOrderService = () => {
   const DEFAULT_FILTERS: IFilters = { page: 1, limit: 10 };
@@ -20,7 +20,7 @@ export const useDashboardOrderService = () => {
 
     return useServiceQuery(
       [...queryKeys.dashboard.orders.list(appliedFilters)],
-      (service) => service.getAllOrders(filters),
+      (service) => service.getAllOrders(appliedFilters),
       { staleTime: 0, ...options },
     );
   };
