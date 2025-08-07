@@ -3,32 +3,7 @@ import { tryCatchWrapper } from "@/lib/tools/tryCatchFunction";
 import { ForgotPasswordData, LoginFormData, RegisterFormData, ResetPasswordData } from "@/schemas";
 import { isAxiosError } from "axios";
 
-interface User {
-  id: string;
-  firstName: string;
-  lastName: string;
-  role: string;
-  email: string;
-  fullName: string;
-  createdAt: string;
-  updatedAt: string;
-}
-
-interface Tokens {
-  accessToken: string;
-  refreshToken: string;
-}
-
-interface AuthResponseData {
-  user: User;
-  tokens: Tokens;
-}
-
-interface UserResponse {
-  success: boolean;
-  data: AuthResponseData;
-  error?: string;
-}
+// Types are now globally available in src/types/
 
 export class AuthService {
   private readonly http: HttpAdapter;

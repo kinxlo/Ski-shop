@@ -1,16 +1,7 @@
 import { countries } from "@/lib/constants";
 import { useEffect, useMemo, useState } from "react";
 
-interface Country {
-  value: string;
-  label: string;
-}
-
-interface UseCountriesOptions {
-  searchTerm?: string;
-  limit?: number;
-  delay?: number;
-}
+// Types are now globally available in src/types/
 
 export const useCountries = ({ searchTerm = "", limit = 20, delay = 300 }: UseCountriesOptions = {}) => {
   const [filteredCountries, setFilteredCountries] = useState<Country[]>([]);

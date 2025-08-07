@@ -3,16 +3,9 @@
 
 import React, { createContext, useState } from "react";
 
-interface LoadingContextProperties {
-  isLoading: boolean;
-  setLoading: (loading: boolean) => void;
-}
+// Types are now globally available in src/types/
 
 export const LoadingContext = createContext<LoadingContextProperties | undefined>(undefined);
-
-interface LoadingProviderProperties {
-  children: React.ReactNode;
-}
 
 export const LoadingProvider: React.FC<LoadingProviderProperties> = ({ children }) => {
   const [isLoading, setLoading] = useState(true);

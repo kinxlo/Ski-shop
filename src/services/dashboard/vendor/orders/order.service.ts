@@ -1,60 +1,7 @@
 import { HttpAdapter } from "@/lib/http/http-adapter";
 import { tryCatchWrapper } from "@/lib/tools/tryCatchFunction";
 
-export interface IOrder {
-  id: string;
-  orderId: string;
-  status: "pending" | "delivered" | "cancelled";
-  products: Array<{
-    id: string;
-    name: string;
-    image: string;
-    price: number;
-    quantity: number;
-  }>;
-  buyer: {
-    name: string;
-    email: string;
-  };
-  delivery: {
-    address: string;
-    city: string;
-    state: string;
-  };
-  totalAmount: number;
-  createdAt: string;
-  updatedAt: string;
-}
-
-export interface IOrderApiResponse {
-  success: boolean;
-  data: {
-    items: IOrder[];
-    metadata: {
-      total: number;
-      totalPages: number;
-      currentPage: number;
-      hasNextPage: boolean;
-      hasPreviousPage: boolean;
-    };
-  };
-}
-
-export interface StoreApiResponse {
-  success: boolean;
-  data: {
-    id: string;
-    name: string;
-    // Add other store properties as needed
-  };
-}
-
-export interface IFilters {
-  page?: number;
-  limit?: number;
-  status?: "pending" | "delivered" | "cancelled";
-  search?: string;
-}
+// Types are now globally available in src/types/
 
 export class DashboardOrderService {
   private readonly http: HttpAdapter;

@@ -1,12 +1,6 @@
 import http from "@/lib/http/httpConfig";
 
-interface HttpResponse<T> {
-  data: T;
-  status: number;
-}
-
-type QueryParameters = Record<string, string | number | boolean>;
-type Headers = Record<string, string>;
+// Types are now globally available in src/types/
 
 export class HttpAdapter {
   private buildQueryString(query: QueryParameters): string {

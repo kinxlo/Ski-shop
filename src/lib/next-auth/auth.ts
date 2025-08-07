@@ -1,40 +1,14 @@
 /* eslint-disable no-console */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import axios from "axios";
-import NextAuth, { CredentialsSignin, DefaultSession } from "next-auth";
+import NextAuth, { CredentialsSignin } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 
+// NextAuth module declarations are now globally available in src/types/
 declare module "next-auth" {
-  interface User {
-    id: string;
-    accessToken: string;
-    refreshToken: string;
-    role: { id: string; name: string };
-  }
-
-  interface Session {
-    user: {
-      id: string;
-      name: string;
-      email: string;
-      role: { id: string; name: string };
-    } & DefaultSession["user"];
-    accessToken: string;
-    refreshToken: string;
-    expires: string;
-  }
-
-  interface JWT {
-    id: string;
-    name: string;
-    email: string;
-    role: { id: string; name: string };
-    accessToken: string;
-    refreshToken: string;
-    iat: number;
-    exp: number;
-    jti: string;
-  }
+  interface User extends NextAuthUser {}
+  interface Session extends NextAuthSession {}
+  interface JWT extends NextAuthJWT {}
 }
 
 export const { handlers, auth, signIn, signOut } = NextAuth({

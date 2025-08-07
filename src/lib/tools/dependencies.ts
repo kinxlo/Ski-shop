@@ -19,10 +19,7 @@ const dependencies = {
   DASHBOARD_ORDER_SERVICE: Symbol("DashboardOrderService"),
 };
 
-interface IDependencyContainer {
-  add<T>(key: symbol, dependency: T): void;
-  get<T>(key: symbol): T;
-}
+// Types are now globally available in src/types/
 
 const httpAdapter = new HttpAdapter();
 const appService = new AppService(httpAdapter);
