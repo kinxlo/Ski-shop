@@ -6,6 +6,7 @@ import { useOrderColumn } from "@/components/shared/dashboard-table/table-data";
 import { EmptyState } from "@/components/shared/empty-state";
 import { orderStatusOptions } from "@/lib/constants";
 import { useDashboardSearchParameters } from "@/lib/nuqs/use-dashboard-search-parameters";
+import { useDashboardOrderService } from "@/services/dashboard/vendor/orders/use-order-service";
 import { useDashboardProductService } from "@/services/dashboard/vendor/products/use-product-service";
 import { useRouter } from "next/navigation";
 import { useCallback, useMemo } from "react";
@@ -42,16 +43,18 @@ const Page = () => {
   );
 
   const { useGetAllProducts } = useDashboardProductService();
-  // const { useGetOverview } = useHomeService();
+  const { useGetAllOrders } = useDashboardOrderService();
   const { data: productData, isLoading: isProductsLoading, isError: isProductsError } = useGetAllProducts(filters);
-  // const { data: overviewData, isLoading: isOverviewLoading, isError: isOverviewError } = useGetOverview();
+  const { data: orderData } = useGetAllOrders(filters);
 
   // Extract data from the correct structure (similar to shop page)
-  const products = productData?.data?.items || [];
   const totalProducts = productData?.data?.metadata?.total || 0;
-  const totalPages = productData?.data?.metadata?.totalPages || 0;
-  const hasNextPage = productData?.data?.metadata?.hasNextPage || false;
-  const hasPreviousPage = productData?.data?.metadata?.hasPreviousPage || false;
+
+  const orders = orderData?.data?.items || [];
+  const totalOrders = orderData?.data?.metadata?.total || 0;
+  const totalPagesOrders = orderData?.data?.metadata?.totalPages || 0;
+  const hasNextPageOrders = orderData?.data?.metadata?.hasNextPage || false;
+  const hasPreviousPageOrders = orderData?.data?.metadata?.hasPreviousPage || false;
 
   const handleSearchChange = useCallback(
     (newSearch: string) => {
@@ -113,7 +116,7 @@ const Page = () => {
             />
             <OverViewCard
               title={"Total Orders"}
-              value={totalProducts || "0"}
+              value={totalOrders || "0"}
               icon={<RiShoppingCartLine />}
               iconClassName="bg-low-blue text-[24px] blue text-primary"
             />
@@ -152,14 +155,14 @@ const Page = () => {
                   descriptionClassName={`!text-mid-danger`}
                   images={[]}
                 />
-              ) : products.length > 0 ? (
+              ) : orders.length > 0 ? (
                 <DashboardTable
-                  data={products}
+                  data={orders}
                   columns={orderColumn}
-                  totalPages={totalPages}
-                  itemsPerPage={totalProducts}
-                  hasPreviousPage={hasPreviousPage}
-                  hasNextPage={hasNextPage}
+                  totalPages={totalPagesOrders}
+                  itemsPerPage={totalOrders}
+                  hasPreviousPage={hasPreviousPageOrders}
+                  hasNextPage={hasNextPageOrders}
                   showPagination
                   pageParameter="page"
                 />

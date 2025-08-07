@@ -4,6 +4,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { formatCurrency, formatDate } from "@/lib/i18n/utils";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { FC } from "react";
 
 interface OrderTableProperties {
@@ -51,6 +52,21 @@ const getStatusColor = (status: string) => {
 };
 
 export const OrderTable: FC<OrderTableProperties> = ({ orders, onStatusUpdate }) => {
+  const router = useRouter();
+
+  const handleRowClick = (orderId: string) => {
+    router.push(`/dashboard/orders/${orderId}`);
+  };
+
+  const handleActionClick = (
+    event: React.MouseEvent,
+    orderId: string,
+    status: "pending" | "delivered" | "cancelled",
+  ) => {
+    event.stopPropagation(); // Prevent row click when clicking action buttons
+    onStatusUpdate?.(orderId, status);
+  };
+
   return (
     <div className="overflow-x-auto">
       <Table>
@@ -68,7 +84,11 @@ export const OrderTable: FC<OrderTableProperties> = ({ orders, onStatusUpdate })
         </TableHeader>
         <TableBody>
           {orders.map((order) => (
-            <TableRow key={order.id}>
+            <TableRow
+              key={order.id}
+              className="cursor-pointer transition-colors hover:bg-gray-50"
+              onClick={() => handleRowClick(order.id)}
+            >
               <TableCell className="font-medium">{order.orderId}</TableCell>
               <TableCell>
                 <div className="flex items-center space-x-2">
@@ -115,7 +135,7 @@ export const OrderTable: FC<OrderTableProperties> = ({ orders, onStatusUpdate })
                   <Button
                     variant="outline"
                     size="sm"
-                    onClick={() => onStatusUpdate?.(order.id, "delivered")}
+                    onClick={(event) => handleActionClick(event, order.id, "delivered")}
                     disabled={order.status === "delivered"}
                   >
                     Mark Delivered
@@ -123,7 +143,7 @@ export const OrderTable: FC<OrderTableProperties> = ({ orders, onStatusUpdate })
                   <Button
                     variant="outline"
                     size="sm"
-                    onClick={() => onStatusUpdate?.(order.id, "cancelled")}
+                    onClick={(event) => handleActionClick(event, order.id, "cancelled")}
                     disabled={order.status === "cancelled"}
                   >
                     Cancel

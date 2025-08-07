@@ -28,6 +28,7 @@ declare global {
     };
     createdAt: string;
     updatedAt: string;
+    [key: string]: unknown;
   }
 
   /** Store entity */
@@ -85,6 +86,7 @@ declare global {
     buyer: OrderBuyer;
     products: OrderProduct[];
     createdAt: string;
+    [key: string]: unknown;
   }
 
   /** Order status types */

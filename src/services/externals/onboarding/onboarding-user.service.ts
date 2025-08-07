@@ -1,6 +1,5 @@
 import { OnboardingHttpAdapter } from "@/lib/http/onboarding-http-adapter";
 import { tryCatchWrapper } from "@/lib/tools/tryCatchFunction";
-import { BankPayoutFormData, BusinessInfoFormData, StoreFormData } from "@/schemas";
 import { isAxiosError } from "axios";
 
 export class OnboardingUserService {
@@ -72,7 +71,8 @@ export class OnboardingUserService {
       const requestData = {
         name: storeData.name,
         description: storeData.description,
-        logo: storeData.image[0],
+        logo: storeData?.image?.[0],
+        // logo: storeData?.image,
       };
 
       const response = await this.http.post<ShortTokenResponse>("/auth/store", requestData, headers);

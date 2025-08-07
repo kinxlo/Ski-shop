@@ -10,8 +10,8 @@ export class DashboardProductService {
     this.http = httpAdapter;
   }
 
-  async getAllProducts(filters?: IFilters) {
-    const defaultFilters: IFilters = { page: 1, limit: 10 };
+  async getAllProducts(filters?: Filters) {
+    const defaultFilters: Filters = { page: 1, limit: 10 };
     const appliedFilters = filters ?? defaultFilters;
     const queryParameters = this.buildQueryParameters(appliedFilters);
     const storeId = await this.getMyStore();
@@ -27,15 +27,15 @@ export class DashboardProductService {
     throw new Error("Failed to fetch products");
   }
 
-  async getStoreInfo() {
-    return tryCatchWrapper(async () => {
-      const response = await this.http.get<StoreApiResponse>(`/stores/current`);
-      if (response?.status === 200) {
-        return response.data;
-      }
-      throw new Error("Failed to fetch store id");
-    });
-  }
+  // async getStoreInfo() {
+  //   return tryCatchWrapper(async () => {
+  //     const response = await this.http.get<StoreApiResponse>(`/stores/current`);
+  //     if (response?.status === 200) {
+  //       return response.data;
+  //     }
+  //     throw new Error("Failed to fetch store id");
+  //   });
+  // }
 
   async getSingleProduct(id: string) {
     return tryCatchWrapper(async () => {
@@ -108,7 +108,7 @@ export class DashboardProductService {
   //get my store /stores/current
   async getMyStore() {
     return tryCatchWrapper(async () => {
-      const response = await this.http.get<StoreApiResponse>(`/stores/current`);
+      const response = await this.http.get<{ success: boolean; data: Store }>(`/stores/current`);
       if (response?.status === 200) {
         return response.data;
       }
@@ -116,7 +116,7 @@ export class DashboardProductService {
     });
   }
 
-  private buildQueryParameters(filters: IFilters): string {
+  private buildQueryParameters(filters: Filters): string {
     const queryParameters = new URLSearchParams();
     for (const [key, value] of Object.entries(filters)) {
       if (value !== undefined) {

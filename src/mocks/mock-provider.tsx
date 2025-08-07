@@ -17,7 +17,7 @@ export const MockServiceWorkerProvider = ({ children, isEnabled }: MockServiceWo
     const initMocks = async () => {
       if (isEnabled) {
         try {
-          await worker.start({
+          await worker?.start({
             onUnhandledRequest: "bypass", // or "warn" or "error"
             quiet: false, // set to true to suppress MSW logs
           });
@@ -36,7 +36,7 @@ export const MockServiceWorkerProvider = ({ children, isEnabled }: MockServiceWo
 
     return () => {
       if (isEnabled) {
-        worker.stop();
+        worker?.stop();
       }
     };
   }, [isEnabled]);

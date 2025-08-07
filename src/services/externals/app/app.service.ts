@@ -8,8 +8,8 @@ export class AppService {
     this.http = httpAdapter;
   }
 
-  async getAllProducts(filters?: IFilters) {
-    const defaultFilters: IFilters = { page: 1, limit: 10 };
+  async getAllProducts(filters?: Filters) {
+    const defaultFilters: Filters = { page: 1, limit: 10 };
     const appliedFilters = filters ?? defaultFilters;
     return tryCatchWrapper(async () => {
       const queryParameters = this.buildQueryParameters(appliedFilters);
@@ -175,7 +175,7 @@ export class AppService {
     });
   }
 
-  private buildQueryParameters(filters: IFilters): string {
+  private buildQueryParameters(filters: Filters): string {
     const queryParameters = new URLSearchParams();
     for (const [key, value] of Object.entries(filters)) {
       if (value !== undefined) {

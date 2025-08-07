@@ -1,6 +1,5 @@
 import { HttpAdapter } from "@/lib/http/http-adapter";
 import { tryCatchWrapper } from "@/lib/tools/tryCatchFunction";
-import { ForgotPasswordData, LoginFormData, RegisterFormData, ResetPasswordData } from "@/schemas";
 import { isAxiosError } from "axios";
 
 // Types are now globally available in src/types/

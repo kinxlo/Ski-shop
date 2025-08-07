@@ -10,14 +10,14 @@ import { RiShoppingCartLine } from "react-icons/ri";
 
 import { OverViewCard } from "../../_components/overview-card";
 import { AllOrders } from "./_views/all-orders";
-import { DeliveredOrders } from "./_views/delivered-orders";
+import { PaidOrders } from "./_views/paid-orders";
 import { PendingOrders } from "./_views/pending-orders";
 
 const Page = () => {
   const { orderStatus: activeTab, setOrderStatus } = useDashboardSearchParameters();
 
   const setActiveTab = (value: string) => {
-    setOrderStatus(value as "all" | "pending" | "delivered");
+    setOrderStatus(value as "all" | "pending" | "paid" | "delivered" | "cancelled");
   };
 
   const { useGetAllOrders } = useDashboardOrderService();
@@ -25,25 +25,25 @@ const Page = () => {
   // Fetch all orders for overview stats
   const { data: allOrdersData } = useGetAllOrders({ page: 1, limit: 10 });
   const { data: pendingOrdersData } = useGetAllOrders({ page: 1, status: "pending", limit: 10 });
-  const { data: deliveredOrdersData } = useGetAllOrders({ page: 1, status: "delivered", limit: 10 });
+  const { data: paidOrdersData } = useGetAllOrders({ page: 1, status: "paid", limit: 10 });
 
   // Calculate stats
   const stats = useMemo(() => {
     const totalOrders = allOrdersData?.data?.metadata?.total || 0;
     const pendingOrders = pendingOrdersData?.data?.metadata?.total || 0;
-    const deliveredOrders = deliveredOrdersData?.data?.metadata?.total || 0;
+    const paidOrders = paidOrdersData?.data?.metadata?.total || 0;
 
     return {
       totalOrders,
       pendingOrders,
-      deliveredOrders,
+      paidOrders,
     };
-  }, [allOrdersData, pendingOrdersData, deliveredOrdersData]);
+  }, [allOrdersData, pendingOrdersData, paidOrdersData]);
 
   const tabOptions = [
     { value: "all", label: "All Orders", count: stats.totalOrders },
     { value: "pending", label: "Pending Orders", count: stats.pendingOrders },
-    { value: "delivered", label: "Delivered Orders", count: stats.deliveredOrders },
+    { value: "paid", label: "Paid Orders", count: stats.paidOrders },
   ];
 
   return (
@@ -65,8 +65,8 @@ const Page = () => {
           iconClassName="bg-low-warning/20 text-mid-warning text-[24px]"
         />
         <OverViewCard
-          title="Delivered Orders"
-          value={stats.deliveredOrders.toString()}
+          title="Paid Orders"
+          value={stats.paidOrders.toString()}
           icon={<RiShoppingCartLine />}
           iconClassName="bg-low-success text-mid-success text-[24px]"
         />
@@ -111,7 +111,7 @@ const Page = () => {
           <div className="mt-6">
             {activeTab === "all" && <AllOrders />}
             {activeTab === "pending" && <PendingOrders />}
-            {activeTab === "delivered" && <DeliveredOrders />}
+            {activeTab === "paid" && <PaidOrders />}
           </div>
         </div>
       </section>

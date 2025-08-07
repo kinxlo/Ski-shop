@@ -69,6 +69,7 @@ export interface User {
   crypto: Crypto;
   role: "admin" | "moderator" | "user";
   status: boolean;
+  [key: string]: unknown;
 }
 
 export interface Users {

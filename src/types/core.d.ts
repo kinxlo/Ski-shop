@@ -77,8 +77,8 @@ declare global {
   /** Query parameters type */
   type QueryParameters = Record<string, string | number | boolean>;
 
-  /** Headers type - using AxiosHeaders for compatibility */
-  type Headers = import("axios").AxiosHeaders | Record<string, string>;
+  /** Headers type for HTTP requests */
+  type HttpHeaders = Record<string, string>;
 
   /** Short token response */
   interface ShortTokenResponse {

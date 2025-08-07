@@ -1,6 +1,6 @@
 export const queryKeys = {
   product: {
-    list: (filters?: IFilters) => [
+    list: (filters?: Filters) => [
       "products",
       "list",
       filters?.page || 1,
@@ -24,7 +24,7 @@ export const queryKeys = {
     top: () => ["vendor", "top"] as const,
   },
   user: {
-    list: (filters?: IFilters) => ["user", "list", ...(filters ? Object.entries(filters) : [])],
+    list: (filters?: Filters) => ["user", "list", ...(filters ? Object.entries(filters) : [])],
     profile: () => ["user", "profile"] as const,
     details: (id: string) => ["user", "details", id] as const,
   },
@@ -35,7 +35,7 @@ export const queryKeys = {
   dashboard: {
     overview: () => ["dashboard", "overview"] as const,
     products: {
-      list: (filters?: IFilters) => [
+      list: (filters?: Filters) => [
         "dashboard",
         "products",
         "list",
@@ -48,7 +48,7 @@ export const queryKeys = {
       details: (id: string) => ["dashboard", "products", "details", id] as const,
     },
     orders: {
-      list: (filters?: IFilters) => [
+      list: (filters?: Filters) => [
         "dashboard",
         "orders",
         "list",

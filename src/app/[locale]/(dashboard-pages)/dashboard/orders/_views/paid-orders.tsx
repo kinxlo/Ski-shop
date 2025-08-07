@@ -11,11 +11,10 @@ import { useCallback, useMemo } from "react";
 
 import { TableSkeleton } from "../../home/page-skeleton";
 
-export const AllOrders = () => {
+export const PaidOrders = () => {
   const router = useRouter();
   const {
     search: searchQuery,
-    orderStatus,
     limit,
     page,
     setSearch: setSearchQuery,
@@ -25,11 +24,11 @@ export const AllOrders = () => {
   const filters = useMemo(
     () => ({
       page,
-      ...(orderStatus !== "all" && { status: orderStatus as "pending" | "delivered" | "cancelled" }),
+      status: "paid" as const,
       ...(searchQuery && { search: searchQuery }),
       ...(limit && { limit }),
     }),
-    [page, orderStatus, searchQuery, limit],
+    [page, searchQuery, limit],
   );
 
   const { useGetAllOrders } = useDashboardOrderService();
@@ -69,7 +68,7 @@ export const AllOrders = () => {
       <EmptyState
         images={[{ src: "/images/empty-state.svg", width: 80, height: 80, alt: "Error" }]}
         title="Something went wrong"
-        description="Failed to load orders. Please try again."
+        description="Failed to load paid orders. Please try again."
         className="bg-mid-grey-I space-y-0 rounded-lg"
         titleClassName="!text-2xl"
         descriptionClassName="text-base mb-4"
@@ -85,9 +84,9 @@ export const AllOrders = () => {
   if (!orders || orders.length === 0) {
     return (
       <EmptyState
-        images={[{ src: "/images/empty-state.svg", width: 80, height: 80, alt: "No orders" }]}
-        title="No orders found"
-        description="There are no orders matching your criteria."
+        images={[{ src: "/images/empty-state.svg", width: 80, height: 80, alt: "No paid orders" }]}
+        title="No paid orders"
+        description="There are no paid orders at the moment."
         className="bg-mid-grey-I space-y-0 rounded-lg"
         titleClassName="!text-2xl"
         descriptionClassName="text-base mb-4"
@@ -104,7 +103,7 @@ export const AllOrders = () => {
           onSearch={handleSearchChange}
           initialValue={searchQuery}
           delay={500}
-          placeholder="Search for orders..."
+          placeholder="Search paid orders..."
         />
       </div>
 

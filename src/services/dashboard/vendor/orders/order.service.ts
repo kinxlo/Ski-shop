@@ -10,15 +10,15 @@ export class DashboardOrderService {
     this.http = httpAdapter;
   }
 
-  async getAllOrders(filters?: IFilters) {
-    const defaultFilters: IFilters = { page: 1, limit: 10 };
+  async getAllOrders(filters?: Filters) {
+    const defaultFilters: Filters = { page: 1, limit: 10 };
     const appliedFilters = filters ?? defaultFilters;
     const queryParameters = this.buildQueryParameters(appliedFilters);
     const storeId = await this.getMyStore();
 
     if (storeId.success) {
       // const response = await this.http.get<IOrderApiResponse>(`/orders?storeId=${storeId.data.id}&${queryParameters}`);
-      const response = await this.http.get<IOrderApiResponse>(`/orders?${queryParameters}`);
+      const response = await this.http.get<OrderApiResponse>(`/orders?${queryParameters}`);
       if (response?.status === 200) {
         return response.data;
       }
@@ -27,9 +27,9 @@ export class DashboardOrderService {
     throw new Error("Failed to fetch orders");
   }
 
-  async getOrderById(id: string): Promise<{ success: boolean; data: IOrder }> {
+  async getOrderById(id: string): Promise<{ success: boolean; data: Order }> {
     return tryCatchWrapper(async () => {
-      const response = await this.http.get<{ success: boolean; data: IOrder }>(`/orders/${id}`);
+      const response = await this.http.get<{ success: boolean; data: Order }>(`/orders/${id}`);
 
       if (response?.status === 200) {
         return response.data;
@@ -41,9 +41,9 @@ export class DashboardOrderService {
   async updateOrderStatus(
     id: string,
     status: "pending" | "delivered" | "cancelled",
-  ): Promise<{ success: boolean; data: IOrder }> {
+  ): Promise<{ success: boolean; data: Order }> {
     return tryCatchWrapper(async () => {
-      const response = await this.http.patch<{ success: boolean; data: IOrder }>(`/orders/${id}/status`, { status });
+      const response = await this.http.patch<{ success: boolean; data: Order }>(`/orders/${id}/status`, { status });
 
       if (response?.status === 200) {
         return response.data;
@@ -55,7 +55,7 @@ export class DashboardOrderService {
   // Get my store /stores/current
   async getMyStore() {
     return tryCatchWrapper(async () => {
-      const response = await this.http.get<StoreApiResponse>(`/stores/current`);
+      const response = await this.http.get<{ success: boolean; data: Store }>(`/stores/current`);
       if (response?.status === 200) {
         return response.data;
       }
@@ -63,7 +63,7 @@ export class DashboardOrderService {
     });
   }
 
-  private buildQueryParameters(filters: IFilters): string {
+  private buildQueryParameters(filters: Filters): string {
     const queryParameters = new URLSearchParams();
     for (const [key, value] of Object.entries(filters)) {
       if (value !== undefined) {

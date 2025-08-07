@@ -156,7 +156,8 @@ declare global {
   interface StoreFormData {
     name: string;
     description: string;
-    image: File;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    image: File | any;
   }
 
   /** Product form data */
