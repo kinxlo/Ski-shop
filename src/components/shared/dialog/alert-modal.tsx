@@ -1,8 +1,9 @@
 "use client";
 
 import { Modal } from "@/components/ui/modal";
-import { AlertTriangle, Info } from "lucide-react";
+import { AlertTriangle } from "lucide-react";
 import { useEffect, useState } from "react";
+import { PiInfoFill } from "react-icons/pi";
 
 import SkiButton from "../button";
 
@@ -64,11 +65,11 @@ const alertConfig = {
     buttonVariant: "destructive" as const,
   },
   info: {
-    icon: Info,
-    iconColor: "text-blue-600",
-    bgColor: "bg-blue-100",
-    borderColor: "border-blue-500",
-    buttonVariant: "default" as const,
+    icon: PiInfoFill,
+    iconColor: "text-primary",
+    bgColor: "bg-primary/10",
+    borderColor: "border-primary",
+    buttonVariant: "primary" as const,
   },
 };
 

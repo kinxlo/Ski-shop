@@ -3,13 +3,17 @@
 import { Wrapper } from "@/components/core/layout/wrapper";
 import { BlurImage } from "@/components/core/miscellaneous/blur-image";
 import SkiButton from "@/components/shared/button";
+import { AlertModal } from "@/components/shared/dialog/alert-modal";
 import { EmptyState } from "@/components/shared/empty-state";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Checkbox } from "@/components/ui/checkbox";
 import { formatCurrency, formatDate } from "@/lib/i18n/utils";
 import { cn } from "@/lib/utils";
+import { OrderTrackingData, RiderInfo } from "@/modules/tracking/types";
+import { createTrackingData } from "@/modules/tracking/utils/tracking-utils";
 import { useDashboardOrderService } from "@/services/dashboard/vendor/orders/use-order-service";
-import { ArrowLeft, CreditCard, MapPin, Phone, User } from "lucide-react";
+import { ArrowLeft, CreditCard, Info, MapPin, Phone, Star, User } from "lucide-react";
 import Link from "next/link";
 import { use, useState } from "react";
 
@@ -45,6 +49,33 @@ export default function OrderDetailPage({ params }: OrderDetailPageProperties) {
   const { useGetOrderById, useUpdateOrderStatus } = useDashboardOrderService();
   const { data: orderResponse, isLoading, isError } = useGetOrderById(orderId);
   const [isAssignRiderModalOpen, setIsAssignRiderModalOpen] = useState(false);
+  const [isFulfillmentFeeModalOpen, setIsFulfillmentFeeModalOpen] = useState(false);
+  const [trackingData, setTrackingData] = useState<OrderTrackingData | null>(null);
+  const [assignedRider, setAssignedRider] = useState<RiderInfo | null>({
+    id: "1",
+    name: "Bola Xpress",
+    phone: "0803 123 4567",
+    rating: 4.7,
+    reviews: 63,
+    location: {
+      lat: 6.5244,
+      lng: 3.3792,
+      address: "Lagos, Nigeria",
+    },
+  });
+
+  // Status checkboxes state
+  const [orderConfirmed, setOrderConfirmed] = useState(true);
+  const [packageReady, setPackageReady] = useState(false);
+
+  // Handle checkbox changes
+  const handleOrderConfirmedChange = (checked: boolean | "indeterminate") => {
+    setOrderConfirmed(checked === true);
+  };
+
+  const handlePackageReadyChange = (checked: boolean | "indeterminate") => {
+    setPackageReady(checked === true);
+  };
 
   const updateOrderStatusMutation = useUpdateOrderStatus({
     onSuccess: () => {
@@ -56,13 +87,23 @@ export default function OrderDetailPage({ params }: OrderDetailPageProperties) {
     },
   });
 
-  const handleAssignRider = () => {
-    // Update order status to "assigned" or similar
-    updateOrderStatusMutation.mutate({
-      id: orderId,
-      status: "delivered", // You might want to add a new status like "assigned"
-    });
-    // TODO: Add rider assignment logic here
+  const handleAssignRider = (riderId: string, riderInfo?: RiderInfo) => {
+    if (riderInfo && orderResponse?.data) {
+      // Create tracking data
+      const newTrackingData = createTrackingData(
+        orderId,
+        orderResponse.data.products[0]?.name || "Product",
+        riderInfo,
+        "rider_accepted",
+      );
+
+      setTrackingData(newTrackingData);
+      setAssignedRider(riderInfo);
+    }
+  };
+
+  const handleFulfillmentFeeInfo = () => {
+    setIsFulfillmentFeeModalOpen(true);
   };
 
   if (isLoading) {
@@ -77,7 +118,7 @@ export default function OrderDetailPage({ params }: OrderDetailPageProperties) {
             <div className="flex items-center space-x-4">
               <Link
                 href="/dashboard/orders"
-                className="flex items-center text-gray-600 transition-colors hover:text-gray-900"
+                className="text-high-grey-II flex items-center transition-colors hover:text-gray-900"
               >
                 <ArrowLeft className="mr-2 h-5 w-5" />
                 <span className="hidden sm:inline">Back to Orders</span>
@@ -119,7 +160,7 @@ export default function OrderDetailPage({ params }: OrderDetailPageProperties) {
             <div className="flex items-center space-x-4">
               <Link
                 href="/dashboard/orders"
-                className="flex items-center text-gray-600 transition-colors hover:text-gray-900"
+                className="text-high-grey-II flex items-center transition-colors hover:text-gray-900"
               >
                 <ArrowLeft className="mr-2 h-5 w-5" />
                 <span className="hidden sm:inline">Back to Orders</span>
@@ -208,7 +249,7 @@ export default function OrderDetailPage({ params }: OrderDetailPageProperties) {
               <CardContent>
                 <div className="space-y-2 sm:space-y-3">
                   <div className="flex justify-between text-sm">
-                    <span className="text-gray-600">Subtotal</span>
+                    <span className="text-high-grey-II">Subtotal</span>
                     <span className="font-medium">
                       {formatCurrency(
                         order.products.reduce(
@@ -219,19 +260,72 @@ export default function OrderDetailPage({ params }: OrderDetailPageProperties) {
                     </span>
                   </div>
                   <div className="flex justify-between text-sm">
-                    <span className="text-gray-600">Delivery fee</span>
+                    <span className="text-high-grey-II">Delivery fee</span>
                     <span className="font-medium">₦1,200</span>
                   </div>
-                  <div className="flex justify-between border-t pt-2 text-sm font-semibold sm:pt-3 sm:text-base">
+                  {assignedRider && (
+                    <div className="flex justify-between text-sm">
+                      <span className="text-high-grey-II flex items-center gap-1">
+                        Gas / Fulfillment Fee
+                        <Info
+                          className="text-primary h-4 w-4 cursor-pointer hover:opacity-80"
+                          onClick={handleFulfillmentFeeInfo}
+                        />
+                      </span>
+                      <span className="text-mid-danger font-medium">₦5,800</span>
+                    </div>
+                  )}
+                  <div className="flex justify-between border-t pt-2 text-sm font-semibold text-green-500 sm:pt-3 sm:text-base">
                     <span>Total</span>
-                    <span className="text-primary">
+                    <span className="">
                       {formatCurrency(
                         order.products.reduce(
                           (sum: number, product: OrderProduct) => sum + product.price * product.quantity,
                           0,
-                        ) + 1200,
+                        ) +
+                          1200 +
+                          (assignedRider ? 5800 : 0),
                       )}
                     </span>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Update Status Section */}
+            <Card className="shadow-none">
+              <CardHeader className="pb-3 sm:pb-6">
+                <CardTitle className="text-base sm:text-lg">Update Status</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between space-x-3">
+                    <label
+                      htmlFor="order-confirmed"
+                      className="text-sm leading-none font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                    >
+                      Order Confirmed
+                    </label>
+                    <Checkbox
+                      id="order-confirmed"
+                      checked={orderConfirmed}
+                      onCheckedChange={handleOrderConfirmedChange}
+                      className="data-[state=checked]:bg-primary data-[state=checked]:border-border border-primary h-6 w-6 rounded-full border-2 data-[state=checked]:border-2"
+                    />
+                  </div>
+                  <div className="flex items-center justify-between space-x-3">
+                    <label
+                      htmlFor="package-ready"
+                      className="text-sm leading-none font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                    >
+                      Package ready to be shipped
+                    </label>
+                    <Checkbox
+                      id="package-ready"
+                      checked={packageReady}
+                      onCheckedChange={handlePackageReadyChange}
+                      className="data-[state=checked]:bg-primary data-[state=checked]:border-border border-primary h-6 w-6 rounded-full border-2 data-[state=checked]:border-2"
+                    />
                   </div>
                 </div>
               </CardContent>
@@ -290,17 +384,68 @@ export default function OrderDetailPage({ params }: OrderDetailPageProperties) {
               </CardContent>
             </Card>
 
-            {/* Action Button */}
-            <div className="sticky bottom-4 z-10 lg:top-6">
-              <SkiButton
-                variant="primary"
-                size={`xl`}
-                className="w-full"
-                onClick={() => setIsAssignRiderModalOpen(true)}
-                isDisabled={updateOrderStatusMutation.isPending}
-              >
-                {updateOrderStatusMutation.isPending ? "Assigning..." : "Assign Rider"}
-              </SkiButton>
+            {/* Assigned Rider Information */}
+            {assignedRider && (
+              <Card className="shadow-none">
+                <CardHeader className="pb-3 sm:pb-6">
+                  <CardTitle className="flex items-center text-base sm:text-lg">
+                    <User className="mr-2 h-4 w-4 sm:h-5 sm:w-5" />
+                    Assigned Rider
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-3 sm:space-y-4">
+                  <div className="flex items-center space-x-3">
+                    <div className="flex h-12 w-12 items-center justify-center rounded-full bg-gray-200">
+                      <span className="text-high-grey-II text-lg font-semibold">
+                        {assignedRider.name
+                          .split(" ")
+                          .map((n) => n[0])
+                          .join("")}
+                      </span>
+                    </div>
+                    <div>
+                      <p className="font-semibold">{assignedRider.name}</p>
+                      <div className="flex items-center space-x-1">
+                        <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+                        <span className="text-sm font-medium">{assignedRider.rating}</span>
+                        <span className="text-xs text-gray-500">({assignedRider.reviews} reviews)</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div>
+                    <span className="flex items-center text-xs text-gray-500 sm:text-sm">
+                      <Phone className="mr-1 h-3 w-3 sm:h-4 sm:w-4" />
+                      Phone
+                    </span>
+                    <p className="text-sm font-medium sm:text-base">{assignedRider.phone}</p>
+                  </div>
+                  <div>
+                    <span className="text-xs text-gray-500 sm:text-sm">Rider ID</span>
+                    <p className="font-mono text-xs font-medium sm:text-sm">{assignedRider.id}</p>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+
+            {/* Action Buttons */}
+            <div className="sticky bottom-4 z-10 space-y-3 lg:top-6">
+              {trackingData ? (
+                <Link href={`/dashboard/orders/${orderId}/tracking`}>
+                  <SkiButton variant="primary" size="xl" className="w-full">
+                    Track Rider
+                  </SkiButton>
+                </Link>
+              ) : (
+                <SkiButton
+                  variant="primary"
+                  size="xl"
+                  className="w-full"
+                  onClick={() => setIsAssignRiderModalOpen(true)}
+                  isDisabled={updateOrderStatusMutation.isPending}
+                >
+                  {updateOrderStatusMutation.isPending ? "Assigning..." : "Assign Rider"}
+                </SkiButton>
+              )}
             </div>
           </div>
         </div>
@@ -312,6 +457,18 @@ export default function OrderDetailPage({ params }: OrderDetailPageProperties) {
         onClose={() => setIsAssignRiderModalOpen(false)}
         onAssignRider={handleAssignRider}
         orderId={""}
+      />
+
+      {/* Fulfillment Fee Info Modal */}
+      <AlertModal
+        isOpen={isFulfillmentFeeModalOpen}
+        onClose={() => setIsFulfillmentFeeModalOpen(false)}
+        onConfirm={() => setIsFulfillmentFeeModalOpen(false)}
+        type="info"
+        title="Fulfillment/Gas Fee"
+        description="Ski-Shop charges a small fulfilment fee on each order you receive. This fee helps cover transaction costs, platform maintenance, and customer support to keep your store running smoothly."
+        confirmText="Okay, Got It!"
+        showCancelButton={false}
       />
     </div>
   );

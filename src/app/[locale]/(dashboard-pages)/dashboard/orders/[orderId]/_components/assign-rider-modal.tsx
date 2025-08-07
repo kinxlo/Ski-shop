@@ -2,11 +2,11 @@
 
 import { SearchInput } from "@/components/core/miscellaneous/search-input";
 import SkiButton from "@/components/shared/button";
-import { AlertModal } from "@/components/shared/dialog/alert-modal";
 import { ReusableDialog } from "@/components/shared/dialog/Dialog";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
+import { RiderInfo } from "@/modules/tracking/types";
 import { Check, MapPin, Phone, Star, X } from "lucide-react";
 import { useState } from "react";
 
@@ -24,11 +24,11 @@ interface Rider {
 interface AssignRiderModalProperties {
   isOpen: boolean;
   onClose: () => void;
-  onAssignRider: (riderId: string) => void;
+  onAssignRider: (riderId: string, riderInfo?: RiderInfo) => void;
   orderId: string;
 }
 
-type ModalState = "select" | "confirm" | "loading" | "success";
+type ModalState = "select" | "confirm" | "loading";
 
 // Mock data - replace with actual API call
 const mockRiders: Rider[] = [
@@ -86,19 +86,29 @@ export const AssignRiderModal = ({ isOpen, onClose, onAssignRider }: AssignRider
     setModalState("loading");
     // Simulate API call
     setTimeout(() => {
-      setModalState("success");
-    }, 3000);
-  };
+      if (confirmingRider) {
+        // Convert rider data to the format expected by tracking system
+        const riderInfo: RiderInfo = {
+          id: confirmingRider.id,
+          name: confirmingRider.name,
+          phone: confirmingRider.phone,
+          rating: confirmingRider.rating,
+          reviews: confirmingRider.reviews,
+          location: {
+            lat: 6.5244, // Default Lagos coordinates
+            lng: 3.3792,
+            address: confirmingRider.location,
+          },
+        };
 
-  const handleContinue = () => {
-    if (confirmingRider) {
-      onAssignRider(confirmingRider.id);
-    }
-    onClose();
-    // Reset state
-    setModalState("select");
-    setSelectedRider(null);
-    setConfirmingRider(null);
+        onAssignRider(confirmingRider.id, riderInfo);
+      }
+      onClose();
+      // Reset state
+      setModalState("select");
+      setSelectedRider(null);
+      setConfirmingRider(null);
+    }, 3000);
   };
 
   const handleBackToSelect = () => {
@@ -324,31 +334,17 @@ export const AssignRiderModal = ({ isOpen, onClose, onAssignRider }: AssignRider
   };
 
   return (
-    <>
-      <ReusableDialog
-        open={isOpen && modalState !== "success"}
-        onOpenChange={onClose}
-        title={getModalTitle()}
-        description={getModalDescription()}
-        className="min-w-xl overflow-hidden"
-        headerClassName={`!text-2xl`}
-        hideClose={modalState === "loading"}
-        trigger={<div />} // Hidden trigger since we control open state
-      >
-        {getModalContent()}
-      </ReusableDialog>
-
-      {/* Success Alert Modal */}
-      <AlertModal
-        isOpen={modalState === "success"}
-        onClose={onClose}
-        onConfirm={handleContinue}
-        type="success"
-        title="Successful!"
-        description={`${confirmingRider?.name} has accepted your delivery order.`}
-        confirmText="Continue"
-        showCancelButton={false}
-      />
-    </>
+    <ReusableDialog
+      open={isOpen}
+      onOpenChange={onClose}
+      title={getModalTitle()}
+      description={getModalDescription()}
+      className="min-w-xl overflow-hidden"
+      headerClassName={`!text-2xl`}
+      hideClose={modalState === "loading"}
+      trigger={<div />} // Hidden trigger since we control open state
+    >
+      {getModalContent()}
+    </ReusableDialog>
   );
 };
