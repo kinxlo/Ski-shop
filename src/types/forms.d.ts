@@ -85,6 +85,29 @@ declare global {
     phone?: string;
   }
 
+  /** Vendor profile form data */
+  interface VendorProfileFormData {
+    store: {
+      name?: string;
+      description?: string;
+      category?: string;
+    };
+    logo?: File;
+    user: {
+      firstName?: string;
+      lastName?: string;
+      phone?: string;
+    };
+    business: {
+      type?: string;
+      businessRegNumber?: string;
+      businessName?: string;
+      country?: string;
+      state?: string;
+      address?: string;
+    };
+  }
+
   /** Email notification setting form data */
   interface EmailNotificationSettingFormData {
     purchase?: boolean;

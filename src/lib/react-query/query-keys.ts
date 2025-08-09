@@ -60,5 +60,8 @@ export const queryKeys = {
       ],
       details: (id: string) => ["dashboard", "orders", "details", id] as const,
     },
+    profile: {
+      details: () => ["dashboard", "profile", "details"] as const,
+    },
   },
 };

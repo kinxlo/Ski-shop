@@ -56,6 +56,35 @@ declare global {
     updatedAt: string;
   }
 
+  /** Vendor profile entity */
+  interface VendorProfile {
+    id: string;
+    store: {
+      id: string;
+      name: string;
+      description: string;
+      category: string;
+      logo?: string;
+    };
+    user: {
+      id: string;
+      firstName: string;
+      lastName: string;
+      email: string;
+      phone?: string;
+    };
+    business: {
+      type: string;
+      businessRegNumber?: string;
+      businessName: string;
+      country: string;
+      state: string;
+      address: string;
+    };
+    createdAt: string;
+    updatedAt: string;
+  }
+
   /** Business information */
   interface BusinessInfo {
     type: string;

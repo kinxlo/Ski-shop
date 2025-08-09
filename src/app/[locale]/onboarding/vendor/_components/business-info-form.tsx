@@ -6,7 +6,7 @@ import { PhoneInput } from "@/components/shared/inputs/phone-input";
 import { ComboBox } from "@/components/shared/select-dropdown/combo-box";
 import { FormControl, FormItem, FormField as UIFormField } from "@/components/ui/form";
 import { countries } from "@/lib/constants";
-import { BusinessInfoFormData, businessInfoSchema } from "@/schemas";
+import { businessInfoSchema } from "@/schemas";
 import { useOnboardingUserService } from "@/services/externals/onboarding/use-onboarding-user-service";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useLocale } from "next-intl";
