@@ -12,7 +12,18 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   return (
     <SidebarProvider defaultOpen={true}>
       <div className="bg-background flex min-h-screen w-full">
-        <DashboardSidebar navItems={navItems} />
+        <DashboardSidebar
+          navItems={navItems}
+          autoExpandOnActiveChild={true}
+          persistExpandedState={true}
+          defaultExpandedItems={["settings"]}
+          logoProperties={{
+            width: 100,
+            height: 60,
+            className: "transition-all duration-200",
+          }}
+          className="transition-all duration-300 ease-in-out"
+        />
         <SidebarInset className="flex-1">
           <div className="flex h-full flex-col">
             <header className="flex h-20 shrink-0 items-center gap-2 border-b px-4 py-5">

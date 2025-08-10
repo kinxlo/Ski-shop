@@ -16,6 +16,10 @@ export const queryKeys = {
     categories: () => ["products", "categories"] as const,
     saved: () => ["products", "saved"] as const,
   },
+  review: {
+    list: () => ["review", "list"] as const,
+    details: (productId: string) => ["review", "details", productId] as const,
+  },
   cart: {
     list: () => ["cart"] as const,
     item: (id: string) => ["cart", "item", id] as const,
@@ -62,6 +66,20 @@ export const queryKeys = {
     },
     profile: {
       details: () => ["dashboard", "profile", "details"] as const,
+    },
+    payouts: {
+      store: () => ["dashboard", "payouts", "store"] as const,
+      list: (filters?: Filters) => ["dashboard", "payouts", "list", filters?.page || 1, filters?.limit || 10],
+      stats: () => ["dashboard", "payouts", "stats"] as const,
+      withdrawalHistory: (filters?: Filters) => [
+        "dashboard",
+        "payouts",
+        "withdrawal-history",
+        filters?.page || 1,
+        filters?.limit || 10,
+      ],
+      withdrawals: (payoutId: string) => ["dashboard", "payouts", "withdrawals", payoutId] as const,
+      banks: () => ["dashboard", "payouts", "banks"] as const,
     },
   },
 };

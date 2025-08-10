@@ -1,4 +1,5 @@
 import SkiButton from "@/components/shared/button";
+import { useAppService } from "@/services/externals/app/use-app-service";
 import Image from "next/image";
 import { useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
@@ -26,6 +27,25 @@ interface FormData {
 export const RatingModal = ({ product, onRatingSubmit, triggerStructure }: RatingModalProperties) => {
   const [rating, setRating] = useState(0);
   const [isSuccess, setIsSuccess] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const { useReviewProduct } = useAppService();
+
+  const reviewProductMutation = useReviewProduct({
+    onSuccess: () => {
+      setIsSuccess(true);
+      setError(null);
+      // Auto close after 2 seconds
+      setTimeout(() => {
+        setIsSuccess(false);
+        setRating(0);
+        reset();
+      }, 2000);
+    },
+    onError: (error: Error) => {
+      setError(error?.message || "Failed to submit review. Please try again.");
+    },
+  });
 
   const methods = useForm<FormData>({
     defaultValues: {
@@ -37,20 +57,22 @@ export const RatingModal = ({ product, onRatingSubmit, triggerStructure }: Ratin
 
   const handleRatingSubmit = (data: FormData) => {
     if (rating > 0) {
+      setError(null);
+      reviewProductMutation.mutate({
+        productId: product.id,
+        rating,
+        comment: data.review,
+      });
+
+      // Also call the optional callback if provided
       onRatingSubmit?.(rating, data.review);
-      setIsSuccess(true);
-      // Auto close after 2 seconds
-      setTimeout(() => {
-        setIsSuccess(false);
-        setRating(0);
-        reset();
-      }, 2000);
     }
   };
 
   const handleClose = () => {
     setIsSuccess(false);
     setRating(0);
+    setError(null);
     reset();
   };
 
@@ -109,9 +131,22 @@ export const RatingModal = ({ product, onRatingSubmit, triggerStructure }: Ratin
               />
             </div>
 
+            {/* Error Display */}
+            {error && (
+              <div className="rounded-lg bg-red-50 p-3 text-center">
+                <p className="text-sm text-red-600">{error}</p>
+              </div>
+            )}
+
             {/* Save Button */}
-            <SkiButton variant="primary" size="lg" type="submit" isDisabled={rating === 0} className="w-full">
-              Save
+            <SkiButton
+              variant="primary"
+              size="lg"
+              type="submit"
+              isDisabled={rating === 0 || reviewProductMutation.isPending}
+              className="w-full"
+            >
+              {reviewProductMutation.isPending ? "Submitting..." : "Save"}
             </SkiButton>
           </form>
         </FormProvider>

@@ -175,6 +175,46 @@ export class AppService {
     });
   }
 
+  async reviewProduct(data: { productId: string; comment: string; rating: number }) {
+    return tryCatchWrapper(async () => {
+      const response = await this.http.post<{ success: boolean; data: Review }>("/reviews", data);
+      if (response?.status === 201) {
+        return response.data;
+      }
+      throw new Error("Failed to review product");
+    });
+  }
+
+  async getReviewByProductId(productId: string) {
+    return tryCatchWrapper(async () => {
+      const response = await this.http.get<{ success: boolean; data: Review }>(`/reviews/${productId}`);
+      if (response?.status === 200) {
+        return response.data;
+      }
+      throw new Error("Failed to fetch reviews");
+    });
+  }
+
+  async getAllReviews() {
+    return tryCatchWrapper(async () => {
+      const response = await this.http.get<ReviewApiResponse>("/reviews");
+      if (response?.status === 200) {
+        return response.data;
+      }
+      throw new Error("Failed to fetch reviews");
+    });
+  }
+
+  async deleteReview(reviewId: string) {
+    return tryCatchWrapper(async () => {
+      const response = await this.http.delete<{ success: boolean; data: 1 | 0 }>(`/reviews/${reviewId}`);
+      if (response?.status === 200) {
+        return response.data;
+      }
+      throw new Error("Failed to delete review");
+    });
+  }
+
   private buildQueryParameters(filters: Filters): string {
     const queryParameters = new URLSearchParams();
     for (const [key, value] of Object.entries(filters)) {

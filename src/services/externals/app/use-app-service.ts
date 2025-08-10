@@ -126,6 +126,36 @@ export const useAppService = () => {
   const useGetTopVendors = (options?: any) =>
     useServiceQuery([...queryKeys.vendor.top()], (service) => service.getTopVendors(), options);
 
+  const useReviewProduct = (options?: any) =>
+    useServiceMutation(
+      (service, data: { productId: string; comment: string; rating: number }) => service.reviewProduct(data),
+      {
+        onSuccess: (result, variables) => {
+          queryClient.invalidateQueries({ queryKey: queryKeys.product.details(variables.productId) });
+          queryClient.invalidateQueries({ queryKey: queryKeys.product.list() });
+        },
+        ...options,
+      },
+    );
+
+  const useGetReviewByProductId = (productId: string, options?: any) =>
+    useServiceQuery(
+      [...queryKeys.review.details(productId)],
+      (service) => service.getReviewByProductId(productId),
+      options,
+    );
+
+  const useGetAllReviews = (options?: any) =>
+    useServiceQuery([...queryKeys.review.list()], (service) => service.getAllReviews(), options);
+
+  const useDeleteReview = (options?: any) =>
+    useServiceMutation((service, reviewId: string) => service.deleteReview(reviewId), {
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: queryKeys.review.list() });
+      },
+      ...options,
+    });
+
   return {
     // Product Queries
     useGetAllProducts,
@@ -153,5 +183,11 @@ export const useAppService = () => {
 
     // Vendor Queries
     useGetTopVendors,
+
+    // Review Queries
+    useReviewProduct,
+    useGetReviewByProductId,
+    useGetAllReviews,
+    useDeleteReview,
   };
 };

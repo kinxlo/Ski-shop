@@ -1,24 +1,153 @@
 "use client";
 
-import { adminSideItems, superAdminSideItems, vendorSideItems } from "@/lib/constants";
+import {
+  createDivider,
+  createNavItem,
+  createNavItemWithChildren,
+  dangerBadge,
+  type NavItem,
+} from "@/components/shared/sidebar";
+import { useDashboardOrderService } from "@/services/dashboard/vendor/orders/use-order-service";
+import { usePayoutService } from "@/services/dashboard/vendor/payouts";
+import { Languages } from "lucide-react";
 import { useSession } from "next-auth/react";
+import { FaGamepad } from "react-icons/fa";
+import { GiWallet } from "react-icons/gi";
+import { IoRibbonOutline } from "react-icons/io5";
+import { MdDashboard, MdOutlineAddCard, MdOutlinePrivacyTip, MdOutlineVerifiedUser } from "react-icons/md";
+import { PiUsersThreeLight } from "react-icons/pi";
+import { RiAdvertisementLine, RiShoppingCartLine, RiUserLine } from "react-icons/ri";
+import { TbBell, TbCreditCard, TbSettings2, TbShield, TbShoppingBag, TbUserCog, TbUsers } from "react-icons/tb";
 
-export const useRoleNavigation = () => {
+export const useRoleNavigation = (): NavItem[] => {
   const { data: session } = useSession();
   const userRole = session?.user?.role?.name?.toUpperCase() || "";
 
+  // Get order and payout data for dynamic badges
+  const { useGetAllOrders } = useDashboardOrderService();
+  const { useGetWithdrawalsHistory } = usePayoutService();
+
+  // Fetch data with minimal queries for badge counts
+  const { data: ordersData } = useGetAllOrders({ page: 1, limit: 1 }, { staleTime: 30_000 });
+  const { data: withdrawalsData } = useGetWithdrawalsHistory(undefined, { staleTime: 30_000 });
+
+  // Calculate badge counts
+  const orderCount = ordersData?.success ? ordersData.data?.metadata?.total || 0 : 0;
+  const pendingWithdrawals = withdrawalsData?.success
+    ? withdrawalsData.data?.filter((w: WithdrawalHistoryItem) => w.status === "pending")?.length || 0
+    : 0;
+
+  // Helper function to create settings submenu based on role
+  const createSettingsMenu = (role: string): NavItem => {
+    const commonSettingsItems = [
+      createNavItem("security-settings", "Security", "/dashboard/settings/security", { icon: TbShield }),
+      createNavItem("notifications-settings", "Notifications", "/dashboard/settings/notifications", { icon: TbBell }),
+      createNavItem("l-r", "Language & Region", "/dashboard/settings/language-and-region", { icon: Languages }),
+    ];
+
+    const adminSettingsItems = [
+      ...commonSettingsItems,
+      createNavItem("user-management", "User Management", "/admin/settings/users", { icon: TbUsers }),
+      createNavItem("system-settings", "System", "/admin/settings/system", { icon: TbSettings2 }),
+      createNavItem("privacy-settings", "Privacy & Terms", "/admin/settings/privacy", { icon: MdOutlinePrivacyTip }),
+    ];
+
+    const superAdminSettingsItems = [
+      ...adminSettingsItems,
+      createNavItem("admin-management", "Admin Management", "/super-admin/settings/admins", { icon: TbUserCog }),
+      createNavItem("platform-settings", "Platform Config", "/super-admin/settings/platform", {
+        icon: MdOutlineVerifiedUser,
+      }),
+    ];
+
+    switch (role) {
+      case "SUPER_ADMIN": {
+        return createNavItemWithChildren("settings", "Settings", "/super-admin/settings", superAdminSettingsItems, {
+          icon: TbSettings2,
+        });
+      }
+      case "ADMIN": {
+        return createNavItemWithChildren("settings", "Settings", "/admin/settings", adminSettingsItems, {
+          icon: TbSettings2,
+        });
+      }
+      default: {
+        return createNavItemWithChildren("settings", "Settings", "/dashboard/settings", commonSettingsItems, {
+          icon: TbSettings2,
+        });
+      }
+    }
+  };
+
   switch (userRole) {
     case "SUPER_ADMIN": {
-      return superAdminSideItems;
+      return [
+        createNavItem("dashboard", "Dashboard", "/super-admin/home", { icon: MdDashboard }),
+        createDivider("admin-section"),
+        createNavItemWithChildren(
+          "user-management",
+          "User Management",
+          "/super-admin/users",
+          [
+            createNavItem("admins", "Admins", "/super-admin/users/admins", { icon: TbUserCog }),
+            createNavItem("vendors", "Vendors", "/super-admin/users/vendors", { icon: RiUserLine }),
+            createNavItem("customers", "Customers", "/super-admin/users/customers", { icon: TbUsers }),
+          ],
+          { icon: PiUsersThreeLight },
+        ),
+        createNavItem("orders", "All Orders", "/super-admin/orders", {
+          icon: RiShoppingCartLine,
+          badge: orderCount > 0 ? dangerBadge(orderCount) : undefined,
+        }),
+        createNavItem("products", "Platform Products", "/super-admin/products", { icon: TbShoppingBag }),
+        createNavItem("payouts", "Platform Payouts", "/super-admin/payouts", { icon: MdOutlineAddCard }),
+        createNavItem("revenues", "Platform Revenue", "/super-admin/revenues", { icon: GiWallet }),
+        createDivider("platform-section"),
+        createNavItem("subscriptions", "Subscriptions", "/super-admin/subscriptions", { icon: IoRibbonOutline }),
+        createNavItem("promotions", "Promotions & Ads", "/super-admin/promotions", { icon: RiAdvertisementLine }),
+        createNavItem("play-to-win", "Play 2 Win", "/super-admin/play-to-win", { icon: FaGamepad }),
+        createDivider("settings-section"),
+        createSettingsMenu("SUPER_ADMIN"),
+      ];
     }
     case "ADMIN": {
-      return adminSideItems;
-    }
-    case "VENDOR": {
-      return vendorSideItems;
+      return [
+        createNavItem("dashboard", "Dashboard", "/admin/home", { icon: MdDashboard }),
+        createDivider("management-section"),
+        createNavItem("users", "Users", "/admin/users", { icon: PiUsersThreeLight }),
+        createNavItem("orders", "Orders", "/admin/orders", {
+          icon: RiShoppingCartLine,
+          badge: orderCount > 0 ? dangerBadge(orderCount) : undefined,
+        }),
+        createNavItem("products", "Skicom Products", "/admin/products", { icon: TbShoppingBag }),
+        createNavItem("payouts", "Payouts", "/admin/payouts", { icon: MdOutlineAddCard }),
+        createNavItem("revenues", "Revenues", "/admin/revenues", { icon: GiWallet }),
+        createDivider("platform-section"),
+        createNavItem("subscriptions", "Subscriptions", "/admin/subscriptions", { icon: IoRibbonOutline }),
+        createNavItem("promotions", "Promotions & Ads", "/admin/promotions", { icon: RiAdvertisementLine }),
+        createNavItem("play-to-win", "Play 2 Win", "/admin/play-to-win", { icon: FaGamepad }),
+        createDivider("settings-section"),
+        createSettingsMenu("ADMIN"),
+      ];
     }
     default: {
-      return vendorSideItems;
-    } // Default to vendor items for unknown roles
+      return [
+        createNavItem("home", "Dashboard", "/dashboard/home", { icon: MdDashboard }),
+        createDivider("business-section"),
+        createNavItem("products", "My Products", "/dashboard/products", { icon: TbShoppingBag }),
+        createNavItem("orders", "Orders", "/dashboard/orders", {
+          icon: RiShoppingCartLine,
+          badge: orderCount > 0 ? dangerBadge(orderCount) : undefined,
+        }),
+        createDivider("finance-section"),
+        createNavItem("payouts", "Payouts", "/dashboard/payouts", {
+          icon: TbCreditCard,
+          badge: pendingWithdrawals > 0 ? dangerBadge(pendingWithdrawals) : undefined,
+        }),
+        createDivider("account-section"),
+        createNavItem("profile", "Profile", "/dashboard/profile", { icon: RiUserLine }),
+        createSettingsMenu("VENDOR"),
+      ];
+    }
   }
 };

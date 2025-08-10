@@ -145,11 +145,12 @@ declare global {
 
   /** Review entity */
   interface Review {
+    id: string;
+    product: Product;
+    reviewer: UserProfile;
+    createdAt: string;
     rating: number;
     comment: string;
-    date: string;
-    reviewerName: string;
-    reviewerEmail: string;
   }
 
   /** Product dimensions */
@@ -222,6 +223,9 @@ declare global {
 
   /** Order API response */
   interface OrderApiResponse extends PaginatedApiResponse<Order> {}
+
+  /** Review API response */
+  interface ReviewApiResponse extends PaginatedApiResponse<Review> {}
 
   /** Cart API response */
   interface CartApiResponse {
