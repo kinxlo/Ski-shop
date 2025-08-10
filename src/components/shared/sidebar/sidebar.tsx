@@ -210,14 +210,14 @@ export function DashboardSidebar({
             <SidebarMenuButton
               onClick={() => toggleExpanded(item.id)}
               className={cn(
-                "flex h-[48px] w-full items-center gap-3 rounded-lg text-[16px] font-medium transition-all duration-200",
+                "flex h-[48px] w-full items-center gap-3 rounded-lg text-base font-medium transition-all duration-200",
                 isActive
                   ? "bg-primary/10 text-primary shadow-active border-primary rounded-none border-l-4"
-                  : "text-mid-grey-II hover:bg-low-grey-I",
+                  : "hover:bg-low-grey-I",
               )}
             >
               {renderIcon(item)}
-              <span className="flex-1 font-light dark:text-white">{item.route}</span>
+              <span className="flex-1 font-medium dark:text-white">{item.route}</span>
               {item.badge && (
                 <SidebarMenuBadge
                   className={cn(
@@ -255,15 +255,15 @@ export function DashboardSidebar({
                       <SidebarMenuSubButton
                         asChild
                         className={cn(
-                          "flex h-[40px] items-center gap-3 rounded-lg text-[14px] font-medium transition-all duration-200",
+                          "flex h-[40px] items-center gap-3 rounded-lg text-sm font-medium transition-all duration-200",
                           isChildActiveState
                             ? "bg-primary/10 text-primary shadow-active border-primary rounded-none border-l-2"
-                            : "text-mid-grey-II hover:bg-low-grey-I",
+                            : "hover:bg-low-grey-I",
                         )}
                       >
                         <LocaleLink onClick={handleCloseOnMobile} href={childLink} data-testid={child.id}>
                           {renderIcon(child)}
-                          <span className="font-light dark:text-white">{child.route}</span>
+                          <span className="font-medium dark:text-white">{child.route}</span>
                           {child.badge && (
                             <SidebarMenuBadge
                               className={cn(
@@ -296,15 +296,15 @@ export function DashboardSidebar({
           <SidebarMenuButton
             asChild
             className={cn(
-              "flex h-[48px] items-center gap-3 rounded-lg text-[16px] font-medium transition-all duration-200",
+              "flex h-[48px] items-center gap-3 rounded-lg text-base transition-all duration-200",
               isActive
                 ? "bg-primary/10 text-primary shadow-active border-primary rounded-none border-l-4"
-                : "text-mid-grey-II hover:bg-low-grey-I",
+                : "hover:bg-low-grey-I",
             )}
           >
             <LocaleLink onClick={handleCloseOnMobile} href={link} data-testid={item.id}>
               {renderIcon(item)}
-              <span className="font-light dark:text-white">{item.route}</span>
+              <span className="font-medium dark:text-white">{item.route}</span>
               {item.badge && (
                 <SidebarMenuBadge
                   className={cn(

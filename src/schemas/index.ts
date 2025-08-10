@@ -123,6 +123,24 @@ export const emailNotificationSettingSchema = z.object({
   payout: z.boolean().optional(),
 });
 
+// Security & Privacy settings schema
+export const securityPrivacySettingsSchema = z.object({
+  // Two-Factor Authentication
+  twoFactorEnabled: z.boolean().default(false),
+  // Login Notifications
+  loginAlerts: z.boolean().default(true),
+  suspiciousActivityAlerts: z.boolean().default(true),
+  // Session Management
+  logoutInactiveDevices: z.boolean().default(false),
+  // Privacy Controls
+  profileVisibility: z.enum(["public", "private", "business_only"]).default("business_only"),
+  showEmailToCustomers: z.boolean().default(false),
+  allowDataCollection: z.boolean().default(true),
+  // Data Management
+  enableDataExport: z.boolean().default(true),
+  autoDeleteOldData: z.boolean().default(false),
+});
+
 export const changePasswordSchema = z
   .object({
     password: z.string().min(8, "Your current Password is Required"),
@@ -190,6 +208,34 @@ export const bankPayoutSchema = z.object({
   code: z.string().min(1, "Bank code is required"),
 });
 
+// Comprehensive notification settings schema
+export const notificationSettingsSchema = z.object({
+  // App Notifications
+  appNotifications: z.boolean().default(true),
+  // Sound Notifications
+  soundNotifications: z.boolean().default(true),
+  // Order Management Notifications
+  newOrders: z.boolean().default(true),
+  orderUpdates: z.boolean().default(true),
+  orderCancellations: z.boolean().default(true),
+  // Business Notifications
+  lowStock: z.boolean().default(true),
+  payoutUpdates: z.boolean().default(true),
+  salesMilestones: z.boolean().default(false),
+  // Customer Engagement
+  newReviews: z.boolean().default(true),
+  customerMessages: z.boolean().default(true),
+  // System & Security
+  securityAlerts: z.boolean().default(true),
+  systemUpdates: z.boolean().default(false),
+  maintenanceNotifications: z.boolean().default(true),
+  // Marketing & Promotions
+  promotionalOffers: z.boolean().default(false),
+  newsUpdates: z.boolean().default(false),
+});
+
+export type NotificationSettingsData = z.infer<typeof notificationSettingsSchema>;
+
 // export type BankPayoutFormData = z.infer<typeof bankPayoutSchema>;
 // export type RegisterFormData = z.infer<typeof registerSchema>;
 // export type LoginFormData = z.infer<typeof loginSchema>;
@@ -215,3 +261,5 @@ export const bankPayoutSchema = z.object({
 
 // Type definitions are now globally available in src/types/
 // These types are automatically inferred from the schemas and available globally
+
+export type SecurityPrivacySettingsData = z.infer<typeof securityPrivacySettingsSchema>;

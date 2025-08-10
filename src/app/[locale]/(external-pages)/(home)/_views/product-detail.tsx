@@ -4,6 +4,7 @@
 import { Wrapper } from "@/components/core/layout/wrapper";
 import { BlurImage } from "@/components/core/miscellaneous/blur-image";
 import SkiButton from "@/components/shared/button";
+import { DangerConfirmationDialog } from "@/components/shared/dialog/confirmation-dialog";
 import { Ratings } from "@/components/shared/ratings";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Locale } from "@/lib/i18n/config";
@@ -12,7 +13,8 @@ import { cn } from "@/lib/utils";
 import { useSaveProduct } from "@/mocks/handlers/products/use-save-product";
 import { useAppService } from "@/services/externals/app/use-app-service";
 import { useQueryClient } from "@tanstack/react-query";
-import { Heart, Minus, Plus, ShoppingCart } from "lucide-react";
+import { Heart, Minus, Plus, ShoppingCart, Trash2 } from "lucide-react";
+import { useSession } from "next-auth/react";
 import { useLocale } from "next-intl";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -28,13 +30,53 @@ type Tab = "description" | "reviews";
 export const ProductDetail = ({ product, isLoading = false }: any) => {
   const router = useRouter();
   const locale = useLocale();
+  const { data: session } = useSession();
   const [selectedImage, setSelectedImage] = useState(0);
   const [quantity, setQuantity] = useState(1);
-  const { useAddToCart, useGetAllReviews } = useAppService();
+  const { useAddToCart, useGetAllReviews, useDeleteReview } = useAppService();
   const { data: reviews, isLoading: isReviewsLoading, isError: isReviewsError } = useGetAllReviews();
   const { isSaved, isPending: isSaving, toggleSave } = useSaveProduct(product?.id || "");
   const [activeTab, setActiveTab] = useState<Tab>("description");
+  const [deletingReviewId, setDeletingReviewId] = useState<string | null>(null);
   const queryClient = useQueryClient();
+
+  const { mutate: deleteReview } = useDeleteReview({
+    onMutate: async (reviewId: string) => {
+      setDeletingReviewId(reviewId);
+      // Cancel any outgoing refetches
+      await queryClient.cancelQueries({ queryKey: ["review", "list"] });
+      // Snapshot the previous value
+      const previousReviews = queryClient.getQueryData(["review", "list"]);
+
+      // Optimistically remove the review
+      queryClient.setQueryData(["review", "list"], (old: any) => {
+        if (!old?.data?.items) return old;
+        return {
+          ...old,
+          data: {
+            ...old.data,
+            items: old.data.items.filter((review: any) => review.id !== reviewId),
+          },
+        };
+      });
+
+      return { previousReviews };
+    },
+    onError: (error: any, reviewId: string, context: any) => {
+      // Revert the optimistic update on error
+      queryClient.setQueryData(["review", "list"], context?.previousReviews);
+      toast.error("Failed to delete review", {
+        description: "Please try again later.",
+      });
+    },
+    onSuccess: () => {
+      toast.success("Review deleted successfully");
+    },
+    onSettled: () => {
+      setDeletingReviewId(null);
+      queryClient.invalidateQueries({ queryKey: ["review", "list"] });
+    },
+  });
   const { mutate: addToCart, isPending } = useAddToCart({
     onMutate: async (newItem: any) => {
       // Cancel any outgoing refetches
@@ -102,6 +144,14 @@ export const ProductDetail = ({ product, isLoading = false }: any) => {
         },
       },
     );
+  };
+
+  const handleDeleteReview = (reviewId: string) => {
+    deleteReview(reviewId);
+  };
+
+  const isReviewOwner = (review: any) => {
+    return session?.user?.id === review.reviewer?.id || session?.user?.email === review.reviewer?.email;
   };
 
   return (
@@ -286,16 +336,44 @@ export const ProductDetail = ({ product, isLoading = false }: any) => {
                           <div className="space-y-4">
                             {reviewsData?.map((review: any, index: any) => (
                               <div key={index} className="rounded-lg border p-4">
-                                <div className="flex items-center gap-2">
-                                  <Ratings size={16} rating={review.rating} readonly />
+                                <div className="flex items-start justify-between">
+                                  <div className="flex-1">
+                                    <div className="flex items-center gap-2">
+                                      <Ratings size={16} rating={review.rating} readonly />
+                                    </div>
+                                    <h6 className="mt-2 !text-lg font-medium capitalize">
+                                      {review.reviewer.firstName} {review.reviewer.lastName}
+                                    </h6>
+                                    <p className="text-gray-600">{review.comment}</p>
+                                    <p className="text-low-grey-II mt-2 text-sm">
+                                      {formatDate(review.createdAt, locale as Locale)}
+                                    </p>
+                                  </div>
+                                  {isReviewOwner(review) && (
+                                    <DangerConfirmationDialog
+                                      action={{
+                                        title: "Delete Review",
+                                        description:
+                                          "Are you sure you want to delete this review? This action cannot be undone.",
+                                        onConfirm: () => handleDeleteReview(review.id),
+                                        buttonName: "Delete Review",
+                                        cancelButtonName: "Cancel",
+                                        pending: deletingReviewId === review.id,
+                                        headerClassName: "text-center !text-2xl",
+                                      }}
+                                    >
+                                      <SkiButton
+                                        variant="outline"
+                                        size="icon"
+                                        isDisabled={deletingReviewId === review.id}
+                                        className="hover:bg-red-50 hover:text-red-600"
+                                        icon={<Trash2 className="h-4 w-4" />}
+                                        aria-label="Delete review"
+                                        isIconOnly
+                                      />
+                                    </DangerConfirmationDialog>
+                                  )}
                                 </div>
-                                <h6 className="mt-2 !text-lg font-medium capitalize">
-                                  {review.reviewer.firstName} {review.reviewer.lastName}
-                                </h6>
-                                <p className="text-gray-600">{review.comment}</p>
-                                <p className="text-low-grey-II mt-2 text-sm">
-                                  {formatDate(review.createdAt, locale as Locale)}
-                                </p>
                               </div>
                             ))}
                           </div>

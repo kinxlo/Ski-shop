@@ -1,3 +1,4 @@
+import { cn } from "@/lib/utils";
 import React, { useState } from "react";
 
 import SkiButton from "../button";
@@ -82,11 +83,11 @@ export const ConfirmationDialog = ({
     showCancelButton = true,
     showConfirmButton = true,
     size = "lg",
-    headerClassName = "text-center font-semibold",
-    wrapperClassName = "flex flex-col items-center justify-center text-center",
+    headerClassName,
+    wrapperClassName = "flex flex-col items-center justify-center text-center space-y-2 sm:space-y-4",
     content,
     icon,
-    iconClassName = "mx-auto mb-4",
+    iconClassName = "mx-auto",
     danger = false,
   } = action;
 
@@ -104,26 +105,42 @@ export const ConfirmationDialog = ({
       img={typeof action.img === "string" ? action.img : undefined}
       headerClassName={headerClassName}
       wrapperClassName={wrapperClassName}
+      className="h-fit w-[95vw] max-w-md sm:max-w-[425px]"
     >
-      <div className="space-y-4">
+      <div className="space-y-4 px-1 sm:px-0">
         {/* Custom Icon */}
-        {icon && <div className={iconClassName}>{icon}</div>}
+        {icon && (
+          <div className={cn("flex justify-center py-2 sm:py-4", iconClassName)}>
+            <div className="scale-75 sm:scale-100">{icon}</div>
+          </div>
+        )}
 
         {/* Custom Content */}
-        {content && <div className="py-2">{content}</div>}
+        {content && <div className="px-2 py-2 text-sm sm:px-0 sm:text-base">{content}</div>}
 
         {/* Custom Image (if ReactNode) */}
-        {typeof action.img === "object" && action.img && <div className="flex justify-center py-2">{action.img}</div>}
+        {typeof action.img === "object" && action.img && (
+          <div className="flex justify-center py-2 sm:py-4">
+            <div className="scale-75 sm:scale-100">{action.img}</div>
+          </div>
+        )}
 
         {/* Action Buttons */}
-        <div className="flex justify-center gap-3 pt-4">
+        <div className="flex flex-col gap-3 pt-4 sm:flex-row sm:justify-center sm:pt-6">
           {showCancelButton && (
-            <SkiButton variant={finalCancelButtonVariant} onClick={handleCancel} size={size} isDisabled={pending}>
+            <SkiButton
+              className="w-full touch-manipulation"
+              variant={finalCancelButtonVariant}
+              onClick={handleCancel}
+              size={size}
+              isDisabled={pending}
+            >
               {cancelButtonName}
             </SkiButton>
           )}
           {showConfirmButton && (
             <SkiButton
+              className="w-full touch-manipulation"
               isDisabled={pending}
               isLoading={pending}
               variant={finalButtonVariant}
@@ -148,6 +165,7 @@ export const DangerConfirmationDialog = (properties: ConfirmationDialogPropertie
       danger: true,
       buttonVariant: "destructive",
       buttonName: properties.action.buttonName || "Delete",
+      wrapperClassName: "text-center space-y-2 sm:space-y-4",
     }}
   />
 );
