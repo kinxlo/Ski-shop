@@ -6,7 +6,6 @@ import { EmptyState } from "@/components/shared/empty-state";
 import { Skeleton } from "@/components/ui/skeleton";
 import { formatCategory } from "@/lib/utils";
 import { useAppService } from "@/services/externals/app/use-app-service";
-import { useTranslations } from "next-intl";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -41,7 +40,6 @@ const CategorySkeleton = () => (
 );
 
 export const Categories = () => {
-  const t = useTranslations("home.categories");
   const { useGetAllProductCategory } = useAppService();
   const { data: categoriesResponse, isLoading, isError, refetch } = useGetAllProductCategory();
 
@@ -110,7 +108,7 @@ export const Categories = () => {
           variant="outline"
           className="border-mid-danger text-mid-danger hover:bg-mid-danger/10 mt-4 border"
         >
-          {t("retry")}
+          {`Retry`}
         </SkiButton>
       }
     />
@@ -135,7 +133,7 @@ export const Categories = () => {
   return (
     <Wrapper className="min-h-[480px] py-16">
       <div className="mb-8 flex items-baseline justify-center">
-        <h2 className="text-high-grey-II text-center text-3xl font-semibold">{t("title")}</h2>
+        <h2 className="text-high-grey-II text-center text-3xl font-semibold">{`Categories`}</h2>
       </div>
 
       {renderCategoriesGrid()}
