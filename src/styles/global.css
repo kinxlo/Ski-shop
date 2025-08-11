@@ -407,3 +407,400 @@ h6 {
   height: 100%;
   width: 100%;
 }
+
+/* ============================================
+   SKISHOP ENHANCED THEME SYSTEM
+   ============================================ */
+
+/* Theme Spacing Scale Variables */
+:root {
+  --theme-spacing-scale: 1;
+  --theme-transition: all 0.2s ease-in-out;
+  --theme-duration: 200ms;
+  --theme-contrast: normal;
+}
+
+/* Enhanced Theme Classes */
+
+/* Theme Base Classes */
+.skishop-theme-skishop-light,
+.skishop-theme-skishop-dark {
+  --primary: var(--color-primary);
+  --primary-foreground: var(--color-primary-foreground);
+}
+
+.skishop-theme-winter-pro {
+  --primary: var(--color-high-blue);
+  --primary-foreground: var(--color-low-blue);
+  --accent: var(--color-mid-blue);
+  --accent-foreground: var(--color-low-blue);
+}
+
+.skishop-theme-alpine-comfort {
+  --primary: var(--color-high-success);
+  --primary-foreground: var(--color-low-success);
+  --accent: var(--color-mid-success);
+  --accent-foreground: var(--color-low-success);
+}
+
+.skishop-theme-sunset-vibes {
+  --primary: var(--color-high-warning);
+  --primary-foreground: var(--color-low-warning);
+  --accent: var(--color-mid-warning);
+  --accent-foreground: var(--color-low-warning);
+}
+
+.skishop-theme-accessibility-high {
+  --primary: var(--color-high-grey-III);
+  --primary-foreground: var(--color-mid-grey-I);
+  --accent: var(--color-high-grey-II);
+  --accent-foreground: var(--color-mid-grey-I);
+}
+
+.skishop-theme-developer-mode {
+  --font-sans: var(--font-mono);
+  --primary: var(--color-high-grey-III);
+  --primary-foreground: var(--color-mid-grey-I);
+}
+
+/* Color Theme Classes */
+.skishop-color-skishop-default {
+  /* Uses existing primary colors from :root */
+}
+
+.skishop-color-skishop-winter {
+  --color-theme-primary: var(--color-high-blue);
+  --color-theme-primary-foreground: var(--color-low-blue);
+  --color-theme-accent: var(--color-mid-blue);
+  --color-theme-accent-foreground: var(--color-low-blue);
+}
+
+.skishop-color-skishop-forest {
+  --color-theme-primary: var(--color-high-success);
+  --color-theme-primary-foreground: var(--color-low-success);
+  --color-theme-accent: var(--color-mid-success);
+  --color-theme-accent-foreground: var(--color-low-success);
+}
+
+.skishop-color-skishop-sunset {
+  --color-theme-primary: var(--color-high-warning);
+  --color-theme-primary-foreground: var(--color-low-warning);
+  --color-theme-accent: var(--color-mid-warning);
+  --color-theme-accent-foreground: var(--color-low-warning);
+}
+
+.skishop-color-skishop-midnight {
+  --color-theme-primary: var(--color-mid-grey-III);
+  --color-theme-primary-foreground: var(--color-mid-grey-I);
+  --color-theme-accent: var(--color-high-grey-II);
+  --color-theme-accent-foreground: var(--color-mid-grey-I);
+}
+
+.skishop-color-skishop-danger {
+  --color-theme-primary: var(--color-high-danger);
+  --color-theme-primary-foreground: var(--color-low-danger);
+  --color-theme-accent: var(--color-mid-danger);
+  --color-theme-accent-foreground: var(--color-low-danger);
+}
+
+/* Layout Theme Classes */
+.skishop-layout-default {
+  --theme-spacing-scale: 1;
+  --theme-font-family: var(--font-sans);
+}
+
+.skishop-layout-compact {
+  --theme-spacing-scale: 0.8;
+  --theme-font-family: var(--font-sans);
+}
+
+.skishop-layout-comfortable {
+  --theme-spacing-scale: 1.2;
+  --theme-font-family: var(--font-sans);
+}
+
+.skishop-layout-developer {
+  --theme-spacing-scale: 1;
+  --theme-font-family: var(--font-mono);
+}
+
+/* Mode Classes */
+.skishop-mode-light {
+  /* Light mode styles - uses existing :root variables */
+}
+
+.skishop-mode-dark {
+  /* Dark mode styles - uses existing .dark variables */
+}
+
+/* Accessibility Classes */
+.skishop-reduced-motion,
+.skishop-reduced-motion * {
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.01ms !important;
+  scroll-behavior: auto !important;
+}
+
+.skishop-high-contrast {
+  --theme-contrast: high;
+  filter: contrast(1.2);
+}
+
+.skishop-high-contrast *:focus-visible {
+  outline: 3px solid var(--primary) !important;
+  outline-offset: 2px !important;
+}
+
+/* Spacing Scale Utilities */
+.theme-spacing {
+  padding: calc(1rem * var(--theme-spacing-scale));
+}
+
+.theme-spacing-x {
+  padding-left: calc(1rem * var(--theme-spacing-scale));
+  padding-right: calc(1rem * var(--theme-spacing-scale));
+}
+
+.theme-spacing-y {
+  padding-top: calc(1rem * var(--theme-spacing-scale));
+  padding-bottom: calc(1rem * var(--theme-spacing-scale));
+}
+
+.theme-spacing-t {
+  padding-top: calc(1rem * var(--theme-spacing-scale));
+}
+
+.theme-spacing-r {
+  padding-right: calc(1rem * var(--theme-spacing-scale));
+}
+
+.theme-spacing-b {
+  padding-bottom: calc(1rem * var(--theme-spacing-scale));
+}
+
+.theme-spacing-l {
+  padding-left: calc(1rem * var(--theme-spacing-scale));
+}
+
+/* Margin variants */
+.theme-margin {
+  margin: calc(1rem * var(--theme-spacing-scale));
+}
+
+.theme-margin-x {
+  margin-left: calc(1rem * var(--theme-spacing-scale));
+  margin-right: calc(1rem * var(--theme-spacing-scale));
+}
+
+.theme-margin-y {
+  margin-top: calc(1rem * var(--theme-spacing-scale));
+  margin-bottom: calc(1rem * var(--theme-spacing-scale));
+}
+
+/* Gap utilities */
+.theme-gap {
+  gap: calc(1rem * var(--theme-spacing-scale));
+}
+
+.theme-gap-x {
+  column-gap: calc(1rem * var(--theme-spacing-scale));
+}
+
+.theme-gap-y {
+  row-gap: calc(1rem * var(--theme-spacing-scale));
+}
+
+/* Font Family Utilities */
+.theme-font {
+  font-family: var(--theme-font-family, var(--font-sans));
+}
+
+/* Transition Utilities */
+.theme-transition {
+  transition: var(--theme-transition);
+}
+
+.theme-transition-none {
+  transition: none;
+}
+
+.theme-transition-all {
+  transition: all var(--theme-duration) ease-in-out;
+}
+
+.theme-transition-colors {
+  transition:
+    color var(--theme-duration) ease-in-out,
+    background-color var(--theme-duration) ease-in-out,
+    border-color var(--theme-duration) ease-in-out;
+}
+
+.theme-transition-opacity {
+  transition: opacity var(--theme-duration) ease-in-out;
+}
+
+.theme-transition-transform {
+  transition: transform var(--theme-duration) ease-in-out;
+}
+
+/* Enhanced Border Radius Variables */
+:root {
+  --radius-xs: calc(var(--radius) - 6px);
+  --radius-2xl: calc(var(--radius) + 8px);
+  --radius-3xl: calc(var(--radius) + 16px);
+}
+
+/* Theme Border Radius Utilities */
+.theme-rounded-none {
+  border-radius: 0;
+}
+.theme-rounded-xs {
+  border-radius: var(--radius-xs);
+}
+.theme-rounded-sm {
+  border-radius: var(--radius-sm);
+}
+.theme-rounded {
+  border-radius: var(--radius);
+}
+.theme-rounded-md {
+  border-radius: var(--radius-md);
+}
+.theme-rounded-lg {
+  border-radius: var(--radius-lg);
+}
+.theme-rounded-xl {
+  border-radius: var(--radius-xl);
+}
+.theme-rounded-2xl {
+  border-radius: var(--radius-2xl);
+}
+.theme-rounded-3xl {
+  border-radius: var(--radius-3xl);
+}
+.theme-rounded-full {
+  border-radius: 9999px;
+}
+
+/* Enhanced Color Utilities */
+.theme-primary {
+  color: var(--color-theme-primary, var(--primary));
+}
+
+.theme-primary-foreground {
+  color: var(--color-theme-primary-foreground, var(--primary-foreground));
+}
+
+.theme-bg-primary {
+  background-color: var(--color-theme-primary, var(--primary));
+}
+
+.theme-bg-primary-foreground {
+  background-color: var(--color-theme-primary-foreground, var(--primary-foreground));
+}
+
+.theme-border-primary {
+  border-color: var(--color-theme-primary, var(--primary));
+}
+
+.theme-accent {
+  color: var(--color-theme-accent, var(--accent));
+}
+
+.theme-accent-foreground {
+  color: var(--color-theme-accent-foreground, var(--accent-foreground));
+}
+
+.theme-bg-accent {
+  background-color: var(--color-theme-accent, var(--accent));
+}
+
+.theme-bg-accent-foreground {
+  background-color: var(--color-theme-accent-foreground, var(--accent-foreground));
+}
+
+.theme-border-accent {
+  border-color: var(--color-theme-accent, var(--accent));
+}
+
+/* Interactive States */
+.theme-interactive {
+  transition: var(--theme-transition);
+}
+
+.theme-interactive:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.theme-interactive:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Focus states with theme awareness */
+.theme-focus:focus-visible {
+  outline: 2px solid var(--color-theme-primary, var(--primary));
+  outline-offset: 2px;
+}
+
+/* Component-specific theme utilities */
+.theme-card {
+  background-color: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: calc(1.5rem * var(--theme-spacing-scale));
+  transition: var(--theme-transition);
+}
+
+.theme-button {
+  background-color: var(--color-theme-primary, var(--primary));
+  color: var(--color-theme-primary-foreground, var(--primary-foreground));
+  border: none;
+  border-radius: var(--radius-md);
+  padding: calc(0.5rem * var(--theme-spacing-scale)) calc(1rem * var(--theme-spacing-scale));
+  font-family: var(--theme-font-family, var(--font-sans));
+  transition: var(--theme-transition);
+  cursor: pointer;
+}
+
+.theme-button:hover {
+  opacity: 0.9;
+  transform: translateY(-1px);
+}
+
+.theme-button:active {
+  transform: translateY(0);
+}
+
+.theme-button.secondary {
+  background-color: var(--color-theme-accent, var(--accent));
+  color: var(--color-theme-accent-foreground, var(--accent-foreground));
+}
+
+/* Theme Loading State */
+.theme-loading {
+  opacity: 0.7;
+  pointer-events: none;
+  transition: opacity 0.2s ease-in-out;
+}
+
+/* Theme Debug Utilities (only in development) */
+[data-theme-debug] {
+  position: relative;
+}
+
+[data-theme-debug]::before {
+  content: attr(data-theme-debug);
+  position: absolute;
+  top: 0;
+  right: 0;
+  background: var(--color-high-danger);
+  color: var(--color-low-danger);
+  font-size: 0.75rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0 0 0 0.25rem;
+  z-index: 1000;
+  font-family: var(--font-mono);
+}

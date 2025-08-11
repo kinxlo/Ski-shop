@@ -1,6 +1,7 @@
 "use client";
 
 import { LocaleLink } from "@/components/shared/locale-link";
+import { ModeToggleButtons } from "@/components/theme/enhanced-theme-selector";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   DropdownMenu,
@@ -17,8 +18,6 @@ import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { PiCaretDown, PiHeart } from "react-icons/pi";
 import { toast } from "sonner";
-
-import { ModeToggle } from "../layout/ThemeToggle/theme-toggle";
 
 interface UserAvatarProfileProperties {
   className?: string;
@@ -109,7 +108,7 @@ export function UserAvatarProfile({ className, showInfo = false }: UserAvatarPro
         </ComponentGuard>
         <DropdownMenuSeparator />
         <div className="flex items-center justify-between px-2 py-1.5">
-          <ModeToggle />
+          <ModeToggleButtons />
         </div>
         <DropdownMenuSeparator />
         <DropdownMenuItem className="text-destructive focus:text-destructive cursor-pointer" onClick={handleLogout}>
