@@ -29,7 +29,7 @@ export const WithdrawalHistoryTable = ({
   const withdrawalColumns = useWithdrawalHistoryColumns();
 
   return (
-    <div className="rounded-lg bg-white p-6">
+    <div className="border-border bg-background rounded-lg border p-6">
       <div className="mb-6">
         <h5 className="text-high-grey-II !text-2xl font-semibold">Withdrawal History</h5>
         <p className="mt-1 text-sm text-gray-500">Track your withdrawal transactions and their status</p>

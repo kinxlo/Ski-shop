@@ -5,9 +5,10 @@ import SkiButton from "@/components/shared/button";
 import { EmptyState } from "@/components/shared/empty-state";
 import { Ratings } from "@/components/shared/ratings";
 import { Badge } from "@/components/ui/badge";
+import { Skeleton } from "@/components/ui/skeleton";
 import { useAppService } from "@/services/externals/app/use-app-service";
+import { useTranslations } from "next-intl";
 import { memo, useMemo } from "react";
-import { toast } from "sonner";
 
 // Types
 interface Product {
@@ -25,36 +26,19 @@ interface ProductCardProperties {
   className?: string;
 }
 
-// Skeleton Loader Component
-const FeaturedProductsSkeleton = memo(() => {
-  return (
-    <Wrapper className="mx-auto my-[98px] grid gap-4 px-4 md:grid-cols-2">
-      {/* Large Product Banner Skeleton */}
-      <div className="row-span-2 flex h-[300px] animate-pulse items-center justify-center rounded-2xl bg-gray-200 sm:min-h-[630px]">
-        <div className="h-10 w-3/4 rounded bg-gray-300"></div>
-      </div>
+// Skeleton Components
+const FeaturedProductSkeleton = memo(({ isLarge = false }: { isLarge?: boolean }) => (
+  <div className={`space-y-3 rounded-md p-6 ${isLarge ? "row-span-2 sm:min-h-[630px]" : ""}`}>
+    <Skeleton className={`w-full rounded-md ${isLarge ? "h-[500px] sm:h-[580px]" : "h-[200px] md:h-full"}`} />
+    <div className="space-y-2">
+      <Skeleton className="h-4 w-20" />
+      <Skeleton className="h-6 w-32" />
+      <Skeleton className="h-4 w-24" />
+    </div>
+  </div>
+));
 
-      {/* Product Grid Skeletons */}
-      <div className="flex h-[200px] animate-pulse items-center justify-center rounded-2xl bg-gray-200 md:h-full">
-        <div className="space-y-4">
-          <div className="h-4 w-20 rounded bg-gray-300"></div>
-          <div className="h-6 w-32 rounded bg-gray-300"></div>
-          <div className="h-4 w-24 rounded bg-gray-300"></div>
-        </div>
-      </div>
-
-      <div className="flex h-[200px] animate-pulse items-center justify-center rounded-2xl bg-gray-200 md:h-full">
-        <div className="space-y-4">
-          <div className="h-4 w-20 rounded bg-gray-300"></div>
-          <div className="h-6 w-32 rounded bg-gray-300"></div>
-          <div className="h-4 w-24 rounded bg-gray-300"></div>
-        </div>
-      </div>
-    </Wrapper>
-  );
-});
-
-FeaturedProductsSkeleton.displayName = "FeaturedProductsSkeleton";
+FeaturedProductSkeleton.displayName = "FeaturedProductSkeleton";
 
 // Individual Product Card Component
 const ProductCard = memo(({ product, isLarge = false, className = "" }: ProductCardProperties) => {
@@ -111,7 +95,8 @@ ProductCard.displayName = "ProductCard";
 // Main Component
 export const FeaturedProducts = memo(() => {
   const { useGetAllProducts } = useAppService();
-  const { isLoading, isError, error, data, refetch } = useGetAllProducts({ flag: "featured" });
+  const { isLoading, isError, data, refetch } = useGetAllProducts({ flag: "featured" });
+  const t = useTranslations("home.featuredProducts");
 
   // Memoize featured products to prevent unnecessary re-renders
   const featuredProducts = useMemo(() => {
@@ -126,59 +111,23 @@ export const FeaturedProducts = memo(() => {
     }));
   }, [data]);
 
-  // Handle loading state
-  if (isLoading) {
-    return <FeaturedProductsSkeleton />;
-  }
+  const renderLoadingSkeletons = () => (
+    <Wrapper className="mx-auto my-[98px] grid gap-2 px-4 md:grid-cols-2 lg:gap-8">
+      {/* Large Product Banner Skeleton */}
+      <FeaturedProductSkeleton isLarge={true} />
 
-  // Handle error state
-  if (isError) {
-    toast.error("Failed to load featured products", {
-      description: error?.message || "Please try again later",
-    });
-    return (
-      <EmptyState
-        images={[{ src: "/images/empty-state.svg", width: 80, height: 80, alt: "No featured products" }]}
-        description="Failed to load featured products"
-        descriptionClassName="text-mid-danger"
-        className="min-h-fit space-y-0 rounded-lg py-10"
-        actionButton={
-          <SkiButton
-            onClick={() => refetch()}
-            variant="outline"
-            className="border-mid-danger text-mid-danger hover:bg-mid-danger/10 mt-4 border"
-          >
-            Retry
-          </SkiButton>
-        }
-      />
-    );
-  }
+      {/* Second Featured Product Skeleton */}
+      <FeaturedProductSkeleton />
 
-  // Handle empty state
-  if (!featuredProducts?.length) {
-    return (
-      <Wrapper className={`my-[78px] min-h-[308px]`}>
-        <EmptyState
-          images={[
-            {
-              src: "/images/empty-state.svg",
-              alt: "Empty Cart",
-              width: 80,
-              height: 80,
-            },
-          ]}
-          title="No products found"
-          titleClassName={`!text-lg font-bold !text-mid-warning`}
-          description={"There are no products in the database. Please add a product to get started."}
-          descriptionClassName={`text-mid-grey-II`}
-          className="bg-mid-grey-I space-y-0 rounded-lg py-10"
-        />
-      </Wrapper>
-    );
-  }
+      {/* Grid of two smaller card skeletons */}
+      <div className="grid grid-cols-2 gap-2 lg:gap-8">
+        <FeaturedProductSkeleton />
+        <FeaturedProductSkeleton />
+      </div>
+    </Wrapper>
+  );
 
-  return (
+  const renderFeaturedProductsGrid = () => (
     <Wrapper className="mx-auto my-[98px] grid gap-2 px-4 md:grid-cols-2 lg:gap-8">
       {/* Large Featured Product Banner */}
       <ProductCard product={featuredProducts[0]} isLarge={true} className="row-span-2 sm:min-h-[630px]" />
@@ -194,6 +143,75 @@ export const FeaturedProducts = memo(() => {
       </div>
     </Wrapper>
   );
+
+  const renderEmptyState = () => (
+    <Wrapper className="my-[78px] min-h-[480px]">
+      <div className="flex min-h-[360px] items-center justify-center">
+        <EmptyState
+          images={[
+            {
+              src: "/images/empty-state.svg",
+              alt: "No featured products found",
+              width: 80,
+              height: 80,
+            },
+          ]}
+          title="No featured products found"
+          titleClassName="!text-lg font-bold !text-mid-warning"
+          description="There are no featured products available at the moment. Please check back later."
+          descriptionClassName="text-mid-grey-II"
+          className="bg-mid-grey-I space-y-0 rounded-lg py-10"
+        />
+      </div>
+    </Wrapper>
+  );
+
+  const renderErrorState = () => (
+    <Wrapper className="my-[78px] min-h-[480px]">
+      <div className="flex min-h-[360px] items-center justify-center">
+        <EmptyState
+          images={[
+            {
+              src: "/images/empty-state.svg",
+              alt: "Failed to load featured products",
+              width: 80,
+              height: 80,
+            },
+          ]}
+          description="Failed to load featured products"
+          descriptionClassName="text-mid-danger"
+          className="bg-low-warning/5 space-y-0 rounded-lg"
+          actionButton={
+            <SkiButton
+              onClick={() => refetch()}
+              variant="outline"
+              className="border-mid-danger text-mid-danger hover:bg-mid-danger/10 mt-4 border"
+            >
+              {t("retry")}
+            </SkiButton>
+          }
+        />
+      </div>
+    </Wrapper>
+  );
+
+  const renderFeaturedContent = () => {
+    if (isLoading) {
+      return renderLoadingSkeletons();
+    }
+
+    if (featuredProducts.length === 0) {
+      return renderEmptyState();
+    }
+
+    if (isError) {
+      return renderErrorState();
+    }
+
+    return renderFeaturedProductsGrid();
+  };
+
+  return renderFeaturedContent();
 });
 
 FeaturedProducts.displayName = "FeaturedProducts";

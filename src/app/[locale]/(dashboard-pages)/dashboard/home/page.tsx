@@ -131,7 +131,7 @@ const Page = () => {
 
         {/* Products Table Section */}
         <section>
-          <section className={`mt-6 space-y-4 rounded-lg bg-white p-6`}>
+          <section className={`border-border bg-background mt-6 space-y-4 rounded-lg border p-6`}>
             <section className={`flex flex-col-reverse justify-between gap-4 lg:flex-row lg:items-center`}>
               <div className="">
                 <p className="text-lg font-bold">Recent Orders</p>

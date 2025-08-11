@@ -1,12 +1,14 @@
 "use client";
 
 import { Wrapper } from "@/components/core/layout/wrapper";
+import SkiButton from "@/components/shared/button";
+import { EmptyState } from "@/components/shared/empty-state";
+import { Skeleton } from "@/components/ui/skeleton";
 import { formatCategory } from "@/lib/utils";
 import { useAppService } from "@/services/externals/app/use-app-service";
 import { useTranslations } from "next-intl";
 import Image from "next/image";
 import Link from "next/link";
-import { toast } from "sonner";
 
 interface CategoryItemProperties {
   title: string;
@@ -32,49 +34,111 @@ const CategoryItem = ({ title, image, href }: CategoryItemProperties) => {
   );
 };
 
+const CategorySkeleton = () => (
+  <div className="aspect-[3/4] space-y-3 rounded-lg">
+    <Skeleton className="h-full w-full rounded-lg" />
+  </div>
+);
+
 export const Categories = () => {
-  const t = useTranslations("navigation");
+  const t = useTranslations("home.categories");
   const { useGetAllProductCategory } = useAppService();
-  const { data: categoriesResponse, isLoading, isError, error } = useGetAllProductCategory();
+  const { data: categoriesResponse, isLoading, isError, refetch } = useGetAllProductCategory();
 
-  // Show error toast if there's an error
-  if (isError) {
-    toast.error(t("categories"), {
-      description: error?.message || "Please try again later",
-    });
-  }
+  const categories =
+    categoriesResponse?.data?.map((category) => {
+      const formattedTitle = formatCategory(category);
+      return {
+        title: formattedTitle,
+        image: "/images/shop/hero.svg",
+        href: `/shop?category=${encodeURIComponent(category)}`,
+      };
+    }) || [];
 
-  const categories = categoriesResponse?.data.map((category) => {
-    const formattedTitle = formatCategory(category);
-    return {
-      title: formattedTitle,
-      image: "/images/shop/hero.svg", // You can make this dynamic based on category
-      href: `/shop?category=${encodeURIComponent(category)}`,
-    };
-  });
+  const renderLoadingSkeletons = () => (
+    <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4">
+      {Array.from({ length: 8 }).map((_, index) => (
+        <CategorySkeleton key={index} />
+      ))}
+    </div>
+  );
 
-  // Loading state
-  if (isLoading) {
-    return (
-      <Wrapper className="">
-        <h2 className="text-high-grey-II mb-8 text-center text-3xl font-semibold">{t("categories")}</h2>
-        <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4">
-          {Array.from({ length: 8 }).map((_, index) => (
-            <div key={index} className="aspect-[3/4] animate-pulse rounded-lg bg-gray-200" />
-          ))}
-        </div>
-      </Wrapper>
-    );
-  }
+  const renderCategoryItems = () => (
+    <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4">
+      {categories.map((category) => (
+        <CategoryItem key={category.title} title={category.title} image={category.image} href={category.href} />
+      ))}
+    </div>
+  );
+
+  const renderEmptyState = () => (
+    <div className="flex min-h-[360px] items-center justify-center">
+      <EmptyState
+        images={[
+          {
+            src: "/images/empty-state.svg",
+            alt: "No categories found",
+            width: 80,
+            height: 80,
+          },
+        ]}
+        title="No categories found"
+        titleClassName="!text-lg font-bold !text-mid-warning"
+        description="There are no product categories available at the moment. Please check back later."
+        descriptionClassName="text-mid-grey-II"
+        className="bg-mid-grey-I space-y-0 rounded-lg py-10"
+      />
+    </div>
+  );
+
+  const renderErrorState = () => (
+    <EmptyState
+      images={[
+        {
+          src: "/images/empty-state.svg",
+          alt: "Failed to load categories",
+          width: 80,
+          height: 80,
+        },
+      ]}
+      description="Failed to load product categories"
+      descriptionClassName="text-mid-danger"
+      className="bg-low-warning/5 space-y-0 rounded-lg"
+      actionButton={
+        <SkiButton
+          onClick={() => refetch()}
+          variant="outline"
+          className="border-mid-danger text-mid-danger hover:bg-mid-danger/10 mt-4 border"
+        >
+          {t("retry")}
+        </SkiButton>
+      }
+    />
+  );
+
+  const renderCategoriesGrid = () => {
+    if (isLoading) {
+      return renderLoadingSkeletons();
+    }
+
+    if (categories.length === 0) {
+      return renderEmptyState();
+    }
+
+    if (isError) {
+      return renderErrorState();
+    }
+
+    return renderCategoryItems();
+  };
 
   return (
-    <Wrapper className="">
-      <h2 className="text-high-grey-II mb-8 text-center text-3xl font-semibold">{t("categories")}</h2>
-      <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4">
-        {categories?.map((category) => (
-          <CategoryItem key={category.title} title={category.title} image={category.image} href={category.href} />
-        ))}
+    <Wrapper className="min-h-[480px] py-16">
+      <div className="mb-8 flex items-baseline justify-center">
+        <h2 className="text-high-grey-II text-center text-3xl font-semibold">{t("title")}</h2>
       </div>
+
+      {renderCategoriesGrid()}
     </Wrapper>
   );
 };
