@@ -1,9 +1,11 @@
 "use client";
 
-import SkiButton from "@/components/shared/button";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { useTranslations } from "next-intl";
 import Image from "next/image";
+
+import { SpinToWinModal } from "../spin-to-win-modal";
 
 const PlayToWinBanner = () => {
   const t = useTranslations("home.playToWin");
@@ -18,9 +20,12 @@ const PlayToWinBanner = () => {
         </Badge>
         <h1>{t("title")}</h1>
         <p className={`my-[22px] text-2xl`}>{t("description")}</p>
-        <SkiButton size={`xl`} variant={`default`} className={`bg-black text-white`}>
-          {t("action")}
-        </SkiButton>
+
+        <SpinToWinModal>
+          <Button size={`xl`} variant={`default`} className={`bg-black text-white`}>
+            {t("action")}
+          </Button>
+        </SpinToWinModal>
       </div>
       <div>
         <Image src="/images/wheel.svg" alt="wheel" height={419} width={479} />
