@@ -1,10 +1,12 @@
 "use client";
 
 export type ThemeVariant = "default" | "red" | "green";
-export type ThemeMode = "light" | "dark";
+export type ThemeMode = "light" | "dark" | "system";
 
 const STORAGE_KEY = "theme_variant";
 const STORAGE_KEY_MODE = "theme_mode";
+const MODE_EVENT = "theme:mode";
+const VARIANT_EVENT = "theme:variant";
 const THEME_CLASSES: Record<Exclude<ThemeVariant, "default">, string> = {
   red: "theme-red",
   green: "theme-green",
@@ -17,10 +19,31 @@ function applyThemeVariant(variant: ThemeVariant): void {
   if (variant !== "default") classList.add(THEME_CLASSES[variant]);
 }
 
+function getSystemPrefersDark(): boolean {
+  try {
+    return (
+      typeof window !== "undefined" && window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches
+    );
+  } catch {
+    return false;
+  }
+}
+
+function computeEffectiveMode(mode: ThemeMode): Exclude<ThemeMode, "system"> {
+  if (mode === "system") return getSystemPrefersDark() ? "dark" : "light";
+  return mode;
+}
+
 function applyThemeMode(mode: ThemeMode): void {
   if (typeof document === "undefined") return;
+  const effective = computeEffectiveMode(mode);
   const classList = document.documentElement.classList;
-  classList.toggle("dark", mode === "dark");
+  classList.toggle("dark", effective === "dark");
+  try {
+    document.documentElement.dataset.themeMode = effective;
+  } catch {
+    /* empty */
+  }
 }
 
 export function initThemeVariant(): void {
@@ -51,7 +74,7 @@ export function getThemeVariant(): ThemeVariant {
 
 export function initThemeMode(): void {
   try {
-    const stored = (localStorage.getItem(STORAGE_KEY_MODE) as ThemeMode | null) || "light";
+    const stored = (localStorage.getItem(STORAGE_KEY_MODE) as ThemeMode | null) || "system";
     applyThemeMode(stored);
   } catch {
     /* empty */
@@ -67,7 +90,9 @@ export function setThemeMode(mode: ThemeMode): void {
   applyThemeMode(mode);
   if (typeof window !== "undefined") {
     try {
-      window.dispatchEvent(new CustomEvent("theme:mode", { detail: { mode } }));
+      window.dispatchEvent(
+        new CustomEvent(MODE_EVENT, { detail: { mode, effectiveMode: computeEffectiveMode(mode) } }),
+      );
     } catch {
       /* empty */
     }
@@ -76,8 +101,22 @@ export function setThemeMode(mode: ThemeMode): void {
 
 export function getThemeMode(): ThemeMode {
   try {
-    return ((localStorage.getItem(STORAGE_KEY_MODE) as ThemeMode | null) || "light") as ThemeMode;
+    return ((localStorage.getItem(STORAGE_KEY_MODE) as ThemeMode | null) || "system") as ThemeMode;
   } catch {
-    return "light";
+    return "system";
+  }
+}
+
+export function getEffectiveThemeMode(): Exclude<ThemeMode, "system"> {
+  return computeEffectiveMode(getThemeMode());
+}
+
+export function notifyVariantChange(variant: ThemeVariant): void {
+  if (typeof window !== "undefined") {
+    try {
+      window.dispatchEvent(new CustomEvent(VARIANT_EVENT, { detail: { variant } }));
+    } catch {
+      /* empty */
+    }
   }
 }
