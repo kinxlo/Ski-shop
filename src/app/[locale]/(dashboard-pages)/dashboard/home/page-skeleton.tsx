@@ -7,7 +7,10 @@ export const AnalysisSkeleton = () => {
     <section className="grid grid-cols-1 gap-5 lg:grid-cols-3">
       {/* Total Revenue Card */}
       {Array.from({ length: 3 }).map((_, index) => (
-        <div key={index} className="flex min-h-[144px] flex-col justify-center rounded-lg bg-white p-6">
+        <div
+          key={index}
+          className="border-border flex min-h-[144px] flex-col justify-center rounded-lg border bg-white p-6"
+        >
           <div className="flex items-start justify-between">
             <div className="space-y-4">
               <Skeleton className="h-4 w-[200px]" />
@@ -45,19 +48,6 @@ export const SectionTwoSkeleton = () => {
 export const TableSkeleton = () => {
   return (
     <section className="mt-6 space-y-4 rounded-lg bg-white p-6">
-      {/* Header with search and filter */}
-      {/* <section className="flex flex-col-reverse justify-between gap-4 lg:flex-row lg:items-center">
-        <div>
-          <Skeleton className="h-6 w-[150px]" />
-        </div>
-        <div>
-          <div className="flex items-center gap-2">
-            <Skeleton className="h-10 w-[200px]" />
-            <Skeleton className="h-10 w-[120px]" />
-          </div>
-        </div>
-      </section> */}
-
       {/* Table Section */}
       <section>
         <div className="rounded-lg">

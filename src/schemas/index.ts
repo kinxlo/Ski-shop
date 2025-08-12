@@ -236,28 +236,28 @@ export const notificationSettingsSchema = z.object({
 
 export type NotificationSettingsData = z.infer<typeof notificationSettingsSchema>;
 
-// export type BankPayoutFormData = z.infer<typeof bankPayoutSchema>;
-// export type RegisterFormData = z.infer<typeof registerSchema>;
-// export type LoginFormData = z.infer<typeof loginSchema>;
-// export type ForgotPasswordData = z.infer<typeof forgotPasswordSchema>;
-// export type VerifyOTP = z.infer<typeof verifyOTP>;
-// export type ResetPasswordData = z.infer<typeof resetPasswordSchema>;
-// export type WithdrawalData = z.infer<typeof withdrawalSchema>;
-// export type BankFormData = z.infer<typeof bankFormSchema>;
-// export type ReviewFormData = z.infer<typeof reviewSchema>;
-// export type ContactFormData = z.infer<typeof contactSchema>;
-// export type ProfileFormData = z.infer<typeof profileSchema>;
-// export type EmailNotificationSettingFormData = z.infer<typeof emailNotificationSettingSchema>;
-// export type ChangePasswordFormData = z.infer<typeof changePasswordSchema>;
-// export type ChangeEmailFormData = z.infer<typeof changeEmailSchema>;
-// export type KycFormData = z.infer<typeof kycSchema>;
-// export type EmailIntegrationFormData = z.infer<typeof emailIntegrationSchema>;
-// export type FunnelFormData = z.infer<typeof funnelSchema>;
-// export type FunnelSettingFormData = z.infer<typeof funnelSettingsSchema>;
-// export type ExternalContactFormData = z.infer<typeof externalContactSchema>;
-// export type BusinessInfoFormData = z.infer<typeof businessInfoSchema>;
-// export type StoreFormData = z.infer<typeof storeSchema>;
-// export type ProductFormData = z.infer<typeof ProductFormSchema>;
+export type BankPayoutFormData = z.infer<typeof bankPayoutSchema>;
+export type RegisterFormData = z.infer<typeof registerSchema>;
+export type LoginFormData = z.infer<typeof loginSchema>;
+export type ForgotPasswordData = z.infer<typeof forgotPasswordSchema>;
+export type VerifyOTP = z.infer<typeof verifyOTP>;
+export type ResetPasswordData = z.infer<typeof resetPasswordSchema>;
+export type WithdrawalData = z.infer<typeof withdrawalSchema>;
+export type BankFormData = z.infer<typeof bankFormSchema>;
+export type ReviewFormData = z.infer<typeof reviewSchema>;
+export type ContactFormData = z.infer<typeof contactSchema>;
+export type ProfileFormData = z.infer<typeof profileSchema>;
+export type EmailNotificationSettingFormData = z.infer<typeof emailNotificationSettingSchema>;
+export type ChangePasswordFormData = z.infer<typeof changePasswordSchema>;
+export type ChangeEmailFormData = z.infer<typeof changeEmailSchema>;
+export type KycFormData = z.infer<typeof kycSchema>;
+export type EmailIntegrationFormData = z.infer<typeof emailIntegrationSchema>;
+export type FunnelFormData = z.infer<typeof funnelSchema>;
+export type FunnelSettingFormData = z.infer<typeof funnelSettingsSchema>;
+export type ExternalContactFormData = z.infer<typeof externalContactSchema>;
+export type BusinessInfoFormData = z.infer<typeof businessInfoSchema>;
+export type StoreFormData = z.infer<typeof storeSchema>;
+export type ProductFormData = z.infer<typeof ProductFormSchema>;
 
 // Type definitions are now globally available in src/types/
 // These types are automatically inferred from the schemas and available globally

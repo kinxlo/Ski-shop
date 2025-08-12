@@ -103,51 +103,79 @@ export const AlertModal: React.FC<AlertModalProperties> = ({
     }
   }, [isOpen, autoClose, autoCloseDelay, loading, onClose]);
 
-  if (!isMounted) {
-    return null;
-  }
-
   const config = alertConfig[type];
 
-  return (
-    <Modal title="" description="" isOpen={isOpen} onClose={onClose}>
-      <div className="flex flex-col items-center gap-6 py-8">
-        {/* Icon */}
-        <div
-          className={`flex h-16 w-16 items-center justify-center rounded-full border-2 ${config.borderColor} ${config.bgColor}`}
-        >
-          {type === "success" || type === "error" ? (
-            <config.icon />
-          ) : (
-            <config.icon className={`h-8 w-8 ${config.iconColor}`} />
-          )}
-        </div>
-
-        {/* Content */}
-        <div className="space-y-2 text-center">
-          <h3 className="!text-2xl font-bold text-gray-900">{title}</h3>
-          <p className="text-sm text-gray-600">{description}</p>
-        </div>
-
-        {/* Buttons */}
-        <div className="flex w-full gap-3">
-          {showCancelButton && (
-            <SkiButton isDisabled={loading} variant="outline" onClick={onClose} className="flex-1">
-              {cancelText}
-            </SkiButton>
-          )}
-          {onConfirm && (
-            <SkiButton isDisabled={loading} variant={config.buttonVariant} onClick={onConfirm} className="flex-1">
-              {loading ? "Loading..." : confirmText}
-            </SkiButton>
-          )}
-          {!onConfirm && (
-            <SkiButton isDisabled={loading} variant={config.buttonVariant} onClick={onClose} className="flex-1">
-              {confirmText}
-            </SkiButton>
-          )}
-        </div>
-      </div>
-    </Modal>
+  const renderIcon = () => (
+    <div
+      className={`flex h-16 w-16 items-center justify-center rounded-full border-2 ${config.borderColor} ${config.bgColor}`}
+    >
+      {type === "success" || type === "error" ? (
+        <config.icon />
+      ) : (
+        <config.icon className={`h-8 w-8 ${config.iconColor}`} />
+      )}
+    </div>
   );
+
+  const renderContent = () => (
+    <div className="space-y-2 text-center">
+      <h3 className="!text-2xl font-bold text-gray-900">{title}</h3>
+      <p className="text-sm text-gray-600">{description}</p>
+    </div>
+  );
+
+  const renderCancelButton = () => {
+    if (!showCancelButton) return null;
+
+    return (
+      <SkiButton isDisabled={loading} variant="outline" onClick={onClose} className="flex-1">
+        {cancelText}
+      </SkiButton>
+    );
+  };
+
+  const renderConfirmButton = () => {
+    if (onConfirm) {
+      return (
+        <SkiButton isDisabled={loading} variant={config.buttonVariant} onClick={onConfirm} className="flex-1">
+          {loading ? "Loading..." : confirmText}
+        </SkiButton>
+      );
+    }
+
+    return (
+      <SkiButton isDisabled={loading} variant={config.buttonVariant} onClick={onClose} className="flex-1">
+        {confirmText}
+      </SkiButton>
+    );
+  };
+
+  const renderButtons = () => (
+    <div className="flex w-full gap-3">
+      {renderCancelButton()}
+      {renderConfirmButton()}
+    </div>
+  );
+
+  const renderModalContent = () => (
+    <div className="flex flex-col items-center gap-6 py-8">
+      {renderIcon()}
+      {renderContent()}
+      {renderButtons()}
+    </div>
+  );
+
+  const renderAlertModal = () => {
+    if (!isMounted) {
+      return null;
+    }
+
+    return (
+      <Modal title="" description="" isOpen={isOpen} onClose={onClose}>
+        {renderModalContent()}
+      </Modal>
+    );
+  };
+
+  return renderAlertModal();
 };

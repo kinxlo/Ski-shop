@@ -16,13 +16,13 @@ declare global {
   }
 
   /** Register form data */
-  interface RegisterFormData {
-    firstName: string;
-    lastName: string;
-    email: string;
-    password: string;
-    passwordConfirmation: string;
-  }
+  // interface RegisterFormData {
+  //   firstName: string;
+  //   lastName: string;
+  //   email: string;
+  //   password: string;
+  //   passwordConfirmation: string;
+  // }
 
   /** Login form data */
   interface LoginFormData {

@@ -57,76 +57,87 @@ export const LoginForm = () => {
     });
   };
 
-  return (
+  const renderFormFields = () => (
+    <section className="space-y-4">
+      <FormField placeholder="Enter email address" className="h-14 w-full" label="Email Address" name="email" />
+      <div className="space-y-2">
+        <FormField
+          type="password"
+          placeholder="Enter password"
+          className="h-14 w-full"
+          label="Password"
+          name="password"
+        />
+      </div>
+    </section>
+  );
+
+  const renderRememberMeSection = () => (
+    <section className="mt-[23px] flex items-center justify-between">
+      <div className="flex items-center space-x-2">
+        <Checkbox id="remember" />
+        <label
+          htmlFor="remember"
+          className="text-sm leading-none font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+        >
+          Remember Me
+        </label>
+      </div>
+      <LocaleLink href="/forgot-password">
+        <p className="text-mid-danger text-sm">Forgot Password ?</p>
+      </LocaleLink>
+    </section>
+  );
+
+  const renderActionButtons = () => (
+    <section className="flex flex-col items-center justify-center gap-[20px] pt-[20px]">
+      <SkiButton
+        isDisabled={isSubmitting || !isValid}
+        isLoading={isSubmitting}
+        size="lg"
+        className="h-[56px] w-full rounded-full"
+        variant="primary"
+        type="submit"
+      >
+        Login
+      </SkiButton>
+      <span className="text-mid-grey-II">-------------------- OR --------------------</span>
+      <SkiButton
+        size="lg"
+        className="border-primary text-primary h-[56px] w-full rounded-full"
+        variant="outline"
+        isRightIconVisible
+        icon={<FcGoogle />}
+        isDisabled={isGooglePending}
+        isLoading={isGooglePending}
+        onClick={handleGoogleSignIn}
+      >
+        Login with Google
+      </SkiButton>
+    </section>
+  );
+
+  const renderSignUpPrompt = () => (
+    <p className="mt-6 text-center text-gray-500">
+      New user?{" "}
+      <LocaleLink href="/signup" className="text-primary font-medium hover:underline">
+        Sign up
+      </LocaleLink>
+    </p>
+  );
+
+  const renderLoginForm = () => (
     <section className="mx-auto lg:min-w-[550px]">
       <FormProvider {...methods}>
-        <form onSubmit={handleSubmit(handleSubmitForm)} className="">
-          <section className={`space-y-4`}>
-            <FormField
-              placeholder={`Enter email address`}
-              className={`h-14 w-full`}
-              label={`Email Address`}
-              name={"email"}
-            />
-            <div className="space-y-2">
-              <FormField
-                type={`password`}
-                placeholder={`Enter password`}
-                className={`h-14 w-full`}
-                label={`Password`}
-                name={"password"}
-              />
-            </div>
-          </section>
-          <section className="mt-[23px] flex items-center justify-between">
-            <div className="flex items-center space-x-2">
-              <Checkbox id="remember" />
-              <label
-                htmlFor="remember"
-                className="text-sm leading-none font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-              >
-                Remember Me
-              </label>
-            </div>
-            <LocaleLink href="/forgot-password">
-              <p className="text-mid-danger text-sm">Forgot Password ?</p>
-            </LocaleLink>
-          </section>
-
-          {/* CTA */}
-          <section className="flex flex-col items-center justify-center gap-[20px] pt-[20px]">
-            <SkiButton
-              isDisabled={isSubmitting || !isValid}
-              isLoading={isSubmitting}
-              size="lg"
-              className="h-[56px] w-full rounded-full"
-              variant="primary"
-              type="submit"
-            >
-              Login
-            </SkiButton>
-            <span className="text-mid-grey-II">-------------------- OR --------------------</span>
-            <SkiButton
-              size="lg"
-              className="border-primary text-primary h-[56px] w-full rounded-full"
-              variant="outline"
-              isRightIconVisible
-              icon={<FcGoogle />}
-              isDisabled={isGooglePending}
-              isLoading={isGooglePending}
-              onClick={handleGoogleSignIn}
-            >
-              Login with Google
-            </SkiButton>
-          </section>
-          <p className="mt-6 text-center text-gray-500">
-            New user?{" "}
-            <LocaleLink href="/signup" className="text-primary font-medium hover:underline">
-              Sign up
-            </LocaleLink>
-          </p>
+        <form onSubmit={handleSubmit(handleSubmitForm)}>
+          {renderFormFields()}
+          {renderRememberMeSection()}
+          {renderActionButtons()}
+          {renderSignUpPrompt()}
         </form>
       </FormProvider>
     </section>
   );
+
+  return renderLoginForm();
 };
