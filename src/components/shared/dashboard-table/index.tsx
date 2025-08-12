@@ -10,6 +10,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { cn } from "@/lib/utils";
 import { ChevronLeftIcon, ChevronRightIcon, MoreHorizontal, MoreHorizontalIcon } from "lucide-react";
 import { useQueryState } from "nuqs";
+import React from "react";
 
 import SkiButton from "../button";
 import { SetToolTip } from "../tool-tip";
@@ -29,11 +30,19 @@ export const DashboardTable = <T extends DataItem>({
   // Use nuqs directly for pagination (same approach as shop page)
   const [currentPage, setCurrentPage] = useQueryState(pageParameter, { defaultValue: "1" });
 
-  const renderColumn = (column: IColumnDefinition<T>, item: T) => {
+  const renderColumn = (column: IColumnDefinition<T>, item: T): React.ReactNode => {
     if (!column) return "N/A"; // Handle undefined column
-    return column.render
-      ? column.render(item[column.accessorKey ?? ""], item)
-      : (item[column.accessorKey ?? ""] ?? "N/A");
+    if (column.render) {
+      return column.render(item[column.accessorKey ?? ""], item);
+    }
+
+    const value = item[column.accessorKey ?? ""];
+    // Convert non-ReactNode values to strings
+    if (value === null || value === undefined) return "N/A";
+    if (typeof value === "object" && !React.isValidElement(value)) {
+      return JSON.stringify(value);
+    }
+    return String(value);
   };
 
   const handlePageChange = (newPage: number) => {
@@ -74,7 +83,7 @@ export const DashboardTable = <T extends DataItem>({
               >
                 {columns.map((column, colIndex) => (
                   <TableCell key={`${rowIndex}-${colIndex}`} className={`py-4`}>
-                    {column.render ? column.render(item[column.accessorKey], item) : item[column.accessorKey]}
+                    {renderColumn(column, item)}
                   </TableCell>
                 ))}
                 {rowActions && (

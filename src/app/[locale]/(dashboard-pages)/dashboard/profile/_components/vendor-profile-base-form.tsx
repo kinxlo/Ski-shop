@@ -6,38 +6,12 @@ import MainButton from "@/components/shared/button";
 import { FormField } from "@/components/shared/inputs/FormFields";
 import { PhoneInput } from "@/components/shared/inputs/phone-input";
 import { FormControl, FormItem, FormField as UIFormField } from "@/components/ui/form";
+import { vendorProfileSchema, type VendorProfileFormData } from "@/schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Camera } from "lucide-react";
 import { useRef, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { z } from "zod";
-
-// Validation schema for the vendor profile form
-const vendorProfileSchema = z.object({
-  store: z.object({
-    name: z.string().min(1, "Store name is required"),
-    description: z.string().optional(),
-    category: z.string().optional(),
-  }),
-  logo: z.any().optional(),
-  user: z.object({
-    firstName: z.string().min(1, "First name is required"),
-    lastName: z.string().min(1, "Last name is required"),
-    email: z.string().email().optional(),
-    phone: z.string().optional(),
-  }),
-  business: z.object({
-    type: z.string().min(1, "Business type is required"),
-    businessRegNumber: z.string().optional(),
-    businessName: z.string().min(1, "Business name is required"),
-    country: z.string().min(1, "Country is required"),
-    state: z.string().min(1, "State is required"),
-    address: z.string().min(1, "Address is required"),
-  }),
-});
-
-type VendorProfileFormDataWithValidation = z.infer<typeof vendorProfileSchema> & VendorProfileFormData;
 
 // Sample data for dropdowns
 const businessTypes = [
@@ -64,7 +38,7 @@ const states = [
 
 interface VendorProfileBaseFormProperties {
   initialData?: VendorProfile | null;
-  onSubmit: (data: VendorProfileFormDataWithValidation) => Promise<void>;
+  onSubmit: (data: VendorProfileFormData) => Promise<void>;
   isLoading?: boolean;
   submitButtonText: string;
   title: string;
@@ -80,7 +54,7 @@ export const VendorProfileBaseForm = ({
   const fileInputReference = useRef<HTMLInputElement>(null);
   const [previewImage, setPreviewImage] = useState<string | null>(initialData?.store?.logo || null);
 
-  const methods = useForm<VendorProfileFormDataWithValidation>({
+  const methods = useForm<VendorProfileFormData>({
     resolver: zodResolver(vendorProfileSchema),
     defaultValues: {
       store: {
@@ -119,7 +93,7 @@ export const VendorProfileBaseForm = ({
     fileInputReference.current?.click();
   };
 
-  const handleFormSubmit = async (data: VendorProfileFormDataWithValidation) => {
+  const handleFormSubmit = async (data: VendorProfileFormData) => {
     try {
       await onSubmit(data);
       toast.success(`Profile ${initialData ? "updated" : "created"} successfully!`);

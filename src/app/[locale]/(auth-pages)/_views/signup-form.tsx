@@ -65,76 +65,85 @@ export const BaseSignupForm = () => {
   //   });
   // };
 
-  return (
-    <>
-      <section>
-        <FormProvider {...methods}>
-          <form onSubmit={handleSubmit(handleSubmitForm)} className="">
-            <section className={`space-y-4`}>
-              <FormField placeholder={`Enter email address`} className={`h-14 w-full`} name={"email"} />
-              <div className="grid grid-cols-1 gap-4 space-y-2 lg:grid-cols-2">
-                <FormField placeholder={`Enter first name`} className={`h-14 w-full`} name={"firstName"} />
-                <FormField placeholder={`Enter last name`} className={`h-14 w-full`} name={"lastName"} />
-              </div>
-              <FormField type={`password`} placeholder={`Enter password`} className={`h-14 w-full`} name={"password"} />
-              <FormField
-                type={`password`}
-                placeholder={`Enter confirm password`}
-                className={`h-14 w-full`}
-                name={"confirmPassword"}
-              />
-            </section>
-            <section className="mt-[23px] flex items-center justify-between">
-              <div className="text-muted-foreground mb-4">
-                <p>
-                  By signing up, you&apos;re agreeing to Skicom&apos;s
-                  <LocaleLink href={`/${locale}/privacy`} className="text-primary hover:underline">
-                    {" "}
-                    Privacy Policy
-                  </LocaleLink>
-                  , and{" "}
-                  <LocaleLink href={`/${locale}/terms`} className="text-primary hover:underline">
-                    Terms & Conditions.
-                  </LocaleLink>
-                </p>
-              </div>
-            </section>
-
-            {/* CTA */}
-            <section className="flex flex-col items-center justify-center gap-[20px] pt-[20px]">
-              <SkiButton
-                isDisabled={!isValid}
-                isLoading={isSigningUp}
-                size="lg"
-                className="h-[56px] w-full rounded-full"
-                variant="primary"
-                type="submit"
-              >
-                {isSigningUp ? `Signing up..` : ` Sign up`}
-              </SkiButton>
-              {/* <span className="text-mid-grey-II">-------------------- OR --------------------</span>
-              <SkiButton
-                size="lg"
-                className="border-primary text-primary h-[56px] w-full rounded-full"
-                variant="outline"
-                isRightIconVisible
-                icon={<FaGoogle />}
-                isDisabled={isGooglePending}
-                isLoading={isGooglePending}
-                onClick={handleGoogleSignIn}
-              >
-                Signup with Google
-              </SkiButton> */}
-            </section>
-            <p className="mt-6 text-center text-gray-500">
-              Already a user?{" "}
-              <LocaleLink href={`/${locale}/login`} className="text-primary font-medium hover:underline">
-                Log In
-              </LocaleLink>
-            </p>
-          </form>
-        </FormProvider>
-      </section>
-    </>
+  const renderFormFields = () => (
+    <section className="space-y-4">
+      <FormField placeholder="Enter email address" className="h-14 w-full" name="email" />
+      <div className="grid grid-cols-1 gap-4 space-y-2 lg:grid-cols-2">
+        <FormField placeholder="Enter first name" className="h-14 w-full" name="firstName" />
+        <FormField placeholder="Enter last name" className="h-14 w-full" name="lastName" />
+      </div>
+      <FormField type="password" placeholder="Enter password" className="h-14 w-full" name="password" />
+      <FormField type="password" placeholder="Enter confirm password" className="h-14 w-full" name="confirmPassword" />
+    </section>
   );
+
+  const renderTermsSection = () => (
+    <section className="mt-[23px] flex items-center justify-between">
+      <div className="text-muted-foreground mb-4">
+        <p>
+          By signing up, you&apos;re agreeing to Skicom&apos;s
+          <LocaleLink href={`/${locale}/privacy`} className="text-primary hover:underline">
+            {" "}
+            Privacy Policy
+          </LocaleLink>
+          , and{" "}
+          <LocaleLink href={`/${locale}/terms`} className="text-primary hover:underline">
+            Terms & Conditions.
+          </LocaleLink>
+        </p>
+      </div>
+    </section>
+  );
+
+  const renderActionButtons = () => (
+    <section className="flex flex-col items-center justify-center gap-[20px] pt-[20px]">
+      <SkiButton
+        isDisabled={!isValid}
+        isLoading={isSigningUp}
+        size="lg"
+        className="h-[56px] w-full rounded-full"
+        variant="primary"
+        type="submit"
+      >
+        {isSigningUp ? "Signing up.." : " Sign up"}
+      </SkiButton>
+      {/* <span className="text-mid-grey-II">-------------------- OR --------------------</span>
+      <SkiButton
+        size="lg"
+        className="border-primary text-primary h-[56px] w-full rounded-full"
+        variant="outline"
+        isRightIconVisible
+        icon={<FaGoogle />}
+        isDisabled={isGooglePending}
+        isLoading={isGooglePending}
+        onClick={handleGoogleSignIn}
+      >
+        Signup with Google
+      </SkiButton> */}
+    </section>
+  );
+
+  const renderLoginPrompt = () => (
+    <p className="mt-6 text-center text-gray-500">
+      Already a user?{" "}
+      <LocaleLink href={`/${locale}/login`} className="text-primary font-medium hover:underline">
+        Log In
+      </LocaleLink>
+    </p>
+  );
+
+  const renderSignupForm = () => (
+    <section>
+      <FormProvider {...methods}>
+        <form onSubmit={handleSubmit(handleSubmitForm)}>
+          {renderFormFields()}
+          {renderTermsSection()}
+          {renderActionButtons()}
+          {renderLoginPrompt()}
+        </form>
+      </FormProvider>
+    </section>
+  );
+
+  return renderSignupForm();
 };

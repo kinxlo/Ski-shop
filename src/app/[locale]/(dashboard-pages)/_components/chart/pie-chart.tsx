@@ -1,10 +1,9 @@
 "use client";
 
+import { ChartConfig, ChartContainer, ChartTooltipContent } from "@/components/ui/chart";
 import { IoEllipsisVerticalSharp } from "react-icons/io5";
 import { LuDot } from "react-icons/lu";
 import { Cell, Pie, PieChart, ResponsiveContainer, Tooltip } from "recharts";
-
-import { ChartConfig, ChartContainer, ChartTooltipContent } from "~/components/ui/chart";
 
 // Data for Pie Chart
 const pieData = [

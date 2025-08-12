@@ -176,12 +176,12 @@ declare global {
   }
 
   /** Store form data */
-  interface StoreFormData {
-    name: string;
-    description: string;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    image: File | any;
-  }
+  // interface StoreFormData {
+  //   name: string;
+  //   description: string;
+  //   // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  //   image: File | any;
+  // }
 
   /** Product form data */
   interface ProductFormData {

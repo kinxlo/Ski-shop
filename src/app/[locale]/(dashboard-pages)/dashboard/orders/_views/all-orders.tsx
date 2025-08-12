@@ -60,42 +60,36 @@ export const AllOrders = () => {
     [router],
   );
 
-  if (isLoading) {
-    return <TableSkeleton />;
-  }
+  const renderLoadingSkeleton = () => <TableSkeleton />;
 
-  if (isError) {
-    return (
-      <EmptyState
-        images={[{ src: "/images/empty-state.svg", width: 80, height: 80, alt: "Error" }]}
-        title="Something went wrong"
-        description="Failed to load orders. Please try again."
-        className="bg-mid-grey-I space-y-0 rounded-lg"
-        titleClassName="!text-2xl"
-        descriptionClassName="text-base mb-4"
-        actionButton={
-          <button onClick={() => refetch()} className="bg-primary hover:bg-primary/90 rounded-md px-4 py-2 text-white">
-            Try Again
-          </button>
-        }
-      />
-    );
-  }
+  const renderErrorState = () => (
+    <EmptyState
+      images={[{ src: "/images/empty-state.svg", width: 80, height: 80, alt: "Error" }]}
+      title="Something went wrong"
+      description="Failed to load orders. Please try again."
+      className="bg-mid-grey-I space-y-0 rounded-lg"
+      titleClassName="!text-2xl"
+      descriptionClassName="text-base mb-4"
+      actionButton={
+        <button onClick={() => refetch()} className="bg-primary hover:bg-primary/90 rounded-md px-4 py-2 text-white">
+          Try Again
+        </button>
+      }
+    />
+  );
 
-  if (!orders || orders.length === 0) {
-    return (
-      <EmptyState
-        images={[{ src: "/images/empty-state.svg", width: 80, height: 80, alt: "No orders" }]}
-        title="No orders found"
-        description="There are no orders matching your criteria."
-        className="bg-mid-grey-I space-y-0 rounded-lg"
-        titleClassName="!text-2xl"
-        descriptionClassName="text-base mb-4"
-      />
-    );
-  }
+  const renderEmptyState = () => (
+    <EmptyState
+      images={[{ src: "/images/empty-state.svg", width: 80, height: 80, alt: "No orders" }]}
+      title="No orders found"
+      description="There are no orders matching your criteria."
+      className="bg-mid-grey-I space-y-0 rounded-lg"
+      titleClassName="!text-2xl"
+      descriptionClassName="text-base mb-4"
+    />
+  );
 
-  return (
+  const renderOrdersTable = () => (
     <div className="space-y-6">
       {/* Search Bar */}
       <div className="flex justify-end">
@@ -122,4 +116,22 @@ export const AllOrders = () => {
       />
     </div>
   );
+
+  const renderAllOrdersContent = () => {
+    if (isLoading) {
+      return renderLoadingSkeleton();
+    }
+
+    if (isError) {
+      return renderErrorState();
+    }
+
+    if (!orders || orders.length === 0) {
+      return renderEmptyState();
+    }
+
+    return renderOrdersTable();
+  };
+
+  return renderAllOrdersContent();
 };

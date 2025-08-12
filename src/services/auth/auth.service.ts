@@ -1,5 +1,6 @@
 import { HttpAdapter } from "@/lib/http/http-adapter";
 import { tryCatchWrapper } from "@/lib/tools/tryCatchFunction";
+import { RegisterFormData } from "@/schemas";
 import { isAxiosError } from "axios";
 
 // Types are now globally available in src/types/
@@ -140,20 +141,12 @@ export class AuthService {
   }
 
   async resetPassword(credentials: ResetPasswordData) {
-    return tryCatchWrapper(
-      async () => {
-        const response = await this.http.post<{ data: string }>("/auth/resetpassword", credentials);
-        if (response?.status === 200) {
-          return response.data;
-        }
-        throw new Error("Password reset failed");
-      },
-      (error: unknown) => {
-        if (isAxiosError(error)) {
-          return new Error(error.response?.data?.message || "Password reset failed");
-        }
-        return new Error("Unknown error during password reset");
-      },
-    );
+    return tryCatchWrapper(async () => {
+      const response = await this.http.post<{ data: string }>("/auth/resetpassword", credentials);
+      if (response?.status === 200) {
+        return response.data;
+      }
+      throw new Error("Password reset failed");
+    });
   }
 }

@@ -50,42 +50,36 @@ export const PaidOrders = () => {
     [setSearchQuery, resetToFirstPage, searchQuery],
   );
 
-  if (isLoading) {
-    return <TableSkeleton />;
-  }
+  const renderLoadingSkeleton = () => <TableSkeleton />;
 
-  if (isError) {
-    return (
-      <EmptyState
-        images={[{ src: "/images/empty-state.svg", width: 80, height: 80, alt: "Error" }]}
-        title="Something went wrong"
-        description="Failed to load paid orders. Please try again."
-        className="bg-mid-grey-I space-y-0 rounded-lg"
-        titleClassName="!text-2xl"
-        descriptionClassName="text-base mb-4"
-        actionButton={
-          <button onClick={() => refetch()} className="bg-primary hover:bg-primary/90 rounded-md px-4 py-2 text-white">
-            Try Again
-          </button>
-        }
-      />
-    );
-  }
+  const renderErrorState = () => (
+    <EmptyState
+      images={[{ src: "/images/empty-state.svg", width: 80, height: 80, alt: "Error" }]}
+      title="Something went wrong"
+      description="Failed to load delivered orders. Please try again."
+      className="bg-mid-grey-I space-y-0 rounded-lg"
+      titleClassName="!text-2xl"
+      descriptionClassName="text-base mb-4"
+      actionButton={
+        <button onClick={() => refetch()} className="bg-primary hover:bg-primary/90 rounded-md px-4 py-2 text-white">
+          Try Again
+        </button>
+      }
+    />
+  );
 
-  if (!orders || orders.length === 0) {
-    return (
-      <EmptyState
-        images={[{ src: "/images/empty-state.svg", width: 80, height: 80, alt: "No paid orders" }]}
-        title="No paid orders"
-        description="There are no paid orders at the moment."
-        className="bg-mid-grey-I space-y-0 rounded-lg"
-        titleClassName="!text-2xl"
-        descriptionClassName="text-base mb-4"
-      />
-    );
-  }
+  const renderEmptyState = () => (
+    <EmptyState
+      images={[{ src: "/images/empty-state.svg", width: 80, height: 80, alt: "No delivered orders" }]}
+      title="No delivered orders"
+      description="There are no delivered orders at the moment."
+      className="bg-mid-grey-I space-y-0 rounded-lg"
+      titleClassName="!text-2xl"
+      descriptionClassName="text-base mb-4"
+    />
+  );
 
-  return (
+  const renderOrdersTable = () => (
     <div className="space-y-6">
       {/* Search Bar */}
       <div className="flex justify-end">
@@ -94,7 +88,7 @@ export const PaidOrders = () => {
           onSearch={handleSearchChange}
           initialValue={searchQuery}
           delay={500}
-          placeholder="Search paid orders..."
+          placeholder="Search delivered orders..."
         />
       </div>
 
@@ -111,4 +105,22 @@ export const PaidOrders = () => {
       />
     </div>
   );
+
+  const renderDeliveredOrdersContent = () => {
+    if (isLoading) {
+      return renderLoadingSkeleton();
+    }
+
+    if (isError) {
+      return renderErrorState();
+    }
+
+    if (!orders || orders.length === 0) {
+      return renderEmptyState();
+    }
+
+    return renderOrdersTable();
+  };
+
+  return renderDeliveredOrdersContent();
 };

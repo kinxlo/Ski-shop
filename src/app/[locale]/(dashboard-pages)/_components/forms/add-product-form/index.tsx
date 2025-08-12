@@ -31,7 +31,8 @@ import { FormProvider, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import * as z from "zod";
 
-const productSchema = z.object({
+// Simple product schema for the dashboard add form
+const simpleProductSchema = z.object({
   name: z.string().min(1, "Product name is required"),
   price: z.number().min(0, "Price must be positive"),
   discountPrice: z.number().min(0, "Discount price must be positive").optional(),
@@ -42,7 +43,7 @@ const productSchema = z.object({
   status: z.enum(["published", "draft"]).default("published"),
 });
 
-export type ProductFormData = z.infer<typeof productSchema>;
+export type SimpleProductFormData = z.infer<typeof simpleProductSchema>;
 
 interface SortableImageProperties {
   id: string;
@@ -137,8 +138,8 @@ export const AddProductForm = () => {
   const { data: productCategories } = useGetAllProductCategory();
   const { mutateAsync: createProduct, isPending: isCreatingProduct } = useCreateProduct();
   const { data: storeInfo, isLoading: storeInfoLoading } = useGetStoreInfo();
-  const methods = useForm<ProductFormData>({
-    resolver: zodResolver(productSchema),
+  const methods = useForm<SimpleProductFormData>({
+    resolver: zodResolver(simpleProductSchema),
     defaultValues: {
       name: "",
       price: 0,
@@ -251,7 +252,7 @@ export const AddProductForm = () => {
     }
   };
 
-  const handleSubmitForm = async (data: ProductFormData) => {
+  const handleSubmitForm = async (data: SimpleProductFormData) => {
     try {
       // Validate store info is available
       if (!storeInfo?.data?.id) {
