@@ -11,6 +11,8 @@ export interface BaseNavItem {
   badge?: BadgeConfig;
   divider?: boolean;
   link: string;
+  /** Optional action type to trigger custom behaviors instead of navigation */
+  actionType?: string;
 }
 
 export interface NavItemWithChildren extends BaseNavItem {
@@ -47,11 +49,13 @@ export const createNavItem = (
     icon?: React.ComponentType<React.SVGProps<SVGSVGElement>>;
     badge?: BadgeConfig;
     divider?: boolean;
+    actionType?: string;
   },
 ): NavItemWithoutChildren => ({
   id,
   route,
   link,
+  actionType: options?.actionType,
   ...options,
 });
 
@@ -64,6 +68,7 @@ export const createNavItemWithChildren = (
     icon?: React.ComponentType<React.SVGProps<SVGSVGElement>>;
     badge?: BadgeConfig;
     divider?: boolean;
+    actionType?: string;
   },
 ): NavItemWithChildren => ({
   id,
@@ -71,6 +76,7 @@ export const createNavItemWithChildren = (
   link,
   children,
   collapsible: true,
+  actionType: options?.actionType,
   ...options,
 });
 

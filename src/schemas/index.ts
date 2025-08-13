@@ -91,6 +91,7 @@ export const reviewSchema = z.object({
 });
 
 export const contactSchema = z.object({
+  fullName: z.string().min(1, "Full name is required"),
   email: z.string().min(1, "Email is required").email("Please enter a valid email address"),
   subject: z.string().min(1, "Subject is required"),
   message: z.string().min(1, "Message is required"),
@@ -201,19 +202,26 @@ export const storeSchema = z.object({
   image: z.any().refine((file) => file !== null, "Image is required"),
 });
 
-export const vendorProfileSchema = z.object({
+// Separate schemas for individual form sections
+export const vendorStoreFormSchema = z.object({
   store: z.object({
     name: z.string().min(1, "Store name is required"),
     description: z.string().optional(),
-    category: z.string().optional(),
+    // category: z.string().optional(),
   }),
   logo: z.any().optional(),
+});
+
+export const vendorProfileFormSchema = z.object({
   user: z.object({
     firstName: z.string().min(1, "First name is required"),
     lastName: z.string().min(1, "Last name is required"),
     email: z.string().email().optional(),
     phone: z.string().optional(),
   }),
+});
+
+export const vendorBusinessFormSchema = z.object({
   business: z.object({
     type: z.string().min(1, "Business type is required"),
     businessRegNumber: z.string().optional(),
@@ -223,6 +231,30 @@ export const vendorProfileSchema = z.object({
     address: z.string().min(1, "Address is required"),
   }),
 });
+
+// Combined schema (existing)
+// export const vendorProfileSchema = z.object({
+//   store: z.object({
+//     name: z.string().min(1, "Store name is required"),
+//     description: z.string().optional(),
+//     category: z.string().optional(),
+//   }),
+//   logo: z.any().optional(),
+//   user: z.object({
+//     firstName: z.string().min(1, "First name is required"),
+//     lastName: z.string().min(1, "Last name is required"),
+//     email: z.string().email().optional(),
+//     phone: z.string().optional(),
+//   }),
+//   business: z.object({
+//     type: z.string().min(1, "Business type is required"),
+//     businessRegNumber: z.string().optional(),
+//     businessName: z.string().min(1, "Business name is required"),
+//     country: z.string().min(1, "Country is required"),
+//     state: z.string().min(1, "State is required"),
+//     address: z.string().min(1, "Address is required"),
+//   }),
+// });
 
 export const bankPayoutSchema = z.object({
   bankName: z.string().min(1, "Bank name is required"),
@@ -280,7 +312,10 @@ export type FunnelSettingFormData = z.infer<typeof funnelSettingsSchema>;
 export type ExternalContactFormData = z.infer<typeof externalContactSchema>;
 export type BusinessInfoFormData = z.infer<typeof businessInfoSchema>;
 export type StoreFormData = z.infer<typeof storeSchema>;
-export type VendorProfileFormData = z.infer<typeof vendorProfileSchema>;
+// export type VendorProfileFormData = z.infer<typeof vendorProfileSchema>;
+export type VendorStoreFormData = z.infer<typeof vendorStoreFormSchema>;
+export type VendorPersonalFormData = z.infer<typeof vendorProfileFormSchema>;
+export type VendorBusinessFormData = z.infer<typeof vendorBusinessFormSchema>;
 export type ProductFormData = z.infer<typeof ProductFormSchema>;
 
 // Type definitions are now globally available in src/types/

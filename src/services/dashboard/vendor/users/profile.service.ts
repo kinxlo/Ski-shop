@@ -14,13 +14,14 @@ export class DashboardProfileService {
     this.http = httpAdapter;
   }
 
-  async getVendorProfile() {
+  // get store info with /store/current
+  async getVendorStore() {
     return tryCatchWrapper(async () => {
-      const response = await this.http.get<VendorProfileApiResponse>(`/vendor/profile`);
+      const response = await this.http.get<{ success: boolean; data: Store }>(`/stores/current`);
       if (response?.status === 200) {
         return response.data;
       }
-      throw new Error("Failed to fetch vendor profile");
+      throw new Error("Failed to fetch vendor store");
     });
   }
 
@@ -51,11 +52,40 @@ export class DashboardProfileService {
     if (data.business?.address) formData.append("business[address]", data.business.address);
 
     return tryCatchWrapper(async () => {
-      const response = await this.http.post<VendorProfileApiResponse>(`/vendor/profile`, formData);
+      const response = await this.http.patch<VendorProfileApiResponse>(`/vendor/profile`, formData);
       if (response?.status === 200) {
         return response.data;
       }
       throw new Error("Failed to update vendor profile");
+    });
+  }
+
+  // create promotion
+  async getAllAvailablePromotions() {
+    return tryCatchWrapper(async () => {
+      const response = await this.http.get<PromotionApiResponse>(`/promotions`);
+      if (response?.status === 200) {
+        return response.data;
+      }
+      throw new Error("Failed to fetch available promotions");
+    });
+  }
+
+  // create ads
+  async createAds(data: { promotionId: string; productId: string; paymentMethod: "paystack" }) {
+    return tryCatchWrapper(async () => {
+      const response = await this.http.post<{
+        success: boolean;
+        data: {
+          reference: string;
+          checkoutUrl: string;
+          checkoutCode: string;
+        };
+      }>(`/ads`, data);
+      if (response?.status === 201) {
+        return response.data;
+      }
+      throw new Error("Failed to create ads");
     });
   }
 }

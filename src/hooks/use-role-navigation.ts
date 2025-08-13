@@ -1,3 +1,5 @@
+/* eslint-disable unused-imports/no-unused-imports */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
 import {
@@ -9,7 +11,7 @@ import {
 } from "@/components/shared/sidebar";
 import { useDashboardOrderService } from "@/services/dashboard/vendor/orders/use-order-service";
 import { usePayoutService } from "@/services/dashboard/vendor/payouts";
-import { Languages } from "lucide-react";
+import { Languages, ThumbsUp } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { FaGamepad, FaQuestionCircle, FaStar } from "react-icons/fa";
 import { GiWallet } from "react-icons/gi";
@@ -53,143 +55,126 @@ export const useRoleNavigation = (): NavItem[] => {
   // Organized into logical categories for better user experience and navigation
   const createSettingsMenu = (role: string): NavItem => {
     // Notification Settings (Common for all roles)
-    const notificationSettings = [
-      createNavItem("app-notifications", "App Notification", "/dashboard/settings/notifications/app", {
-        icon: TbNotification,
-      }),
-      createNavItem("sound-notifications", "Sound Notification", "/dashboard/settings/notifications/sound", {
-        icon: MdVolumeUp,
-      }),
-    ];
+    // const notificationSettings = [
+    //   createNavItem("app-notifications", "App Notification", "/dashboard/settings/notifications/app", {
+    //     icon: TbNotification,
+    //   }),
+    //   createNavItem("sound-notifications", "Sound Notification", "/dashboard/settings/notifications/sound", {
+    //     icon: MdVolumeUp,
+    //   }),
+    // ];
 
     // Security & Privacy Settings (Common for all roles)
-    const securityPrivacySettings = [
-      createNavItem("security-settings", "Security Setting", "/dashboard/settings/security", {
-        icon: TbShield,
-      }),
-      createNavItem("privacy-terms", "Privacy & Terms", "/dashboard/settings/privacy", {
-        icon: MdOutlinePrivacyTip,
-      }),
-    ];
+    // const securityPrivacySettings = [
+    //   createNavItem("security-settings", "Security Setting", "/dashboard/settings/security", {
+    //     icon: TbShield,
+    //   }),
+    //   createNavItem("privacy-terms", "Privacy & Terms", "/dashboard/settings/privacy", {
+    //     icon: MdOutlinePrivacyTip,
+    //   }),
+    // ];
 
-    // Help & Support Settings (Common for all roles)
-    const helpSupportSettings = [
-      createNavItem("faqs", "Frequently Asked Questions (FAQs)", "/dashboard/settings/faqs", {
-        icon: FaQuestionCircle,
-      }),
-      createNavItem("contact-support", "Contact Support", "/dashboard/settings/support", {
-        icon: TbMessageCircle,
-      }),
-    ];
+    // // Help & Support Settings (Common for all roles)
+    // const helpSupportSettings = [
+    //   createNavItem("faqs", "Frequently Asked Questions (FAQs)", "/dashboard/settings/faqs", {
+    //     icon: FaQuestionCircle,
+    //   }),
+    //   createNavItem("contact-support", "Contact Support", "/dashboard/settings/support", {
+    //     icon: TbMessageCircle,
+    //   }),
+    // ];
 
-    // Account & Preferences (Common for all roles)
-    const accountSettings = [
-      createNavItem("language-region", "Language & Region", "/dashboard/settings/language-and-region", {
-        icon: Languages,
-      }),
-      createNavItem("rate-app", "Rate Our App", "/dashboard/settings/rate-app", {
-        icon: FaStar,
-      }),
-    ];
+    // // Account & Preferences (Common for all roles)
+    // const accountSettings = [
+    //   createNavItem("language-region", "Language & Region", "/dashboard/settings/language-and-region", {
+    //     icon: Languages,
+    //   }),
+    //   createNavItem("rate-app", "Rate Our App", "/dashboard/settings/rate-app", {
+    //     icon: FaStar,
+    //   }),
+    // ];
 
-    // Legal Settings (Common for all roles)
-    const legalSettings = [
-      createNavItem("terms-conditions", "Terms & Conditions", "/dashboard/settings/terms", {
-        icon: TbHelp,
-      }),
-    ];
+    // // Legal Settings (Common for all roles)
+    // const legalSettings = [
+    //   createNavItem("terms-conditions", "Terms & Conditions", "/dashboard/settings/terms", {
+    //     icon: TbHelp,
+    //   }),
+    // ];
 
     // Combine all common settings
     const allCommonSettings = [
-      createNavItemWithChildren(
-        "notifications",
-        "Notifications",
-        "/dashboard/settings/notifications",
-        notificationSettings,
-        {
-          icon: TbBell,
-        },
-      ),
-      createNavItemWithChildren(
-        "security-privacy",
-        "Security & Privacy",
-        "/dashboard/settings/security-privacy",
-        securityPrivacySettings,
-        {
-          icon: TbShield,
-        },
-      ),
-      createNavItemWithChildren(
-        "help-support",
-        "Help & Support",
-        "/dashboard/settings/help-support",
-        helpSupportSettings,
-        {
-          icon: TbHelp,
-        },
-      ),
-      createNavItemWithChildren(
-        "account-preferences",
-        "Account & Preferences",
-        "/dashboard/settings/account-preferences",
-        accountSettings,
-        {
-          icon: RiUserLine,
-        },
-      ),
-      createNavItemWithChildren("legal", "Legal", "/dashboard/settings/legal", legalSettings, {
+      createNavItem("notifications", "Notifications", "/dashboard/settings/notifications", {
+        icon: TbBell,
+      }),
+      createNavItem("security-privacy", "Security & Privacy", "/dashboard/settings/security-privacy", {
+        icon: TbShield,
+      }),
+      createNavItem("help-support", "Help & Support", "/dashboard/settings/help-support", {
+        icon: TbHelp,
+      }),
+      createNavItem("account-preferences", "Account & Preferences", "/dashboard/settings/account-preferences", {
+        icon: RiUserLine,
+      }),
+      createNavItem("supscription", "Supscription", "/dashboard/settings/supscription", {
+        icon: IoRibbonOutline,
+      }),
+      createNavItem("rate-this-app", "Rate This App", "", {
+        icon: ThumbsUp,
+        actionType: "open-rate-app-modal",
+      }),
+      createNavItem("legal", "Legal", "/dashboard/settings/legal", {
         icon: MdOutlinePrivacyTip,
       }),
     ];
 
     // Admin-specific settings
-    const adminSpecificSettings = [
-      createNavItem("user-management", "User Management", "/admin/settings/users", {
-        icon: TbUsers,
-      }),
-      createNavItem("system-settings", "System Settings", "/admin/settings/system", {
-        icon: TbSettings2,
-      }),
-    ];
+    // const adminSpecificSettings = [
+    //   createNavItem("user-management", "User Management", "/admin/settings/users", {
+    //     icon: TbUsers,
+    //   }),
+    //   createNavItem("system-settings", "System Settings", "/admin/settings/system", {
+    //     icon: TbSettings2,
+    //   }),
+    // ];
 
-    // Super Admin-specific settings
-    const superAdminSpecificSettings = [
-      createNavItem("admin-management", "Admin Management", "/super-admin/settings/admins", {
-        icon: TbUserCog,
-      }),
-      createNavItem("platform-settings", "Platform Configuration", "/super-admin/settings/platform", {
-        icon: MdOutlineVerifiedUser,
-      }),
-    ];
+    // // Super Admin-specific settings
+    // const superAdminSpecificSettings = [
+    //   createNavItem("admin-management", "Admin Management", "/super-admin/settings/admins", {
+    //     icon: TbUserCog,
+    //   }),
+    //   createNavItem("platform-settings", "Platform Configuration", "/super-admin/settings/platform", {
+    //     icon: MdOutlineVerifiedUser,
+    //   }),
+    // ];
 
     // Build final settings based on role
     const finalSettings = [...allCommonSettings];
 
-    if (role === "ADMIN") {
-      finalSettings.push(
-        createNavItemWithChildren(
-          "admin-management",
-          "Admin Management",
-          "/admin/settings/management",
-          adminSpecificSettings,
-          {
-            icon: TbUserCog,
-          },
-        ),
-      );
-    } else if (role === "SUPER_ADMIN") {
-      finalSettings.push(
-        createNavItemWithChildren(
-          "admin-management",
-          "Admin Management",
-          "/super-admin/settings/management",
-          [...adminSpecificSettings, ...superAdminSpecificSettings],
-          {
-            icon: TbUserCog,
-          },
-        ),
-      );
-    }
+    // if (role === "ADMIN") {
+    //   finalSettings.push(
+    //     createNavItemWithChildren(
+    //       "admin-management",
+    //       "Admin Management",
+    //       "/admin/settings/management",
+    //       adminSpecificSettings,
+    //       {
+    //         icon: TbUserCog,
+    //       },
+    //     ),
+    //   );
+    // } else if (role === "SUPER_ADMIN") {
+    //   finalSettings.push(
+    //     createNavItemWithChildren(
+    //       "admin-management",
+    //       "Admin Management",
+    //       "/super-admin/settings/management",
+    //       [...adminSpecificSettings, ...superAdminSpecificSettings],
+    //       {
+    //         icon: TbUserCog,
+    //       },
+    //     ),
+    //   );
+    // }
 
     // Return the main settings menu with all categorized items
     const baseRoute =

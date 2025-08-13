@@ -1,5 +1,6 @@
 import { OnboardingHttpAdapter } from "@/lib/http/onboarding-http-adapter";
 import { tryCatchWrapper } from "@/lib/tools/tryCatchFunction";
+import { StoreFormData } from "@/schemas";
 import { isAxiosError } from "axios";
 
 export class OnboardingUserService {

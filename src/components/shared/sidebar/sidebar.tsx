@@ -1,5 +1,6 @@
 "use client";
 
+import { DialogClose } from "@/components/ui/dialog";
 import {
   Sidebar,
   SidebarContent,
@@ -18,8 +19,11 @@ import { ChevronDown, ChevronRight } from "lucide-react";
 import { usePathname } from "next/navigation";
 import React, { useEffect, useState } from "react";
 
+import SkiButton from "../button";
+import { Modal } from "../dialog/content-modal";
 import { LocaleLink } from "../locale-link";
 import { Logo } from "../logo";
+import { Ratings } from "../ratings";
 
 // Enhanced types for sidebar navigation
 interface BadgeConfig {
@@ -34,6 +38,7 @@ interface BaseNavItem {
   badge?: BadgeConfig;
   divider?: boolean;
   link: string;
+  actionType?: string;
 }
 
 interface NavItemWithChildren extends BaseNavItem {
@@ -113,6 +118,8 @@ export function DashboardSidebar({
 
   // State for managing expanded menu items
   const [expandedItems, setExpandedItems] = useState<Set<string>>(getInitialExpandedItems);
+  const [appRating, setAppRating] = useState(0);
+  const [appReview, setAppReview] = useState("");
 
   const renderIcon = (item: NavItem) => {
     if (item.icon) {
@@ -252,39 +259,103 @@ export function DashboardSidebar({
 
                   return (
                     <SidebarMenuSubItem key={child.id}>
-                      <SidebarMenuSubButton
-                        asChild
-                        className={cn(
-                          "flex h-[40px] items-center gap-3 rounded-lg text-sm font-medium transition-all duration-200",
-                          isChildActiveState
-                            ? "bg-primary/10 text-primary shadow-active border-primary rounded-none border-l-2"
-                            : "hover:bg-low-grey-I",
-                        )}
-                      >
-                        <LocaleLink onClick={handleCloseOnMobile} href={childLink} data-testid={child.id}>
-                          {renderIcon(child)}
-                          <span className="font-medium dark:text-white">{child.route}</span>
-                          {child.badge && (
-                            <SidebarMenuBadge
+                      {child.actionType === "open-rate-app-modal" ? (
+                        <Modal
+                          title=""
+                          description=""
+                          triggerStructure={
+                            <SidebarMenuSubButton
                               className={cn(
-                                "mr-4 ml-auto flex h-4 w-4 items-center justify-center rounded-full text-xs",
-                                child.badge.variant === "danger"
-                                  ? "bg-mid-danger text-white"
-                                  : child.badge.variant === "success"
-                                    ? "bg-green-500 text-white"
-                                    : child.badge.variant === "warning"
-                                      ? "bg-accent text-white"
-                                      : child.badge.variant === "info"
-                                        ? "bg-primary text-white"
-                                        : "bg-gray-200",
-                                child.badge.count === 0 && "hidden",
+                                "flex h-[40px] cursor-pointer items-center gap-3 rounded-lg text-sm font-medium transition-all duration-200",
+                                isChildActiveState
+                                  ? "bg-primary/10 text-primary shadow-active border-primary rounded-none border-l-2"
+                                  : "hover:bg-low-grey-I",
                               )}
                             >
-                              {child.badge.count}
-                            </SidebarMenuBadge>
+                              {renderIcon(child)}
+                              <span className="font-medium dark:text-white">{child.route}</span>
+                              {child.badge && (
+                                <SidebarMenuBadge
+                                  className={cn(
+                                    "mr-4 ml-auto flex h-4 w-4 items-center justify-center rounded-full text-xs",
+                                    child.badge.variant === "danger"
+                                      ? "bg-mid-danger text-white"
+                                      : child.badge.variant === "success"
+                                        ? "bg-green-500 text-white"
+                                        : child.badge.variant === "warning"
+                                          ? "bg-accent text-white"
+                                          : child.badge.variant === "info"
+                                            ? "bg-primary text-white"
+                                            : "bg-gray-200",
+                                    child.badge.count === 0 && "hidden",
+                                  )}
+                                >
+                                  {child.badge.count}
+                                </SidebarMenuBadge>
+                              )}
+                            </SidebarMenuSubButton>
+                          }
+                          width="max-w-md"
+                        >
+                          <div className="mx-auto w-full max-w-md rounded-2xl bg-white">
+                            <div className="text-center">
+                              <h3 className="!text-2xl !font-bold">Rate Our App</h3>
+                              <p className="text-muted-foreground mt-1 text-sm">How would you rate our app?</p>
+                              <p className="text-muted-foreground mt-4 text-xs">Tap the stars to choose</p>
+                            </div>
+                            <div className="mt-3 flex justify-center">
+                              <Ratings size={32} readonly={false} rating={appRating} onChange={setAppRating} />
+                            </div>
+                            <div className="mt-4">
+                              <textarea
+                                value={appReview}
+                                onChange={(event_) => setAppReview(event_.target.value)}
+                                className="focus:ring-primary h-28 w-full rounded-lg border p-3 text-sm outline-none focus:ring-2"
+                                placeholder="Write a review (Optional)"
+                              />
+                            </div>
+                            <DialogClose asChild>
+                              <SkiButton variant="primary" className="mt-5 w-full" isDisabled={appRating === 0}>
+                                Save Rating
+                              </SkiButton>
+                            </DialogClose>
+                          </div>
+                        </Modal>
+                      ) : (
+                        <SidebarMenuSubButton
+                          asChild
+                          className={cn(
+                            "flex h-[40px] items-center gap-3 rounded-lg text-sm font-medium transition-all duration-200",
+                            isChildActiveState
+                              ? "bg-primary/10 text-primary shadow-active border-primary rounded-none border-l-2"
+                              : "hover:bg-low-grey-I",
                           )}
-                        </LocaleLink>
-                      </SidebarMenuSubButton>
+                        >
+                          <LocaleLink onClick={handleCloseOnMobile} href={childLink} data-testid={child.id}>
+                            {renderIcon(child)}
+                            <span className="font-medium dark:text-white">{child.route}</span>
+                            {child.badge && (
+                              <SidebarMenuBadge
+                                className={cn(
+                                  "mr-4 ml-auto flex h-4 w-4 items-center justify-center rounded-full text-xs",
+                                  child.badge.variant === "danger"
+                                    ? "bg-mid-danger text-white"
+                                    : child.badge.variant === "success"
+                                      ? "bg-green-500 text-white"
+                                      : child.badge.variant === "warning"
+                                        ? "bg-accent text-white"
+                                        : child.badge.variant === "info"
+                                          ? "bg-primary text-white"
+                                          : "bg-gray-200",
+                                  child.badge.count === 0 && "hidden",
+                                )}
+                              >
+                                {child.badge.count}
+                              </SidebarMenuBadge>
+                            )}
+                          </LocaleLink>
+                        </SidebarMenuSubButton>
+                      )}
                     </SidebarMenuSubItem>
                   );
                 })}
@@ -293,39 +364,86 @@ export function DashboardSidebar({
           </>
         ) : (
           // Regular menu item without children
-          <SidebarMenuButton
-            asChild
-            className={cn(
-              "flex h-[48px] items-center gap-3 rounded-lg text-base transition-all duration-200",
-              isActive
-                ? "bg-primary/10 text-primary shadow-active border-primary rounded-none border-l-4"
-                : "hover:bg-low-grey-I",
-            )}
-          >
-            <LocaleLink onClick={handleCloseOnMobile} href={link} data-testid={item.id}>
-              {renderIcon(item)}
-              <span className="font-medium dark:text-white">{item.route}</span>
-              {item.badge && (
-                <SidebarMenuBadge
-                  className={cn(
-                    "mr-4 ml-auto flex h-5 w-5 items-center justify-center rounded-full text-xs",
-                    item.badge.variant === "danger"
-                      ? "bg-mid-danger text-white"
-                      : item.badge.variant === "success"
-                        ? "bg-green-500 text-white"
-                        : item.badge.variant === "warning"
-                          ? "bg-accent text-white"
-                          : item.badge.variant === "info"
-                            ? "bg-primary text-white"
-                            : "bg-gray-200",
-                    item.badge.count === 0 && "hidden",
+          <>
+            {item.actionType === "open-rate-app-modal" ? (
+              <Modal
+                title=""
+                description=""
+                triggerStructure={
+                  <SidebarMenuButton
+                    className={cn(
+                      "flex h-[48px] items-center gap-3 rounded-lg text-base transition-all duration-200",
+                      isActive
+                        ? "bg-primary/10 text-primary shadow-active border-primary rounded-none border-l-4"
+                        : "hover:bg-low-grey-I",
+                    )}
+                  >
+                    {renderIcon(item)}
+                    <span className="font-medium dark:text-white">{item.route}</span>
+                  </SidebarMenuButton>
+                }
+                width="max-w-md"
+              >
+                <div className="mx-auto w-full max-w-md rounded-2xl bg-white p-4 sm:p-6">
+                  <div className="text-center">
+                    <h3 className="text-lg font-bold">Rate Our App</h3>
+                    <p className="text-muted-foreground mt-1 text-sm">How would you rate our app?</p>
+                    <p className="text-muted-foreground mt-4 text-xs">Tap the stars to choose</p>
+                  </div>
+                  <div className="mt-3 flex justify-center">
+                    <Ratings size={32} readonly={false} rating={appRating} onChange={setAppRating} />
+                  </div>
+                  <div className="mt-4">
+                    <textarea
+                      value={appReview}
+                      onChange={(event_) => setAppReview(event_.target.value)}
+                      className="h-28 w-full rounded-lg border p-3 text-sm outline-none focus:ring-2 focus:ring-blue-500"
+                      placeholder="Write a review (Optional)"
+                    />
+                  </div>
+                  <DialogClose asChild>
+                    <SkiButton variant="primary" className="mt-5 w-full" isDisabled={appRating === 0}>
+                      Save Rating
+                    </SkiButton>
+                  </DialogClose>
+                </div>
+              </Modal>
+            ) : (
+              <SidebarMenuButton
+                asChild
+                className={cn(
+                  "flex h-[48px] items-center gap-3 rounded-lg text-base transition-all duration-200",
+                  isActive
+                    ? "bg-primary/10 text-primary shadow-active border-primary rounded-none border-l-4"
+                    : "hover:bg-low-grey-I",
+                )}
+              >
+                <LocaleLink onClick={handleCloseOnMobile} href={link} data-testid={item.id}>
+                  {renderIcon(item)}
+                  <span className="font-medium dark:text-white">{item.route}</span>
+                  {item.badge && (
+                    <SidebarMenuBadge
+                      className={cn(
+                        "mr-4 ml-auto flex h-5 w-5 items-center justify-center rounded-full text-xs",
+                        item.badge.variant === "danger"
+                          ? "bg-mid-danger text-white"
+                          : item.badge.variant === "success"
+                            ? "bg-green-500 text-white"
+                            : item.badge.variant === "warning"
+                              ? "bg-accent text-white"
+                              : item.badge.variant === "info"
+                                ? "bg-primary text-white"
+                                : "bg-gray-200",
+                        item.badge.count === 0 && "hidden",
+                      )}
+                    >
+                      {item.badge.count}
+                    </SidebarMenuBadge>
                   )}
-                >
-                  {item.badge.count}
-                </SidebarMenuBadge>
-              )}
-            </LocaleLink>
-          </SidebarMenuButton>
+                </LocaleLink>
+              </SidebarMenuButton>
+            )}
+          </>
         )}
       </SidebarMenuItem>
     );

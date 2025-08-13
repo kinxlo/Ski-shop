@@ -15,7 +15,7 @@ export class DashboardProductService {
     const appliedFilters = filters ?? defaultFilters;
     const queryParameters = this.buildQueryParameters(appliedFilters);
     const storeId = await this.getMyStore();
-    if (storeId.success) {
+    if (storeId?.success) {
       const response = await this.http.get<ProductApiResponse>(
         `/products?storeId=${storeId.data.id}&${queryParameters}`,
       );

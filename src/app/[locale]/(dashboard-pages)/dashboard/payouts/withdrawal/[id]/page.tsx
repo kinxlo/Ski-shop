@@ -204,7 +204,7 @@ const WithdrawalDetailsPage = ({ params }: PageProperties) => {
   return (
     <div className="min-h-screen">
       {/* Header */}
-      <div className="border-border border-b px-4 py-4 sm:px-6 sm:py-6">
+      <div className="px-4 py-4 sm:px-6 sm:py-6">
         <div className="flex items-center gap-3 sm:gap-4">
           <button
             onClick={handleGoBack}
@@ -219,7 +219,7 @@ const WithdrawalDetailsPage = ({ params }: PageProperties) => {
 
       {/* Content */}
       <Wrapper className="px-0 py-8">
-        <div className="rounded-lg bg-white p-4 sm:p-6 lg:p-8">
+        <div className="border-border rounded-lg border bg-white p-4 sm:p-6 lg:p-8">
           {/* Amount */}
           <div className="mb-6 sm:mb-8">
             <h2 className="mb-2 !text-lg font-semibold">Withdraw Earnings</h2>

@@ -103,13 +103,10 @@ export default function ProductDetailPage() {
         { id: product.id, data: submitData },
         {
           onSuccess: (response) => {
-            if (response.success) {
+            if (response?.success) {
               toast.success("Product marked as out of stock");
               refetch();
             }
-          },
-          onError: () => {
-            toast.error("Failed to mark product as out of stock");
           },
         },
       );

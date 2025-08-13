@@ -1,28 +1,23 @@
 import { queryKeys } from "@/lib/react-query/query-keys";
 import { createServiceHooks } from "@/lib/react-query/use-service-query";
 import { dependencies } from "@/lib/tools/dependencies";
-import { useQueryClient, UseQueryOptions } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 
-import { DashboardProfileService, VendorProfileApiResponse } from "./profile.service";
+import { DashboardProfileService } from "./profile.service";
 
 export const useDashboardProfileService = () => {
-  const { useServiceQuery, useServiceMutation } = createServiceHooks<DashboardProfileService>(
+  const { useServiceMutation, useServiceQuery } = createServiceHooks<DashboardProfileService>(
     dependencies.DASHBOARD_PROFILE_SERVICE,
   );
 
   // Queries
-  const useGetVendorProfile = (options?: UseQueryOptions<VendorProfileApiResponse>) => {
-    return useServiceQuery([...queryKeys.dashboard.profile.details()], (service) => service.getVendorProfile(), {
-      staleTime: 5 * 60 * 1000, // 5 minutes
-      gcTime: 10 * 60 * 1000, // 10 minutes
-      ...options,
-    });
+  const useGetVendorStore = () => {
+    return useServiceQuery([...queryKeys.dashboard.profile.details()], (service) => service.getVendorStore());
   };
 
   // Mutations
   const useUpdateVendorProfile = () => {
     const queryClient = useQueryClient();
-
     return useServiceMutation(
       (service, { data }: { data: VendorProfileFormData }) => service.updateVendorProfile(data),
       {
@@ -34,10 +29,25 @@ export const useDashboardProfileService = () => {
     );
   };
 
+  const useGetAllAvailablePromotions = () => {
+    return useServiceQuery([...queryKeys.dashboard.profile.details()], (service) =>
+      service.getAllAvailablePromotions(),
+    );
+  };
+
+  const useCreateAds = () => {
+    return useServiceMutation(
+      (service, { data }: { data: { promotionId: string; productId: string; paymentMethod: "paystack" } }) =>
+        service.createAds(data),
+    );
+  };
+
   return {
     // Queries
-    useGetVendorProfile,
+    useGetVendorStore,
+    useGetAllAvailablePromotions,
     // Mutations
     useUpdateVendorProfile,
+    useCreateAds,
   };
 };

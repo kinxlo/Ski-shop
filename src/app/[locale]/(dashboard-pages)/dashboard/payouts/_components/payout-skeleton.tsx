@@ -7,7 +7,10 @@ export const PayoutOverviewSkeleton = () => {
     <section className="my-[38px] grid grid-cols-1 gap-[31px] lg:grid-cols-2">
       {/* Overview Cards Skeleton */}
       {Array.from({ length: 4 }).map((_, index) => (
-        <div key={index} className="flex min-h-[120px] flex-col justify-center rounded-lg bg-white p-6 shadow-none">
+        <div
+          key={index}
+          className="border-border flex min-h-[120px] flex-col justify-center rounded-lg border bg-white p-6 shadow-none"
+        >
           <div className="flex items-center justify-between">
             <div className="space-y-3">
               <Skeleton className="h-4 w-[120px]" />

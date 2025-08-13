@@ -227,6 +227,9 @@ declare global {
   /** Review API response */
   interface ReviewApiResponse extends PaginatedApiResponse<Review> {}
 
+  /** Promotion API response */
+  interface PromotionApiResponse extends PaginatedApiResponse<Promotion> {}
+
   /** Cart API response */
   interface CartApiResponse {
     data: {
@@ -256,6 +259,15 @@ declare global {
   interface SingleStoreApiResponse {
     success: boolean;
     data: Store;
+  }
+
+  interface Promotion {
+    id: string;
+    name: string;
+    amount: number;
+    duration: number;
+    type: string;
+    createdAt: string;
   }
 }
 
