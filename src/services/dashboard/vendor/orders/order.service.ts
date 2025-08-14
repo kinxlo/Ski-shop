@@ -1,75 +1,35 @@
 import { HttpAdapter } from "@/lib/http/http-adapter";
 import { tryCatchWrapper } from "@/lib/tools/tryCatchFunction";
 
-export interface IOrder {
-  id: string;
-  orderId: string;
-  status: "pending" | "delivered" | "cancelled";
-  products: Array<{
-    id: string;
-    name: string;
-    image: string;
-    price: number;
-    quantity: number;
-  }>;
-  buyer: {
-    name: string;
-    email: string;
-  };
-  delivery: {
-    address: string;
-    city: string;
-    state: string;
-  };
-  totalAmount: number;
-  createdAt: string;
-  updatedAt: string;
-}
-
-export interface IOrderApiResponse {
-  data: {
-    items: IOrder[];
-    metadata: {
-      total: number;
-      totalPages: number;
-      currentPage: number;
-      hasNextPage: boolean;
-      hasPreviousPage: boolean;
-    };
-  };
-}
-
-export interface IFilters {
-  page?: number;
-  limit?: number;
-  status?: "pending" | "delivered" | "cancelled";
-  search?: string;
-}
+// Types are now globally available in src/types/
 
 export class DashboardOrderService {
-  constructor(private http: HttpAdapter) {}
+  private readonly http: HttpAdapter;
 
-  async getAllOrders(filters?: IFilters): Promise<IOrderApiResponse> {
-    return tryCatchWrapper(async () => {
-      const parameters = new URLSearchParams();
+  constructor(httpAdapter: HttpAdapter) {
+    this.http = httpAdapter;
+  }
 
-      if (filters?.page) parameters.append("page", filters.page.toString());
-      if (filters?.limit) parameters.append("limit", filters.limit.toString());
-      if (filters?.status) parameters.append("status", filters.status);
-      if (filters?.search) parameters.append("search", filters.search);
+  async getAllOrders(filters?: Filters) {
+    const defaultFilters: Filters = { page: 1, limit: 10 };
+    const appliedFilters = filters ?? defaultFilters;
+    const queryParameters = this.buildQueryParameters(appliedFilters);
+    const storeId = await this.getMyStore();
 
-      const response = await this.http.get<IOrderApiResponse>(`/api/dashboard/orders?${parameters.toString()}`);
-
+    if (storeId.success) {
+      // const response = await this.http.get<IOrderApiResponse>(`/orders?storeId=${storeId.data.id}&${queryParameters}`);
+      const response = await this.http.get<OrderApiResponse>(`/orders?${queryParameters}`);
       if (response?.status === 200) {
         return response.data;
       }
       throw new Error("Failed to fetch orders");
-    });
+    }
+    throw new Error("Failed to fetch orders");
   }
 
-  async getOrderById(id: string): Promise<{ data: IOrder }> {
+  async getOrderById(id: string): Promise<{ success: boolean; data: Order }> {
     return tryCatchWrapper(async () => {
-      const response = await this.http.get<{ data: IOrder }>(`/api/dashboard/orders/${id}`);
+      const response = await this.http.get<{ success: boolean; data: Order }>(`/orders/${id}`);
 
       if (response?.status === 200) {
         return response.data;
@@ -78,14 +38,38 @@ export class DashboardOrderService {
     });
   }
 
-  async updateOrderStatus(id: string, status: "pending" | "delivered" | "cancelled"): Promise<{ data: IOrder }> {
+  async updateOrderStatus(
+    id: string,
+    status: "pending" | "delivered" | "cancelled",
+  ): Promise<{ success: boolean; data: Order }> {
     return tryCatchWrapper(async () => {
-      const response = await this.http.patch<{ data: IOrder }>(`/api/dashboard/orders/${id}/status`, { status });
+      const response = await this.http.patch<{ success: boolean; data: Order }>(`/orders/${id}/status`, { status });
 
       if (response?.status === 200) {
         return response.data;
       }
       throw new Error("Failed to update order status");
     });
+  }
+
+  // Get my store /stores/current
+  async getMyStore() {
+    return tryCatchWrapper(async () => {
+      const response = await this.http.get<{ success: boolean; data: Store }>(`/stores/current`);
+      if (response?.status === 200) {
+        return response.data;
+      }
+      throw new Error("Failed to fetch store id");
+    });
+  }
+
+  private buildQueryParameters(filters: Filters): string {
+    const queryParameters = new URLSearchParams();
+    for (const [key, value] of Object.entries(filters)) {
+      if (value !== undefined) {
+        queryParameters.append(key, value.toString());
+      }
+    }
+    return queryParameters.toString();
   }
 }

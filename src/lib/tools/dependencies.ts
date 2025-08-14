@@ -1,7 +1,9 @@
 import { AuthService } from "@/services/auth/auth.service";
 import { HomeService } from "@/services/dashboard/vendor/home/home.service";
 import { DashboardOrderService } from "@/services/dashboard/vendor/orders/order.service";
+import { PayoutService } from "@/services/dashboard/vendor/payouts/payout.service";
 import { DashboardProductService } from "@/services/dashboard/vendor/products/product.service";
+import { DashboardProfileService } from "@/services/dashboard/vendor/users/profile.service";
 import { AppService } from "@/services/externals/app/app.service";
 import { OnboardingUserService } from "@/services/externals/onboarding/onboarding-user.service";
 import { UserService } from "@/services/externals/user/user.service";
@@ -17,12 +19,11 @@ const dependencies = {
   ONBOARDING_USER_SERVICE: Symbol("OnboardingUserService"),
   DASHBOARD_PRODUCT_SERVICE: Symbol("DashboardProductService"),
   DASHBOARD_ORDER_SERVICE: Symbol("DashboardOrderService"),
+  DASHBOARD_PROFILE_SERVICE: Symbol("DashboardProfileService"),
+  PAYOUT_SERVICE: Symbol("PayoutService"),
 };
 
-interface IDependencyContainer {
-  add<T>(key: symbol, dependency: T): void;
-  get<T>(key: symbol): T;
-}
+// Types are now globally available in src/types/
 
 const httpAdapter = new HttpAdapter();
 const appService = new AppService(httpAdapter);
@@ -32,6 +33,8 @@ const userService = new UserService(httpAdapter);
 const onboardingUserService = new OnboardingUserService();
 const dashboardProductService = new DashboardProductService(httpAdapter);
 const dashboardOrderService = new DashboardOrderService(httpAdapter);
+const dashboardProfileService = new DashboardProfileService(httpAdapter);
+const payoutService = new PayoutService(httpAdapter);
 
 class DependencyContainer implements IDependencyContainer {
   _dependencies = {};
@@ -57,5 +60,7 @@ container.add(dependencies.USER_SERVICE, userService);
 container.add(dependencies.ONBOARDING_USER_SERVICE, onboardingUserService);
 container.add(dependencies.DASHBOARD_PRODUCT_SERVICE, dashboardProductService);
 container.add(dependencies.DASHBOARD_ORDER_SERVICE, dashboardOrderService);
+container.add(dependencies.DASHBOARD_PROFILE_SERVICE, dashboardProfileService);
+container.add(dependencies.PAYOUT_SERVICE, payoutService);
 
 export { container, dependencies };

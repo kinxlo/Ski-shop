@@ -118,11 +118,11 @@ export function FormField({
                   {...field}
                   placeholder={placeholder}
                   disabled={disabled}
-                  className={cn(inputClassName, "resize-y")}
+                  className={cn(inputClassName, "border-border resize-y !border-1 !shadow-none")}
                 />
               ) : type === "select" ? (
                 <Select onValueChange={field.onChange} value={field.value} disabled={disabled}>
-                  <SelectTrigger className={cn(inputClassName, "w-full bg-white")}>
+                  <SelectTrigger className={cn(inputClassName, "border-border w-full bg-white shadow-none")}>
                     <SelectValue placeholder={placeholder} />
                   </SelectTrigger>
                   <SelectContent>
@@ -139,7 +139,7 @@ export function FormField({
                   type="number"
                   placeholder={placeholder}
                   disabled={disabled}
-                  className={inputClassName}
+                  className={cn(inputClassName, "border-border shadow-none")}
                   value={field.value || ""}
                   onChange={(event) => field.onChange(event.target.valueAsNumber)}
                 />
@@ -150,7 +150,7 @@ export function FormField({
                     type={showPassword ? "text" : "password"}
                     placeholder={placeholder}
                     disabled={disabled}
-                    className={inputClassName}
+                    className={cn(inputClassName, "border-border shadow-none")}
                     onChange={(event) => {
                       field.onChange(event);
                       onChange?.(event);
@@ -279,7 +279,7 @@ export function FormField({
                   type={type}
                   placeholder={placeholder}
                   disabled={disabled}
-                  className={inputClassName}
+                  className={cn(inputClassName, "border-border shadow-none")}
                 />
               )}
               {rightAddon && <div className="flex items-center">{rightAddon}</div>}

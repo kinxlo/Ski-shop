@@ -61,19 +61,6 @@ export const PublishedProducts = () => {
     [router, locale],
   );
 
-  if (isError) {
-    return (
-      <EmptyState
-        images={[{ src: empty1.src, alt: "No products", width: 50, height: 50 }]}
-        className={`space-y-0`}
-        titleClassName={`!text-2xl text-primary font-semibold`}
-        descriptionClassName={`text-muted-foreground max-w-[500px] font-medium`}
-        title="No published products yet."
-        description="Once you publish products, you'll see their details here, including name, category, price, stock, and more."
-      />
-    );
-  }
-
   // Extract data from the correct structure (similar to shop page)
   const products = productData?.data?.items || [];
   const totalProducts = productData?.data?.metadata?.total || 0;
@@ -81,53 +68,96 @@ export const PublishedProducts = () => {
   const hasNextPage = productData?.data?.metadata?.hasNextPage || false;
   const hasPreviousPage = productData?.data?.metadata?.hasPreviousPage || false;
 
-  return (
-    <>
-      <div className="mb-2 flex items-center justify-between gap-2">
-        <h6 className={`!text-lg font-semibold`}>Published</h6>
-        <div className={`flex items-center gap-2`}>
-          <SearchInput className={``} onSearch={handleSearchChange} initialValue={searchQuery} delay={500} />
-        </div>
-      </div>
-      <section>
-        {isProductsLoading ? (
-          <TableSkeleton />
-        ) : products.length > 0 ? (
-          <DashboardTable
-            data={products}
-            columns={productColumn}
-            totalPages={totalPages}
-            itemsPerPage={totalProducts}
-            hasPreviousPage={hasPreviousPage}
-            hasNextPage={hasNextPage}
-            showPagination
-            pageParameter="page"
-            onRowClick={handleRowClick}
-          />
-        ) : searchQuery ? (
-          <FilteredEmptyState
-            onReset={() => {
-              setSearchQuery("");
-              resetToFirstPage();
-            }}
-          />
-        ) : (
-          <EmptyState
-            images={[{ src: empty1.src, alt: "No products", width: 50, height: 50 }]}
-            className={`space-y-0`}
-            titleClassName={`!text-2xl text-primary font-semibold`}
-            descriptionClassName={`text-muted-foreground max-w-[500px] font-medium`}
-            title="No published products yet."
-            description="Once you publish products, you'll see their details here, including name, category, price, stock, and more."
-            button={{
-              text: "Add New Product",
-              onClick: () => {
-                router.push(`/${locale}/dashboard/products/new`);
-              },
-            }}
-          />
-        )}
-      </section>
-    </>
+  const renderLoadingSkeleton = () => <TableSkeleton />;
+
+  const renderErrorState = () => (
+    <EmptyState
+      images={[{ src: empty1.src, alt: "No products", width: 50, height: 50 }]}
+      className="space-y-0"
+      titleClassName="!text-2xl text-primary font-semibold"
+      descriptionClassName="text-muted-foreground max-w-[500px] font-medium"
+      title="No published products yet."
+      description="Once you publish products, you'll see their details here, including name, category, price, stock, and more."
+    />
   );
+
+  const renderFilteredEmptyState = () => (
+    <FilteredEmptyState
+      onReset={() => {
+        setSearchQuery("");
+        resetToFirstPage();
+      }}
+    />
+  );
+
+  const renderEmptyState = () => (
+    <EmptyState
+      images={[{ src: empty1.src, alt: "No products", width: 50, height: 50 }]}
+      className="space-y-0"
+      titleClassName="!text-2xl text-primary font-semibold"
+      descriptionClassName="text-muted-foreground max-w-[500px] font-medium"
+      title="No published products yet."
+      description="Once you publish products, you'll see their details here, including name, category, price, stock, and more."
+      button={{
+        text: "Add New Product",
+        onClick: () => {
+          router.push(`/${locale}/dashboard/products/new`);
+        },
+      }}
+    />
+  );
+
+  const renderProductsTable = () => (
+    <DashboardTable
+      data={products}
+      columns={productColumn}
+      totalPages={totalPages}
+      itemsPerPage={totalProducts}
+      hasPreviousPage={hasPreviousPage}
+      hasNextPage={hasNextPage}
+      showPagination
+      pageParameter="page"
+      onRowClick={handleRowClick}
+    />
+  );
+
+  const renderHeader = () => (
+    <div className="mb-2 flex items-center justify-between gap-2">
+      <h6 className="!text-lg font-semibold">Published</h6>
+      <div className="flex items-center gap-2">
+        <SearchInput onSearch={handleSearchChange} initialValue={searchQuery} delay={500} />
+      </div>
+    </div>
+  );
+
+  const renderProductsContent = () => {
+    if (isProductsLoading) {
+      return renderLoadingSkeleton();
+    }
+
+    if (products.length > 0) {
+      return renderProductsTable();
+    }
+
+    if (searchQuery) {
+      return renderFilteredEmptyState();
+    }
+
+    return renderEmptyState();
+  };
+
+  const renderPublishedProductsView = () => {
+    if (isError) {
+      return renderErrorState();
+    }
+
+    return (
+      <>
+        {renderHeader()}
+        <section>{renderProductsContent()}</section>
+      </>
+    );
+  };
+
+  return renderPublishedProductsView();
 };

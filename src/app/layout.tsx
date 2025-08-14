@@ -1,78 +1,41 @@
 import { fontVariables } from "@/lib/tools/font";
 import { cn } from "@/lib/utils";
-import type { Metadata, Viewport } from "next";
-import { cookies } from "next/headers";
+import type { Metadata } from "next";
+import Script from "next/script";
 import NextTopLoader from "nextjs-toploader";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
 
-import "../styles/theme.css";
 import "../styles/global.css";
 
-import ThemeProvider from "@/components/core/layout/ThemeToggle/theme-provider";
-// import { ModeToggle } from "@/components/core/layout/ThemeToggle/theme-toggle";
+import { AppThemeProvider } from "@/components/core/miscellaneous/theme-provider";
 import { Toast } from "@/components/shared/Toast";
 import { ReactQueryProvider } from "@/lib/react-query/query-provider";
 import { MockServiceWorkerProvider } from "@/mocks/mock-provider";
 import { SessionProvider } from "next-auth/react";
-
-const META_THEME_COLORS = {
-  light: "#ffffff",
-  dark: "#09090b",
-};
 
 export const metadata: Metadata = {
   title: "Ski Shop",
   description: "Shop Smart and Save More with Ski-Shop",
 };
 
-export const viewport: Viewport = {
-  themeColor: META_THEME_COLORS.light,
-};
-
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
-  const cookieStore = await cookies();
-  const activeThemeValue = cookieStore.get("active_theme")?.value;
-  const isScaled = activeThemeValue?.endsWith("-scaled");
-
+  const themeInit = `;(function(){try{var de=document.documentElement;var d=de.classList;var v=localStorage.getItem('theme_variant')||'default';d.remove('theme-red','theme-green');if(v==='red'){d.add('theme-red');}else if(v==='green'){d.add('theme-green');}var m=localStorage.getItem('theme_mode')||'system';var prefersDark=(function(){try{return window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches;}catch(_){return false}})();var eff=m==='system'?(prefersDark?'dark':'light'):m;d.toggle('dark',eff==='dark');try{de.dataset.themeMode=eff}catch(_){}}catch(e){}})();`;
   return (
     <html lang="en" suppressHydrationWarning>
-      <head>
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              try {
-                if (localStorage.theme === 'dark' || ((!('theme' in localStorage) || localStorage.theme === 'system') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-                  document.querySelector('meta[name="theme-color"]').setAttribute('content', '${META_THEME_COLORS.dark}')
-                }
-              } catch (_) {}
-            `,
-          }}
-        />
-      </head>
       <SessionProvider>
-        <body
-          className={cn(
-            "bg-background font-sans antialiased",
-            activeThemeValue ? `theme-${activeThemeValue}` : "",
-            isScaled ? "theme-scaled" : "",
-            fontVariables,
-          )}
-        >
-          <NextTopLoader showSpinner={false} />
-          <NuqsAdapter>
-            <ReactQueryProvider>
-              <ThemeProvider
-                attribute="class"
-                defaultTheme="system"
-                enableSystem
-                disableTransitionOnChange
-                enableColorScheme
-              >
+        <body className={cn("", fontVariables)}>
+          <Script id="theme-variant-init" strategy="beforeInteractive">
+            {themeInit}
+          </Script>
+          <ReactQueryProvider>
+            <AppThemeProvider>
+              <NuqsAdapter>
+                <NextTopLoader showSpinner={false} />
                 <Toast />
                 <MockServiceWorkerProvider isEnabled={true}>{children}</MockServiceWorkerProvider>
-              </ThemeProvider>
-            </ReactQueryProvider>
-          </NuqsAdapter>
+              </NuqsAdapter>
+            </AppThemeProvider>
+          </ReactQueryProvider>
         </body>
       </SessionProvider>
     </html>

@@ -1,10 +1,9 @@
 "use client";
 
+import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
 import { IoEllipsisVerticalSharp } from "react-icons/io5";
 import { LuDot } from "react-icons/lu";
 import { Bar, BarChart, CartesianGrid, XAxis } from "recharts";
-
-import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from "~/components/ui/chart";
 
 const chartData = [
   { month: "January", desktop: 186, mobile: 80, tablet: 70 },

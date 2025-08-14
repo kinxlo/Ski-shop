@@ -11,11 +11,11 @@ interface OverviewProperties {
 
 export const OverViewCard: FC<OverviewProperties> = ({ title, value, icon, iconClassName }) => {
   return (
-    <Card className="min-h-[144px] w-full border-none px-[22px] py-[33px] shadow-none">
+    <Card className="border-border min-h-[144px] w-full px-[22px] py-[33px] shadow-none">
       <section className="flex w-full items-start justify-between self-center">
         <div className="space-y-[13px]">
-          <p className="text-[18px] font-[500]">{title}</p>
-          <p className="text-[24px] font-extrabold">{value}</p>
+          <h5 className="!text-lg font-semibold">{title}</h5>
+          <p className="!text-2xl font-extrabold">{value}</p>
         </div>
         <div className={cn(`flex h-[42px] w-[42px] items-center justify-center rounded`, iconClassName)}>{icon}</div>
       </section>

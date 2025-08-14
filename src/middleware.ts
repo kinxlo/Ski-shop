@@ -1,144 +1,162 @@
+import { defaultLocale } from "@/lib/i18n/config";
+import { isValidLocale } from "@/lib/i18n/utils";
+import { ADMIN_ROUTES, PUBLIC_ROUTES, SUPER_ADMIN_ROUTES, VENDOR_ROUTES } from "@/lib/routes/routes";
 import { getToken } from "next-auth/jwt";
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse, type NextRequest } from "next/server";
 
-import { ADMIN_ROUTES, PUBLIC_ROUTES, SUPER_ADMIN_ROUTES, VENDOR_ROUTES } from "./lib/routes/routes";
+function stripLocalePrefix(pathname: string): { basePath: string; localePrefix: string | null } {
+  const segments = pathname.split("/");
+  const maybeLocale = segments[1];
+  if (maybeLocale && isValidLocale(maybeLocale)) {
+    const rest = segments.slice(2).join("/");
+    return { basePath: `/${rest}`, localePrefix: maybeLocale };
+  }
+  return { basePath: pathname, localePrefix: null };
+}
 
-// Helper function to check if path matches any route pattern
-const matchesRoute = (path: string, routePatterns: string[]): boolean => {
-  return routePatterns.some((pattern) => {
-    if (pattern.endsWith("*")) {
-      const basePattern = pattern.slice(0, -1);
-      return path.startsWith(basePattern);
+function pathMatchesAny(pathname: string, patterns: string[]): boolean {
+  for (const pattern of patterns) {
+    if (pattern === "/") {
+      if (pathname === "/") return true;
+      continue;
     }
-    return path === pattern || path.startsWith(pattern + "/");
-  });
-};
+    if (pathname === pattern) return true;
+    if (pathname.startsWith(`${pattern}/`)) return true;
+  }
+  return false;
+}
 
-// Supported locales
-const SUPPORTED_LOCALES = ["en", "fr", "es", "ar"];
+function getUserRoleFromToken(token: unknown): string {
+  if (!token || typeof token !== "object") return "customer";
+  const maybeRole = (token as Record<string, unknown>).role as unknown;
+  if (!maybeRole) return "customer";
+  if (typeof maybeRole === "string") return maybeRole.toLowerCase();
+  const id = String((maybeRole as Record<string, unknown>)?.id ?? "");
+  const name = String((maybeRole as Record<string, unknown>)?.name ?? "");
+  return (name || id || "customer").toLowerCase();
+}
 
-export async function middleware(request: NextRequest) {
-  const { pathname } = request.nextUrl;
+function getDefaultHomeForRole(role: string): string {
+  switch (role) {
+    case "vendor": {
+      return "/dashboard";
+    }
+    case "admin": {
+      return "/admin";
+    }
+    case "super-admin":
+    case "super_admin":
+    case "superadmin": {
+      return "/super-admin";
+    }
+    default: {
+      return "/shop";
+    }
+  }
+}
 
-  // Skip middleware for static files and API routes
+function withLocalePrefix(path: string, localePrefix: string | null): string {
+  if (!localePrefix) return path;
+  if (path === "/") return `/${localePrefix}`;
+  return `/${localePrefix}${path.startsWith("/") ? "" : "/"}${path}`;
+}
+
+export default async function middleware(request: NextRequest) {
+  const { nextUrl } = request;
+  const pathname = nextUrl.pathname;
+
+  // Skip static files, internal Next.js paths, and API routes entirely
   if (
-    pathname.startsWith("/_next/") ||
-    pathname.startsWith("/api/") ||
-    pathname.startsWith("/static/") ||
-    pathname.includes(".") // Skip files with extensions
+    pathname.startsWith("/_next") ||
+    pathname.startsWith("/_vercel") ||
+    pathname.startsWith("/favicon") ||
+    pathname.startsWith("/assets") ||
+    pathname.startsWith("/images") ||
+    pathname.startsWith("/api/")
   ) {
     return NextResponse.next();
   }
 
-  // Extract locale from pathname
-  const pathnameHasLocale = SUPPORTED_LOCALES.some(
-    (locale) => pathname.startsWith(`/${locale}/`) || pathname === `/${locale}`,
-  );
+  const { basePath, localePrefix } = stripLocalePrefix(pathname);
 
-  // If no locale in pathname, redirect to default locale (en)
-  if (!pathnameHasLocale) {
-    const locale = "en";
-    return NextResponse.redirect(new URL(`/${locale}${pathname}`, request.url));
+  // Enforce locale prefix: redirect to default locale if missing
+  if (!localePrefix) {
+    const localized = `/${defaultLocale}${pathname === "/" ? "" : pathname}${nextUrl.search}`;
+    return NextResponse.redirect(new URL(localized, request.url));
   }
 
-  // Extract locale and path without locale
-  const segments = pathname.split("/");
-  const locale = segments[1];
-  const pathWithoutLocale = `/${segments.slice(2).join("/")}`;
-
-  // Check if locale is supported
-  if (!SUPPORTED_LOCALES.includes(locale)) {
-    return NextResponse.redirect(new URL(`/en${pathWithoutLocale}`, request.url));
+  // Always allow NextAuth built-in endpoints
+  if (basePath.startsWith("/api/auth")) {
+    return NextResponse.next();
   }
 
-  // Get user token to check authentication and role
+  // Auth state from JWT cookie (compatible with middleware)
+  // Fix for production: ensure proper cookie reading and secret handling
   const token = await getToken({
     req: request,
-    secret: process.env.AUTH_SECRET,
+    secret: process.env.AUTH_SECRET ?? process.env.NEXTAUTH_SECRET ?? process.env.NEXT_AUTH_SECRET,
+    // Add cookie configuration for production
+    cookieName: process.env.NODE_ENV === "production" ? "__Secure-authjs.session-token" : "authjs.session-token",
+    // Ensure secure cookies are handled correctly
+    secureCookie: process.env.NODE_ENV === "production",
   });
 
-  const isAuthenticated = !!token;
-  // Handle role as object or string
-  const userRole =
-    typeof token?.role === "object" && (token?.role as { id: string })?.id
-      ? (token?.role as { id: string }).id
-      : (token?.role as string) || "customer";
+  // Debug logging for production issues (remove after fixing)
+  if (process.env.NODE_ENV === "production" && !token && pathname !== "/login") {
+    // eslint-disable-next-line no-console
+    console.log("[Middleware] No token found in production for path:", pathname);
+    // eslint-disable-next-line no-console
+    console.log("[Middleware] Cookie header:", request.headers.get("cookie"));
+  }
 
-  // Check if user is trying to access a protected route
-  const isVendorRoute = matchesRoute(pathWithoutLocale, VENDOR_ROUTES);
-  const isAdminRoute = matchesRoute(pathWithoutLocale, ADMIN_ROUTES);
-  const isSuperAdminRoute = matchesRoute(pathWithoutLocale, SUPER_ADMIN_ROUTES);
-  const isPublicRoute = matchesRoute(pathWithoutLocale, PUBLIC_ROUTES);
+  const isAuthenticated = Boolean(token);
+  const role = getUserRoleFromToken(token);
 
-  // Role-based access control
-  if (isAuthenticated) {
-    // Authenticated users - check role-based access
-    switch (userRole) {
-      case "customer": {
-        // Customers can only access public routes
-        if (isVendorRoute || isAdminRoute || isSuperAdminRoute) {
-          const url = new URL(request.url);
-          url.pathname = `/${locale}/shop`;
-          return NextResponse.redirect(url);
-        }
-        break;
-      }
-
-      case "vendor": {
-        // Vendors can access public routes and vendor routes
-        if (isAdminRoute || isSuperAdminRoute) {
-          const url = new URL(request.url);
-          url.pathname = `/${locale}/dashboard/home`;
-          return NextResponse.redirect(url);
-        }
-        break;
-      }
-
-      case "admin": {
-        // Admins can access public routes, vendor routes, and admin routes
-        if (isSuperAdminRoute) {
-          const url = new URL(request.url);
-          url.pathname = `/${locale}/admin/home`;
-          return NextResponse.redirect(url);
-        }
-        break;
-      }
-
-      case "super-admin": {
-        // Super admins can access all routes
-        break;
-      }
-
-      default: {
-        // Unknown role - redirect to login with current locale
-        const url = new URL(request.url);
-        url.pathname = `/${locale}/login`;
-        return NextResponse.redirect(url);
-      }
+  // Public routes are accessible to everyone
+  const isPublic = pathMatchesAny(basePath, PUBLIC_ROUTES);
+  if (isPublic) {
+    // If authenticated and on an auth page, redirect to role home
+    if (isAuthenticated && (basePath === "/login" || basePath === "/signup" || basePath === "/auth")) {
+      const destination = withLocalePrefix(getDefaultHomeForRole(role), localePrefix);
+      return NextResponse.redirect(new URL(destination, request.url));
     }
-  } else {
-    // Unauthenticated users can only access public routes
-    if (!isPublicRoute) {
-      const url = new URL(request.url);
-      url.pathname = `/${locale}/login`;
-      return NextResponse.redirect(url);
+    return NextResponse.next();
+  }
+
+  // Protected routes by role
+  const isVendorArea = pathMatchesAny(basePath, VENDOR_ROUTES);
+  const isAdminArea = pathMatchesAny(basePath, ADMIN_ROUTES);
+  const isSuperAdminArea = pathMatchesAny(basePath, SUPER_ADMIN_ROUTES);
+
+  // If not authenticated and trying to access any protected area, go to login with callback
+  if (!isAuthenticated && (isVendorArea || isAdminArea || isSuperAdminArea)) {
+    const callbackUrl = encodeURIComponent(nextUrl.pathname + nextUrl.search);
+    const loginPath = withLocalePrefix(`/login?callbackUrl=${callbackUrl}`, localePrefix);
+    return NextResponse.redirect(new URL(loginPath, request.url));
+  }
+
+  // If authenticated but wrong role, redirect to their default home
+  if (isAuthenticated) {
+    if (isVendorArea && role !== "vendor") {
+      const destination = withLocalePrefix(getDefaultHomeForRole(role), localePrefix);
+      return NextResponse.redirect(new URL(destination, request.url));
+    }
+    if (isAdminArea && role !== "admin") {
+      const destination = withLocalePrefix(getDefaultHomeForRole(role), localePrefix);
+      return NextResponse.redirect(new URL(destination, request.url));
+    }
+    if (isSuperAdminArea && role !== "super-admin") {
+      const destination = withLocalePrefix(getDefaultHomeForRole(role), localePrefix);
+      return NextResponse.redirect(new URL(destination, request.url));
     }
   }
 
-  // Continue with the request
   return NextResponse.next();
 }
 
 export const config = {
   matcher: [
-    /*
-     * Match all request paths except for the ones starting with:
-     * - api (API routes)
-     * - _next/static (static files)
-     * - _next/image (image optimization files)
-     * - favicon.ico (favicon file)
-     * - public folder files
-     */
-    "/((?!api|_next|static|images|favicon.ico|public|mockServiceWorker).*)",
+    // Match all paths except for static files, image assets and API routes
+    "/((?!api|_next|_vercel|.*[.].*).*)",
   ],
 };

@@ -4,7 +4,6 @@ import { RiShoppingCartLine } from "react-icons/ri";
 
 import { OverViewCard } from "../../_components/overview-card";
 import { AllOrders } from "../../dashboard/orders/_views/all-orders";
-import { DeliveredOrders } from "../../dashboard/orders/_views/delivered-orders";
 import { PendingOrders } from "../../dashboard/orders/_views/pending-orders";
 
 const Page = () => {
@@ -62,9 +61,7 @@ const Page = () => {
           <TabsContent value="pending">
             <PendingOrders />
           </TabsContent>
-          <TabsContent value="completed">
-            <DeliveredOrders />
-          </TabsContent>
+          <TabsContent value="completed">{/* <DeliveredOrders /> */}</TabsContent>
         </Tabs>
       </section>
     </main>

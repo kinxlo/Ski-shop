@@ -32,7 +32,7 @@ export const useDashboardProductService = () => {
   };
 
   const useGetStoreInfo = (options?: any) => {
-    return useServiceQuery(["store", "info"], (service) => service.getStoreInfo(), {
+    return useServiceQuery(["store", "info"], (service) => service.getMyStore(), {
       staleTime: 5 * 60 * 1000, // 5 minutes
       gcTime: 10 * 60 * 1000, // 10 minutes
       ...options,

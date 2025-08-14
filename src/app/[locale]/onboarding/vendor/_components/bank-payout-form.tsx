@@ -3,7 +3,7 @@
 import SkiButton from "@/components/shared/button";
 import { FormField } from "@/components/shared/inputs/FormFields";
 import { ComboBox } from "@/components/shared/select-dropdown/combo-box";
-import { BankPayoutFormData, bankPayoutSchema } from "@/schemas";
+import { bankPayoutSchema } from "@/schemas";
 import { useOnboardingUserService } from "@/services/externals/onboarding/use-onboarding-user-service";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useLocale } from "next-intl";
@@ -46,52 +46,67 @@ export const BankPayoutForm = () => {
     });
   };
 
-  return (
+  const renderHeader = () => (
+    <div className="mb-6 text-center">
+      <h2 className="mb-2 !text-3xl font-semibold text-gray-900">Bank and Payout Setup</h2>
+      <p className="text-sm text-gray-600">To receive your payments, please provide accurate bank details.</p>
+    </div>
+  );
+
+  const renderBankFields = () => (
+    <>
+      <ComboBox
+        options={
+          availableBanks?.data?.map((bank) => ({
+            value: bank.code,
+            label: bank.name,
+          })) || []
+        }
+        value={methods.watch("code")}
+        onValueChange={(value) => {
+          const selectedBank = availableBanks?.data?.find((bank) => bank.code === value);
+          if (selectedBank) {
+            methods.setValue("bankName", selectedBank.name);
+            methods.setValue("code", selectedBank.code);
+          }
+        }}
+        placeholder="Select bank..."
+        searchPlaceholder="Search bank..."
+        emptyMessage="No bank found."
+        className="text-high-grey-II h-14 w-full rounded-lg bg-white shadow-none"
+        contentClassName="w-full"
+      />
+      <FormField placeholder="Account Number" className="h-14 w-full" name="accountNumber" />
+      <FormField placeholder="Account Name" className="h-14 w-full" name="accountName" />
+    </>
+  );
+
+  const renderSubmitButton = () => (
+    <div className="pt-4">
+      <SkiButton
+        type="submit"
+        className="h-12 w-full font-medium"
+        variant="primary"
+        isDisabled={!isValid || isPending || isLoadingAvailableBanks}
+        isLoading={isPending}
+      >
+        Continue & Submit
+      </SkiButton>
+    </div>
+  );
+
+  const renderBankPayoutForm = () => (
     <div className="mx-auto w-full max-w-md">
-      <div className="mb-6 text-center">
-        <h2 className="mb-2 !text-3xl font-semibold text-gray-900">Bank and Payout Setup</h2>
-        <p className="text-sm text-gray-600">To receive your payments, please provide accurate bank details.</p>
-      </div>
+      {renderHeader()}
 
       <FormProvider {...methods}>
         <form onSubmit={handleSubmit(handleSubmitForm)} className="space-y-4">
-          <ComboBox
-            options={
-              availableBanks?.data?.map((bank) => ({
-                value: bank.code,
-                label: bank.name,
-              })) || []
-            }
-            value={methods.watch("code")}
-            onValueChange={(value) => {
-              const selectedBank = availableBanks?.data?.find((bank) => bank.code === value);
-              if (selectedBank) {
-                methods.setValue("bankName", selectedBank.name);
-                methods.setValue("code", selectedBank.code);
-              }
-            }}
-            placeholder="Select bank..."
-            searchPlaceholder="Search bank..."
-            emptyMessage="No bank found."
-            className={`text-high-grey-II h-14 w-full rounded-lg bg-white shadow-none`}
-            contentClassName={`w-full`}
-          />
-          <FormField placeholder="Account Number" className="h-14 w-full" name="accountNumber" />
-          <FormField placeholder="Account Name" className="h-14 w-full" name="accountName" />
-
-          <div className="pt-4">
-            <SkiButton
-              type="submit"
-              className="h-12 w-full font-medium"
-              variant="primary"
-              isDisabled={!isValid || isPending || isLoadingAvailableBanks}
-              isLoading={isPending}
-            >
-              Continue & Submit
-            </SkiButton>
-          </div>
+          {renderBankFields()}
+          {renderSubmitButton()}
         </form>
       </FormProvider>
     </div>
   );
+
+  return renderBankPayoutForm();
 };

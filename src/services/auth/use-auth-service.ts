@@ -2,7 +2,7 @@
 
 import { createServiceHooks } from "@/lib/react-query/use-service-query";
 import { dependencies } from "@/lib/tools/dependencies";
-import { ForgotPasswordData, RegisterFormData, ResetPasswordData } from "@/schemas";
+import { RegisterFormData } from "@/schemas";
 
 import { AuthService } from "./auth.service";
 

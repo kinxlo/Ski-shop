@@ -3,14 +3,7 @@
 import { currencies, Locale } from "@/lib/i18n/config";
 import { createContext, useContext, useMemo } from "react";
 
-interface CurrencyContextType {
-  selectedCurrency: string;
-  availableCurrencies: Array<{
-    code: string;
-    symbol: string;
-    name: string;
-  }>;
-}
+// Types are now globally available in src/types/
 
 const CurrencyContext = createContext<CurrencyContextType | undefined>(undefined);
 

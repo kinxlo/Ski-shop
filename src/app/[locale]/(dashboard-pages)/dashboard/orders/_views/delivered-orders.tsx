@@ -1,16 +1,16 @@
 "use client";
 
 import { SearchInput } from "@/components/core/miscellaneous/search-input";
+import { DashboardTable } from "@/components/shared/dashboard-table";
+import { useOrderColumn } from "@/components/shared/dashboard-table/table-data";
 import { EmptyState } from "@/components/shared/empty-state";
 import { useDashboardSearchParameters } from "@/lib/nuqs/use-dashboard-search-parameters";
 import { useDashboardOrderService } from "@/services/dashboard/vendor/orders/use-order-service";
 import { useCallback, useMemo } from "react";
-import { toast } from "sonner";
 
-import { MobileOrderCard } from "../_components/mobile-order-card";
-import { OrderTable } from "../_components/order-table";
+import { TableSkeleton } from "../../home/page-skeleton";
 
-export const DeliveredOrders = () => {
+export const PaidOrders = () => {
   const {
     search: searchQuery,
     limit,
@@ -22,19 +22,23 @@ export const DeliveredOrders = () => {
   const filters = useMemo(
     () => ({
       page,
-      status: "delivered" as const,
+      status: "paid" as const,
       ...(searchQuery && { search: searchQuery }),
       ...(limit && { limit }),
     }),
     [page, searchQuery, limit],
   );
 
-  const { useGetAllOrders, useUpdateOrderStatus } = useDashboardOrderService();
+  const { useGetAllOrders } = useDashboardOrderService();
   const { data: orderData, isLoading, isError, refetch } = useGetAllOrders(filters);
-  const updateOrderStatusMutation = useUpdateOrderStatus();
 
   const orders = orderData?.data?.items || [];
   const totalOrders = orderData?.data?.metadata?.total || 0;
+  const totalPages = orderData?.data?.metadata?.totalPages || 1;
+  const hasNextPage = orderData?.data?.metadata?.hasNextPage || false;
+  const hasPreviousPage = orderData?.data?.metadata?.hasPreviousPage || false;
+
+  const orderColumn = useOrderColumn();
 
   const handleSearchChange = useCallback(
     (newSearch: string) => {
@@ -46,64 +50,36 @@ export const DeliveredOrders = () => {
     [setSearchQuery, resetToFirstPage, searchQuery],
   );
 
-  const handleStatusUpdate = useCallback(
-    async (orderId: string, status: "pending" | "delivered" | "cancelled") => {
-      try {
-        await updateOrderStatusMutation.mutateAsync({ id: orderId, status });
-        toast.success("Order status updated successfully");
-        refetch();
-      } catch {
-        toast.error("Failed to update order status");
+  const renderLoadingSkeleton = () => <TableSkeleton />;
+
+  const renderErrorState = () => (
+    <EmptyState
+      images={[{ src: "/images/empty-state.svg", width: 80, height: 80, alt: "Error" }]}
+      title="Something went wrong"
+      description="Failed to load delivered orders. Please try again."
+      className="bg-mid-grey-I space-y-0 rounded-lg"
+      titleClassName="!text-2xl"
+      descriptionClassName="text-base mb-4"
+      actionButton={
+        <button onClick={() => refetch()} className="bg-primary hover:bg-primary/90 rounded-md px-4 py-2 text-white">
+          Try Again
+        </button>
       }
-    },
-    [updateOrderStatusMutation, refetch],
+    />
   );
 
-  if (isLoading) {
-    return (
-      <div className="space-y-4">
-        <div className="h-10 w-full animate-pulse rounded bg-gray-200" />
-        <div className="space-y-3">
-          {Array.from({ length: 5 }).map((_, index) => (
-            <div key={index} className="h-32 animate-pulse rounded bg-gray-200" />
-          ))}
-        </div>
-      </div>
-    );
-  }
+  const renderEmptyState = () => (
+    <EmptyState
+      images={[{ src: "/images/empty-state.svg", width: 80, height: 80, alt: "No delivered orders" }]}
+      title="No delivered orders"
+      description="There are no delivered orders at the moment."
+      className="bg-mid-grey-I space-y-0 rounded-lg"
+      titleClassName="!text-2xl"
+      descriptionClassName="text-base mb-4"
+    />
+  );
 
-  if (isError) {
-    return (
-      <EmptyState
-        images={[{ src: "/images/empty-state.svg", width: 80, height: 80, alt: "Error" }]}
-        title="Something went wrong"
-        description="Failed to load delivered orders. Please try again."
-        className="bg-mid-grey-I space-y-0 rounded-lg"
-        titleClassName="!text-2xl"
-        descriptionClassName="text-base mb-4"
-        actionButton={
-          <button onClick={() => refetch()} className="bg-primary hover:bg-primary/90 rounded-md px-4 py-2 text-white">
-            Try Again
-          </button>
-        }
-      />
-    );
-  }
-
-  if (!orders || orders.length === 0) {
-    return (
-      <EmptyState
-        images={[{ src: "/images/empty-state.svg", width: 80, height: 80, alt: "No delivered orders" }]}
-        title="No delivered orders"
-        description="There are no delivered orders at the moment."
-        className="bg-mid-grey-I space-y-0 rounded-lg"
-        titleClassName="!text-2xl"
-        descriptionClassName="text-base mb-4"
-      />
-    );
-  }
-
-  return (
+  const renderOrdersTable = () => (
     <div className="space-y-6">
       {/* Search Bar */}
       <div className="flex justify-end">
@@ -116,24 +92,35 @@ export const DeliveredOrders = () => {
         />
       </div>
 
-      {/* Mobile View */}
-      <div className="block lg:hidden">
-        <div className="space-y-4">
-          {orders.map((order) => (
-            <MobileOrderCard key={order.id} order={order} />
-          ))}
-        </div>
-      </div>
-
-      {/* Desktop View */}
-      <div className="hidden lg:block">
-        <OrderTable orders={orders} onStatusUpdate={handleStatusUpdate} />
-      </div>
-
-      {/* Results Count */}
-      <div className="text-sm text-gray-500">
-        Showing {orders.length} of {totalOrders} delivered orders
-      </div>
+      {/* Dashboard Table */}
+      <DashboardTable
+        data={orders}
+        columns={orderColumn}
+        totalPages={totalPages}
+        itemsPerPage={totalOrders}
+        hasNextPage={hasNextPage}
+        hasPreviousPage={hasPreviousPage}
+        showPagination
+        pageParameter="page"
+      />
     </div>
   );
+
+  const renderDeliveredOrdersContent = () => {
+    if (isLoading) {
+      return renderLoadingSkeleton();
+    }
+
+    if (isError) {
+      return renderErrorState();
+    }
+
+    if (!orders || orders.length === 0) {
+      return renderEmptyState();
+    }
+
+    return renderOrdersTable();
+  };
+
+  return renderDeliveredOrdersContent();
 };

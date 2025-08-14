@@ -9,6 +9,7 @@ import { FormField } from "@/components/shared/inputs/FormFields";
 import { Label } from "@/components/ui/label";
 import { Editor } from "@/lib/rich-text-editor";
 import { cn } from "@/lib/utils";
+import { SimpleProductFormData, simpleProductSchema } from "@/schemas";
 import { useDashboardProductService } from "@/services/dashboard/vendor/products/use-product-service";
 import { useAppService } from "@/services/externals/app/use-app-service";
 import {
@@ -29,20 +30,6 @@ import { useRouter } from "next/navigation";
 import { useRef, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { toast } from "sonner";
-import * as z from "zod";
-
-const productSchema = z.object({
-  name: z.string().min(1, "Product name is required"),
-  price: z.number().min(0, "Price must be positive"),
-  discountPrice: z.number().min(0, "Discount price must be positive").optional(),
-  description: z.string().min(1, "Description is required"),
-  category: z.string().min(1, "Category is required"),
-  stockCount: z.number().min(0, "Stock count must be positive"),
-  images: z.array(z.any()).min(1, "At least one image is required").max(4, "Maximum 4 images allowed"),
-  status: z.enum(["published", "draft"]).default("published"),
-});
-
-export type ProductFormData = z.infer<typeof productSchema>;
 
 interface SortableImageProperties {
   id: string;
@@ -137,8 +124,8 @@ export const AddProductForm = () => {
   const { data: productCategories } = useGetAllProductCategory();
   const { mutateAsync: createProduct, isPending: isCreatingProduct } = useCreateProduct();
   const { data: storeInfo, isLoading: storeInfoLoading } = useGetStoreInfo();
-  const methods = useForm<ProductFormData>({
-    resolver: zodResolver(productSchema),
+  const methods = useForm<SimpleProductFormData>({
+    resolver: zodResolver(simpleProductSchema),
     defaultValues: {
       name: "",
       price: 0,
@@ -162,7 +149,7 @@ export const AddProductForm = () => {
   const [activeId, setActiveId] = useState<string | null>(null);
   const [selectedImageId, setSelectedImageId] = useState<string | null>(null);
   const [descriptionEditorState, setDescriptionEditorState] = useState<SerializedEditorState>();
-  const [showSuccessModal, setShowSuccessModal] = useState(true);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [createdProductId, setCreatedProductId] = useState<string | null>(null);
   const images = watch("images");
 
@@ -251,7 +238,7 @@ export const AddProductForm = () => {
     }
   };
 
-  const handleSubmitForm = async (data: ProductFormData) => {
+  const handleSubmitForm = async (data: SimpleProductFormData) => {
     try {
       // Validate store info is available
       if (!storeInfo?.data?.id) {

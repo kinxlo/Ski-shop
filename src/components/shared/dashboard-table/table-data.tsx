@@ -34,59 +34,86 @@ import { User } from "./type";
 //   return { getproductActions };
 // };
 
-export const useOrderColumn = (): IColumnDefinition<Product>[] => {
+export const useOrderColumn = (): TableColumnDefinition<Order>[] => {
   const locale = useLocale();
 
   return [
     {
-      header: "Product",
-      accessorKey: "name",
-    },
-    {
       header: "Order ID",
-      accessorKey: "store",
-      render: (_, product: Product) => (
-        <span className={`rounded-md px-2 py-1 text-sm capitalize`}>{product.store.id}</span>
+      accessorKey: "id",
+      render: (_, order: Order) => <span className="font-medium">{order.id.slice(0, 8)}...</span>,
+    },
+    {
+      header: "Products",
+      accessorKey: "products",
+      render: (_, order: Order) => (
+        <div className="flex items-center space-x-2">
+          <div className="relative">
+            {order.products.length > 0 && order.products[0].images.length > 0 && (
+              <BlurImage
+                src={order.products[0].images[0]}
+                alt={order.products[0].name}
+                width={40}
+                height={40}
+                className="rounded-md object-cover"
+              />
+            )}
+            {order.products.length > 1 && (
+              <div className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-blue-500 text-xs text-white">
+                +{order.products.length - 1}
+              </div>
+            )}
+          </div>
+          <div>
+            <div className="font-medium">{order.products[0]?.name || "N/A"}</div>
+            <div className="text-sm text-gray-500">
+              {order.products.length} item{order.products.length > 1 ? "s" : ""}
+            </div>
+          </div>
+        </div>
       ),
     },
     {
-      header: "Amount",
-      accessorKey: "price",
-      render: (_, product: Product) => (
-        // <span className={`rounded-md px-2 py-1 text-sm capitalize`}>&#8358;{product.price.toLocaleString()}</span>
-        <span className={`rounded-md px-2 py-1 text-sm capitalize`}>
-          {formatCurrency(product.price, locale as Locale)}
-        </span>
+      header: "Buyer",
+      accessorKey: "buyer",
+      render: (_, order: Order) => (
+        <div>
+          <div className="font-medium">{order.buyer.name}</div>
+        </div>
       ),
     },
     {
-      header: "Customer Name",
-      accessorKey: "user",
-      render: (_, product: Product) => (
-        <span className={`rounded-md px-2 py-1 text-sm capitalize`}>{product.user.name}</span>
-      ),
+      header: "Delivery Address",
+      accessorKey: "delivery",
+      render: () => <div className="max-w-xs truncate">N/A</div>,
     },
     {
-      header: "Date & Time",
+      header: "Total Amount",
+      accessorKey: "products",
+      render: (_, order: Order) => {
+        const totalAmount = order.products.reduce((sum, product) => sum + product.price * product.quantity, 0);
+        return <span className="font-medium">{formatCurrency(totalAmount, locale as Locale)}</span>;
+      },
+    },
+    {
+      header: "Date",
       accessorKey: "createdAt",
-      render: (_, product: Product) => (
-        <span className={`rounded-md px-2 py-1 text-sm capitalize`}>
-          {formatDate(product.createdAt, locale as Locale)}
-        </span>
-      ),
+      render: (_, order: Order) => <span>{formatDate(order.createdAt, locale as Locale)}</span>,
     },
     {
       header: "Status",
       accessorKey: "status",
-      render: (_, product: Product) => (
+      render: (_, order: Order) => (
         <span
           className={cn(
             `rounded-full px-2 py-1 text-xs capitalize`,
-            product.status.includes(`published`) && `bg-low-success text-mid-success`,
-            product.status.includes(`draft`) && `bg-yellow-100 text-yellow-600`,
+            order.status === "paid" && "bg-low-success text-mid-success",
+            order.status === "pending" && "bg-yellow-100 text-yellow-600",
+            order.status === "cancelled" && "bg-red-100 text-red-600",
+            order.status === "delivered" && "bg-blue-100 text-blue-600",
           )}
         >
-          {product.status}
+          {order.status}
         </span>
       ),
     },

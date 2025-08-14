@@ -18,7 +18,7 @@ import { useState } from "react";
 import { PiCaretDown, PiHeart } from "react-icons/pi";
 import { toast } from "sonner";
 
-import { ModeToggle } from "../layout/ThemeToggle/theme-toggle";
+import { ThemeSwitchers } from "./theme-variant-switcher";
 
 interface UserAvatarProfileProperties {
   className?: string;
@@ -109,7 +109,7 @@ export function UserAvatarProfile({ className, showInfo = false }: UserAvatarPro
         </ComponentGuard>
         <DropdownMenuSeparator />
         <div className="flex items-center justify-between px-2 py-1.5">
-          <ModeToggle />
+          <ThemeSwitchers className={`flex-col`} />
         </div>
         <DropdownMenuSeparator />
         <DropdownMenuItem className="text-destructive focus:text-destructive cursor-pointer" onClick={handleLogout}>

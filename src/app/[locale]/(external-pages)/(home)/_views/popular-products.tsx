@@ -24,62 +24,97 @@ export const PopularProducts = ({
   flag?: string;
 }) => {
   const { useGetAllProducts } = useAppService();
-  const { isLoading, isError, data, refetch } = useGetAllProducts({ flag });
+  const { isLoading, isError, data, refetch } = useGetAllProducts({ flag, limit: 4 });
   const t = useTranslations("home.popularProducts");
 
-  // Handle error state
-  if (isError) {
-    return (
-      <Wrapper className="min-h-[480px] pt-16">
-        <h2 className={cn("text-high-grey-II text-sm font-black lg:text-3xl", headerStyle)}>{title}</h2>
-        <EmptyState
-          images={[
-            {
-              src: "/images/empty-state.svg",
-              alt: "Empty Cart",
-              width: 80,
-              height: 80,
-            },
-          ]}
-          description={t("failedToLoad")}
-          descriptionClassName={`text-mid-danger`}
-          className={`bg-low-warning/5 space-y-0 rounded-lg`}
-          actionButton={
-            <SkiButton
-              onClick={() => refetch()}
-              variant="outline"
-              className="border-mid-danger text-mid-danger hover:bg-mid-danger/10 mt-4 border"
-            >
-              {t("retry")}
-            </SkiButton>
-          }
-        />
-      </Wrapper>
-    );
-  }
+  const products = data?.data?.items || [];
 
-  if (!data?.data?.items?.length) {
-    return (
-      <Wrapper className="min-h-[480px] pt-16">
-        <h2 className={cn("text-high-grey-II text-sm font-black lg:text-3xl", headerStyle)}>{title}</h2>
-        <EmptyState
-          images={[
-            {
-              src: "/images/empty-state.svg",
-              alt: "Empty Cart",
-              width: 80,
-              height: 80,
-            },
-          ]}
-          title="No products found"
-          titleClassName={`!text-lg font-bold !text-mid-warning`}
-          description={"There are no products in the database. Please add a product to get started."}
-          descriptionClassName={`text-mid-grey-II`}
-          className="bg-mid-grey-I space-y-0 rounded-lg py-10"
+  const renderLoadingSkeletons = () => (
+    <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
+      {Array.from({ length: 4 }).map((_, index) => (
+        <ShopCardSkeleton key={index} />
+      ))}
+    </div>
+  );
+
+  const renderProductCards = () => (
+    <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
+      {products.map((product: Product) => (
+        <ShopCard
+          key={product.id.toString()}
+          id={product.id.toString()}
+          category={product.category}
+          title={product.name}
+          rating={3}
+          price={product.price}
+          discount={product.discountPrice || 0}
+          image={product.images[0]}
+          name={product.store.name || "Skicom"}
         />
-      </Wrapper>
-    );
-  }
+      ))}
+    </div>
+  );
+
+  const renderEmptyState = () => (
+    <div className="flex min-h-[360px] items-center justify-center">
+      <EmptyState
+        images={[
+          {
+            src: "/images/empty-state.svg",
+            alt: "No products found",
+            width: 80,
+            height: 80,
+          },
+        ]}
+        title="No products found"
+        titleClassName="!text-lg font-bold !text-mid-warning"
+        description="There are no products in the database. Please add a product to get started."
+        descriptionClassName="text-mid-grey-II"
+        className="bg-mid-grey-I space-y-0 rounded-lg py-10"
+      />
+    </div>
+  );
+
+  const renderErrorState = () => (
+    <EmptyState
+      images={[
+        {
+          src: "/images/empty-state.svg",
+          alt: "Empty Cart",
+          width: 80,
+          height: 80,
+        },
+      ]}
+      description={t("failedToLoad")}
+      descriptionClassName={`text-mid-danger`}
+      className={`bg-low-warning/5 space-y-0 rounded-lg`}
+      actionButton={
+        <SkiButton
+          onClick={() => refetch()}
+          variant="outline"
+          className="border-mid-danger text-mid-danger hover:bg-mid-danger/10 mt-4 border"
+        >
+          {t("retry")}
+        </SkiButton>
+      }
+    />
+  );
+
+  const renderProductsGrid = () => {
+    if (isLoading) {
+      return renderLoadingSkeletons();
+    }
+
+    if (products.length === 0) {
+      return renderEmptyState();
+    }
+
+    if (isError) {
+      return renderErrorState();
+    }
+
+    return renderProductCards();
+  };
 
   return (
     <Wrapper className="min-h-[480px] pt-16">
@@ -92,30 +127,7 @@ export const PopularProducts = ({
         )}
       </div>
 
-      {/* Products Grid */}
-      <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
-        {isLoading &&
-          Array.from({ length: 4 }).map((_, index: number) => {
-            return <ShopCardSkeleton key={index} />;
-          })}
-
-        {!isLoading &&
-          data?.data?.items?.slice(0, 4).map((product: Product) => {
-            return (
-              <ShopCard
-                key={product.id.toString()}
-                id={product.id.toString()}
-                category={product.category}
-                title={product.name}
-                rating={3}
-                price={product.price}
-                discount={product.discountPrice || 0}
-                image={product.images[0]}
-                name={product.store.name || "Skicom"}
-              />
-            );
-          })}
-      </div>
+      {renderProductsGrid()}
     </Wrapper>
   );
 };

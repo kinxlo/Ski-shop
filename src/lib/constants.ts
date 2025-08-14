@@ -3,7 +3,7 @@ import { GiWallet } from "react-icons/gi";
 import { IoRibbonOutline } from "react-icons/io5";
 import { MdDashboard, MdOutlineAddCard } from "react-icons/md";
 import { PiUsersThreeLight } from "react-icons/pi";
-import { RiAdvertisementLine, RiShoppingCartLine } from "react-icons/ri";
+import { RiAdvertisementLine, RiShoppingCartLine, RiUserLine } from "react-icons/ri";
 import { TbSettings2, TbShoppingBag } from "react-icons/tb";
 
 export const NAV_LINKS: NavLink[] = [
@@ -147,7 +147,7 @@ export const adminSideItems = [
 // Vendor navigation items
 export const vendorSideItems = [
   {
-    route: "Dashboard",
+    route: "Home",
     link: "/dashboard/home",
     icon: MdDashboard,
     id: "home",
@@ -165,16 +165,16 @@ export const vendorSideItems = [
     id: "orders",
   },
   {
-    route: "Users",
-    link: "/dashboard/users",
-    icon: PiUsersThreeLight,
-    id: "users",
+    route: "Profile",
+    link: "/dashboard/profile",
+    icon: RiUserLine,
+    id: "profile",
   },
   {
-    route: "Downloads",
-    link: "/dashboard/downloads",
+    route: "Payouts",
+    link: "/dashboard/payouts",
     icon: MdOutlineAddCard,
-    id: "downloads",
+    id: "payouts",
   },
   {
     route: "Settings",

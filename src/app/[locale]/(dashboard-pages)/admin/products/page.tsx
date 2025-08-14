@@ -5,7 +5,6 @@ import { LucidePlusCircle } from "lucide-react";
 import { TbShoppingBag } from "react-icons/tb";
 
 import { OverViewCard } from "../../_components/overview-card";
-import { UnpublishedProducts } from "./_views/unpublished-products";
 
 const Page = () => {
   return (
@@ -62,9 +61,7 @@ const Page = () => {
           </TabsList>
           <Separator className="bg-muted mt-[-1px] mb-[26px]" />
           <TabsContent value="published"></TabsContent>
-          <TabsContent value="unpublished">
-            <UnpublishedProducts />
-          </TabsContent>
+          <TabsContent value="unpublished">{/* <UnpublishedProducts /> */}</TabsContent>
         </Tabs>
       </section>
     </main>

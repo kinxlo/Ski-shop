@@ -8,19 +8,19 @@ import { useQueryClient } from "@tanstack/react-query";
 import { DashboardOrderService } from "./order.service";
 
 export const useDashboardOrderService = () => {
-  const DEFAULT_FILTERS: IFilters = { page: 1, limit: 10 };
+  const DEFAULT_FILTERS: Filters = { page: 1, limit: 10 };
 
   const { useServiceQuery, useServiceMutation } = createServiceHooks<DashboardOrderService>(
     dependencies.DASHBOARD_ORDER_SERVICE,
   );
 
   // Queries
-  const useGetAllOrders = (filters?: IFilters, options?: any) => {
+  const useGetAllOrders = (filters?: Filters, options?: any) => {
     const appliedFilters = filters ?? DEFAULT_FILTERS;
 
     return useServiceQuery(
       [...queryKeys.dashboard.orders.list(appliedFilters)],
-      (service) => service.getAllOrders(filters),
+      (service) => service.getAllOrders(appliedFilters),
       { staleTime: 0, ...options },
     );
   };

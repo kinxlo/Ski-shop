@@ -103,13 +103,10 @@ export default function ProductDetailPage() {
         { id: product.id, data: submitData },
         {
           onSuccess: (response) => {
-            if (response.success) {
+            if (response?.success) {
               toast.success("Product marked as out of stock");
               refetch();
             }
-          },
-          onError: () => {
-            toast.error("Failed to mark product as out of stock");
           },
         },
       );
@@ -238,7 +235,7 @@ export default function ProductDetailPage() {
           </div>
 
           {/* Right Column - Product Information */}
-          <div className="space-y-6">
+          <div className="border-border bg-background space-y-6 rounded-lg border p-6">
             {/* Product Title and Category */}
             <div className="space-y-2">
               <h4 className="text-2xl font-bold text-gray-900">{product.name}</h4>
@@ -276,9 +273,7 @@ export default function ProductDetailPage() {
                 </div>
                 <div>
                   <span className="text-gray-500">Last updated:</span>
-                  <p className="font-medium text-gray-900">
-                    {formatDate(product.updateAt || product.createdAt, locale as Locale)}
-                  </p>
+                  <p className="font-medium text-gray-900">{formatDate(product.createdAt, locale as Locale)}</p>
                 </div>
               </div>
             </div>

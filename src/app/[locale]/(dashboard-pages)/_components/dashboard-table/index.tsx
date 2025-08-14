@@ -236,7 +236,7 @@ export const DashboardTable: FC<TableProperties> = ({ variant }) => {
         ) : (
           <div className="flex items-center gap-[20px]">
             {/* <SearchInput /> */}
-            <FilterDropdown />
+            <FilterDropdown value={""} onValueChange={() => {}} />
           </div>
         )}
       </section>

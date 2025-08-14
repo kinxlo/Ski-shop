@@ -3,11 +3,7 @@ const DB_NAME = "ski_shop_db";
 const DB_VERSION = 1;
 const STORE_NAME = "saved_products";
 
-interface SavedProduct {
-  id: string;
-  product: Product;
-  savedAt: string;
-}
+// Types are now globally available in src/types/
 
 class IndexedDBStorage {
   private db: IDBDatabase | null = null;

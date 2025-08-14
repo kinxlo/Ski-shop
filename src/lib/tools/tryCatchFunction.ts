@@ -13,6 +13,6 @@ export const tryCatchWrapper = async <T>(
     // Handle the error (shows toast)
     handleError(transformedError);
     // Re-throw the error so React Query can handle it
-    throw transformedError;
+    // throw transformedError;
   }
 };

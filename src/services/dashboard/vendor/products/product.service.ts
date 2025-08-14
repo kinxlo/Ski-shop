@@ -1,7 +1,7 @@
-import { ProductFormData } from "@/app/[locale]/(dashboard-pages)/_components/forms/add-product-form";
 import { EditProductFormData } from "@/app/[locale]/(dashboard-pages)/_components/forms/edit-product-form";
 import { HttpAdapter } from "@/lib/http/http-adapter";
 import { tryCatchWrapper } from "@/lib/tools/tryCatchFunction";
+import { SimpleProductFormData } from "@/schemas";
 
 export class DashboardProductService {
   private readonly http: HttpAdapter;
@@ -10,12 +10,12 @@ export class DashboardProductService {
     this.http = httpAdapter;
   }
 
-  async getAllProducts(filters?: IFilters) {
-    const defaultFilters: IFilters = { page: 1, limit: 10 };
+  async getAllProducts(filters?: Filters) {
+    const defaultFilters: Filters = { page: 1, limit: 10 };
     const appliedFilters = filters ?? defaultFilters;
     const queryParameters = this.buildQueryParameters(appliedFilters);
     const storeId = await this.getMyStore();
-    if (storeId.success) {
+    if (storeId?.success) {
       const response = await this.http.get<ProductApiResponse>(
         `/products?storeId=${storeId.data.id}&${queryParameters}`,
       );
@@ -27,15 +27,15 @@ export class DashboardProductService {
     throw new Error("Failed to fetch products");
   }
 
-  async getStoreInfo() {
-    return tryCatchWrapper(async () => {
-      const response = await this.http.get<StoreApiResponse>(`/stores/current`);
-      if (response?.status === 200) {
-        return response.data;
-      }
-      throw new Error("Failed to fetch store id");
-    });
-  }
+  // async getStoreInfo() {
+  //   return tryCatchWrapper(async () => {
+  //     const response = await this.http.get<StoreApiResponse>(`/stores/current`);
+  //     if (response?.status === 200) {
+  //       return response.data;
+  //     }
+  //     throw new Error("Failed to fetch store id");
+  //   });
+  // }
 
   async getSingleProduct(id: string) {
     return tryCatchWrapper(async () => {
@@ -48,24 +48,32 @@ export class DashboardProductService {
   }
 
   // Create product
-  async createProduct(data: ProductFormData, storeID: string) {
+  async createProduct(data: SimpleProductFormData, storeID: string) {
     const headers = { "Content-Type": "multipart/form-data" };
-    // Create regular object with all form data
-    const productData = {
-      name: data.name,
-      price: data.price,
-      category: data.category,
-      stockCount: data.stockCount,
-      description: data.description,
-      storeId: storeID,
-      status: data.status || "published",
-      // discountPrice: data.discountPrice || null,
-      images: data.images[0].file, // Array of File objects
-      // images: data.images.map((image) => image.file), // Array of File objects
-    };
+
+    // Create FormData for multipart upload
+    const formData = new FormData();
+
+    // Append text fields
+    formData.append("name", data.name);
+    formData.append("price", data.price.toString());
+    formData.append("category", data.category);
+    formData.append("stockCount", data.stockCount.toString());
+    formData.append("description", data.description);
+    formData.append("storeId", storeID);
+    formData.append("status", data.status || "published");
+
+    if (data.discountPrice) {
+      formData.append("discountPrice", data.discountPrice.toString());
+    }
+
+    // Append images (File objects)
+    for (const imageObject of data.images) {
+      formData.append(`images`, imageObject.file);
+    }
 
     return tryCatchWrapper(async () => {
-      const response = await this.http.post<{ success: boolean; data: Product }>(`/products`, productData, headers);
+      const response = await this.http.post<{ success: boolean; data: Product }>(`/products`, formData, headers);
       if (response?.status === 201) {
         return response.data;
       }
@@ -86,8 +94,31 @@ export class DashboardProductService {
   }
 
   async editProduct(id: string, data: EditProductFormData) {
+    const headers = { "Content-Type": "multipart/form-data" };
+
+    // Create FormData for multipart upload
+    const formData = new FormData();
+
+    // Append text fields if they exist
+    if (data.name !== undefined) formData.append("name", data.name);
+    if (data.price !== undefined) formData.append("price", data.price.toString());
+    if (data.stockCount !== undefined) formData.append("stockCount", data.stockCount.toString());
+    if (data.description !== undefined) formData.append("description", data.description);
+    if (data.status !== undefined) formData.append("status", data.status);
+
+    if (data.discountPrice !== undefined && data.discountPrice !== null) {
+      formData.append("discountPrice", data.discountPrice.toString());
+    }
+
+    // Append images if they exist (File objects)
+    if (data?.images && data?.images?.length > 0) {
+      for (const imageObject of data.images) {
+        formData.append(`images`, imageObject?.file);
+      }
+    }
+
     return tryCatchWrapper(async () => {
-      const response = await this.http.patch<ProductApiResponse>(`/products/${id}`, data);
+      const response = await this.http.patch<ProductApiResponse>(`/products/${id}`, formData, headers);
       if (response?.status === 200) {
         return response.data;
       }
@@ -108,7 +139,7 @@ export class DashboardProductService {
   //get my store /stores/current
   async getMyStore() {
     return tryCatchWrapper(async () => {
-      const response = await this.http.get<StoreApiResponse>(`/stores/current`);
+      const response = await this.http.get<{ success: boolean; data: Store }>(`/stores/current`);
       if (response?.status === 200) {
         return response.data;
       }
@@ -116,7 +147,7 @@ export class DashboardProductService {
     });
   }
 
-  private buildQueryParameters(filters: IFilters): string {
+  private buildQueryParameters(filters: Filters): string {
     const queryParameters = new URLSearchParams();
     for (const [key, value] of Object.entries(filters)) {
       if (value !== undefined) {

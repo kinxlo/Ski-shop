@@ -8,13 +8,13 @@ import { dependencies } from "@/lib/tools/dependencies";
 import { AppService } from "./app.service";
 
 // Stable default filters object to avoid object reference issues
-const DEFAULT_FILTERS: IFilters = { page: 1, limit: 10 };
+const DEFAULT_FILTERS: Filters = { page: 1, limit: 10 };
 
 export const useAppService = () => {
   const { useServiceQuery, useServiceMutation } = createServiceHooks<AppService>(dependencies.APP_SERVICE);
 
   // Queries
-  const useGetAllProducts = (filters?: IFilters, options?: any) => {
+  const useGetAllProducts = (filters?: Filters, options?: any) => {
     const appliedFilters = filters ?? DEFAULT_FILTERS;
 
     return useServiceQuery(
@@ -126,6 +126,36 @@ export const useAppService = () => {
   const useGetTopVendors = (options?: any) =>
     useServiceQuery([...queryKeys.vendor.top()], (service) => service.getTopVendors(), options);
 
+  const useReviewProduct = (options?: any) =>
+    useServiceMutation(
+      (service, data: { productId: string; comment: string; rating: number }) => service.reviewProduct(data),
+      {
+        onSuccess: (result, variables) => {
+          queryClient.invalidateQueries({ queryKey: queryKeys.product.details(variables.productId) });
+          queryClient.invalidateQueries({ queryKey: queryKeys.product.list() });
+        },
+        ...options,
+      },
+    );
+
+  const useGetReviewByProductId = (productId: string, options?: any) =>
+    useServiceQuery(
+      [...queryKeys.review.details(productId)],
+      (service) => service.getReviewByProductId(productId),
+      options,
+    );
+
+  const useGetAllReviews = (options?: any) =>
+    useServiceQuery([...queryKeys.review.list()], (service) => service.getAllReviews(), options);
+
+  const useDeleteReview = (options?: any) =>
+    useServiceMutation((service, reviewId: string) => service.deleteReview(reviewId), {
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: queryKeys.review.list() });
+      },
+      ...options,
+    });
+
   return {
     // Product Queries
     useGetAllProducts,
@@ -153,5 +183,11 @@ export const useAppService = () => {
 
     // Vendor Queries
     useGetTopVendors,
+
+    // Review Queries
+    useReviewProduct,
+    useGetReviewByProductId,
+    useGetAllReviews,
+    useDeleteReview,
   };
 };

@@ -1,45 +1,22 @@
 /* eslint-disable no-console */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import axios from "axios";
-import NextAuth, { CredentialsSignin, DefaultSession } from "next-auth";
+import NextAuth, { CredentialsSignin } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 
+// NextAuth module declarations are now globally available in src/types/
 declare module "next-auth" {
-  interface User {
-    id: string;
-    accessToken: string;
-    refreshToken: string;
-    role: { id: string; name: string };
-  }
-
-  interface Session {
-    user: {
-      id: string;
-      name: string;
-      email: string;
-      role: { id: string; name: string };
-    } & DefaultSession["user"];
-    accessToken: string;
-    refreshToken: string;
-    expires: string;
-  }
-
-  interface JWT {
-    id: string;
-    name: string;
-    email: string;
-    role: { id: string; name: string };
-    accessToken: string;
-    refreshToken: string;
-    iat: number;
-    exp: number;
-    jti: string;
-  }
+  interface User extends NextAuthUser {}
+  interface Session extends NextAuthSession {}
+  interface JWT extends NextAuthJWT {}
 }
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
-  secret: process.env.AUTH_SECRET,
+  // Support both legacy and new env names for the auth secret in different environments
+  secret: process.env.AUTH_SECRET ?? process.env.NEXTAUTH_SECRET ?? process.env.NEXT_AUTH_SECRET,
   // debug: process.env.NODE_ENV === "development",
+  // Add trustHost for production deployments
+  trustHost: true,
   providers: [
     // Google OAuth via credentials provider
     Credentials({
@@ -158,7 +135,14 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           id: user.id,
           name: user.name,
           email: user.email,
-          role: user.role,
+          // Normalize role early to avoid case/format mismatches downstream
+          role:
+            typeof user.role === "object"
+              ? {
+                  id: String((user.role as any)?.id ?? (user.role as any)?.name ?? "customer"),
+                  name: String((user.role as any)?.name ?? (user.role as any)?.id ?? "customer"),
+                }
+              : String(user.role ?? "customer"),
           accessToken: user.accessToken,
           refreshToken: user.refreshToken,
         };
@@ -177,8 +161,8 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     },
 
     session({ session, token }): Promise<any> {
-      console.log("Session callback - Token:", token);
-      console.log("Session callback - Token role:", token.role);
+      // console.log("Session callback - Token:", token);
+      // console.log("Session callback - Token role:", token.role);
       return Promise.resolve({
         ...session,
         user: {
@@ -201,5 +185,17 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   },
   pages: {
     signIn: "/login",
+  },
+  // Add explicit cookie configuration for production
+  cookies: {
+    sessionToken: {
+      name: process.env.NODE_ENV === "production" ? "__Secure-authjs.session-token" : "authjs.session-token",
+      options: {
+        httpOnly: true,
+        sameSite: "lax",
+        path: "/",
+        secure: process.env.NODE_ENV === "production",
+      },
+    },
   },
 });
