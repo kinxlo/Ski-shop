@@ -1,6 +1,10 @@
 import type { NextConfig } from "next";
+import createNextIntlPlugin from "next-intl/plugin";
+
+const withNextIntl = createNextIntlPlugin();
 
 const nextConfig: NextConfig = {
+  serverExternalPackages: ["msw"],
   typescript: {
     ignoreBuildErrors: true,
   },
@@ -10,8 +14,17 @@ const nextConfig: NextConfig = {
       {
         hostname: "cdn.dummyjson.com",
       },
+      {
+        hostname: "picsum.photos",
+      },
+      {
+        hostname: "nyc3.digitaloceanspaces.com",
+      },
+      {
+        hostname: "loremflickr.com",
+      },
     ],
   },
 };
 
-export default nextConfig;
+export default withNextIntl(nextConfig);

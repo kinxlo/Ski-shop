@@ -20,6 +20,7 @@ interface ReusableDialogProperties extends HTMLAttributes<HTMLDivElement> {
   children?: ReactNode;
   headerClassName?: string;
   wrapperClassName?: string;
+  descriptionClassName?: string;
   open?: boolean;
   hideClose?: boolean;
   onOpenChange?: (open: boolean) => void;
@@ -31,6 +32,7 @@ export function ReusableDialog({
   title,
   description,
   children,
+  descriptionClassName,
   headerClassName,
   wrapperClassName,
   className,
@@ -52,7 +54,7 @@ export function ReusableDialog({
           <DialogHeader className={cn("h-fit", wrapperClassName)}>
             {img && <Image width={100} height={100} src={img || ""} alt="dangerous" className="h-[100px] w-[100px]" />}
             <DialogTitle className={cn("text-2xl", headerClassName)}>{title}</DialogTitle>
-            <DialogDescription>{description}</DialogDescription>
+            <DialogDescription className={cn("text-center", descriptionClassName)}>{description}</DialogDescription>
           </DialogHeader>
           {/* )) */}
           {/* } */}

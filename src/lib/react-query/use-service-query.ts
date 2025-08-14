@@ -9,7 +9,7 @@ export function createServiceHooks<TService>(serviceSymbol: symbol) {
   };
 
   const useServiceQuery = <TData, TError = Error>(
-    queryKey: readonly unknown[],
+    queryKey: unknown[],
     serviceMethod: (service: TService) => Promise<TData>,
     options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">,
   ) => {

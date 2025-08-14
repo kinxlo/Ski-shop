@@ -1,25 +1,61 @@
 "use client";
 
-import { IconSearch } from "@tabler/icons-react";
-import { useKBar } from "kbar";
+import { Input } from "@/components/ui/input";
+import { cn } from "@/lib/utils";
+import { SearchIcon } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { useDebounce } from "use-debounce";
 
-import { Button } from "../../ui/button";
+interface SearchInputProperties {
+  placeholder?: string;
+  onSearch: (query: string) => void;
+  delay?: number; // debounce delay in ms
+  className?: string;
+  initialValue?: string;
+}
 
-export default function SearchInput() {
-  const { query } = useKBar();
+export const SearchInput = ({
+  placeholder = "Search...",
+  onSearch,
+  delay = 300,
+  className = "",
+  initialValue = "",
+}: SearchInputProperties) => {
+  const [searchQuery, setSearchQuery] = useState(initialValue);
+  const [debouncedQuery] = useDebounce(searchQuery, delay);
+  const isUserTyping = useRef(false);
+
+  // Update internal state when initialValue changes (for URL sync)
+  useEffect(() => {
+    if (!isUserTyping.current) {
+      setSearchQuery(initialValue);
+    }
+  }, [initialValue]);
+
+  useEffect(() => {
+    // Only call onSearch if the user is actively typing (not just syncing with URL)
+    if (isUserTyping.current && debouncedQuery !== initialValue) {
+      onSearch(debouncedQuery);
+      // Reset the flag after calling onSearch
+      isUserTyping.current = false;
+    }
+  }, [debouncedQuery, onSearch, initialValue]);
+
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    isUserTyping.current = true;
+    setSearchQuery(event.target.value);
+  };
+
   return (
-    <div className="w-full space-y-2">
-      <Button
-        variant="outline"
-        className="bg-background text-muted-foreground relative h-9 w-full justify-start rounded-[0.5rem] text-sm font-normal shadow-none sm:pr-12 md:w-40 lg:w-64"
-        onClick={query.toggle}
-      >
-        <IconSearch className="mr-2 h-4 w-4" />
-        Search...
-        <kbd className="bg-muted pointer-events-none absolute top-[0.3rem] right-[0.3rem] hidden h-6 items-center gap-1 rounded border px-1.5 font-mono text-[10px] font-medium opacity-100 select-none sm:flex">
-          <span className="text-xs">⌘</span>K
-        </kbd>
-      </Button>
+    <div className={`relative w-fit`}>
+      <SearchIcon className="text-muted-foreground absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 transform" />
+      <Input
+        type="search"
+        placeholder={placeholder}
+        className={cn("rounded-sm border border-black/10 pr-4 pl-10 shadow-none", className)}
+        value={searchQuery}
+        onChange={handleInputChange}
+      />
     </div>
   );
-}
+};

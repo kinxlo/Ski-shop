@@ -1,50 +1,9 @@
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { cloneElement, forwardRef, MouseEventHandler, ReactElement, ReactNode } from "react";
+import { cloneElement, forwardRef, ReactElement } from "react";
 import { LuLoader, LuPlus } from "react-icons/lu";
 
-type Variant =
-  | "default"
-  | "primary"
-  | "destructive"
-  | "subtle"
-  | "loading"
-  | "outline"
-  | "secondary"
-  | "ghost"
-  | "link"
-  | "accent";
-type Size = "default" | "sm" | "lg" | "xl" | "link" | "icon" | "circle";
-
-interface ButtonProperties {
-  type?: "submit" | "button" | "reset";
-  /** Specifies the button style variant */
-  variant?: Variant;
-  /** Specifies the size of the button */
-  size?: Size;
-  /** Icon to be displayed inside the button */
-  icon?: ReactNode;
-  /** Text or elements to be displayed inside the button */
-  children?: ReactNode;
-  /** Indicates if the button is in a loading state */
-  isLoading?: boolean;
-  /** Indicates if the button is icon only */
-  isIconOnly?: boolean;
-  /** Indicates if the left icon is visible */
-  isLeftIconVisible?: boolean;
-  /** Indicates if the right icon is visible */
-  isRightIconVisible?: boolean;
-  /** Disables the button if true */
-  isDisabled?: boolean;
-  /** Accessibility label for the button */
-  ariaLabel?: string;
-  /** Href to link button to a URL or route */
-  href?: string;
-  /** Class for custom styling */
-  className?: string;
-  /** Click event handler for the button */
-  onClick?: MouseEventHandler<HTMLButtonElement>;
-}
+// Types are now globally available in src/types/
 
 /**
  * CustomButton component to render a button with various styles and states.
@@ -95,7 +54,7 @@ const SkiButton = forwardRef<HTMLButtonElement, ButtonProperties>(
       </>
     );
 
-    const buttonClasses = `transition-all duration-300 ease-in-out rounded-full cursor-pointer ${
+    const buttonClasses = `transition-all duration-300 ease-in-out rounded-full cursor-pointer shadow-none ${
       isDisabled ? "opacity-50 cursor-not-allowed" : "hover:shadow-sneob dark:hover:shadow-sneobw focus:shadow-none"
     } ${className}`;
 
