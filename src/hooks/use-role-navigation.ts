@@ -239,18 +239,21 @@ export const useRoleNavigation = (): NavItem[] => {
     default: {
       return [
         createNavItem("home", "Dashboard", "/dashboard/home", { icon: MdDashboard }),
-        createDivider("business-section"),
+        // createDivider("business-section"),
         createNavItem("products", "My Products", "/dashboard/products", { icon: TbShoppingBag }),
         createNavItem("orders", "Orders", "/dashboard/orders", {
           icon: RiShoppingCartLine,
           badge: orderCount > 0 ? dangerBadge(orderCount) : undefined,
         }),
-        createDivider("finance-section"),
+        // createDivider("finance-section"),
         createNavItem("payouts", "Payouts", "/dashboard/payouts", {
           icon: TbCreditCard,
           badge: pendingWithdrawals > 0 ? dangerBadge(pendingWithdrawals) : undefined,
         }),
-        createDivider("account-section"),
+        createNavItem("promotions", "Promotions", "/dashboard/promotions", {
+          icon: RiAdvertisementLine,
+        }),
+        // createDivider("account-section"),
         createNavItem("profile", "Profile", "/dashboard/profile", { icon: RiUserLine }),
         createSettingsMenu("VENDOR"),
       ];

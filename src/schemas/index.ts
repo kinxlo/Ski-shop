@@ -45,35 +45,17 @@ export const resetPasswordSchema = z
     message: "Passwords don't match",
     path: ["confirmPassword"],
   });
-// Base schema for common fields
-const BaseSchema = z.object({
-  product_type: z.enum(["digital_product", "skill_selling"]),
-  title: z.string().min(1, "Title is required"),
-  category: z.string().min(1, "Category is required"),
-  price: z.number().min(1, "Price must be a positive number"),
-  discount_price: z.number().min(0, "Discount must be a positive number"),
+
+export const simpleProductSchema = z.object({
+  name: z.string().min(1, "Product name is required"),
+  price: z.number().min(0, "Price must be positive"),
+  discountPrice: z.number().min(0, "Discount price must be positive").optional(),
   description: z.string().min(1, "Description is required"),
-  cover_photos: z.array(z.any()).min(1, "Cover photo is required"),
-  thumbnail: z.any().refine((file) => file !== null, "Thumbnail is required"),
-  tags: z.array(z.string()).min(1, "At least one tag is required"),
-  highlights: z.array(z.string()).min(1, "At least one highlight is required"),
+  category: z.string().min(1, "Category is required"),
+  stockCount: z.number().min(0, "Stock count must be positive"),
+  images: z.array(z.any()).min(1, "At least one image is required").max(4, "Maximum 4 images allowed"),
+  status: z.enum(["published", "draft"]).default("published"),
 });
-
-// Digital product schema
-const DigitalProductSchema = BaseSchema.extend({
-  product_type: z.literal("digital_product"),
-  assets: z.array(z.any()).min(1, "Product files are required").max(4, "You can upload up to 4 files"),
-});
-
-// Skill selling schema
-const SkillSellingSchema = BaseSchema.extend({
-  product_type: z.literal("skill_selling"),
-  resource_link: z.array(z.string()).min(1, "At least one resource link is required"),
-  portfolio_link: z.string().min(1, "Portfolio link is required"),
-});
-
-// Combined schema using Zod's union
-export const ProductFormSchema = z.discriminatedUnion("product_type", [DigitalProductSchema, SkillSellingSchema]);
 
 export const withdrawalSchema = z.object({
   amount: z.number().min(1, "Price must be a positive number"),
@@ -312,13 +294,9 @@ export type FunnelSettingFormData = z.infer<typeof funnelSettingsSchema>;
 export type ExternalContactFormData = z.infer<typeof externalContactSchema>;
 export type BusinessInfoFormData = z.infer<typeof businessInfoSchema>;
 export type StoreFormData = z.infer<typeof storeSchema>;
+export type SimpleProductFormData = z.infer<typeof simpleProductSchema>;
 // export type VendorProfileFormData = z.infer<typeof vendorProfileSchema>;
 export type VendorStoreFormData = z.infer<typeof vendorStoreFormSchema>;
 export type VendorPersonalFormData = z.infer<typeof vendorProfileFormSchema>;
 export type VendorBusinessFormData = z.infer<typeof vendorBusinessFormSchema>;
-export type ProductFormData = z.infer<typeof ProductFormSchema>;
-
-// Type definitions are now globally available in src/types/
-// These types are automatically inferred from the schemas and available globally
-
 export type SecurityPrivacySettingsData = z.infer<typeof securityPrivacySettingsSchema>;

@@ -32,7 +32,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                 <TopBar notificationsCount={12} className="px-6" />
               </div>
             </header>
-            <main className="max-w-full flex-1 overflow-auto bg-[#F7F9FC] p-6 dark:bg-black">
+            <main className="overflow-auto p-6">
               <div className="mx-auto max-w-[1400px] space-y-6">{children}</div>
             </main>
           </div>

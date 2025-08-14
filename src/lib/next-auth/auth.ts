@@ -12,7 +12,7 @@ declare module "next-auth" {
 }
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
-  secret: process.env.AUTH_SECRET,
+  secret: process.env.NEXTAUTH_SECRET,
   // debug: process.env.NODE_ENV === "development",
   providers: [
     // Google OAuth via credentials provider

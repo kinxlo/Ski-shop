@@ -1,7 +1,7 @@
-import { ProductFormData } from "@/app/[locale]/(dashboard-pages)/_components/forms/add-product-form";
 import { EditProductFormData } from "@/app/[locale]/(dashboard-pages)/_components/forms/edit-product-form";
 import { HttpAdapter } from "@/lib/http/http-adapter";
 import { tryCatchWrapper } from "@/lib/tools/tryCatchFunction";
+import { SimpleProductFormData } from "@/schemas";
 
 export class DashboardProductService {
   private readonly http: HttpAdapter;
@@ -48,7 +48,7 @@ export class DashboardProductService {
   }
 
   // Create product
-  async createProduct(data: ProductFormData, storeID: string) {
+  async createProduct(data: SimpleProductFormData, storeID: string) {
     const headers = { "Content-Type": "multipart/form-data" };
 
     // Create FormData for multipart upload
@@ -111,9 +111,9 @@ export class DashboardProductService {
     }
 
     // Append images if they exist (File objects)
-    if (data.images && data.images.length > 0) {
+    if (data?.images && data?.images?.length > 0) {
       for (const imageObject of data.images) {
-        formData.append(`images`, imageObject.file);
+        formData.append(`images`, imageObject?.file);
       }
     }
 

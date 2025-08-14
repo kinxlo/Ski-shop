@@ -54,7 +54,7 @@ export async function middleware(request: NextRequest) {
   // Get user token to check authentication and role
   const token = await getToken({
     req: request,
-    secret: process.env.AUTH_SECRET,
+    secret: process.env.NEXTAUTH_SECRET,
   });
 
   const isAuthenticated = !!token;
