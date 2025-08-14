@@ -12,7 +12,8 @@ declare module "next-auth" {
 }
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
-  secret: process.env.NEXTAUTH_SECRET,
+  // Support both legacy and new env names for the auth secret in different environments
+  secret: process.env.AUTH_SECRET ?? process.env.NEXTAUTH_SECRET ?? process.env.NEXT_AUTH_SECRET,
   // debug: process.env.NODE_ENV === "development",
   providers: [
     // Google OAuth via credentials provider
@@ -132,7 +133,14 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           id: user.id,
           name: user.name,
           email: user.email,
-          role: user.role,
+          // Normalize role early to avoid case/format mismatches downstream
+          role:
+            typeof user.role === "object"
+              ? {
+                  id: String((user.role as any)?.id ?? (user.role as any)?.name ?? "customer"),
+                  name: String((user.role as any)?.name ?? (user.role as any)?.id ?? "customer"),
+                }
+              : String(user.role ?? "customer"),
           accessToken: user.accessToken,
           refreshToken: user.refreshToken,
         };

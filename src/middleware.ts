@@ -52,17 +52,24 @@ export async function middleware(request: NextRequest) {
   }
 
   // Get user token to check authentication and role
+  const AUTH_SECRET = process.env.AUTH_SECRET ?? process.env.NEXTAUTH_SECRET ?? process.env.NEXT_AUTH_SECRET;
+
   const token = await getToken({
     req: request,
-    secret: process.env.NEXTAUTH_SECRET,
+    secret: AUTH_SECRET,
   });
 
   const isAuthenticated = !!token;
-  // Handle role as object or string
-  const userRole =
-    typeof token?.role === "object" && (token?.role as { id: string })?.id
-      ? (token?.role as { id: string }).id
-      : (token?.role as string) || "customer";
+  // Handle role as object or string and normalize to lowercase, hyphenated form
+  let rawRole: string | undefined;
+  if (typeof token?.role === "object") {
+    const roleObject = token?.role as { id?: string; name?: string };
+    rawRole = roleObject.id || roleObject.name;
+  } else {
+    rawRole = token?.role as string | undefined;
+  }
+
+  const userRole = (rawRole ? String(rawRole) : "customer").toLowerCase().replaceAll("_", "-");
 
   // Check if user is trying to access a protected route
   const isVendorRoute = matchesRoute(pathWithoutLocale, VENDOR_ROUTES);
