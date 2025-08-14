@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 "use client";
 
 import SkiButton from "@/components/shared/button";
