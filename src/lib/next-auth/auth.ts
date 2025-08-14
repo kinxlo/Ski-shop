@@ -15,6 +15,8 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   // Support both legacy and new env names for the auth secret in different environments
   secret: process.env.AUTH_SECRET ?? process.env.NEXTAUTH_SECRET ?? process.env.NEXT_AUTH_SECRET,
   // debug: process.env.NODE_ENV === "development",
+  // Add trustHost for production deployments
+  trustHost: true,
   providers: [
     // Google OAuth via credentials provider
     Credentials({
@@ -183,5 +185,17 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   },
   pages: {
     signIn: "/login",
+  },
+  // Add explicit cookie configuration for production
+  cookies: {
+    sessionToken: {
+      name: process.env.NODE_ENV === "production" ? "__Secure-authjs.session-token" : "authjs.session-token",
+      options: {
+        httpOnly: true,
+        sameSite: "lax",
+        path: "/",
+        secure: process.env.NODE_ENV === "production",
+      },
+    },
   },
 });

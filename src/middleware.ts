@@ -1,9 +1,8 @@
+import { defaultLocale } from "@/lib/i18n/config";
+import { isValidLocale } from "@/lib/i18n/utils";
+import { ADMIN_ROUTES, PUBLIC_ROUTES, SUPER_ADMIN_ROUTES, VENDOR_ROUTES } from "@/lib/routes/routes";
 import { getToken } from "next-auth/jwt";
 import { NextResponse, type NextRequest } from "next/server";
-
-import { defaultLocale } from "./lib/i18n/config";
-import { isValidLocale } from "./lib/i18n/utils";
-import { ADMIN_ROUTES, PUBLIC_ROUTES, SUPER_ADMIN_ROUTES, VENDOR_ROUTES } from "./lib/routes/routes";
 
 function stripLocalePrefix(pathname: string): { basePath: string; localePrefix: string | null } {
   const segments = pathname.split("/");
@@ -92,10 +91,24 @@ export default async function middleware(request: NextRequest) {
   }
 
   // Auth state from JWT cookie (compatible with middleware)
+  // Fix for production: ensure proper cookie reading and secret handling
   const token = await getToken({
     req: request,
     secret: process.env.AUTH_SECRET ?? process.env.NEXTAUTH_SECRET ?? process.env.NEXT_AUTH_SECRET,
+    // Add cookie configuration for production
+    cookieName: process.env.NODE_ENV === "production" ? "__Secure-authjs.session-token" : "authjs.session-token",
+    // Ensure secure cookies are handled correctly
+    secureCookie: process.env.NODE_ENV === "production",
   });
+
+  // Debug logging for production issues (remove after fixing)
+  if (process.env.NODE_ENV === "production" && !token && pathname !== "/login") {
+    // eslint-disable-next-line no-console
+    console.log("[Middleware] No token found in production for path:", pathname);
+    // eslint-disable-next-line no-console
+    console.log("[Middleware] Cookie header:", request.headers.get("cookie"));
+  }
+
   const isAuthenticated = Boolean(token);
   const role = getUserRoleFromToken(token);
 
