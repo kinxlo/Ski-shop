@@ -144,6 +144,6 @@ export default async function middleware(request: NextRequest) {
 export const config = {
   matcher: [
     // Match all paths except for static files, image assets and API routes
-    String.raw`/((?!api|_next|_vercel|.*\..*).*)`,
+    "/((?!api|_next|_vercel|.*[.].*).*)",
   ],
 };
