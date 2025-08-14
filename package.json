@@ -12,7 +12,7 @@
     "url": "https://github.com/kinxlo"
   },
   "scripts": {
-    "dev": "next dev --turbopack",
+    "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
