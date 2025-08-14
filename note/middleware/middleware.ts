@@ -1,7 +1,7 @@
 import { getToken } from "next-auth/jwt";
 import { NextRequest, NextResponse } from "next/server";
 
-import { ADMIN_ROUTES, PUBLIC_ROUTES, SUPER_ADMIN_ROUTES, VENDOR_ROUTES } from "./lib/routes/routes";
+import { ADMIN_ROUTES, PUBLIC_ROUTES, SUPER_ADMIN_ROUTES, VENDOR_ROUTES } from "../../src/lib/routes/routes";
 
 // Helper function to check if path matches any route pattern
 const matchesRoute = (path: string, routePatterns: string[]): boolean => {
@@ -54,19 +54,33 @@ export async function middleware(request: NextRequest) {
   // Get user token to check authentication and role
   const AUTH_SECRET = process.env.AUTH_SECRET ?? process.env.NEXTAUTH_SECRET ?? process.env.NEXT_AUTH_SECRET;
 
-  const token = await getToken({
-    req: request,
-    secret: AUTH_SECRET,
-  });
+  // Try multiple cookie names to be environment-agnostic (http vs https, legacy vs new names)
+  const possibleCookieNames = [
+    request.nextUrl.protocol === "https:" ? "__Secure-authjs.session-token" : "authjs.session-token",
+    "authjs.session-token",
+    "__Secure-authjs.session-token",
+    // legacy next-auth v4 names, kept for safety during migrations
+    "next-auth.session-token",
+    "__Secure-next-auth.session-token",
+  ];
 
-  const isAuthenticated = !!token;
+  let token: Awaited<ReturnType<typeof getToken>> | null = null;
+  for (const name of possibleCookieNames) {
+    token = await getToken({ req: request, secret: AUTH_SECRET, cookieName: name });
+    if (token) break;
+  }
+
+  const isAuthenticated = token != null && typeof token === "object";
   // Handle role as object or string and normalize to lowercase, hyphenated form
   let rawRole: string | undefined;
-  if (typeof token?.role === "object") {
-    const roleObject = token?.role as { id?: string; name?: string };
-    rawRole = roleObject.id || roleObject.name;
-  } else {
-    rawRole = token?.role as string | undefined;
+  if (token && typeof token === "object") {
+    type RoleValue = { id?: string; name?: string } | string | undefined;
+    const roleValue = (token as unknown as { role?: RoleValue }).role;
+    if (roleValue && typeof roleValue === "object") {
+      rawRole = roleValue.id ?? roleValue.name;
+    } else if (typeof roleValue === "string") {
+      rawRole = roleValue;
+    }
   }
 
   const userRole = (rawRole ? String(rawRole) : "customer").toLowerCase().replaceAll("_", "-");
