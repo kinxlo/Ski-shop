@@ -55,9 +55,9 @@ const Page = () => {
   ];
 
   return (
-    <main>
+    <main className="space-y-8">
       <section className="flex items-center justify-between">
-        <h4 className="text-mid-grey-III text-[18px] lg:text-[30px]">Products</h4>
+        <h4>Products</h4>
         <div>
           <SkiButton
             href={`/${locale}/dashboard/products/new`}
@@ -70,7 +70,7 @@ const Page = () => {
           </SkiButton>
         </div>
       </section>
-      <section className="my-[38px] grid grid-cols-1 gap-[31px] lg:grid-cols-2">
+      <section className="grid grid-cols-1 gap-[31px] lg:grid-cols-2">
         <OverViewCard
           title="Total Products"
           value={stats.totalProducts.toString()}
@@ -117,12 +117,12 @@ const Page = () => {
           {/* Desktop Tabs */}
           <div className="hidden sm:block">
             <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-              <TabsList className="bg-white p-0">
+              <TabsList className="bg-background p-0">
                 {tabOptions.map((option) => (
                   <TabsTrigger
                     key={option.value}
                     value={option.value}
-                    className="data-[state=active]:border-primary data-[state=active]:text-primary text-high-grey-II relative h-13 rounded-none border-0 border-b-2 px-4 text-sm font-medium !shadow-none data-[state=active]:border-b-2 data-[state=active]:bg-transparent"
+                    className="data-[state=active]:border-primary data-[state=active]:text-primary text-mid-grey-II relative h-13 rounded-none border-0 border-b-2 px-4 text-sm font-medium !shadow-none data-[state=active]:border-b-2 data-[state=active]:bg-transparent"
                   >
                     {option.label} ({option.count})
                   </TabsTrigger>

@@ -8,7 +8,7 @@ interface StrengthProperties {
 
 export const ServiceCard = ({ strength }: { strength: StrengthProperties }) => {
   return (
-    <section className={`flex flex-col items-center justify-center gap-4 rounded-xl bg-white p-9`}>
+    <section className={`dark:bg-high-grey-II flex flex-col items-center justify-center gap-4 rounded-xl bg-white p-9`}>
       <div className={`relative`}>
         <Image src={strength.image} alt={strength.title} className={``} width={62} height={62} />
       </div>

@@ -91,7 +91,7 @@ export const CartView = () => {
   };
 
   const subtotal = cartItems.reduce(
-    (sum: number, item: CartItem) => sum + (item.product.price || 0) * item.quantity,
+    (sum: number, item: CartItem) => sum + (item.product.discountPrice || item.product.price || 0) * item.quantity,
     0,
   );
   const shipping = subtotal > 100 ? 0 : 15;
@@ -258,18 +258,23 @@ export const CartView = () => {
                                 </div>
                               </div>
                               <div>
-                                <p className="font-medium">{item.product.name}</p>
-                                <p className="text-xs text-gray-500">SKU: {item.product.id}</p>
+                                <p className="!mb-0 font-medium">{item.product.name}</p>
+                                <p className="text-high-grey-II !mb-0 text-[11px]">SKU: {item.product.id}</p>
                               </div>
                             </div>
                           </td>
                           <td className="px-4 py-4">
-                            {formatCurrency(item.product.price, locale as Locale)}
-                            <br />
-                            {item.product.discountPrice && (
-                              <span className="text-destructive ml-2 text-xs line-through">
-                                {formatCurrency(item.product?.discountPrice, locale as Locale)}
-                              </span>
+                            {item.product.discountPrice ? (
+                              <>
+                                <span className="font-semibold">
+                                  {formatCurrency(item.product.discountPrice, locale as Locale)}
+                                </span>
+                                {/* <span className="text-destructive mr-2 text-[10px] line-through">
+                                  {formatCurrency(item.product.price, locale as Locale)}
+                                </span> */}
+                              </>
+                            ) : (
+                              <span>{formatCurrency(item.product.price, locale as Locale)}</span>
                             )}
                           </td>
                           <td className="px-4 py-4">
@@ -292,17 +297,22 @@ export const CartView = () => {
                             </div>
                           </td>
                           <td className="px-4 py-4 font-medium">
-                            {formatCurrency((item.product.price || 0) * item.quantity, locale as Locale)}
+                            {formatCurrency(
+                              (item.product.discountPrice || item.product.price || 0) * item.quantity,
+                              locale as Locale,
+                            )}
                           </td>
                           <td className="px-4 py-4">
-                            <button
+                            <SkiButton
                               onClick={() => handleRemoveItem(item.id)}
-                              disabled={isRemoving}
+                              isDisabled={isRemoving}
+                              variant="ghost"
+                              size="icon"
                               className="text-red-500 hover:text-red-700 disabled:opacity-50"
                               aria-label="Remove item"
-                            >
-                              <Trash2 className="h-5 w-5" />
-                            </button>
+                              icon={<Trash2 className="h-5 w-5" />}
+                              isIconOnly
+                            />
                           </td>
                         </tr>
                       ))}

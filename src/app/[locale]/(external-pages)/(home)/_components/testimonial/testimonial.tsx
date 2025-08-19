@@ -38,7 +38,7 @@ export const Testimonial = () => {
         <section className="items-center gap-3 md:flex">
           <div className="flex-1">
             <h6 className="text-primary">{t("tagTitle")}</h6>
-            <h1 className="text-high-grey-II mt-2 font-medium">{t("title")}</h1>
+            <h2 className="text-high-grey-II mt-2 font-medium">{t("title")}</h2>
           </div>
           <div className="flex justify-end gap-[15px] xl:gap-[35px]">
             {testimonialImages.map((t, index) =>
@@ -76,23 +76,19 @@ export const Testimonial = () => {
               height={214}
             />
 
-            <div className="absolute right-0">{<Ratings rating={selectedTestimonial?.rating || 0} />}</div>
-
             {/* Fade-in/out container */}
             <section
               key={selectedTestimonialIndex}
               className={`transition-opacity duration-500 ${fade ? "opacity-100" : "opacity-0"}`}
             >
               <div className="relative">
-                <div className="flex items-center justify-between">
-                  <h3 className="text-[16px] font-semibold text-[#292929] xl:text-[22px]">
-                    {selectedTestimonial.name}
-                  </h3>
+                <div className="flex items-start justify-between">
+                  <div className="">
+                    <h3 className="!mb-0">{selectedTestimonial.name}</h3>
+                    <p className={`text-primary font-medium`}>{selectedTestimonial.position}</p>
+                  </div>
+                  <Ratings rating={selectedTestimonial?.rating || 0} />
                 </div>
-
-                <p className="absolute left-0 mt-1 text-[14px] font-medium text-gray-500 xl:text-[16px]">
-                  {selectedTestimonial.position}
-                </p>
                 <p className="mt-14 max-w-7xl text-justify text-[14px] leading-[23px] lg:text-xl">
                   {selectedTestimonial.message}
                 </p>

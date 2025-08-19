@@ -319,16 +319,17 @@ export const EditProductForm = ({ product, onSuccess, onCancel }: EditProductFor
   };
 
   const handleSubmitForm = async (data: EditProductFormData) => {
+    // console.log(data);
     try {
-      // Ensure all required fields are provided with defaults
-      const submitData = {
-        ...data,
-        images: data?.images?.map((img) => img.url) || [],
-        description: data.description || "",
-      };
+      //   // Ensure all required fields are provided with defaults
+      //   const submitData = {
+      //     ...data,
+      //     images: data?.images?.map((img) => img.url) || [],
+      //     description: data.description || "",
+      //   };
 
       editProduct(
-        { id: product.id, data: submitData },
+        { id: product.id, data: data },
         {
           onSuccess: (response) => {
             if (response?.success) {
@@ -347,9 +348,9 @@ export const EditProductForm = ({ product, onSuccess, onCancel }: EditProductFor
   const activeItem = activeId ? images.find((img) => img.id === activeId) : null;
 
   return (
-    <section className="">
-      <div className="mb-8 space-y-2">
-        <h3 className="!text-3xl font-bold text-black">Edit Product</h3>
+    <section className="space-y-8">
+      <div className="">
+        <h4>Edit Product</h4>
       </div>
 
       <FormProvider {...methods}>

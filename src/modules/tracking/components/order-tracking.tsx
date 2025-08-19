@@ -54,11 +54,11 @@ export const OrderTracking = ({ trackingData, apiKey, onRateRider }: OrderTracki
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="!text-2xl font-bold text-gray-900">Live Tracking</h2>
-          <p className="text-gray-600">Order ID: {trackingData.orderId}</p>
-          <p className="text-gray-600">{trackingData.productName}</p>
+          <h2 className="text-mid-grey-II !text-2xl font-bold">Live Tracking</h2>
+          <p className="text-mid-grey-II">Order ID: {trackingData.orderId}</p>
+          <p className="text-mid-grey-II">{trackingData.productName}</p>
         </div>
-        <Badge className="px-3 py-1 text-sm">
+        <Badge className="rounded-full px-6 py-2 text-base">
           {trackingData.currentStatus.replaceAll("_", " ").replaceAll(/\b\w/g, (l) => l.toUpperCase())}
         </Badge>
       </div>

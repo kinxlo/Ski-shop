@@ -51,11 +51,9 @@ export function SubscriptionFlow() {
     <section className="space-y-8">
       {/* Header / Progress */}
       <div className="flex items-center justify-between">
-        <div>
-          <h2 className="!text-4xl font-bold">Become a Star Seller</h2>
-          <p className="text-muted-foreground mt-1 text-sm">
-            Upgrade your store and unlock premium features that help you grow faster.
-          </p>
+        <div className="">
+          <h4 className="">Become a Star Seller</h4>
+          <p className="text-mid-grey-II">Upgrade your store and unlock premium features that help you grow faster.</p>
         </div>
         <Image src="/images/skicom-star.svg" width={48} height={48} alt="Skicom Star" />
       </div>

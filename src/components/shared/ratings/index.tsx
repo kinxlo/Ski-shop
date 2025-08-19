@@ -4,19 +4,13 @@ import React, { useState } from "react";
 
 interface RatingsProperties {
   rating: number;
-  size?: number;
+  size?: string;
   readonly?: boolean;
   onChange?: (rating: number) => void;
   className?: string;
 }
 
-export const Ratings: React.FC<RatingsProperties> = ({
-  rating,
-  size = 20,
-  readonly = true,
-  onChange,
-  className = "",
-}) => {
+export const Ratings: React.FC<RatingsProperties> = ({ rating, size, readonly = true, onChange, className = "" }) => {
   const [hovered, setHovered] = useState<number | null>(null);
   const [internalRating, setInternalRating] = useState<number>(rating);
 
@@ -60,8 +54,11 @@ export const Ratings: React.FC<RatingsProperties> = ({
           )}
         >
           <Star
-            size={size}
-            className={cn(index < displayRating ? "fill-yellow-400 text-yellow-400" : "fill-gray-400 text-gray-400")}
+            className={cn(
+              "size-3.5 md:size-5",
+              index < displayRating ? "fill-yellow-400 text-yellow-400" : "fill-gray-400 text-gray-400",
+              size,
+            )}
           />
         </button>
       ))}

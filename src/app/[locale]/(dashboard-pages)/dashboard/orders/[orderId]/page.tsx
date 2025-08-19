@@ -2,6 +2,7 @@
 
 import { Wrapper } from "@/components/core/layout/wrapper";
 import { BlurImage } from "@/components/core/miscellaneous/blur-image";
+import { BackButton } from "@/components/shared/back-button";
 import SkiButton from "@/components/shared/button";
 import { AlertModal } from "@/components/shared/dialog/alert-modal";
 import { EmptyState } from "@/components/shared/empty-state";
@@ -14,6 +15,7 @@ import { OrderTrackingData, RiderInfo } from "@/modules/tracking/types";
 import { createTrackingData } from "@/modules/tracking/utils/tracking-utils";
 import { useDashboardOrderService } from "@/services/dashboard/vendor/orders/use-order-service";
 import { ArrowLeft, CreditCard, Info, MapPin, Phone, Star, User } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import { use, useState } from "react";
 
@@ -152,21 +154,14 @@ export default function OrderDetailPage({ params }: OrderDetailPageProperties) {
   const order = orderResponse.data;
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="space-y-8">
       {/* Header */}
       <div>
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="flex h-16 items-center justify-between">
-            <div className="flex items-center space-x-4">
-              <Link
-                href="/dashboard/orders"
-                className="text-high-grey-II flex items-center transition-colors hover:text-gray-900"
-              >
-                <ArrowLeft className="mr-2 h-5 w-5" />
-                <span className="hidden sm:inline">Back to Orders</span>
-              </Link>
-              <div className="hidden h-6 w-px bg-gray-300 sm:block" />
-              <h1 className="!text-lg font-semibold text-gray-900 sm:!text-3xl">Order Details</h1>
+        <div className="">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <BackButton />
+              <h4>Order Details</h4>
             </div>
             <Badge className={cn("px-3 py-1 text-sm", getStatusColor(order.status))}>
               {order.status.charAt(0).toUpperCase() + order.status.slice(1)}
@@ -176,7 +171,7 @@ export default function OrderDetailPage({ params }: OrderDetailPageProperties) {
       </div>
 
       <Wrapper className="mx-auto px-0 py-4">
-        <div className="grid grid-cols-1 gap-4 sm:gap-8 lg:grid-cols-3">
+        <div className="grid grid-cols-1 gap-4 sm:gap-6 lg:grid-cols-3">
           {/* Main Content */}
           <div className="space-y-4 sm:space-y-6 lg:col-span-2">
             {/* Order Summary */}
@@ -208,10 +203,10 @@ export default function OrderDetailPage({ params }: OrderDetailPageProperties) {
                   {order.products.map((product: OrderProduct) => (
                     <div
                       key={product.id}
-                      className="flex items-center space-x-3 rounded-lg bg-gray-50 p-3 sm:space-x-4 sm:p-4"
+                      className="bg-primary/5 relative flex items-center space-x-3 overflow-hidden rounded-lg p-3 sm:space-x-4 sm:p-4"
                     >
-                      <div className="relative flex-shrink-0">
-                        <div className="relative">
+                      <div className="flex-shrink-0">
+                        <div className={cn("")}>
                           <BlurImage
                             src={product.images[0] || "/images/placeholder-product.jpg"}
                             alt={product.name}
@@ -220,9 +215,13 @@ export default function OrderDetailPage({ params }: OrderDetailPageProperties) {
                             className="rounded-lg object-cover sm:h-20 sm:w-20"
                           />
                           {product.vendor?.name && (
-                            <div className="bg-primary absolute -top-1 -left-1 rounded px-1 py-0.5 text-xs text-white sm:-top-2 sm:-left-2 sm:px-2 sm:py-1">
-                              {`Best Seller`}
-                            </div>
+                            <Image
+                              src="/images/star-seller.svg"
+                              alt="Seller badge"
+                              width={20}
+                              height={20}
+                              className="pointer-events-none absolute -top-3 -left-0 z-10 size-10 sm:size-20"
+                            />
                           )}
                         </div>
                       </div>

@@ -6,7 +6,7 @@ import { PhoneInput } from "@/components/shared/inputs/phone-input";
 import { ComboBox } from "@/components/shared/select-dropdown/combo-box";
 import { FormControl, FormItem, FormField as UIFormField } from "@/components/ui/form";
 import { countries } from "@/lib/constants";
-import { businessInfoSchema } from "@/schemas";
+import { BusinessInfoFormData, businessInfoSchema } from "@/schemas";
 import { useOnboardingUserService } from "@/services/externals/onboarding/use-onboarding-user-service";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useLocale } from "next-intl";
@@ -53,8 +53,8 @@ export const BusinessInfoForm = () => {
 
   const renderHeader = () => (
     <div className="mb-6 text-center">
-      <h2 className="mb-2 text-xl font-semibold text-gray-900 sm:text-2xl">Basic Business Info</h2>
-      <p className="text-sm text-gray-600 sm:text-base">
+      <h2 className="text-high-grey-II mb-2 text-xl font-semibold sm:text-2xl">Basic Business Info</h2>
+      <p className="text-high-grey-II text-sm sm:text-base">
         Please provide your business details to continue. This helps us verify and tailor your experience on Ski-Shop.
       </p>
     </div>
@@ -138,7 +138,7 @@ export const BusinessInfoForm = () => {
           placeholder="Select country"
           searchPlaceholder="Search countries..."
           emptyMessage="No country found."
-          className="h-14 w-full rounded-lg bg-white shadow-none"
+          className="bg-mid-grey-III text-mid-grey-II h-14 w-full rounded-lg shadow-none"
         />
         {methods.formState.errors.country && (
           <p className="text-sm text-red-500">{methods.formState.errors.country.message}</p>

@@ -164,7 +164,10 @@ const CheckoutPage = () => {
 
   // Calculate totals
   const subtotal =
-    cartData?.data?.items?.reduce((sum: number, item: CartItem) => sum + item.product.price * item.quantity, 0) || 0;
+    cartData?.data?.items?.reduce(
+      (sum: number, item: CartItem) => sum + (item.product.discountPrice || item.product.price || 0) * item.quantity,
+      0,
+    ) || 0;
 
   const total = subtotal + shippingFee;
 
@@ -241,7 +244,7 @@ const CheckoutPage = () => {
         <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
           {/* Delivery and Payment Section */}
           <div>
-            <h5 className="mb-6 text-2xl font-semibold">Delivery Method</h5>
+            <h4 className="">Delivery Method</h4>
 
             <form onSubmit={handleFormSubmit}>
               <div className="space-y-20">
@@ -253,9 +256,9 @@ const CheckoutPage = () => {
                       value="station"
                       checked={deliveryMethod === "station"}
                       onChange={() => setDeliveryMethod("station")}
-                      className="mt-1 mr-2"
+                      className="mt-2 mr-2"
                     />
-                    <p className={`text-xl font-semibold`}>Pick-up Station</p>
+                    <p className={`text-lg font-semibold`}>Pick-up Station</p>
                   </div>
                   <p className={`my-4`}>
                     Delivery Between <strong>10 May</strong> and <strong>12 May</strong>
@@ -289,9 +292,9 @@ const CheckoutPage = () => {
                       value="door"
                       checked={deliveryMethod === "door"}
                       onChange={() => setDeliveryMethod("door")}
-                      className="mt-1 mr-2"
+                      className="mt-2 mr-2"
                     />
-                    <p className={`text-xl font-semibold`}>Door Delivery</p>
+                    <p className={`text-lg font-semibold`}>Door Delivery</p>
                   </div>
                   <p className={`my-4`}>
                     Delivery Between <strong>12 May</strong> and <strong>14 May</strong>
@@ -335,9 +338,9 @@ const CheckoutPage = () => {
 
               {/* Payment Method */}
               <div className="mt-8">
-                <h5 className="mb-6 text-2xl font-semibold">Payment Method</h5>
+                <h4 className="">Payment Method</h4>
                 <div className="space-y-4">
-                  <label className="flex cursor-pointer items-center p-4">
+                  <label className="flex cursor-pointer items-center py-4">
                     <input
                       type="radio"
                       name="payment"
@@ -377,7 +380,7 @@ const CheckoutPage = () => {
 
           {/* Order Summary */}
           <div className="h-fit rounded-lg border p-6">
-            <h5 className="mb-6 text-xl font-semibold">Your order</h5>
+            <h4 className="mb-6 text-xl">Your order</h4>
             <hr />
 
             {isCartLoading ? (
@@ -385,7 +388,7 @@ const CheckoutPage = () => {
                 <p>Loading cart items...</p>
               </div>
             ) : cartError ? (
-              <div className="mt-4 rounded-lg bg-red-50 p-4 text-red-600">Error loading cart items</div>
+              <div className="text-destructive mt-4 rounded-lg bg-red-50 p-4">Error loading cart items</div>
             ) : (
               <div className="mt-4 space-y-4">
                 <div className="flex justify-between font-medium">
@@ -411,7 +414,12 @@ const CheckoutPage = () => {
                             {item.product.name} × {item.quantity}
                           </span>
                         </div>
-                        <span>{formatCurrency(item.product.price * item.quantity, locale as Locale)}</span>
+                        <span>
+                          {formatCurrency(
+                            (item.product.discountPrice || item.product.price || 0) * item.quantity,
+                            locale as Locale,
+                          )}
+                        </span>
                       </div>
                     ))}
 

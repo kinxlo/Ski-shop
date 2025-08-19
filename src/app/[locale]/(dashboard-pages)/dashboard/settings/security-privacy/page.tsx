@@ -68,11 +68,11 @@ const SecurityPrivacyPage = () => {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       {/* Header */}
-      <div className="space-y-2">
-        <h1 className="!text-4xl font-bold tracking-tight">Security & Privacy</h1>
-        <p className="text-muted-foreground">
+      <div className="">
+        <h4 className="">Security & Privacy</h4>
+        <p className="text-mid-grey-II">
           Manage your account security, privacy settings, and data preferences to keep your information safe.
         </p>
       </div>

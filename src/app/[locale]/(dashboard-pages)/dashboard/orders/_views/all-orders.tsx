@@ -71,7 +71,10 @@ export const AllOrders = () => {
       titleClassName="!text-2xl"
       descriptionClassName="text-base mb-4"
       actionButton={
-        <button onClick={() => refetch()} className="bg-primary hover:bg-primary/90 rounded-md px-4 py-2 text-white">
+        <button
+          onClick={() => refetch()}
+          className="bg-primary hover:bg-primary/90 text-background rounded-md px-4 py-2"
+        >
           Try Again
         </button>
       }
@@ -86,6 +89,14 @@ export const AllOrders = () => {
       className="bg-mid-grey-I space-y-0 rounded-lg"
       titleClassName="!text-2xl"
       descriptionClassName="text-base mb-4"
+      actionButton={
+        <button
+          onClick={() => refetch()}
+          className="bg-primary hover:bg-primary/90 text-background rounded-md px-4 py-2"
+        >
+          Refresh
+        </button>
+      }
     />
   );
 
@@ -101,35 +112,30 @@ export const AllOrders = () => {
           placeholder="Search for orders..."
         />
       </div>
-
-      {/* Dashboard Table */}
-      <DashboardTable
-        data={orders}
-        columns={orderColumn}
-        totalPages={totalPages}
-        itemsPerPage={totalOrders}
-        hasNextPage={hasNextPage}
-        hasPreviousPage={hasPreviousPage}
-        showPagination
-        pageParameter="page"
-        onRowClick={handleRowClick}
-      />
+      {isLoading ? (
+        renderLoadingSkeleton()
+      ) : isError ? (
+        renderErrorState()
+      ) : !orders || orders.length === 0 ? (
+        renderEmptyState()
+      ) : (
+        // Dashboard Table
+        <DashboardTable
+          data={orders}
+          columns={orderColumn}
+          totalPages={totalPages}
+          itemsPerPage={totalOrders}
+          hasNextPage={hasNextPage}
+          hasPreviousPage={hasPreviousPage}
+          showPagination
+          pageParameter="page"
+          onRowClick={handleRowClick}
+        />
+      )}
     </div>
   );
 
   const renderAllOrdersContent = () => {
-    if (isLoading) {
-      return renderLoadingSkeleton();
-    }
-
-    if (isError) {
-      return renderErrorState();
-    }
-
-    if (!orders || orders.length === 0) {
-      return renderEmptyState();
-    }
-
     return renderOrdersTable();
   };
 

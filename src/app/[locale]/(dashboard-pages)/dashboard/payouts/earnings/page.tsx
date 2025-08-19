@@ -1,6 +1,6 @@
 "use client";
 
-import { Wrapper } from "@/components/core/layout/wrapper";
+import { BackButton } from "@/components/shared/back-button";
 import SkiButton from "@/components/shared/button";
 import { AlertModal } from "@/components/shared/dialog/alert-modal";
 import { EmptyState } from "@/components/shared/empty-state";
@@ -13,7 +13,7 @@ import { useLocale } from "next-intl";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
-import { TbArrowLeft, TbCheck, TbCurrencyNaira, TbInfoCircle, TbWallet } from "react-icons/tb";
+import { TbCheck, TbCurrencyNaira, TbInfoCircle, TbWallet } from "react-icons/tb";
 import { z } from "zod";
 
 import { OverViewCard } from "../../../_components/overview-card";
@@ -124,18 +124,16 @@ const Page = () => {
   const watchedAmount = watch("amount");
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="space-y-8">
       {/* Header */}
-      <div className="border-border border-b px-4 py-4">
+      <div className="">
         <div className="flex items-center gap-4">
-          <button onClick={() => router.back()} className="rounded-full p-2 transition-colors hover:bg-gray-100">
-            <TbArrowLeft className="h-6 w-6" />
-          </button>
-          <h1 className="!text-3xl font-semibold text-gray-900">Withdraw Earnings</h1>
+          <BackButton />
+          <h4 className="">Withdraw Earnings</h4>
         </div>
       </div>
 
-      <Wrapper className="max-w-4xl space-y-6 px-0 py-4">
+      <section className="space-y-6">
         {/* Available Earnings */}
         <OverViewCard
           title="Available Earnings"
@@ -155,20 +153,20 @@ const Page = () => {
             {isLoadingBanks ? (
               <div className="space-y-3">
                 {Array.from({ length: 2 }, (_, index) => (
-                  <div key={index} className="rounded-lg bg-white p-4">
+                  <div key={index} className="bg-background rounded-lg p-4">
                     <div className="flex items-center gap-3">
                       <div className="h-10 w-10 animate-pulse rounded-full bg-gray-200" />
                       <div className="flex-1 space-y-2">
-                        <div className="h-4 w-24 animate-pulse rounded bg-gray-200" />
-                        <div className="h-3 w-32 animate-pulse rounded bg-gray-200" />
-                        <div className="h-3 w-28 animate-pulse rounded bg-gray-200" />
+                        <div className="h-4 w-24 animate-pulse rounded bg-gray-200 dark:bg-[#111111]" />
+                        <div className="h-3 w-32 animate-pulse rounded bg-gray-200 dark:bg-[#111111]" />
+                        <div className="h-3 w-28 animate-pulse rounded bg-gray-200 dark:bg-[#111111]" />
                       </div>
                     </div>
                   </div>
                 ))}
               </div>
             ) : isBanksError ? (
-              <div className="rounded-lg bg-white p-6">
+              <div className="bg-background rounded-lg p-6">
                 <EmptyState
                   images={[{ src: "/images/alert.png", alt: "Error", width: 50, height: 50 }]}
                   title="Failed to Load Bank Accounts"
@@ -183,7 +181,7 @@ const Page = () => {
                 />
               </div>
             ) : bankAccounts.length === 0 ? (
-              <div className="rounded-lg bg-white p-6">
+              <div className="bg-background rounded-lg p-6">
                 <EmptyState
                   images={[{ src: "/images/alert.png", alt: "No banks", width: 50, height: 50 }]}
                   title="No Bank Accounts"
@@ -199,7 +197,7 @@ const Page = () => {
                   <div
                     key={bank.id}
                     onClick={() => setSelectedBankId(bank.id)}
-                    className={`cursor-pointer rounded-lg border-2 bg-white p-4 transition-colors ${
+                    className={`bg-background cursor-pointer rounded-lg border-2 p-4 transition-colors ${
                       selectedBankId === bank.id
                         ? "border-primary bg-primary/10"
                         : "border-gray-200 hover:border-gray-300"
@@ -278,7 +276,7 @@ const Page = () => {
             </div>
           </form>
         </FormProvider>
-      </Wrapper>
+      </section>
 
       {/* Success Modal */}
       <AlertModal

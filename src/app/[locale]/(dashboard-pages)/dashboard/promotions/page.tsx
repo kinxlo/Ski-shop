@@ -66,7 +66,7 @@ const typeBadgeClass: Record<Campaign["type"], string> = {
 
 function CampaignCard({ campaign }: { campaign: Campaign }) {
   return (
-    <Card className="border-border p-4 shadow-none sm:p-5">
+    <Card className="p-4 shadow-none sm:p-5">
       <div className="mb-4 flex items-start justify-between gap-3">
         <div className="flex min-w-0 items-center gap-3">
           <div className="shrink-0">
@@ -92,15 +92,15 @@ function CampaignCard({ campaign }: { campaign: Campaign }) {
       </div>
 
       <div className="grid grid-cols-3 gap-3 sm:gap-4">
-        <div className="rounded-md border bg-white p-3 text-center">
+        <div className="bg-background rounded-md border p-3 text-center">
           <p className="text-foreground text-sm font-semibold">{campaign.impressions.toLocaleString()}</p>
           <p className="text-muted-foreground text-[11px] sm:text-xs">Impressions</p>
         </div>
-        <div className="rounded-md border bg-white p-3 text-center">
+        <div className="bg-background rounded-md border p-3 text-center">
           <p className="text-foreground text-sm font-semibold">{campaign.clicks.toLocaleString()}</p>
           <p className="text-muted-foreground text-[11px] sm:text-xs">Clicks</p>
         </div>
-        <div className="rounded-md border bg-white p-3 text-center">
+        <div className="bg-background rounded-md border p-3 text-center">
           <p className="text-foreground text-sm font-semibold">{campaign.conversionRate}%</p>
           <p className="text-muted-foreground text-[11px] sm:text-xs">Conv. Rate</p>
         </div>
@@ -111,9 +111,9 @@ function CampaignCard({ campaign }: { campaign: Campaign }) {
 
 const Page = () => {
   return (
-    <section className="space-y-4 sm:space-y-5">
-      <header className="mb-2">
-        <h4 className="text-mid-grey-III text-[18px] !font-bold lg:text-[30px]">Active Campaigns</h4>
+    <section className="space-y-8">
+      <header className="">
+        <h4 className="">Active Campaigns</h4>
       </header>
 
       <div className="space-y-4">

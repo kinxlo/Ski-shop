@@ -66,10 +66,10 @@ export default function HelpSupportPage() {
   };
 
   return (
-    <section>
-      <div className="space-y-1">
-        <h1 className="!text-3xl font-semibold tracking-tight sm:text-3xl">Help & Support</h1>
-        <p className="text-muted-foreground">Find quick answers or contact our team. We&apos;re here to help.</p>
+    <section className="space-y-8">
+      <div className="">
+        <h4 className="">Help & Support</h4>
+        <p className="text-mid-grey-II">Find quick answers or contact our team. We&apos;re here to help.</p>
       </div>
 
       <div className="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-5">

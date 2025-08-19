@@ -29,8 +29,8 @@ export const SectionThree = () => {
   return (
     <section className={`my-30`}>
       <div className={`space-y-4 pt-6 text-center`}>
-        <h2 className={`text-mid-grey-II text-4xl`}>{t("title")}</h2>
-        <p className={`text-xl`}>{t("description")}</p>
+        <h2 className={``}>{t("title")}</h2>
+        <p className={`text-mid-grey-II mx-auto max-w-2xl text-lg`}>{t("description")}</p>
       </div>
       <div className="mt-8 flex flex-col items-center justify-between gap-4 pb-10 lg:flex-row">
         {OUR_SERVICE.map((service) => (

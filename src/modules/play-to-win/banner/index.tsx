@@ -12,14 +12,14 @@ const PlayToWinBanner = () => {
 
   return (
     <section
-      className={`my-[78px] flex flex-col-reverse items-center justify-between gap-4 rounded-lg bg-[#FFF9F2] p-8 lg:flex-row lg:px-[62px] lg:py-[64px]`}
+      className={`my-[78px] flex flex-col-reverse items-center justify-between gap-4 rounded-lg bg-[#FFF9F2] p-8 lg:flex-row lg:px-[62px] lg:py-[64px] dark:bg-[#111111]`}
     >
       <div className={`max-w-[456px]`}>
-        <Badge variant={`default`} className={`bg-accent rounded-md px-[12px] py-[6px]`}>
+        <Badge variant={`default`} className={`bg-accent mb-8 rounded-md px-[12px] py-[6px]`}>
           {t("badge")}
         </Badge>
-        <h1>{t("title")}</h1>
-        <p className={`my-[22px] text-2xl`}>{t("description")}</p>
+        <h1 className={`text-foreground !mb-0`}>{t("title")}</h1>
+        <p className={`my-[22px] text-xl`}>{t("description")}</p>
 
         <SpinToWinModal>
           <Button size={`xl`} variant={`default`} className={`bg-black text-white`}>

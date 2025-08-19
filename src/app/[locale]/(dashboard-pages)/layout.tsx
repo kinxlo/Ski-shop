@@ -11,12 +11,11 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
   return (
     <SidebarProvider defaultOpen={true}>
-      <div className="bg-background flex min-h-screen w-full">
+      <div className="flex min-h-screen w-full">
         <DashboardSidebar
           navItems={navItems}
           autoExpandOnActiveChild={true}
           persistExpandedState={true}
-          defaultExpandedItems={["settings"]}
           logoProperties={{
             width: 100,
             height: 60,
@@ -26,13 +25,13 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         />
         <SidebarInset className="flex-1">
           <div className="flex h-full flex-col">
-            <header className="flex h-20 shrink-0 items-center gap-2 border-b px-4 py-5">
+            <header className="bg-background sticky top-0 z-50 flex h-20 shrink-0 items-center gap-2 border-b px-4 py-5">
               <SidebarTrigger className="text-primary -ml-1 size-9" />
               <div className="flex-1">
                 <TopBar notificationsCount={12} className="px-6" />
               </div>
             </header>
-            <main className="overflow-auto p-6">
+            <main className="overflow-auto bg-[#F8F8F9] p-6 dark:bg-[#111111]">
               <div className="mx-auto max-w-[1400px] space-y-6">{children}</div>
             </main>
           </div>

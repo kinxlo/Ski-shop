@@ -47,7 +47,7 @@ export const SearchInput = ({
   };
 
   return (
-    <div className={`relative w-fit`}>
+    <div className={`relative w-full`}>
       <SearchIcon className="text-muted-foreground absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 transform" />
       <Input
         type="search"

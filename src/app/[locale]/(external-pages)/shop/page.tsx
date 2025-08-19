@@ -5,11 +5,13 @@ import SkiButton from "@/components/shared/button";
 import { EmptyState } from "@/components/shared/empty-state";
 import { Paginations } from "@/components/shared/pagination/pagination";
 import { CustomSelect } from "@/components/shared/select-dropdown";
+import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerTrigger } from "@/components/ui/drawer";
 import { Input } from "@/components/ui/input";
 import { useAppService } from "@/services/externals/app/use-app-service";
 import { useTranslations } from "next-intl";
 import { useQueryState } from "nuqs";
 import { useMemo } from "react";
+import { PiFunnel } from "react-icons/pi";
 import { useDebounce } from "use-debounce";
 
 import { MobileDownloadBanner } from "../_components/mobile-download-banner";
@@ -110,12 +112,12 @@ const Page = () => {
 
   if (isProductError) {
     return (
-      <Wrapper className="py-12">
+      <Wrapper className="py-6 sm:py-12">
         <EmptyState
           images={[{ src: "/images/empty-state.svg", width: 80, height: 80, alt: "No featured products" }]}
           description={t("errors.failedToLoadProducts")}
           descriptionClassName="text-mid-danger"
-          className="bg-low-warning/5 space-y-0 rounded-lg py-10"
+          className="bg-low-warning/5 space-y-0 rounded-lg py-8 sm:py-10"
           actionButton={
             <SkiButton
               onClick={() => refetchProducts()}
@@ -135,153 +137,216 @@ const Page = () => {
   return (
     <>
       <Hero />
-      <Wrapper className="my-14 grid grid-cols-12 gap-6">
-        {/* Filters sidebar */}
-        <section className="col-span-2 space-y-10">
-          {isCategoriesLoading ? (
-            <div className="space-y-2">
-              <h6 className="font-semibold uppercase">{t("filters.categories")}</h6>
-              <div className="space-y-4">
-                {Array.from({ length: 7 }).map((_, index) => (
-                  <div key={index} className="flex items-center space-x-2">
-                    <div className="bg-muted h-4 w-4 animate-pulse rounded-full" />
-                    <div className="bg-muted h-4 w-24 animate-pulse rounded" />
-                  </div>
-                ))}
-              </div>
-            </div>
-          ) : (
-            <OptionsSelector
-              title={t("filters.categories")}
-              categories={[t("filters.allCategories"), ...categories]}
-              value={category || t("filters.allCategories")}
-              onChange={handleCategoryChange}
-            />
-          )}
-          {isTopVendorsLoading ? (
-            <div className="space-y-2">
-              <h6 className="font-semibold uppercase">{t("filters.vendor")}</h6>
-              <div className="space-y-4">
-                {Array.from({ length: 7 }).map((_, index) => (
-                  <div key={index} className="flex items-center space-x-2">
-                    <div className="bg-muted h-4 w-4 animate-pulse rounded-full" />
-                    <div className="bg-muted h-4 w-24 animate-pulse rounded" />
-                  </div>
-                ))}
-              </div>
-            </div>
-          ) : (
-            <OptionsSelector
-              title={t("filters.vendor")}
-              categories={[
-                t("filters.allVendor"),
-                ...(topVendorsData?.data?.items.map((vendor) => ({
-                  value: vendor.id,
-                  label: vendor.name,
-                })) || []),
-              ]}
-              value={storeId || t("filters.allVendor")}
-              onChange={handleVendorChange}
-            />
-          )}
-        </section>
+      <Wrapper className="my-8 sm:my-14">
+        {/* Mobile Filters Toggle */}
+        <div className="mb-6 flex items-center justify-between lg:hidden">
+          <Drawer>
+            <DrawerTrigger asChild>
+              <SkiButton
+                variant="outline"
+                icon={<PiFunnel className="h-4 w-4" />}
+                isLeftIconVisible
+                className="rounded-lg"
+                size="sm"
+              >
+                {t("filters.title") || "Filters"}
+              </SkiButton>
+            </DrawerTrigger>
+            <DrawerContent className="h-[85vh]">
+              <DrawerHeader>
+                <DrawerTitle>{t("filters.title") || "Filters"}</DrawerTitle>
+              </DrawerHeader>
+              <div className="flex-1 overflow-y-auto p-4">
+                <div className="space-y-6">
+                  {/* Categories */}
+                  {!isCategoriesLoading && (
+                    <OptionsSelector
+                      title={t("filters.categories")}
+                      categories={[t("filters.allCategories"), ...categories]}
+                      value={category || t("filters.allCategories")}
+                      onChange={handleCategoryChange}
+                    />
+                  )}
 
-        {/* Main content */}
-        <section className="col-span-10">
-          {/* Search and sort header */}
-          <article className="flex items-center justify-between">
-            <div className="w-[20rem]">
-              <Input name="search" placeholder={t("search.placeholder")} value={search || ""} onChange={handleSearch} />
-            </div>
-            <div className="flex items-center space-x-4">
-              <p className="text-sm">{t("search.sortBy")}</p>
-              <CustomSelect
-                options={["newest", "name", "price", "rating"]}
-                placeholder={t("search.chooseSortOption")}
-                value={sort || "newest"}
-                onChange={handleSortChange}
+                  {/* Vendors */}
+                  {!isTopVendorsLoading && (
+                    <OptionsSelector
+                      title={t("filters.vendor")}
+                      categories={[
+                        t("filters.allVendor"),
+                        ...(topVendorsData?.data?.items.map((vendor) => ({
+                          value: vendor.id,
+                          label: vendor.name,
+                        })) || []),
+                      ]}
+                      value={storeId || t("filters.allVendor")}
+                      onChange={handleVendorChange}
+                    />
+                  )}
+                </div>
+              </div>
+            </DrawerContent>
+          </Drawer>
+          <div className="text-sm text-gray-600">
+            {totalProducts} {t("activeFilters.resultsFound") || "results"}
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-12">
+          {/* Filters sidebar - Hidden on mobile, shown on desktop */}
+          <section className="hidden space-y-10 lg:sticky lg:top-8 lg:col-span-2 lg:block lg:self-start">
+            {isCategoriesLoading ? (
+              <div className="space-y-2">
+                <h6 className="font-black uppercase">{t("filters.categories")}</h6>
+                <div className="space-y-4">
+                  {Array.from({ length: 7 }).map((_, index) => (
+                    <div key={index} className="flex items-center space-x-2">
+                      <div className="bg-muted h-4 w-4 animate-pulse rounded-full" />
+                      <div className="bg-muted h-4 w-24 animate-pulse rounded" />
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ) : (
+              <OptionsSelector
+                title={t("filters.categories")}
+                categories={[t("filters.allCategories"), ...categories]}
+                value={category || t("filters.allCategories")}
+                onChange={handleCategoryChange}
               />
-            </div>
-          </article>
+            )}
+            {isTopVendorsLoading ? (
+              <div className="space-y-2">
+                <h6 className="font-semibold uppercase">{t("filters.vendor")}</h6>
+                <div className="space-y-4">
+                  {Array.from({ length: 7 }).map((_, index) => (
+                    <div key={index} className="flex items-center space-x-2">
+                      <div className="bg-muted h-4 w-4 animate-pulse rounded-full" />
+                      <div className="bg-muted h-4 w-24 animate-pulse rounded" />
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ) : (
+              <OptionsSelector
+                title={t("filters.vendor")}
+                categories={[
+                  t("filters.allVendor"),
+                  ...(topVendorsData?.data?.items.map((vendor) => ({
+                    value: vendor.id,
+                    label: vendor.name,
+                  })) || []),
+                ]}
+                value={storeId || t("filters.allVendor")}
+                onChange={handleVendorChange}
+              />
+            )}
+          </section>
 
-          {/* Active filters info */}
-          <article className="bg-high-grey-I my-4 flex items-center justify-between rounded-md p-4">
-            <div>
-              <span className="text-mid-grey-II text-sm">{t("activeFilters.title")} </span>
-              <span className="space-x-4 text-sm">
-                {category || t("filters.allCategories")} /{" "}
-                {(() => {
-                  if (!storeId || storeId === t("filters.allVendor")) {
-                    return t("filters.allVendor");
-                  }
-                  const selectedVendor = topVendorsData?.data?.items.find((vendor) => vendor.id === storeId);
-                  return selectedVendor?.name || storeId;
-                })()}
-                {debouncedSearch && ` / Search: ${debouncedSearch}`}
-              </span>
-            </div>
-            <div>
-              <p className="text-mid-grey-II text-sm">
-                <span className="text-high-grey-II text-sm font-semibold">{totalProducts}</span>{" "}
-                {t("activeFilters.resultsFound")}
-              </p>
-            </div>
-          </article>
+          {/* Main content */}
+          <section className="lg:col-span-10">
+            {/* Search and sort header */}
+            <article className="mb-6 flex gap-4 sm:flex-row sm:items-center sm:justify-between">
+              <div className="w-full sm:w-[20rem]">
+                <Input
+                  name="search"
+                  placeholder={t("search.placeholder")}
+                  value={search || ""}
+                  onChange={handleSearch}
+                  className="w-full"
+                />
+              </div>
+              <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:space-x-4">
+                <p className="!m-0 hidden text-sm text-gray-600 sm:block sm:text-base">{t("search.sortBy")}</p>
+                <CustomSelect
+                  options={["newest", "name", "price", "rating"]}
+                  placeholder={t("search.chooseSortOption")}
+                  value={sort || "newest"}
+                  onChange={handleSortChange}
+                />
+              </div>
+            </article>
 
-          {/* Products grid */}
-          <section className="my-8">
-            <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
-              {isLoadingProducts && Array.from({ length: 12 }).map((_, index) => <ShopCardSkeleton key={index} />)}
+            {/* Active filters info */}
+            <article className="bg-high-grey-I my-4 flex flex-col gap-3 rounded-md p-4 sm:flex-row sm:items-center sm:justify-between dark:bg-[#111111]">
+              <div>
+                <span className="text-mid-grey-II text-sm">{t("activeFilters.title")} </span>
+                <span className="space-x-4 text-sm">
+                  {category || t("filters.allCategories")} /{" "}
+                  {(() => {
+                    if (!storeId || storeId === t("filters.allVendor")) {
+                      return t("filters.allVendor");
+                    }
+                    const selectedVendor = topVendorsData?.data?.items.find((vendor) => vendor.id === storeId);
+                    return selectedVendor?.name || storeId;
+                  })()}
+                  {debouncedSearch && ` / Search: ${debouncedSearch}`}
+                </span>
+              </div>
+              <div>
+                <p className="text-mid-grey-II !m-0 text-sm">
+                  <span className="text-high-grey-II text-sm font-semibold">{totalProducts}</span>{" "}
+                  {t("activeFilters.resultsFound")}
+                </p>
+              </div>
+            </article>
 
-              {!isLoadingProducts && !products?.length && (
-                <div className="col-span-full py-10 text-center">
-                  <EmptyState
-                    images={[
-                      {
-                        src: "/images/empty-state.svg",
-                        alt: "Empty Cart",
-                        width: 80,
-                        height: 80,
-                      },
-                    ]}
-                    title="No products found"
-                    titleClassName={`!text-lg font-bold !text-mid-warning`}
-                    description={t("errors.noProductsFound")}
-                    descriptionClassName={`text-mid-grey-II`}
-                    className="bg-mid-grey-I space-y-0 rounded-lg py-10"
+            {/* Products grid */}
+            <section className="mb-8">
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                {isLoadingProducts && Array.from({ length: 12 }).map((_, index) => <ShopCardSkeleton key={index} />)}
+
+                {!isLoadingProducts && !products?.length && (
+                  <div className="col-span-full py-10 text-center">
+                    <EmptyState
+                      images={[
+                        {
+                          src: "/images/empty-state.svg",
+                          alt: "Empty Cart",
+                          width: 80,
+                          height: 80,
+                        },
+                      ]}
+                      title="No products found"
+                      titleClassName={`!text-lg font-bold !text-mid-warning`}
+                      description={t("errors.noProductsFound")}
+                      descriptionClassName={`text-mid-grey-II`}
+                      className="bg-mid-grey-I space-y-0 rounded-lg py-10"
+                    />
+                  </div>
+                )}
+
+                {!isLoadingProducts &&
+                  products.map((product: Product) => (
+                    <ShopCard
+                      key={product.id.toString()}
+                      id={product.id.toString()}
+                      category={product.category}
+                      title={product.name}
+                      rating={product.rating}
+                      price={product.price}
+                      discount={product.discountPrice || 0}
+                      image={product.images[0]}
+                      name={product.store.name || "Skicom"}
+                    />
+                  ))}
+              </div>
+
+              {/* Pagination */}
+              {!isLoadingProducts && totalPages > 1 && (
+                <div className="mt-10">
+                  <Paginations
+                    currentPage={page ? Number.parseInt(page) : 1}
+                    totalPages={totalPages}
+                    onPageChange={handlePageChange}
                   />
                 </div>
               )}
-
-              {!isLoadingProducts &&
-                products.map((product: Product) => (
-                  <ShopCard
-                    key={product.id.toString()}
-                    id={product.id.toString()}
-                    category={product.category}
-                    title={product.name}
-                    rating={3}
-                    price={product.price}
-                    discount={product.discountPrice || 0}
-                    image={product.images[0]}
-                    name={product.store.name || "Skicom"}
-                  />
-                ))}
-            </div>
-
-            {/* Pagination */}
-            {!isLoadingProducts && totalPages > 1 && (
-              <div className="my-10">
-                <Paginations
-                  currentPage={page ? Number.parseInt(page) : 1}
-                  totalPages={totalPages}
-                  onPageChange={handlePageChange}
-                />
-              </div>
-            )}
+            </section>
           </section>
-        </section>
+        </div>
       </Wrapper>
+
       <MobileDownloadBanner />
     </>
   );

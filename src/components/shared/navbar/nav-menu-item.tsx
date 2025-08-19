@@ -67,7 +67,11 @@ export const NavItems: React.FC<NavItemProperties> = ({ links, isMobile, classNa
               >
                 <LocaleLink
                   href={link.href}
-                  className={cn(navigationMenuTriggerStyle(), "w-full", isActive && "text-primary underline")}
+                  className={cn(
+                    navigationMenuTriggerStyle(),
+                    "w-full bg-transparent",
+                    isActive && "text-primary underline",
+                  )}
                 >
                   {link.title}
                 </LocaleLink>

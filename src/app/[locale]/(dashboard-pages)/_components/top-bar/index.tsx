@@ -21,7 +21,7 @@ export default function TopBar({ notificationsCount = 0, className = "" }: TopBa
   }, [session]);
   return (
     <header className={`bg-background flex h-16 items-center justify-between ${className}`}>
-      <div className="relative hidden w-full max-w-[240px] md:block">
+      <div className="relative hidden md:block">
         <SearchInput className={`bg-muted min-w-md border-none`} onSearch={() => {}} />
       </div>
       <div className="flex items-center gap-4">

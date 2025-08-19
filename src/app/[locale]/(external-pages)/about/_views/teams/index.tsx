@@ -10,8 +10,8 @@ export const Teams = () => {
     <section className="mx-auto mt-3">
       <div className="text-center">
         <div className={`px-4`}>
-          <h2 className="text-mid-grey-II mb-2 text-[28px] xl:text-[44px]">{t("title")}</h2>
-          <p className="mx-auto max-w-xl text-[16px] text-[#292929] xl:text-xl">{t("description")}</p>
+          <h2 className="">{t("title")}</h2>
+          <p className="text-mid-grey-II mx-auto max-w-xl text-lg">{t("description")}</p>
         </div>
 
         <div className="relative mt-[56px]">

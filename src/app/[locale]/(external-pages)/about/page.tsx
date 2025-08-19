@@ -18,7 +18,7 @@ const Page = () => {
         <SectionOne />
         <SectionTwo />
       </Wrapper>
-      <section className={`bg-mid-grey-I`}>
+      <section className={`bg-mid-grey-I dark:bg-[#111111]`}>
         <Wrapper className={``}>
           <SectionThree />
         </Wrapper>

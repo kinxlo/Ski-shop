@@ -76,8 +76,8 @@ const Page = () => {
   );
 
   const renderDashboardHeader = () => (
-    <section className="mb-5 flex items-center justify-between">
-      <h4 className="text-mid-grey-III text-[18px] !font-bold lg:text-[30px]">Dashboard Overview</h4>
+    <section className="flex items-center justify-between">
+      <h4 className="">Dashboard Overview</h4>
       <div>
         <CurrencyDropdown />
       </div>
@@ -103,19 +103,19 @@ const Page = () => {
         title="Total Sales"
         value={totalProducts || "0"}
         icon={<GiWallet />}
-        iconClassName="bg-[#F2EBFB] text-[24px] text-purple"
+        iconClassName="bg-low-blue dark:bg-[#111111] text-[24px] text-primary"
       />
       <OverViewCard
         title="Total Orders"
         value={totalOrders || "0"}
         icon={<RiShoppingCartLine />}
-        iconClassName="bg-low-blue text-[24px] blue text-primary"
+        iconClassName="bg-low-blue dark:bg-[#111111] text-[24px] text-primary"
       />
       <OverViewCard
         title="Total Products"
         value={totalProducts || "0"}
         icon={<IoBag />}
-        iconClassName="bg-low-success text-[24px] text-mid-success"
+        iconClassName="bg-low-success dark:bg-[#111111] text-[24px] text-mid-success"
       />
     </section>
   );
@@ -212,7 +212,7 @@ const Page = () => {
 
   const renderOrdersTableSection = () => (
     <section>
-      <section className="border-border bg-background mt-6 space-y-4 rounded-lg border p-6">
+      <section className="border-border bg-background space-y-4 rounded-lg border p-6">
         {renderOrdersTableHeader()}
         <section>{renderOrdersTableContent()}</section>
       </section>
@@ -220,7 +220,7 @@ const Page = () => {
   );
 
   return (
-    <main>
+    <main className="space-y-8">
       {renderDashboardHeader()}
       {renderOverviewSection()}
       {renderOrdersTableSection()}

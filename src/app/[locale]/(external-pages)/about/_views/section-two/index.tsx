@@ -34,8 +34,8 @@ export const SectionTwo = () => {
   return (
     <section>
       <div className={`space-y-4 text-center`}>
-        <h2 className={`text-mid-grey-II text-4xl`}>{t("title")}</h2>
-        <p className={`text-xl`}>{t("description")}</p>
+        <h2 className={``}>{t("title")}</h2>
+        <p className={`text-mid-grey-II mx-auto max-w-2xl text-lg`}>{t("description")}</p>
       </div>
       <div className="mt-8 grid grid-cols-1 gap-13 md:grid-cols-2">
         {OUR_STRENGTH.map((strength) => (

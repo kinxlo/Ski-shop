@@ -20,7 +20,7 @@ const steps = [
 
 export const OnboardingLayout = ({ children, currentStep, showProgress = true }: OnboardingLayoutProperties) => {
   return (
-    <div className="flex min-h-screen flex-col bg-gray-50">
+    <div className="flex min-h-screen flex-col">
       <div className="bg-primary/10 mx-auto mt-20 flex h-16 w-16 items-center justify-center rounded-full">
         <Logo width={40} height={40} className="text-primary" />
       </div>

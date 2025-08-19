@@ -56,9 +56,9 @@ export const DashboardTable = <T extends DataItem>({
   return (
     <div className="w-full space-y-4">
       {/* Desktop Table View */}
-      <div className="hidden h-full overflow-auto bg-white md:block">
+      <div className="bg-background hidden h-full overflow-auto md:block">
         <Table>
-          <TableHeader className={`bg-mid-grey-I`}>
+          <TableHeader className={`bg-background`}>
             <TableRow className={`border-border/50`}>
               {columns.map((column, index) => (
                 <TableHead key={index} className={`py-4`}>
@@ -76,9 +76,9 @@ export const DashboardTable = <T extends DataItem>({
                   if (onRowClick) onRowClick(item);
                 }}
                 className={cn(
-                  "border-border/30 border-b text-black/60",
+                  "border-border/30 text-mid-grey-II border-b",
                   onRowClick ? "hover:bg-primary/50 dark:hover:bg-low-purple cursor-pointer" : "",
-                  "hover:bg-primary/10 text-[16px]",
+                  "hover:bg-primary/10 text-base",
                 )}
               >
                 {columns.map((column, colIndex) => (

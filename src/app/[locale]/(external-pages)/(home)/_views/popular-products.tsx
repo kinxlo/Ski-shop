@@ -3,6 +3,7 @@
 import { Wrapper } from "@/components/core/layout/wrapper";
 import SkiButton from "@/components/shared/button";
 import { EmptyState } from "@/components/shared/empty-state";
+import { LocaleLink } from "@/components/shared/locale-link";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
 import { useAppService } from "@/services/externals/app/use-app-service";
@@ -45,7 +46,7 @@ export const PopularProducts = ({
           id={product.id.toString()}
           category={product.category}
           title={product.name}
-          rating={3}
+          rating={product.rating}
           price={product.price}
           discount={product.discountPrice || 0}
           image={product.images[0]}
@@ -70,7 +71,7 @@ export const PopularProducts = ({
         titleClassName="!text-lg font-bold !text-mid-warning"
         description="There are no products in the database. Please add a product to get started."
         descriptionClassName="text-mid-grey-II"
-        className="bg-mid-grey-I space-y-0 rounded-lg py-10"
+        className="bg-mid-grey-I space-y-0 rounded-lg py-10 dark:bg-[#111111]"
       />
     </div>
   );
@@ -119,11 +120,11 @@ export const PopularProducts = ({
   return (
     <Wrapper className="min-h-[480px] pt-16">
       <div className={cn(`mb-8 flex items-baseline justify-between`, headerStyle)}>
-        <h2 className={cn("text-high-grey-II text-sm font-black lg:text-3xl", headerStyle)}>{title}</h2>
+        <h2 className={cn("", headerStyle)}>{title}</h2>
         {hasAction && (
-          <SkiButton href={fullList} variant="link" className="text-primary font-medium lg:text-2xl">
+          <LocaleLink href={fullList || ""} className="text-primary font-medium lg:text-2xl">
             {t("seeAll")}
-          </SkiButton>
+          </LocaleLink>
         )}
       </div>
 

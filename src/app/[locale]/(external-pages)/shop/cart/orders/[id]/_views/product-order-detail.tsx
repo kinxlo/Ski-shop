@@ -24,6 +24,7 @@ interface ProductOrderDetailProperties {
       images: string[];
       price: number;
       quantity: number;
+      rating: number;
       vendor: {
         id: string;
         name: string;
@@ -56,7 +57,7 @@ export const ProductOrderDetail = ({ order }: ProductOrderDetailProperties) => {
       <ProductBreadcrumb productTitle={`Order Details`} />
       <Wrapper className={`py-16`}>
         <div className={cn(`mb-8 flex items-baseline justify-between`)}>
-          <h2 className={cn("text-high-grey-II text-sm font-black lg:text-3xl")}>Order Details</h2>
+          <h3 className={cn("")}>Order Details</h3>
         </div>
         <div
           className={cn(
@@ -76,7 +77,7 @@ export const ProductOrderDetail = ({ order }: ProductOrderDetailProperties) => {
           <div className="flex-1 space-y-2">
             <p className="text-mid-grey-II text-[10px] capitalize lg:text-xl">Order #{order.id}</p>
             <p className="line-clamp-2 text-xs font-medium lg:text-2xl">{product.name}</p>
-            <Ratings rating={4} />
+            <Ratings rating={product.rating} />
             <p>QTY: {product.quantity}</p>
             {/* <div className="flex items-baseline gap-2">
               <p className="text-primary text-xs font-medium lg:text-xl">

@@ -1,13 +1,14 @@
 "use client";
 
 import { BlurImage } from "@/components/core/miscellaneous/blur-image";
+import { BackButton } from "@/components/shared/back-button";
 import SkiButton from "@/components/shared/button";
 import { AlertModal } from "@/components/shared/dialog/alert-modal";
 import { EmptyState } from "@/components/shared/empty-state";
 import { Locale } from "@/lib/i18n/config";
 import { formatCurrency, formatDate } from "@/lib/i18n/utils";
 import { useDashboardProductService } from "@/services/dashboard/vendor/products/use-product-service";
-import { ArrowLeft, EyeOff, Megaphone, Star } from "lucide-react";
+import { EyeOff, Megaphone, Star } from "lucide-react";
 import { useLocale } from "next-intl";
 import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
@@ -16,10 +17,6 @@ import { toast } from "sonner";
 import { ProductActionsDropdown } from "../_components/product-actions-dropdown";
 import { PromoteProductModal } from "../_components/promote-product-modal";
 import ProductDetailSkeleton from "./_components/product-detail-skeleton";
-
-const handleBack = () => {
-  window.history.back();
-};
 
 // Helper function to determine if a product is from a star seller
 const isStarSeller = (product: Product) => {
@@ -121,7 +118,7 @@ export default function ProductDetailPage() {
   // Show error state
   if (isError || !product) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-gray-50">
+      <div className="flex min-h-screen items-center justify-center">
         <EmptyState
           images={[
             {
@@ -149,23 +146,18 @@ export default function ProductDetailPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="space-y-8">
       {/* Header */}
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="flex h-16 items-center justify-between">
+      <div className="">
+        <div className="flex items-center justify-between">
           <div className="flex items-center space-x-4">
-            <button onClick={handleBack} className="rounded-lg p-2 transition-colors hover:bg-gray-100">
-              <ArrowLeft className="h-5 w-5 text-gray-600" />
-            </button>
-            <h4 className="text-mid-grey-III text-[18px] lg:text-[30px]">Product Details</h4>
+            <BackButton />
+            <h4>Product Details</h4>
           </div>
           <div className="flex items-center space-x-2">
             {/* Star Seller Badge */}
             {isStarSellerProduct && (
-              <div className="hidden items-center space-x-1 rounded-full bg-blue-50 px-3 py-1 text-sm font-medium text-blue-600 sm:flex">
-                <Star className="h-4 w-4 fill-current" />
-                <span>Star Seller</span>
-              </div>
+              <SkiButton isIconOnly size={`icon`} icon={<Star className="h-4 w-4 fill-current" />} />
             )}
             <ProductActionsDropdown
               product={product}
@@ -180,7 +172,7 @@ export default function ProductDetailPage() {
       </div>
 
       {/* Main Content */}
-      <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
+      <div className="">
         <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
           {/* Left Column - Product Images */}
           <div className="space-y-4">

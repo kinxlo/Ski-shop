@@ -160,7 +160,7 @@ export const FeaturedProducts = memo(() => {
           titleClassName="!text-lg font-bold !text-mid-warning"
           description="There are no featured products available at the moment. Please check back later."
           descriptionClassName="text-mid-grey-II"
-          className="bg-mid-grey-I space-y-0 rounded-lg py-10"
+          className="bg-mid-grey-I space-y-0 rounded-lg py-10 dark:bg-[#111111]"
         />
       </div>
     </Wrapper>

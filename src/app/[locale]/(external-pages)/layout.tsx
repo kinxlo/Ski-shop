@@ -9,7 +9,7 @@ export default function LandingLayout({
 }>) {
   return (
     <section>
-      <Navbar className={`bg-white px-4 lg:mt-7 lg:rounded-full lg:px-7`} />
+      <Navbar />
       <div>{children}</div>
       <Footer />
     </section>

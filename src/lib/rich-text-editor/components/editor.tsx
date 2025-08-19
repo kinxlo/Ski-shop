@@ -31,7 +31,7 @@ export function Editor({
   onSerializedChange?: (editorSerializedState: SerializedEditorState) => void;
 }) {
   return (
-    <div className="bg-background overflow-hidden rounded-lg border shadow-sm">
+    <div className="bg-background overflow-hidden rounded-lg border">
       <LexicalComposer
         initialConfig={{
           ...editorConfig,
@@ -41,7 +41,6 @@ export function Editor({
       >
         <TooltipProvider>
           <Plugins />
-
           <OnChangePlugin
             ignoreSelectionChange={true}
             onChange={(editorState) => {

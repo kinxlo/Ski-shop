@@ -8,10 +8,10 @@ interface StrengthProperties {
 
 export const AboutCard = ({ strength }: { strength: StrengthProperties }) => {
   return (
-    <section className={`bg-mid-grey-I rounded-xl`}>
+    <section className={`bg-mid-grey-I rounded-xl dark:bg-[#111111]`}>
       <div className={`space-y-4 p-9`}>
         <h3>{strength.title}</h3>
-        <p className={`text-xl`}>{strength.description}</p>
+        <p className={`text-mid-grey-II text-lg`}>{strength.description}</p>
       </div>
       <div className={`relative`}>
         <BlurImage src={strength.image} alt={strength.title} className={`w-full`} width={532} height={213} />

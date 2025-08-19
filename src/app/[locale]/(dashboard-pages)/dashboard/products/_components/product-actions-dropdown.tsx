@@ -1,5 +1,6 @@
 "use client";
 
+import SkiButton from "@/components/shared/button";
 import { cn } from "@/lib/utils";
 import { Edit, EyeOff, MoreVertical, Package, Trash2, TrendingUp } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
@@ -91,9 +92,12 @@ export function ProductActionsDropdown({
 
   return (
     <div className="relative" ref={dropdownReference}>
-      <button onClick={() => setIsOpen(!isOpen)} className="rounded-lg p-2 transition-colors hover:bg-gray-100">
-        <MoreVertical className="h-5 w-5 text-gray-600" />
-      </button>
+      <SkiButton
+        isIconOnly
+        size={`icon`}
+        icon={<MoreVertical className="h-5 w-5 text-gray-600" />}
+        onClick={() => setIsOpen(!isOpen)}
+      />
 
       {isOpen && (
         <div className="absolute top-full right-0 z-50 mt-2 w-56 rounded-lg border border-gray-200 bg-white py-2 shadow-lg">

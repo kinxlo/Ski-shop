@@ -101,14 +101,6 @@ export default async function middleware(request: NextRequest) {
     secureCookie: process.env.NODE_ENV === "production",
   });
 
-  // Debug logging for production issues (remove after fixing)
-  if (process.env.NODE_ENV === "production" && !token && pathname !== "/login") {
-    // eslint-disable-next-line no-console
-    console.log("[Middleware] No token found in production for path:", pathname);
-    // eslint-disable-next-line no-console
-    console.log("[Middleware] Cookie header:", request.headers.get("cookie"));
-  }
-
   const isAuthenticated = Boolean(token);
   const role = getUserRoleFromToken(token);
 

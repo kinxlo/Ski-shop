@@ -1,28 +1,18 @@
 import { Wrapper } from "@/components/core/layout/wrapper";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { ArrowLeft } from "lucide-react";
-import Link from "next/link";
 
 export const OrderDetailSkeleton = () => {
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen">
       {/* Header Skeleton */}
       <div>
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex h-16 items-center justify-between">
             <div className="flex items-center space-x-4">
-              <Link
-                href="/dashboard/orders"
-                className="flex items-center text-gray-600 transition-colors hover:text-gray-900"
-              >
-                <ArrowLeft className="mr-2 h-5 w-5" />
-                <span className="hidden sm:inline">Back to Orders</span>
-              </Link>
               <div className="hidden h-6 w-px bg-gray-300 sm:block" />
-              <h1 className="!text-lg font-semibold text-gray-900 sm:!text-3xl">Order Details</h1>
+              <h4 className="text-high-grey-II !text-lg font-semibold sm:!text-3xl">Order Details</h4>
             </div>
-            {/* Status Badge Skeleton */}
             <Skeleton className="h-6 w-16 rounded-full" />
           </div>
         </div>

@@ -55,7 +55,7 @@ export const OrderCard = ({
           >
             {status}
           </Badge>
-          <p>To be delivered 27-01-2025</p>
+          <p className="text-mid-grey-III text-base">To be delivered 27-01-2025</p>
         </div>
       </div>
       <SkiButton variant={`link`} className={`text-primary`} href={`/shop/cart/orders/${id}`}>

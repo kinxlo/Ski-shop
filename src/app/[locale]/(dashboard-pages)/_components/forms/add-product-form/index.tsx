@@ -267,9 +267,9 @@ export const AddProductForm = () => {
   const activeItem = activeId ? images.find((img) => img.id === activeId) : null;
 
   return (
-    <section className="">
-      <div className="mb-8 space-y-2">
-        <h3 className="!text-3xl font-bold text-black">Add Product</h3>
+    <section className="space-y-8">
+      <div className="">
+        <h4>Add Product</h4>
       </div>
 
       <FormProvider {...methods}>

@@ -18,7 +18,7 @@ export const OptionsSelector = ({ categories, value, onChange, title }: Selector
 
   return (
     <div className="space-y-4">
-      <h6 className="font-semibold uppercase">{title}</h6>
+      <h6 className="font-bold uppercase">{title}</h6>
       <RadioGroup value={value} onValueChange={onChange} className="flex flex-col gap-3">
         {categories.map((cat) => {
           const isObject = typeof cat === "object";
@@ -28,7 +28,7 @@ export const OptionsSelector = ({ categories, value, onChange, title }: Selector
           return (
             <div key={catValue} className="flex items-center space-x-2">
               <RadioGroupItem value={catValue} id={catValue} />
-              <Label htmlFor={catValue} className="text-mid-grey-II">
+              <Label htmlFor={catValue} className="text-mid-grey-II text-xs">
                 {catLabel}
               </Label>
             </div>

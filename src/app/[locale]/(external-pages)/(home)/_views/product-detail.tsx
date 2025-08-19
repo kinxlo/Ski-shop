@@ -216,7 +216,7 @@ export const ProductDetail = ({ product, isLoading = false }: any) => {
               <div className="space-y-6">
                 <h4 className="mb-4 text-3xl leading-7 font-semibold">{product.name}</h4>
                 <div className="flex items-center gap-4">
-                  <Ratings size={24} rating={averageRating || 3} />
+                  <Ratings size={`!size-8`} rating={product.rating || 0} />
                   <p className={`text-high-grey-II text-2xl font-medium`}>
                     ({averageRating?.toFixed(1) || "4.5"}) {reviewsData?.length || 0} Reviews
                   </p>
@@ -329,7 +329,7 @@ export const ProductDetail = ({ product, isLoading = false }: any) => {
                         <>
                           <div className="flex flex-col gap-2">
                             <div className="flex items-center">
-                              <Ratings size={24} rating={averageRating} readonly />
+                              <Ratings size={`size-10`} rating={averageRating} readonly />
                             </div>
                             <span className="text-sm text-gray-600">Based on {reviewsData?.length} reviews</span>
                           </div>
@@ -339,7 +339,7 @@ export const ProductDetail = ({ product, isLoading = false }: any) => {
                                 <div className="flex items-start justify-between">
                                   <div className="flex-1">
                                     <div className="flex items-center gap-2">
-                                      <Ratings size={16} rating={review.rating} readonly />
+                                      <Ratings size={`size-10`} rating={review.rating} readonly />
                                     </div>
                                     <h6 className="mt-2 !text-lg font-medium capitalize">
                                       {review.reviewer.firstName} {review.reviewer.lastName}

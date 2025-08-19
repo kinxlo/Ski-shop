@@ -14,8 +14,8 @@ export const OverViewCard: FC<OverviewProperties> = ({ title, value, icon, iconC
     <Card className="border-border min-h-[144px] w-full px-[22px] py-[33px] shadow-none">
       <section className="flex w-full items-start justify-between self-center">
         <div className="space-y-[13px]">
-          <h5 className="!text-lg font-semibold">{title}</h5>
-          <p className="!text-2xl font-extrabold">{value}</p>
+          <h5 className="text-lg font-semibold">{title}</h5>
+          <p className="text-2xl !font-extrabold">{value}</p>
         </div>
         <div className={cn(`flex h-[42px] w-[42px] items-center justify-center rounded`, iconClassName)}>{icon}</div>
       </section>

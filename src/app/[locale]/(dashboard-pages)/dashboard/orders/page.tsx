@@ -92,7 +92,7 @@ const Page = () => {
           {/* Desktop Tabs */}
           <div className="hidden sm:block">
             <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-              <TabsList className="bg-white p-0">
+              <TabsList className="bg-background p-0">
                 {tabOptions.map((option) => (
                   <TabsTrigger
                     key={option.value}

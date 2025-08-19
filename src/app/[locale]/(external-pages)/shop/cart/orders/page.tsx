@@ -18,7 +18,7 @@ const Orders = ({ headerStyle }: { title: string; headerStyle?: string; hasActio
       <ProductBreadcrumb productTitle={`Orders`} />
       <Wrapper className={`py-16`}>
         <div className={cn(`mb-8 flex items-baseline justify-between`, headerStyle)}>
-          <h2 className={cn("text-high-grey-II text-sm font-black lg:text-3xl", headerStyle)}>My Orders</h2>
+          <h3 className={cn("", headerStyle)}>My Orders</h3>
         </div>
 
         {/* Error State */}
@@ -78,7 +78,7 @@ const Orders = ({ headerStyle }: { title: string; headerStyle?: string; hasActio
                   key={product.id.toString()}
                   id={product.id.toString()}
                   title={product.products[0].name}
-                  rating={3}
+                  rating={product.products[0].rating}
                   // discount={product.products[0].price ? formatCurrency(product.products[0].price) : 0}
                   image={product.products[0].images[0]}
                   status={product.status}

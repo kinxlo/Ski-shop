@@ -18,6 +18,7 @@ declare global {
     images: string[];
     price: number;
     stockCount: number;
+    rating: number;
     store: {
       id: string;
       name: string;
@@ -114,6 +115,7 @@ declare global {
     status: OrderStatus;
     buyer: OrderBuyer;
     products: OrderProduct[];
+    reference: string;
     createdAt: string;
     [key: string]: unknown;
   }
@@ -135,12 +137,14 @@ declare global {
 
   /** Order product information */
   interface OrderProduct {
+    [x: string]: number;
     id: string;
     name: string;
     images: string[];
     price: number;
     quantity: number;
     vendor: OrderVendor;
+    rating: number;
   }
 
   /** Review entity */

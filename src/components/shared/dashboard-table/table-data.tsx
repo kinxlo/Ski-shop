@@ -39,9 +39,9 @@ export const useOrderColumn = (): TableColumnDefinition<Order>[] => {
 
   return [
     {
-      header: "Order ID",
+      header: "Reference ID",
       accessorKey: "id",
-      render: (_, order: Order) => <span className="font-medium">{order.id.slice(0, 8)}...</span>,
+      render: (_, order: Order) => <span className="font-medium">{order.reference}...</span>,
     },
     {
       header: "Products",
@@ -67,7 +67,7 @@ export const useOrderColumn = (): TableColumnDefinition<Order>[] => {
           <div>
             <div className="font-medium">{order.products[0]?.name || "N/A"}</div>
             <div className="text-sm text-gray-500">
-              {order.products.length} item{order.products.length > 1 ? "s" : ""}
+              {order.products[0].quantity} item{order.products[0].quantity > 1 ? "s" : ""}
             </div>
           </div>
         </div>

@@ -36,7 +36,7 @@ export const ShopCard = ({
   showSaveButton = true,
   isStarSeller = false,
 }: ShopCardProperties) => {
-  const oldPrice = discount ? price / (1 - discount / 100) : null;
+  // const oldPrice = discount ? price / (1 - discount / 100) : null;
   const { isSaved, isPending, toggleSave } = useSaveProduct(id || "");
   const locale = useLocale() as Locale;
   // Don't render save button if no ID
@@ -46,7 +46,7 @@ export const ShopCard = ({
     <LocaleLink
       href={`/shop/products/${id}`}
       className={cn(
-        "relative block rounded-lg border bg-no-repeat p-4", // Added 'relative' for positioning
+        "relative block rounded-lg border bg-no-repeat p-2", // Added 'relative' for positioning
         isStarSeller && "bg-[url('/images/star-seller.svg')]",
         className,
       )}
@@ -93,9 +93,15 @@ export const ShopCard = ({
         <Ratings rating={rating} />
         <p className={`text-mid-grey-II text-[10px] underline lg:text-sm`}>By {name}</p>
         <div className="flex items-baseline gap-2">
-          <p className="text-primary text-xs font-medium lg:text-[16px]">{formatCurrency(price, locale)}</p>
-          {oldPrice && (
-            <p className="text-mid-danger text-[10px] line-through lg:text-sm">{formatCurrency(oldPrice, locale)}</p>
+          {discount ? (
+            <>
+              <p className="text-primary text-xs font-medium lg:text-[16px]">{formatCurrency(discount, locale)}</p>
+              <p className="text-destructive text-xs font-medium line-through lg:text-[16px]">
+                {formatCurrency(price, locale)}
+              </p>
+            </>
+          ) : (
+            <p className="text-primary text-xs font-medium lg:text-[16px]">{formatCurrency(price, locale)}</p>
           )}
         </div>
       </div>

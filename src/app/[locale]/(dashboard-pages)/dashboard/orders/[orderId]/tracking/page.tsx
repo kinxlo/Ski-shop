@@ -1,6 +1,7 @@
 "use client";
 
 import { Wrapper } from "@/components/core/layout/wrapper";
+import { BackButton } from "@/components/shared/back-button";
 import SkiButton from "@/components/shared/button";
 import { EmptyState } from "@/components/shared/empty-state";
 import { OrderTracking } from "@/modules/tracking";
@@ -139,13 +140,6 @@ export default function TrackingPage({ params }: TrackingPageProperties) {
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex h-16 items-center justify-between">
             <div className="flex items-center space-x-4">
-              <Link
-                href={`/dashboard/orders/${orderId}`}
-                className="flex items-center text-gray-600 transition-colors hover:text-gray-900"
-              >
-                <ArrowLeft className="mr-2 h-5 w-5" />
-                <span className="hidden sm:inline">Back to Order</span>
-              </Link>
               <div className="hidden h-6 w-px bg-gray-300 sm:block" />
               <h1 className="!text-lg font-semibold text-gray-900 sm:!text-3xl">Track Rider</h1>
             </div>
@@ -173,32 +167,25 @@ export default function TrackingPage({ params }: TrackingPageProperties) {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="">
       {/* Header */}
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div className="">
         <div className="flex h-16 items-center justify-between">
           <div className="flex items-center space-x-4">
-            <Link
-              href={`/dashboard/orders/${orderId}`}
-              className="flex items-center text-gray-600 transition-colors hover:text-gray-900"
-            >
-              <ArrowLeft className="mr-2 h-5 w-5" />
-              <span className="hidden sm:inline">Back to Order</span>
-            </Link>
-            <div className="hidden h-6 w-px bg-gray-300 sm:block" />
-            <h1 className="!text-lg font-semibold text-gray-900 sm:!text-3xl">Track Rider</h1>
+            <BackButton />
+            <h4 className="">Track Rider</h4>
           </div>
         </div>
       </div>
 
-      <Wrapper className="mx-auto px-0 py-4">
+      <section className="mx-auto px-0 py-4">
         <OrderTracking
           trackingData={trackingData}
           apiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || ""}
           onStatusUpdate={handleStatusUpdate}
           onRateRider={handleRateRider}
         />
-      </Wrapper>
+      </section>
     </div>
   );
 }

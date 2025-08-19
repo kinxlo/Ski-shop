@@ -5,7 +5,7 @@ import { ReusableDialog } from "@/components/shared/dialog/Dialog";
 import { EmptyState } from "@/components/shared/empty-state";
 import { FormField } from "@/components/shared/inputs/FormFields";
 import { ComboBox } from "@/components/shared/select-dropdown/combo-box";
-import { bankPayoutSchema } from "@/schemas";
+import { BankPayoutFormData, bankPayoutSchema } from "@/schemas";
 import { usePayoutService } from "@/services/dashboard/vendor/payouts/use-payout-service";
 import { useOnboardingUserService } from "@/services/externals/onboarding/use-onboarding-user-service";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -207,7 +207,7 @@ export const AddBankTrigger = ({ onBankAdded }: AddBankTriggerProperties) => {
     <>
       <button
         onClick={() => setIsModalOpen(true)}
-        className="min-h-[5rem] w-full rounded-lg border-2 border-dashed border-gray-300 bg-white p-4 transition-colors hover:border-gray-400"
+        className="bg-background min-h-[5rem] w-full rounded-lg border-2 border-dashed border-gray-300 p-4 transition-colors hover:border-gray-400"
       >
         <div className="text-primary flex items-center justify-center gap-2">
           <TbPlus className="h-5 w-5" />

@@ -66,11 +66,11 @@ export const NotificationSettingsForm = () => {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       {/* Header */}
-      <div className="space-y-2">
-        <h1 className="!text-4xl font-bold tracking-tight">Notification Settings</h1>
-        <p className="text-muted-foreground">
+      <div className="">
+        <h4 className="">Notification Settings</h4>
+        <p className="text-mid-grey-II">
           Manage how and when you receive notifications about your business and account activity.
         </p>
       </div>

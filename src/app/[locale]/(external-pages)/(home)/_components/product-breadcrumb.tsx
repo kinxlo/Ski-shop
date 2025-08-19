@@ -20,7 +20,7 @@ export const ProductBreadcrumb = ({ productTitle }: ProductBreadcrumbProperties)
   //   const paths = pathName.split("/").filter(Boolean);
 
   return (
-    <div className="bg-gray-100">
+    <div className="bg-high-grey-I dark:bg-[#111111]">
       <main className="mx-auto max-w-7xl px-4 py-2">
         <Breadcrumb>
           <BreadcrumbList>

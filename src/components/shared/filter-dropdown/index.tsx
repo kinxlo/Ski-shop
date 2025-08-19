@@ -1,4 +1,5 @@
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { cn } from "@/lib/utils";
 
 export interface FilterOption {
   value: string;
@@ -24,7 +25,7 @@ export const FilterDropdown = ({
 }: FilterDropdownProperties) => {
   return (
     <Select value={value} onValueChange={onValueChange} disabled={disabled}>
-      <SelectTrigger className={width}>
+      <SelectTrigger className={cn(width, "shadow-none")}>
         <SelectValue placeholder={placeholder} />
       </SelectTrigger>
       <SelectContent>

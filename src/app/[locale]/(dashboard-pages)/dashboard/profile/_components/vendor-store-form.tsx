@@ -102,11 +102,10 @@ export const VendorStoreForm = ({
   };
 
   return (
-    <div className="rounded-lg border border-gray-200 bg-white p-6">
-      <h2 className="text-high-grey-II mb-4 !text-2xl font-semibold">{title}</h2>
-
+    <div className="bg-background rounded-lg border p-6">
+      <h4 className="text-center">{title}</h4>
       <FormProvider {...methods}>
-        <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-6">
+        <form onSubmit={handleSubmit(handleFormSubmit)} className="mx-auto mt-8 max-w-2xl space-y-6">
           {/* Profile Image/Logo Section */}
           <div className="flex flex-col items-center space-y-4">
             <div className="relative">
@@ -153,7 +152,7 @@ export const VendorStoreForm = ({
               variant={`primary`}
               type="submit"
               isDisabled={isLoading || isFetchingStore || updateProfileMutation.isPending}
-              className="w-full max-w-md"
+              className="w-full"
               isLoading={isLoading || isFetchingStore || updateProfileMutation.isPending}
             >
               {submitButtonText}

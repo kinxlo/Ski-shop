@@ -92,11 +92,11 @@ export const VendorBusinessForm = ({
   };
 
   return (
-    <div className="rounded-lg border border-gray-200 bg-white p-6">
-      <h2 className="text-high-grey-II mb-4 !text-2xl font-semibold">{title}</h2>
+    <div className="bg-background rounded-lg border p-6">
+      <h4 className="text-center">{title}</h4>
 
       <FormProvider {...methods}>
-        <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-6">
+        <form onSubmit={handleSubmit(handleFormSubmit)} className="mx-auto mt-8 max-w-2xl space-y-6">
           <div className="grid gap-4 lg:grid-cols-2">
             <FormField
               label="Business Type"
@@ -104,7 +104,7 @@ export const VendorBusinessForm = ({
               type="select"
               options={businessTypes}
               placeholder="Select business type"
-              className="!h-14 w-full"
+              className="!h-12 w-full"
             />
             <FormField
               label="Business Registration Number (optional)"
@@ -148,7 +148,7 @@ export const VendorBusinessForm = ({
               variant={`primary`}
               type="submit"
               isDisabled={isLoading || updateProfileMutation.isPending}
-              className="w-full max-w-md"
+              className="w-full"
               isLoading={isLoading || updateProfileMutation.isPending}
             >
               {submitButtonText}
