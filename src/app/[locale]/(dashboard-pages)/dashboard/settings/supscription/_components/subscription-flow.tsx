@@ -1,5 +1,6 @@
 "use client";
 
+import SubscriptionBanner from "@/components/shared/banner/subscription-banner";
 import SkiButton from "@/components/shared/button";
 import { ReusableDialog } from "@/components/shared/dialog/Dialog";
 import { Button } from "@/components/ui/button";
@@ -57,6 +58,9 @@ export function SubscriptionFlow() {
         </div>
         <Image src="/images/skicom-star.svg" width={48} height={48} alt="Skicom Star" />
       </div>
+      <div>
+        <SubscriptionBanner />
+      </div>
 
       {/* Steps */}
       {step === 1 && (
@@ -68,7 +72,7 @@ export function SubscriptionFlow() {
             </CardDescription>
           </CardHeader>
           <CardContent className="grid gap-6 pt-6 md:grid-cols-2">
-            <ul className="bg-primary/5 border-primary space-y-4 rounded-xl border p-4">
+            <ul className="bg-primary/5 border-primary space-y-8 rounded-xl border-2 p-4">
               <li className="flex items-center gap-3">
                 <CheckCircle className="text-primary mt-0.5 size-6" />
                 <span className="text-sm font-medium lg:text-base">Boosted product visibility</span>

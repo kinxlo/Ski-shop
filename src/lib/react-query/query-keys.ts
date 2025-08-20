@@ -80,6 +80,7 @@ export const queryKeys = {
       ],
       withdrawals: (payoutId: string) => ["dashboard", "payouts", "withdrawals", payoutId] as const,
       banks: () => ["dashboard", "payouts", "banks"] as const,
+      campaigns: (filters?: Filters) => ["dashboard", "payouts", "campaigns", filters?.page || 1, filters?.limit || 10],
     },
   },
 };

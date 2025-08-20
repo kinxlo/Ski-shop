@@ -1,6 +1,7 @@
 "use client";
 
 import { SearchInput } from "@/components/core/miscellaneous/search-input";
+import SubscriptionBanner from "@/components/shared/banner/subscription-banner";
 import { DashboardTable } from "@/components/shared/dashboard-table";
 import { useOrderColumn } from "@/components/shared/dashboard-table/table-data";
 import { EmptyState } from "@/components/shared/empty-state";
@@ -76,12 +77,13 @@ const Page = () => {
   );
 
   const renderDashboardHeader = () => (
-    <section className="flex items-center justify-between">
-      <h4 className="">Dashboard Overview</h4>
-      <div>
+    <>
+      <section className="flex items-center justify-between">
+        <h4 className="">Dashboard Overview</h4>
         <CurrencyDropdown />
-      </div>
-    </section>
+      </section>
+      <SubscriptionBanner />
+    </>
   );
 
   const renderOverviewLoadingSkeleton = () => <AnalysisSkeleton />;
@@ -135,7 +137,7 @@ const Page = () => {
   const renderOrdersTableHeader = () => (
     <section className="flex flex-col-reverse justify-between gap-4 lg:flex-row lg:items-center">
       <div>
-        <p className="text-lg font-bold">Recent Orders</p>
+        <p className="text-lg !font-bold">Recent Orders</p>
       </div>
       <div>
         <div className="flex items-center gap-2">

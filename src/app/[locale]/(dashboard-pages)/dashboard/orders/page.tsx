@@ -1,5 +1,6 @@
 "use client";
 
+import SubscriptionBanner from "@/components/shared/banner/subscription-banner";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -47,10 +48,9 @@ const Page = () => {
   ];
 
   return (
-    <main>
-      <section className="flex items-center justify-between">
-        <h4 className="text-mid-grey-III text-[18px] lg:text-[30px]">Orders</h4>
-      </section>
+    <main className="space-y-8">
+      <h4 className="text-mid-grey-III text-[18px] lg:text-[30px]">Orders</h4>
+      <SubscriptionBanner />
       <section className="my-[38px] grid grid-cols-1 gap-[31px] lg:grid-cols-3">
         <OverViewCard
           title="All Orders"

@@ -1,5 +1,6 @@
 import { HttpAdapter } from "@/lib/http/http-adapter";
 import { tryCatchWrapper } from "@/lib/tools/tryCatchFunction";
+import { VendorProfileFormData } from "@/schemas";
 
 export interface VendorProfileApiResponse {
   success: boolean;
@@ -25,8 +26,18 @@ export class DashboardProfileService {
     });
   }
 
+  //get vendor profile
+  async getVendorProfile() {
+    return tryCatchWrapper(async () => {
+      const response = await this.http.get<VendorProfileApiResponse>(`/vendors/profile`);
+      if (response?.status === 200) {
+        return response.data;
+      }
+      throw new Error("Failed to fetch vendor profile");
+    });
+  }
+
   async updateVendorProfile(data: VendorProfileFormData) {
-    // Create FormData with bracket notation as expected by the API
     const formData = new FormData();
 
     // Add store information
@@ -52,7 +63,7 @@ export class DashboardProfileService {
     if (data.business?.address) formData.append("business[address]", data.business.address);
 
     return tryCatchWrapper(async () => {
-      const response = await this.http.patch<VendorProfileApiResponse>(`/vendor/profile`, formData);
+      const response = await this.http.patch<VendorProfileApiResponse>(`/vendors/profile`, formData);
       if (response?.status === 200) {
         return response.data;
       }

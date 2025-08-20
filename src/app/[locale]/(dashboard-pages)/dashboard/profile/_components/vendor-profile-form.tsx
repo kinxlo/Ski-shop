@@ -5,9 +5,10 @@ import SkiButton from "@/components/shared/button";
 import { FormField } from "@/components/shared/inputs/FormFields";
 import { PhoneInput } from "@/components/shared/inputs/phone-input";
 import { FormControl, FormItem, FormField as UIFormField } from "@/components/ui/form";
-import { vendorProfileFormSchema, type VendorPersonalFormData } from "@/schemas";
+import { VendorPersonalFormData, vendorPersonalSchema } from "@/schemas";
 import { useDashboardProfileService } from "@/services/dashboard/vendor/users/use-profile-service";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useEffect } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { toast } from "sonner";
 
@@ -27,7 +28,7 @@ export const VendorProfileForm = ({
   title = "Personal Information",
 }: VendorProfileFormProperties) => {
   const methods = useForm<VendorPersonalFormData>({
-    resolver: zodResolver(vendorProfileFormSchema),
+    resolver: zodResolver(vendorPersonalSchema),
     defaultValues: {
       user: {
         firstName: initialData?.user?.firstName || "",
@@ -38,9 +39,25 @@ export const VendorProfileForm = ({
     },
   });
 
-  const { handleSubmit } = methods;
-  const { useUpdateVendorProfile } = useDashboardProfileService();
+  const { handleSubmit, reset } = methods;
+  const { useUpdateVendorProfile, useGetVendorProfile } = useDashboardProfileService();
+  const { data: profileResponse, isLoading: isFetchingProfile } = useGetVendorProfile();
   const updateProfileMutation = useUpdateVendorProfile();
+
+  // Sync fetched data into the form when available
+  useEffect(() => {
+    const fetchedProfile = profileResponse?.data;
+    if (fetchedProfile) {
+      reset({
+        user: {
+          firstName: fetchedProfile.user.firstName ?? "",
+          lastName: fetchedProfile.user.lastName ?? "",
+          email: fetchedProfile.user.email ?? "",
+          phone: fetchedProfile.user.phone ?? "",
+        },
+      });
+    }
+  }, [initialData, reset, profileResponse]);
 
   const handleFormSubmit = async (data: VendorPersonalFormData) => {
     try {
@@ -48,9 +65,19 @@ export const VendorProfileForm = ({
         ? onSubmit(data)
         : updateProfileMutation.mutateAsync({
             data: {
-              // Include required sibling keys as empty objects to satisfy type
-              store: {},
-              business: {},
+              store: {
+                name: initialData?.store?.name || "",
+                description: initialData?.store?.description || "",
+              },
+              business: {
+                type: initialData?.business?.type || "",
+                businessRegNumber: initialData?.business?.businessRegNumber || "",
+                businessName: initialData?.business?.businessName || "",
+                country: initialData?.business?.country || "",
+                state: initialData?.business?.state || "",
+                address: initialData?.business?.address || "",
+              },
+              logo: initialData?.store?.logo || null,
               user: {
                 firstName: data.user.firstName,
                 lastName: data.user.lastName,
@@ -120,9 +147,9 @@ export const VendorProfileForm = ({
             <SkiButton
               variant={`primary`}
               type="submit"
-              isDisabled={isLoading || updateProfileMutation.isPending}
+              isDisabled={isLoading || isFetchingProfile || updateProfileMutation.isPending}
               className="w-full"
-              isLoading={isLoading || updateProfileMutation.isPending}
+              isLoading={isLoading || isFetchingProfile || updateProfileMutation.isPending}
             >
               {submitButtonText}
             </SkiButton>

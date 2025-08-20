@@ -1,5 +1,6 @@
 import { HttpAdapter } from "@/lib/http/http-adapter";
 import { tryCatchWrapper } from "@/lib/tools/tryCatchFunction";
+import { BankPayoutFormData } from "@/schemas";
 
 export class PayoutService {
   private readonly http: HttpAdapter;
@@ -90,6 +91,37 @@ export class PayoutService {
         return response.data;
       }
       throw new Error("Failed to update bank details");
+    });
+  }
+
+  // Get my store /stores/current
+  async getMyStore() {
+    return tryCatchWrapper(async () => {
+      const response = await this.http.get<{ success: boolean; data: Store }>(`/stores/current`);
+      if (response?.status === 200) {
+        return response.data;
+      }
+      throw new Error("Failed to fetch store id");
+    });
+  }
+
+  async getActiveCampaigns(filters?: Filters) {
+    return tryCatchWrapper(async () => {
+      const appliedFilters = filters
+        ? ({ ...filters, status: "active" } as Filters)
+        : ({ status: "active" } as Filters);
+      const queryString = this.buildQueryParameters(appliedFilters);
+
+      const storeResult = await this.getMyStore();
+      const storeQuery = storeResult?.success ? `&storeId=${storeResult.data.id}` : "";
+
+      const url = `/ads?${queryString}${storeQuery}`;
+
+      const response = await this.http.get<PaginatedApiResponse<Campaign>>(url);
+      if (response?.status === 200) {
+        return response.data;
+      }
+      throw new Error("Failed to get active campaigns");
     });
   }
 

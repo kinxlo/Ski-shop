@@ -16,7 +16,7 @@ export class DashboardOrderService {
     const queryParameters = this.buildQueryParameters(appliedFilters);
     const storeId = await this.getMyStore();
 
-    if (storeId.success) {
+    if (storeId?.success) {
       // const response = await this.http.get<IOrderApiResponse>(`/orders?storeId=${storeId.data.id}&${queryParameters}`);
       const response = await this.http.get<OrderApiResponse>(`/orders?${queryParameters}`);
       if (response?.status === 200) {
@@ -27,7 +27,7 @@ export class DashboardOrderService {
     throw new Error("Failed to fetch orders");
   }
 
-  async getOrderById(id: string): Promise<{ success: boolean; data: Order }> {
+  async getOrderById(id: string): Promise<{ success: boolean; data: Order } | undefined> {
     return tryCatchWrapper(async () => {
       const response = await this.http.get<{ success: boolean; data: Order }>(`/orders/${id}`);
 
@@ -41,7 +41,7 @@ export class DashboardOrderService {
   async updateOrderStatus(
     id: string,
     status: "pending" | "delivered" | "cancelled",
-  ): Promise<{ success: boolean; data: Order }> {
+  ): Promise<{ success: boolean; data: Order } | undefined> {
     return tryCatchWrapper(async () => {
       const response = await this.http.patch<{ success: boolean; data: Order }>(`/orders/${id}/status`, { status });
 

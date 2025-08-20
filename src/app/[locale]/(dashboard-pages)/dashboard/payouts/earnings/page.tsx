@@ -1,6 +1,7 @@
 "use client";
 
 import { BackButton } from "@/components/shared/back-button";
+import SubscriptionBanner from "@/components/shared/banner/subscription-banner";
 import SkiButton from "@/components/shared/button";
 import { AlertModal } from "@/components/shared/dialog/alert-modal";
 import { EmptyState } from "@/components/shared/empty-state";
@@ -132,7 +133,7 @@ const Page = () => {
           <h4 className="">Withdraw Earnings</h4>
         </div>
       </div>
-
+      <SubscriptionBanner />
       <section className="space-y-6">
         {/* Available Earnings */}
         <OverViewCard

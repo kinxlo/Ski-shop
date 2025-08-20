@@ -3,6 +3,7 @@
 import { queryKeys } from "@/lib/react-query/query-keys";
 import { createServiceHooks } from "@/lib/react-query/use-service-query";
 import { dependencies } from "@/lib/tools/dependencies";
+import { BankPayoutFormData } from "@/schemas";
 
 import { PayoutService } from "./payout.service";
 
@@ -60,6 +61,13 @@ export const usePayoutService = () => {
       { enabled: !!withdrawalId, ...options },
     );
 
+  const useGetActiveCampaigns = (filters?: Filters, options?: any) =>
+    useServiceQuery(
+      [...queryKeys.dashboard.payouts.campaigns(filters)],
+      (service) => service.getActiveCampaigns(filters),
+      options,
+    );
+
   return {
     useGetPayoutStore,
     useGetPayouts,
@@ -70,5 +78,6 @@ export const usePayoutService = () => {
     useInitiateWithdrawal,
     useInitiateWithdrawalApproval,
     useGetWithdrawalDetails,
+    useGetActiveCampaigns,
   };
 };

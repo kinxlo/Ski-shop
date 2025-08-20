@@ -28,7 +28,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             <header className="bg-background sticky top-0 z-50 flex h-20 shrink-0 items-center gap-2 border-b px-4 py-5">
               <SidebarTrigger className="text-primary -ml-1 size-9" />
               <div className="flex-1">
-                <TopBar notificationsCount={12} className="px-6" />
+                <TopBar notificationsCount={0} className="px-6" />
               </div>
             </header>
             <main className="overflow-auto bg-[#F8F8F9] p-6 dark:bg-[#111111]">

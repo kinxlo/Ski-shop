@@ -1,6 +1,7 @@
 import { queryKeys } from "@/lib/react-query/query-keys";
 import { createServiceHooks } from "@/lib/react-query/use-service-query";
 import { dependencies } from "@/lib/tools/dependencies";
+import { VendorProfileFormData } from "@/schemas";
 import { useQueryClient } from "@tanstack/react-query";
 
 import { DashboardProfileService } from "./profile.service";
@@ -42,10 +43,15 @@ export const useDashboardProfileService = () => {
     );
   };
 
+  const useGetVendorProfile = () => {
+    return useServiceQuery([...queryKeys.dashboard.profile.details()], (service) => service.getVendorProfile());
+  };
+
   return {
     // Queries
     useGetVendorStore,
     useGetAllAvailablePromotions,
+    useGetVendorProfile,
     // Mutations
     useUpdateVendorProfile,
     useCreateAds,

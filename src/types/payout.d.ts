@@ -127,6 +127,22 @@ declare global {
     success: boolean;
     data: WithdrawalHistoryItem[];
   }
+
+  /** Campaign data */
+  interface Campaign {
+    id: string;
+    duration: number;
+    type: string;
+    status: string;
+    startDate: string;
+    endDate: string;
+    clicks: number;
+    impressions: number;
+    conversionRate: string;
+    product: Product;
+    store: Store;
+    vendor: UserProfile;
+  }
 }
 
 // This export is needed to make this file a module

@@ -4,7 +4,7 @@
 import { BlurImage } from "@/components/core/miscellaneous/blur-image";
 import SkiButton from "@/components/shared/button";
 import { FormField } from "@/components/shared/inputs/FormFields";
-import { vendorStoreFormSchema, type VendorStoreFormData } from "@/schemas";
+import { VendorStoreFormData, vendorStoreSchema } from "@/schemas";
 import { useDashboardProfileService } from "@/services/dashboard/vendor/users/use-profile-service";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Camera } from "lucide-react";
@@ -31,7 +31,7 @@ export const VendorStoreForm = ({
   const [previewImage, setPreviewImage] = useState<string | null>(null);
 
   const methods = useForm<VendorStoreFormData>({
-    resolver: zodResolver(vendorStoreFormSchema),
+    resolver: zodResolver(vendorStoreSchema),
     defaultValues: {
       store: {
         name: "",
@@ -45,25 +45,27 @@ export const VendorStoreForm = ({
   const { handleSubmit, setValue, reset } = methods;
 
   // Services
-  const { useGetVendorStore, useUpdateVendorProfile } = useDashboardProfileService();
-  const { data: storeResponse, isLoading: isFetchingStore } = useGetVendorStore();
+  const { useUpdateVendorProfile, useGetVendorProfile } = useDashboardProfileService();
   const updateProfileMutation = useUpdateVendorProfile();
+
+  const { data: profileResponse, isLoading: isFetchingProfile } = useGetVendorProfile();
 
   // Sync fetched data into the form when available
   useEffect(() => {
-    const fetchedStore = storeResponse?.data;
-    if (fetchedStore) {
+    const fetchedProfile = profileResponse?.data;
+    if (fetchedProfile) {
       reset({
         store: {
-          name: fetchedStore.name ?? "",
-          description: fetchedStore.description ?? "",
+          name: fetchedProfile.store.name ?? "",
+          description: fetchedProfile.store.description ?? "",
         },
+        logo: fetchedProfile?.store?.logo ?? null,
       });
-      if (typeof fetchedStore.logo === "string" && fetchedStore.logo) {
-        setPreviewImage(fetchedStore.logo);
+      if (typeof fetchedProfile.store.logo === "string" && fetchedProfile.store.logo) {
+        setPreviewImage(fetchedProfile.store.logo);
       }
     }
-  }, [storeResponse, initialData, reset]);
+  }, [initialData, reset, profileResponse]);
 
   const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -89,9 +91,20 @@ export const VendorStoreForm = ({
                 description: data.store.description,
               },
               logo: data.logo as File | undefined,
-              // user and business omitted intentionally in this form
-              user: {},
-              business: {},
+              user: {
+                firstName: profileResponse?.data?.user?.firstName ?? "",
+                lastName: profileResponse?.data?.user?.lastName ?? "",
+                email: profileResponse?.data?.user?.email ?? "",
+                phone: profileResponse?.data?.user?.phone ?? "",
+              },
+              business: {
+                type: profileResponse?.data?.business?.type ?? "",
+                businessRegNumber: profileResponse?.data?.business?.businessRegNumber ?? "",
+                businessName: profileResponse?.data?.business?.businessName ?? "",
+                country: profileResponse?.data?.business?.country ?? "",
+                state: profileResponse?.data?.business?.state ?? "",
+                address: profileResponse?.data?.business?.address ?? "",
+              },
             },
           }));
       toast.success("Store information saved successfully!");
@@ -151,9 +164,9 @@ export const VendorStoreForm = ({
             <SkiButton
               variant={`primary`}
               type="submit"
-              isDisabled={isLoading || isFetchingStore || updateProfileMutation.isPending}
+              isDisabled={isLoading || isFetchingProfile || updateProfileMutation.isPending}
               className="w-full"
-              isLoading={isLoading || isFetchingStore || updateProfileMutation.isPending}
+              isLoading={isLoading || isFetchingProfile || updateProfileMutation.isPending}
             >
               {submitButtonText}
             </SkiButton>

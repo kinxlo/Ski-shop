@@ -1,5 +1,6 @@
 "use client";
 
+import SubscriptionBanner from "@/components/shared/banner/subscription-banner";
 import SkiButton from "@/components/shared/button";
 import { Locale } from "@/lib/i18n/config";
 import { formatCurrency } from "@/lib/i18n/utils";
@@ -78,9 +79,9 @@ const Page = () => {
   };
 
   return (
-    <main>
+    <main className="space-y-8">
       <section className="flex items-center justify-between">
-        <h4 className="text-mid-grey-III text-[18px] lg:text-[30px]">Payout</h4>
+        <h4 className="">Payout</h4>
         <div>
           <SkiButton
             isLeftIconVisible
@@ -94,7 +95,9 @@ const Page = () => {
           </SkiButton>
         </div>
       </section>
-
+      <div>
+        <SubscriptionBanner />
+      </div>
       {/* Overview Cards Section */}
       {isOverviewLoading ? (
         <PayoutOverviewSkeleton />

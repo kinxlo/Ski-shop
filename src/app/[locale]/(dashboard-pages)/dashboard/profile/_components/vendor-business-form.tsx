@@ -3,9 +3,10 @@
 
 import SkiButton from "@/components/shared/button";
 import { FormField } from "@/components/shared/inputs/FormFields";
-import { vendorBusinessFormSchema, type VendorBusinessFormData } from "@/schemas";
+import { VendorBusinessFormData, vendorBusinessSchema } from "@/schemas";
 import { useDashboardProfileService } from "@/services/dashboard/vendor/users/use-profile-service";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useEffect } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { toast } from "sonner";
 
@@ -48,7 +49,7 @@ export const VendorBusinessForm = ({
   title = "Business Information",
 }: VendorBusinessFormProperties) => {
   const methods = useForm<VendorBusinessFormData>({
-    resolver: zodResolver(vendorBusinessFormSchema),
+    resolver: zodResolver(vendorBusinessSchema),
     defaultValues: {
       business: {
         type: initialData?.business?.type || "",
@@ -61,9 +62,27 @@ export const VendorBusinessForm = ({
     },
   });
 
-  const { handleSubmit } = methods;
-  const { useUpdateVendorProfile } = useDashboardProfileService();
+  const { handleSubmit, reset } = methods;
+  const { useUpdateVendorProfile, useGetVendorProfile } = useDashboardProfileService();
   const updateProfileMutation = useUpdateVendorProfile();
+
+  const { data: profileResponse, isLoading: isFetchingProfile } = useGetVendorProfile();
+
+  useEffect(() => {
+    const fetchedProfile = profileResponse?.data;
+    if (fetchedProfile) {
+      reset({
+        business: {
+          type: fetchedProfile.business.type ?? "",
+          businessRegNumber: fetchedProfile.business.businessRegNumber ?? "",
+          businessName: fetchedProfile.business.businessName ?? "",
+          country: fetchedProfile.business.country ?? "",
+          state: fetchedProfile.business.state ?? "",
+          address: fetchedProfile.business.address ?? "",
+        },
+      });
+    }
+  }, [initialData, reset, profileResponse]);
 
   const handleFormSubmit = async (data: VendorBusinessFormData) => {
     try {
@@ -72,8 +91,15 @@ export const VendorBusinessForm = ({
         : updateProfileMutation.mutateAsync({
             data: {
               // Include required sibling keys as empty objects to satisfy type
-              store: {},
-              user: {},
+              store: {
+                name: initialData?.store?.name || "",
+                description: initialData?.store?.description || "",
+              },
+              user: {
+                firstName: initialData?.user?.firstName || "",
+                lastName: initialData?.user?.lastName || "",
+              },
+              logo: initialData?.store?.logo || null,
               business: {
                 type: data.business.type,
                 businessRegNumber: data.business.businessRegNumber,
@@ -112,12 +138,12 @@ export const VendorBusinessForm = ({
               placeholder="CAC: 1920384"
               className="!h-12 w-full"
             />
-            <FormField
+            {/* <FormField
               label="Business Name"
               name="business.businessName"
               placeholder="Enter business name"
               className="!h-12 w-full"
-            />
+            /> */}
             <FormField
               label="Country"
               name="business.country"
@@ -147,9 +173,9 @@ export const VendorBusinessForm = ({
             <SkiButton
               variant={`primary`}
               type="submit"
-              isDisabled={isLoading || updateProfileMutation.isPending}
+              isDisabled={isLoading || isFetchingProfile || updateProfileMutation.isPending}
               className="w-full"
-              isLoading={isLoading || updateProfileMutation.isPending}
+              isLoading={isLoading || isFetchingProfile || updateProfileMutation.isPending}
             >
               {submitButtonText}
             </SkiButton>

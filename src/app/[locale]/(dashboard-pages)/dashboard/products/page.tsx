@@ -1,5 +1,6 @@
 "use client";
 
+import SubscriptionBanner from "@/components/shared/banner/subscription-banner";
 import SkiButton from "@/components/shared/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
@@ -70,6 +71,9 @@ const Page = () => {
           </SkiButton>
         </div>
       </section>
+      <div>
+        <SubscriptionBanner />
+      </div>
       <section className="grid grid-cols-1 gap-[31px] lg:grid-cols-2">
         <OverViewCard
           title="Total Products"
