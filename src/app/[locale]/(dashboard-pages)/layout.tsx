@@ -17,7 +17,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           autoExpandOnActiveChild={true}
           persistExpandedState={true}
           logoProperties={{
-            width: 100,
+            width: 80,
             height: 60,
             className: "transition-all duration-200",
           }}

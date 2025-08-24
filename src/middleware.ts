@@ -39,10 +39,10 @@ function getUserRoleFromToken(token: unknown): string {
 function getDefaultHomeForRole(role: string): string {
   switch (role) {
     case "vendor": {
-      return "/dashboard";
+      return "/dashboard/home";
     }
     case "admin": {
-      return "/admin";
+      return "/admin/home";
     }
     case "super-admin":
     case "super_admin":
@@ -133,7 +133,9 @@ export default async function middleware(request: NextRequest) {
       const destination = withLocalePrefix(getDefaultHomeForRole(role), localePrefix);
       return NextResponse.redirect(new URL(destination, request.url));
     }
-    if (isAdminArea && role !== "admin") {
+    // Temporarily allow vendors to access admin routes as well
+    // if (isAdminArea && role !== "admin") {
+    if (isAdminArea && role !== "admin" && role !== "vendor") {
       const destination = withLocalePrefix(getDefaultHomeForRole(role), localePrefix);
       return NextResponse.redirect(new URL(destination, request.url));
     }

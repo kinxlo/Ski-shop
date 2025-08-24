@@ -190,7 +190,6 @@ export function DashboardSidebar({
                   // Silently fail if localStorage is not available
                 }
               }
-
               return newSet;
             });
           }
@@ -403,11 +402,11 @@ export function DashboardSidebar({
   };
 
   return (
-    <Sidebar className={cn("border-border border-r-[0.5px] shadow-none", className)}>
+    <Sidebar collapsible="icon" className={cn("border-border border-r-[0.5px] shadow-none", className)}>
       <SidebarHeader className="h-28 items-center justify-center">
         <Logo width={logoProperties.width} height={logoProperties.height} className={logoProperties.className} />
       </SidebarHeader>
-      <SidebarContent>
+      <SidebarContent className="hide-scrollbar">
         <SidebarMenu className="space-y-2 p-4">{navItems.map((item) => renderMenuItem(item))}</SidebarMenu>
       </SidebarContent>
     </Sidebar>
