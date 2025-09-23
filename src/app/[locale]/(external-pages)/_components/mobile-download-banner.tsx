@@ -13,7 +13,7 @@ export const MobileDownloadBanner = () => {
     <Wrapper className={`my-[78px]`}>
       <ReusableBanner
         asChild
-        image="/images/phone.svg"
+        image="https://res.cloudinary.com/kingsleysolomon/image/upload/v1758641971/skicom/u2pl8unk5rtp8zg2vscr.png"
         imageStyle={`lg:right-[5rem] bottom-[-3rem] lg:bottom-[-1rem] block`}
         className={`min-h-[493px] flex-col overflow-hidden rounded-[25px] bg-black text-white`}
       >

@@ -21,6 +21,9 @@ const nextConfig: NextConfig = {
         hostname: "nyc3.digitaloceanspaces.com",
       },
       {
+        hostname: "res.cloudinary.com",
+      },
+      {
         hostname: "loremflickr.com",
       },
     ],

@@ -45,7 +45,7 @@ const Page = () => {
           description={
             "Invite friends and family to shop on Ski-Shop and earn exciting rewards when they sign up and place their first order."
           }
-          image="/images/group-speak.svg"
+          image="https://res.cloudinary.com/kingsleysolomon/image/upload/v1758641973/skicom/meog7pfhsglhvjawbc2o.svg"
           imageStyle={`!w-[524px] !h-[418px] absolute !bottom-10 !right-10`}
           tagTitle={"Refer & Earn"}
           title={"Turn Your Network to Rewards"}
@@ -63,7 +63,7 @@ const Page = () => {
             </SkiButton>
           }
           description={t("beAVendor.description")}
-          image="/images/woman.svg"
+          image="https://res.cloudinary.com/kingsleysolomon/image/upload/v1758641969/skicom/rzixupei0jmxjjfkv6mg.png"
           tagTitle={t("beAVendor.tagTitle")}
           title={t("beAVendor.title")}
         />
@@ -113,7 +113,7 @@ const Page = () => {
             </SkiButton>
           }
           description={t("deliveryNetwork.description")}
-          image="/images/smiling-young-man-.svg"
+          image="https://res.cloudinary.com/kingsleysolomon/image/upload/v1758641975/skicom/qvb0ok9axlax3hjpcg5n.png"
           tagTitle={t("deliveryNetwork.tagTitle")}
           title={t("deliveryNetwork.title")}
           className={`bg-accent/10`}
