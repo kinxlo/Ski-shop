@@ -54,17 +54,28 @@ const HeroSlide = ({ slide, position, t }: { slide: Slide; position: string; t: 
             <p className="!text-mid-grey-I mb-8 !text-sm lg:!text-base">{slide.subtitle}</p>
           </div>
           <div className="mx-auto mt-8 flex flex-col items-center gap-4 lg:mx-0 lg:flex-row">
-            <SkiButton href={`/shop`} size={`xl`} className="w-[220px]" variant="primary">
-              {t("shopNow")}
-            </SkiButton>
             <SkiButton
-              href={`/signup/vendor`}
+              href={`/shop`}
               size={`xl`}
-              className={cn("w-[220px] text-white", session?.user?.role?.name === "vendor" && "hidden")}
-              variant="outline"
+              className={cn(
+                "w-[220px]",
+                position === "left" && "bg-accent",
+                position === "right" && "bg-white text-black",
+              )}
+              variant="primary"
             >
-              {t("becomeSeller")}
+              {position === "center" ? t("shopNow") : position === "left" ? "subscribe now" : "Join now"}
             </SkiButton>
+            {position === "center" && (
+              <SkiButton
+                href={`/signup/vendor`}
+                size={`xl`}
+                className={cn("w-[220px] text-white", session?.user?.role?.name === "vendor" && "hidden")}
+                variant="outline"
+              >
+                {t("becomeSeller")}
+              </SkiButton>
+            )}
           </div>
         </div>
       </Wrapper>
