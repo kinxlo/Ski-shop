@@ -31,7 +31,7 @@ export const NavItems: React.FC<NavItemProperties> = ({ links, isMobile, classNa
     <NavigationMenu className={cn(isMobile && "block max-w-full", className)}>
       <NavigationMenuList className={cn(isMobile && "block")}>
         {links.map((link, index) => {
-          const isActive = pathname === link.href;
+          const isActive = link.href === "/" ? pathname === link.href : pathname.includes(link.href);
 
           if (link.type === "dropdown" && link.subLinks) {
             const isDropdownActive = link.subLinks.some((subLink) => pathname === subLink.href);
