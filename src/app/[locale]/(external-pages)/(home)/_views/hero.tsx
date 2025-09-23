@@ -26,7 +26,7 @@ const HeroSlide = ({ slide, position, t }: { slide: Slide; position: string; t: 
   const { data: session } = useSession();
 
   return (
-    <div className="relative min-h-[600px] w-full">
+    <div className="relative min-h-[700px] w-full">
       <BlurImage
         priority
         className="absolute inset-0 h-full w-full object-cover"
@@ -48,10 +48,10 @@ const HeroSlide = ({ slide, position, t }: { slide: Slide; position: string; t: 
           )}
         >
           <div className="mt-[10rem] max-w-2xl space-y-[12px]">
-            <h1 className="text-[32px] leading-[44px] font-bold !text-white lg:text-[56px] lg:leading-[78px]">
+            <h1 className="!text-[32px] leading-[44px] font-bold !text-white lg:!text-[48px] lg:leading-[78px]">
               {slide.title}
             </h1>
-            <p className="mb-8 text-lg">{slide.subtitle}</p>
+            <p className="!text-mid-grey-I mb-8 !text-sm lg:!text-base">{slide.subtitle}</p>
           </div>
           <div className="mx-auto mt-8 flex flex-col items-center gap-4 lg:mx-0 lg:flex-row">
             <SkiButton href={`/shop`} size={`xl`} className="w-[220px]" variant="primary">
@@ -86,7 +86,7 @@ export const Hero = () => {
   }, []);
 
   return (
-    <section className="bg-subtle relative min-h-[600px] overflow-hidden">
+    <section className="bg-subtle relative overflow-hidden">
       <div
         className="flex h-full w-[300%] transition-transform duration-[2.5s] ease-in-out"
         style={{ transform: `translateX(-${currentImageIndex * (100 / 3)}%)` }}
