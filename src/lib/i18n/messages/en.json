@@ -349,8 +349,20 @@
   },
   "home": {
     "hero": {
-      "title": "Shop Smart and Save More with Ski-Shop",
-      "subtitle": "Your one-stop marketplace for everything you need",
+      "slides": [
+        {
+          "title": "Discover Amazing Products",
+          "subtitle": "Explore our wide range of quality items at unbeatable prices"
+        },
+        {
+          "title": "Start Your Shopping Journey",
+          "subtitle": "Find everything you need in one convenient marketplace"
+        },
+        {
+          "title": "Join the Ski-Shop Community",
+          "subtitle": "Connect with sellers and buyers from around the world"
+        }
+      ],
       "shopNow": "Shop Now",
       "becomeSeller": "Become a Seller"
     },
