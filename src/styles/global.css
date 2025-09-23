@@ -1,0 +1,559 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-default: var(--default);
+  --color-default-foreground: var(--default-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-hover: var(--destructive-hover);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-subtle: var(--subtle);
+  --color-subtle-foreground: var(--subtle-foreground);
+  --color-loading: var(--loading);
+  --color-loading-hover: var(--loading-hover);
+  --color-loading-foreground: var(--loading-foreground);
+  --color-outline: var(--outline);
+  --color-outline-hover: var(--outline-hover);
+  --color-outline-foreground: var(--outline-foreground);
+  --color-link: var(--link);
+  --color-error: var(--error);
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  /* Skishop Design System */
+  --color-high-blue: var(--high-blue);
+  --color-mid-blue: var(--mid-blue);
+  --color-low-blue: var(--low-blue);
+
+  --color-high-danger: var(--high-danger);
+  --color-mid-danger: var(--mid-danger);
+  --color-low-danger: var(--low-danger);
+
+  --color-high-warning: var(--high-warning);
+  --color-mid-warning: var(--mid-warning);
+  --color-low-warning: var(--low-warning);
+
+  --color-high-success: var(--high-success);
+  --color-mid-success: var(--mid-success);
+  --color-low-success: var(--low-success);
+
+  --color-high-grey-III: var(--high-grey-III);
+  --color-mid-grey-III: var(--mid-grey-III);
+  --color-low-grey-III: var(--low-grey-III);
+
+  --color-high-grey-II: var(--high-grey-II);
+  --color-mid-grey-II: var(--mid-grey-II);
+  --color-low-grey-II: var(--low-grey-II);
+
+  --color-high-grey-I: var(--high-grey-I);
+  --color-mid-grey-I: var(--mid-grey-I);
+  --color-low-grey-I: var(--low-grey-I);
+}
+
+:root {
+  --radius: 0.5rem;
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.16 0 0);
+
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.16 0 0);
+
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.16 0 0);
+
+  --default: oklch(1 0 0);
+  --default-foreground: oklch(0 0 0);
+
+  --primary: oklch(0.38 0.15 238.7);
+  /* --primary: hsla(202, 100%, 38%, 1); */
+  --primary-foreground: oklch(1 0 0);
+
+  --secondary: oklch(0.26 0.2 280.4);
+  --secondary-foreground: oklch(0.16 0 0);
+
+  --accent: oklch(0.8 0.17 70);
+  --accent-foreground: oklch(1 0 0);
+
+  --muted: oklch(0.961 0 0);
+  --muted-foreground: oklch(0.469 0 0);
+
+  --destructive: oklch(0.5 0.25 27.3);
+  --destructive-hover: oklch(0.51 0.23 27.3);
+  --destructive-foreground: oklch(1 0 0);
+
+  --subtle: oklch(0.97 0 0);
+  --subtle-hover: oklch(0.91 0 0);
+  --subtle-foreground: oklch(0.16 0 0);
+
+  --loading: oklch(0.16 0 0);
+  --loading-hover: oklch(0.27 0 0);
+  --loading-foreground: oklch(1 0 0);
+
+  --outline: transparent;
+  --outline-hover: oklch(0.96 0 0);
+  --outline-foreground: oklch(0.16 0 0);
+
+  --link: oklch(0.16 0 0);
+
+  --error: oklch(0.51 0.23 27.3);
+  --success: oklch(0.4 0.18 160.4);
+  --warning: oklch(0.47 0.19 47.1);
+
+  --border: oklch(0.91 0 0);
+  --input: oklch(0.91 0 0);
+  --ring: oklch(0.16 0 0);
+
+  --stroke-colors-stroke: oklch(0.84 0 0);
+
+  --white: oklch(1 0 0);
+  --black: oklch(0.16 0 0);
+
+  /* skishop design system */
+  --high-blue: oklch(0.2 0.15 238.7);
+  --mid-blue: oklch(0.38 0.15 238.7);
+  --low-blue: oklch(0.96 0.02 238.7);
+
+  --high-danger: oklch(0.35 0.15 27.3);
+  --mid-danger: oklch(0.5 0.25 27.3);
+  --low-danger: oklch(0.94 0.1 27.3);
+
+  --high-warning: oklch(0.24 0.1 47.1);
+  --mid-warning: oklch(0.68 0.19 47.1);
+  --low-warning: oklch(0.87 0.15 47.1);
+
+  --high-success: oklch(0.2 0.15 160.4);
+  --mid-success: oklch(0.4 0.18 160.4);
+  --low-success: oklch(0.96 0.05 160.4);
+
+  --high-grey-III: oklch(0.12 0 0);
+  --mid-grey-III: oklch(0.21 0 0);
+  --low-grey-III: oklch(0.28 0 0);
+
+  --high-grey-II: oklch(0.56 0 0);
+  --mid-grey-II: oklch(0.469 0 0);
+  --low-grey-II: oklch(0.85 0 0);
+
+  --high-grey-I: oklch(0.95 0 0);
+  --mid-grey-I: oklch(0.98 0 0);
+  --low-grey-I: oklch(1 0 0);
+}
+
+/* Simple color theme variants */
+/* Default: uses :root values (no class needed) */
+
+.theme-red {
+  /* Primary palette */
+  --primary: oklch(0.6 0.23 25);
+  --primary-foreground: oklch(1 0 0);
+
+  /* Accent palette (lighter red) */
+  --accent: oklch(0.92 0.06 25);
+  --accent-foreground: oklch(0.16 0 0);
+
+  /* Optional ring/selection alignment */
+  --ring: var(--primary);
+}
+
+.theme-green {
+  /* Primary palette */
+  --primary: oklch(0.62 0.18 155);
+  --primary-foreground: oklch(1 0 0);
+
+  /* Accent palette (lighter green) */
+  --accent: oklch(0.92 0.06 155);
+  --accent-foreground: oklch(0.16 0 0);
+
+  /* Optional ring/selection alignment */
+  --ring: var(--primary);
+}
+
+.dark {
+  --background: oklch(0.16 0 0);
+  --foreground: oklch(1 0 0);
+
+  --card: oklch(0.16 0 0);
+  --card-foreground: oklch(1 0 0);
+
+  --popover: oklch(0.16 0 0);
+  --popover-foreground: oklch(1 0 0);
+
+  --default: oklch(0.16 0 0);
+  --default-foreground: oklch(1 0 0);
+
+  --primary: oklch(0.38 0.15 238.7);
+  --primary-foreground: oklch(1 0 0);
+
+  --secondary: oklch(1 0 0);
+  --secondary-foreground: oklch(1 0 0);
+
+  --muted: oklch(0.27 0 0);
+  --muted-foreground: oklch(0.71 0 0);
+
+  /* --accent: oklch(0.27 0 0); */
+  --accent: oklch(0.8 0.17 70);
+  --accent-foreground: oklch(1 0 0);
+
+  --destructive: oklch(0.51 0.23 27.3);
+  --destructive-hover: oklch(0.5 0.25 27.3);
+  --destructive-foreground: oklch(1 0 0);
+
+  --subtle: oklch(0.27 0 0);
+  --subtle-hover: oklch(0.31 0 0);
+  --subtle-foreground: oklch(1 0 0);
+
+  --loading: oklch(1 0 0);
+  --loading-hover: oklch(0.96 0 0);
+  --loading-foreground: oklch(0.16 0 0);
+
+  --outline: oklch(0.16 0 0);
+  --outline-hover: oklch(0.27 0 0);
+  --outline-foreground: oklch(1 0 0);
+
+  --link: oklch(1 0 0);
+
+  --error: oklch(0.51 0.23 27.3);
+  --success: oklch(0.4 0.18 160.4);
+  --warning: oklch(0.47 0.19 47.1);
+
+  --border: oklch(0.27 0 0);
+  --input: oklch(0.27 0 0);
+  --ring: oklch(0.71 0 0);
+
+  /* skishop design system */
+  --high-blue: oklch(0.2 0.15 238.7);
+  --mid-blue: oklch(0.38 0.15 238.7);
+  --low-blue: oklch(0.96 0.02 238.7);
+
+  --high-danger: oklch(0.35 0.15 27.3);
+  --mid-danger: oklch(0.5 0.25 27.3);
+  --low-danger: oklch(0.94 0.1 27.3);
+
+  --high-warning: oklch(0.24 0.1 47.1);
+  --mid-warning: oklch(0.68 0.19 47.1);
+  --low-warning: oklch(0.87 0.15 47.1);
+
+  --high-success: oklch(0.2 0.15 160.4);
+  --mid-success: oklch(0.4 0.18 160.4);
+  --low-success: oklch(0.96 0.05 160.4);
+
+  --high-grey-III: oklch(0.12 0 0);
+  --mid-grey-III: oklch(0.21 0 0);
+  --low-grey-III: oklch(0.28 0 0);
+
+  --high-grey-II: hsla(0, 0%, 25%, 1);
+  --mid-grey-II: oklch(0.71 0 0);
+  --low-grey-II: oklch(0.85 0 0);
+
+  --high-grey-I: oklch(0.95 0 0);
+  --mid-grey-I: oklch(0.98 0 0);
+  --low-grey-I: oklch(1 0 0);
+}
+
+.dark.theme-red {
+  --primary: oklch(0.6 0.23 25);
+  --primary-foreground: oklch(1 0 0);
+  --accent: oklch(0.92 0.06 25);
+  --accent-foreground: oklch(0.16 0 0);
+  --ring: var(--primary);
+}
+
+.dark.theme-green {
+  --primary: oklch(0.62 0.18 155);
+  --primary-foreground: oklch(1 0 0);
+  --accent: oklch(0.92 0.06 155);
+  --accent-foreground: oklch(0.16 0 0);
+  --ring: var(--primary);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+}
+
+.hide-scrollbar {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 12px;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--primary);
+  border: 4px solid transparent;
+  border-radius: 10px;
+  background-clip: content-box;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--primary);
+  background-clip: content-box;
+}
+::-webkit-scrollbar-track {
+  background: hsla(0, 0%, 0%, 0.06);
+  border-radius: 10px;
+}
+
+/* Typography System */
+:root {
+  /* Base typography settings */
+  --font-size-base: 1rem;
+  --line-height-base: 1.6;
+  --letter-spacing-base: -0.01em;
+
+  /* Fluid typography scale using clamp() for perfect responsiveness */
+  --font-size-xs: clamp(0.75rem, 0.7rem + 0.25vw, 0.875rem);
+  --font-size-sm: clamp(0.875rem, 0.8rem + 0.375vw, 1rem);
+  /* --font-size-base: clamp(1rem, 0.9rem + 0.5vw, 1.125rem); */
+  --font-size-lg: clamp(1.125rem, 1rem + 0.625vw, 1.25rem);
+  --font-size-xl: clamp(1.25rem, 1.1rem + 0.75vw, 1.5rem);
+  --font-size-2xl: clamp(1.5rem, 1.3rem + 1vw, 1.875rem);
+  --font-size-3xl: clamp(1.875rem, 1.6rem + 1.375vw, 2.25rem);
+  --font-size-4xl: clamp(1.75rem, 1.4rem + 1.5vw, 2.5rem);
+  --font-size-5xl: clamp(2.75rem, 2.3rem + 2.25vw, 3.5rem);
+  --font-size-6xl: clamp(3.5rem, 2.9rem + 3vw, 4.5rem);
+
+  /* Line heights for optimal readability */
+  --line-height-tight: 1.25;
+  --line-height-snug: 1.375;
+  --line-height-normal: 1.5;
+  --line-height-relaxed: 1.625;
+  --line-height-loose: 2;
+
+  /* Letter spacing for enhanced legibility */
+  --letter-spacing-tighter: -0.05em;
+  --letter-spacing-tight: -0.025em;
+  --letter-spacing-normal: 0em;
+  --letter-spacing-wide: 0.025em;
+  --letter-spacing-wider: 0.05em;
+
+  /* Typography weights */
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+  --font-weight-extrabold: 800;
+}
+
+/* Base typography styles */
+html {
+  font-size: var(--font-size-base);
+  line-height: var(--line-height-base);
+  -webkit-text-size-adjust: 100%;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  scrollbar-width: thin;
+  scrollbar-color: var(--primary) hsla(0, 0%, 0%, 0.06);
+}
+
+body {
+  font-size: var(--font-size-base);
+  line-height: var(--line-height-normal);
+  letter-spacing: var(--letter-spacing-base);
+  font-weight: var(--font-weight-normal);
+  font-family: var(--font-inter);
+  @apply bg-background text-foreground;
+  -ms-overflow-style: scrollbar;
+}
+
+/* Heading styles with fluid typography and proper hierarchy */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  color: var(--mid-grey-II);
+  line-height: var(--line-height-tight);
+  letter-spacing: var(--letter-spacing-tight);
+  font-weight: var(--font-weight-bold);
+  /* margin-top: 0; */
+  /* margin-bottom: 0.5em; */
+  text-wrap: balance; /* Modern CSS for better text wrapping */
+  font-family: var(--font-inter);
+}
+
+h1 {
+  font-size: var(--font-size-5xl);
+  font-weight: var(--font-weight-extrabold);
+  letter-spacing: var(--letter-spacing-normal);
+  line-height: var(--line-height-tight);
+}
+
+h2 {
+  font-size: var(--font-size-4xl);
+  font-weight: var(--font-weight-bold);
+  letter-spacing: var(--letter-spacing-tight);
+  line-height: var(--line-height-tight);
+}
+
+h3 {
+  font-size: var(--font-size-3xl);
+  font-weight: var(--font-weight-bold);
+  letter-spacing: var(--letter-spacing-tight);
+  line-height: var(--line-height-snug);
+}
+
+h4 {
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-extrabold);
+  letter-spacing: var(--letter-spacing-normal);
+  line-height: var(--line-height-snug);
+}
+
+h5 {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: var(--letter-spacing-normal);
+  line-height: var(--line-height-normal);
+}
+
+h6 {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-medium);
+  letter-spacing: var(--letter-spacing-normal);
+  line-height: var(--line-height-normal);
+}
+
+/* Paragraph and text styles */
+p {
+  font-weight: var(--font-weight-normal);
+  line-height: var(--line-height-relaxed);
+  /* margin-top: 0;
+  margin-bottom: 1em; */
+  text-wrap: pretty; /* Modern CSS for better paragraph wrapping */
+  @apply text-mid-grey-II;
+}
+
+/* Text size utility classes */
+.text-xs {
+  font-size: var(--font-size-xs);
+}
+.text-sm {
+  font-size: var(--font-size-sm);
+}
+.text-base {
+  font-size: var(--font-size-base);
+}
+.text-lg {
+  font-size: var(--font-size-lg);
+}
+.text-xl {
+  font-size: var(--font-size-xl);
+}
+.text-2xl {
+  font-size: var(--font-size-2xl);
+}
+.text-3xl {
+  font-size: var(--font-size-3xl);
+}
+.text-4xl {
+  font-size: var(--font-size-4xl);
+}
+.text-5xl {
+  font-size: var(--font-size-5xl);
+}
+.text-6xl {
+  font-size: var(--font-size-6xl);
+}
+
+/* Font family utility classes */
+.font-inter {
+  font-family: var(--font-inter);
+}
+.font-roboto {
+  font-family: var(--font-roboto);
+}
+.font-open-sans {
+  font-family: var(--font-open-sans);
+}
+.font-nunito-sans {
+  font-family: var(--font-nunito-sans);
+}
+.font-poppins {
+  font-family: var(--font-poppins);
+}
+
+/* Enhanced readability for small screens */
+@media (max-width: 768px) {
+  body {
+    line-height: var(--line-height-relaxed);
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    line-height: var(--line-height-snug);
+  }
+}
+
+/* Accessibility improvements */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-weight: var(--font-weight-extrabold);
+  }
+}
+
+@keyframes swing {
+  0%,
+  100% {
+    transform: rotate(8deg);
+  }
+  50% {
+    transform: rotate(-5deg);
+  }
+}
+
+.animate-swing {
+  animation: swing 2s ease-in-out infinite;
+  transform-origin: top center;
+}
+
+.leaflet-container {
+  height: 100%;
+  width: 100%;
+}

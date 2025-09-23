@@ -1,0 +1,88 @@
+import Loading from "@/app/Loading";
+import { BlurImage } from "@/components/core/miscellaneous/blur-image";
+import { PayrollLineChart } from "@/components/shared/chart/payrool-linechart";
+import { EmptyState } from "@/components/shared/empty-state";
+import { Card, CardTitle } from "@/components/ui/card";
+import { Locale } from "@/lib/i18n/config";
+import { formatCurrency } from "@/lib/i18n/utils";
+import { useAppService } from "@/services/externals/app/use-app-service";
+import { useLocale } from "next-intl";
+
+export function SectionTwo() {
+  return (
+    <section className="grid grid-cols-1 gap-5 py-5 md:grid-cols-12">
+      <section className={`col-span-12 lg:col-span-8`}>
+        <PayrollLineChart />
+      </section>
+      <section className={`col-span-12 lg:col-span-4`}>
+        <BestSellerLayout />
+      </section>
+    </section>
+  );
+}
+
+const BestSellerLayout = () => {
+  const { useGetAllProducts } = useAppService();
+  const locale = useLocale();
+  const { data: productData, isLoading: isProductsLoading, isError } = useGetAllProducts({ flag: "top", limit: 3 });
+
+  if (isError) {
+    return (
+      <div className="flex items-center justify-center p-20">
+        <p>Error loading products. Please try again later.</p>
+      </div>
+    );
+  }
+
+  return (
+    <Card className={`h-full border-none p-6 shadow-none`}>
+      <CardTitle className="text-lg font-semibold text-gray-800">Best Sellers</CardTitle>
+      <section className={`h-[290px] space-y-4 overflow-auto`}>
+        {isProductsLoading ? (
+          <Loading text="Loading best selling products..." className="w-fill h-fit p-20" />
+        ) : productData?.data?.items?.length ? (
+          productData.data.items.map((product) => (
+            <div key={product.id} className={`flex items-center justify-between gap-4`}>
+              <div className={`flex items-center gap-4`}>
+                <div className={`flex size-[64px] items-center justify-center overflow-hidden rounded-lg bg-black/30`}>
+                  <BlurImage
+                    src={product.images[0]}
+                    alt={product.name}
+                    width={64}
+                    height={64}
+                    className={`h-fit w-fit rounded-lg object-contain`}
+                  />
+                </div>
+                <div>
+                  <h6 title={product.name} className={`max-w-[140px] truncate !text-sm font-black`}>
+                    {product.name}
+                  </h6>
+                  <p className={`text-sm text-gray-400`}>{formatCurrency(product.price, locale as Locale)}</p>
+                </div>
+              </div>
+              <p className={`text-sm text-gray-600`}>999 sales</p>
+            </div>
+          ))
+        ) : (
+          <div className="flex items-center justify-center">
+            <EmptyState
+              images={[
+                {
+                  src: "/images/empty-state.svg",
+                  alt: "Empty Cart",
+                  width: 50,
+                  height: 50,
+                },
+              ]}
+              title="No products found"
+              titleClassName="!text-lg font-bold"
+              description="No best selling products available."
+              descriptionClassName="text-mid-grey-II !text-sm"
+              className="bg-mid-grey-I !min-h-[100px] space-y-0 rounded-lg py-10"
+            />
+          </div>
+        )}
+      </section>
+    </Card>
+  );
+};

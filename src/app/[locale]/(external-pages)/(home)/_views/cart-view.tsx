@@ -1,0 +1,473 @@
+"use client";
+
+import { Wrapper } from "@/components/core/layout/wrapper";
+import SkiButton from "@/components/shared/button";
+import { EmptyState } from "@/components/shared/empty-state";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Locale } from "@/lib/i18n/config";
+import { formatCurrency } from "@/lib/i18n/utils";
+import { useAppService } from "@/services/externals/app/use-app-service";
+import { Minus, Plus, Trash2 } from "lucide-react";
+import { useSession } from "next-auth/react";
+import { useLocale } from "next-intl";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
+
+export const CartView = () => {
+  const router = useRouter();
+  const { data: session } = useSession();
+  const { useGetCart, useRemoveFromCart, useUpdateCartItem } = useAppService();
+  const locale = useLocale();
+  // Mutations
+  const { mutateAsync: updateQuantity, isPending: isUpdating } = useUpdateCartItem();
+  const { mutateAsync: removeItem, isPending: isRemoving } = useRemoveFromCart();
+
+  // Fetch cart data
+  const { data: cartResponse, isLoading, error, refetch } = useGetCart();
+  const cartItems = cartResponse?.data?.items || [];
+  const cartMetadata = cartResponse?.data?.metadata;
+
+  if (!session) {
+    return (
+      <Wrapper className="py-12">
+        <EmptyState
+          images={[
+            {
+              src: "/images/empty-state.svg",
+              alt: "Empty Cart",
+              width: 80,
+              height: 80,
+            },
+          ]}
+          title="Can't view cart"
+          titleClassName={`!text-lg font-bold !text-mid-warning`}
+          description={"Please login to view your cart"}
+          descriptionClassName={`text-mid-grey-II`}
+          className="bg-mid-grey-I space-y-0 rounded-lg py-10"
+        />
+      </Wrapper>
+    );
+  }
+
+  // In your CartView component
+  // const { data: cartResponse = { data: { items: [], metadata: { total: 0 } }, isLoading, error, refetch } = useGetCart();
+  // const cartItems = cartResponse.data.items;
+  // const cartMetadata = cartResponse.data.metadata;
+
+  const handleQuantityChange = (itemId: string, action: "increase" | "decrease") => {
+    const item = cartItems.find((item) => item.id === itemId);
+    if (!item) return;
+
+    const newQuantity = action === "increase" ? item.quantity + 1 : item.quantity - 1;
+
+    if (newQuantity < 1) {
+      handleRemoveItem(itemId);
+      return;
+    }
+
+    updateQuantity(
+      { itemId, quantity: newQuantity },
+      {
+        onSuccess: () => {
+          toast.success("Quantity updated");
+          refetch();
+        },
+      },
+    );
+  };
+
+  const handleRemoveItem = (itemId: string) => {
+    removeItem(itemId, {
+      onSuccess: () => {
+        toast.success("Item removed from cart");
+        refetch();
+      },
+      onError: (error) => {
+        toast.error("Failed to remove item", {
+          description: error.message,
+        });
+      },
+    });
+  };
+
+  const subtotal = cartItems.reduce(
+    (sum: number, item: CartItem) => sum + (item.product.discountPrice || item.product.price || 0) * item.quantity,
+    0,
+  );
+  const shipping = subtotal > 100 ? 0 : 15;
+  const total = subtotal + shipping;
+
+  if (isLoading) {
+    return (
+      <Wrapper className="py-12">
+        <CartViewSkeleton />
+      </Wrapper>
+    );
+  }
+
+  if (error) {
+    return (
+      <Wrapper className="py-12">
+        <EmptyState
+          images={[
+            {
+              src: "/images/empty-state.svg",
+              alt: "Empty Cart",
+              width: 100,
+              height: 100,
+            },
+          ]}
+          description={"There was an error loading your cart"}
+          className="bg-mid-grey-I space-y-0 rounded-lg py-10"
+          button={{
+            text: "Try again",
+            onClick: () => refetch(),
+          }}
+        />
+      </Wrapper>
+    );
+  }
+
+  return (
+    <Wrapper className="py-6 sm:py-10">
+      <p className="mb-6 text-lg font-bold sm:mb-8 sm:text-2xl">
+        Cart {cartMetadata && `(${cartMetadata.total} items)`}
+      </p>
+
+      {cartItems?.length === 0 ? (
+        <EmptyState
+          images={[
+            {
+              src: "/images/empty-state.svg",
+              alt: "Empty Cart",
+              width: 80,
+              height: 80,
+            },
+          ]}
+          title="Your cart is empty"
+          titleClassName={`!text-2xl font-bold`}
+          description={"Add products to your cart to get started"}
+          descriptionClassName={`text-mid-grey-II`}
+          className="bg-mid-grey-I space-y-0 rounded-lg py-10"
+          button={{
+            text: "Continue Shopping",
+            onClick: () => router.push("/shop"),
+          }}
+        />
+      ) : (
+        <div className="grid gap-8 lg:grid-cols-3">
+          {isLoading && <CartViewSkeleton />}
+
+          {!isLoading && (
+            <>
+              {/* Mobile Card View */}
+              <div className="space-y-4 lg:hidden">
+                {cartItems.map((item: CartItem) => (
+                  <div key={item.id} className="rounded-lg border p-4">
+                    <div className="flex justify-between">
+                      <div className="flex items-start gap-4">
+                        <div className="relative h-16 w-16 flex-shrink-0 overflow-hidden rounded bg-gray-100">
+                          <div className="flex h-full items-center justify-center text-gray-400">
+                            <svg className="h-8 w-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                              />
+                            </svg>
+                          </div>
+                        </div>
+                        <div>
+                          <p className="font-medium">{item.product.name}</p>
+                          <p className="text-xs text-gray-500">SKU: {item.product.id}</p>
+                          <div className="mt-2">
+                            <p className="font-medium">
+                              ${item.product.price?.toFixed(2)}
+                              {item.product.discountPrice && (
+                                <span className="ml-2 text-sm text-gray-500 line-through">
+                                  ${item.product.discountPrice.toFixed(2)}
+                                </span>
+                              )}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                      <button
+                        onClick={() => handleRemoveItem(item.id)}
+                        disabled={isRemoving}
+                        className="text-red-500 hover:text-red-700 disabled:opacity-50"
+                        aria-label="Remove item"
+                      >
+                        <Trash2 className="h-5 w-5" />
+                      </button>
+                    </div>
+
+                    <div className="mt-4 flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <button
+                          onClick={() => handleQuantityChange(item.id, "decrease")}
+                          disabled={isUpdating}
+                          className="flex h-8 w-8 items-center justify-center rounded border bg-gray-50 hover:bg-gray-100 disabled:opacity-50"
+                        >
+                          <Minus className="h-4 w-4" />
+                        </button>
+                        <span className="w-8 text-center">{item.quantity}</span>
+                        <button
+                          onClick={() => handleQuantityChange(item.id, "increase")}
+                          disabled={isUpdating}
+                          className="flex h-8 w-8 items-center justify-center rounded border bg-gray-50 hover:bg-gray-100 disabled:opacity-50"
+                        >
+                          <Plus className="h-4 w-4" />
+                        </button>
+                      </div>
+                      <p className="font-medium">${((item.product.price || 0) * item.quantity).toFixed(2)}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Desktop Table View */}
+              <div className="hidden lg:col-span-2 lg:block">
+                <div className="overflow-hidden rounded-lg border">
+                  <table className="w-full">
+                    <thead className="bg-gray-50">
+                      <tr>
+                        <th className="px-4 py-3 text-left text-sm font-medium">Product</th>
+                        <th className="px-4 py-3 text-left text-sm font-medium">Price</th>
+                        <th className="px-4 py-3 text-left text-sm font-medium">Quantity</th>
+                        <th className="px-4 py-3 text-left text-sm font-medium">Total</th>
+                        <th className="px-4 py-3 text-left text-sm font-medium"></th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-gray-200">
+                      {cartItems.map((item: CartItem) => (
+                        <tr key={item.id}>
+                          <td className="px-4 py-4">
+                            <div className="flex items-center gap-4">
+                              <div className="relative h-16 w-16 flex-shrink-0 overflow-hidden rounded bg-gray-100">
+                                <div className="flex h-full items-center justify-center text-gray-400">
+                                  <svg className="h-8 w-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path
+                                      strokeLinecap="round"
+                                      strokeLinejoin="round"
+                                      strokeWidth={2}
+                                      d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                                    />
+                                  </svg>
+                                </div>
+                              </div>
+                              <div>
+                                <p className="!mb-0 font-medium">{item.product.name}</p>
+                                <p className="text-high-grey-II !mb-0 text-[11px]">SKU: {item.product.id}</p>
+                              </div>
+                            </div>
+                          </td>
+                          <td className="px-4 py-4">
+                            {item.product.discountPrice ? (
+                              <>
+                                <span className="font-semibold">
+                                  {formatCurrency(item.product.discountPrice, locale as Locale)}
+                                </span>
+                                {/* <span className="text-destructive mr-2 text-[10px] line-through">
+                                  {formatCurrency(item.product.price, locale as Locale)}
+                                </span> */}
+                              </>
+                            ) : (
+                              <span>{formatCurrency(item.product.price, locale as Locale)}</span>
+                            )}
+                          </td>
+                          <td className="px-4 py-4">
+                            <div className="flex items-center gap-2">
+                              <button
+                                onClick={() => handleQuantityChange(item.id, "decrease")}
+                                disabled={isUpdating}
+                                className="flex h-8 w-8 items-center justify-center rounded border bg-gray-50 hover:bg-gray-100 disabled:opacity-50"
+                              >
+                                <Minus className="h-4 w-4" />
+                              </button>
+                              <span className="w-8 text-center">{item.quantity}</span>
+                              <button
+                                onClick={() => handleQuantityChange(item.id, "increase")}
+                                disabled={isUpdating}
+                                className="flex h-8 w-8 items-center justify-center rounded border bg-gray-50 hover:bg-gray-100 disabled:opacity-50"
+                              >
+                                <Plus className="h-4 w-4" />
+                              </button>
+                            </div>
+                          </td>
+                          <td className="px-4 py-4 font-medium">
+                            {formatCurrency(
+                              (item.product.discountPrice || item.product.price || 0) * item.quantity,
+                              locale as Locale,
+                            )}
+                          </td>
+                          <td className="px-4 py-4">
+                            <SkiButton
+                              onClick={() => handleRemoveItem(item.id)}
+                              isDisabled={isRemoving}
+                              variant="ghost"
+                              size="icon"
+                              className="text-red-500 hover:text-red-700 disabled:opacity-50"
+                              aria-label="Remove item"
+                              icon={<Trash2 className="h-5 w-5" />}
+                              isIconOnly
+                            />
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              {/* Order Summary (Visible on both mobile and desktop) */}
+              <div className="lg:col-span-1">
+                <div className="rounded-lg border bg-gray-50 p-6">
+                  <p className="mb-4 text-lg font-semibold sm:text-2xl">Cart Summary</p>
+                  <hr className={`mb-5`} />
+                  <div className="space-y-4">
+                    <div className="flex justify-between">
+                      <span>Subtotal</span>
+                      <span>{formatCurrency(subtotal, locale as Locale)}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span>Shipping</span>
+                      <span>{shipping === 0 ? "Free" : `${formatCurrency(shipping, locale as Locale)}`}</span>
+                    </div>
+                    <div className="border-t pt-4">
+                      <div className="flex justify-between font-semibold">
+                        <span>Total</span>
+                        <span>{formatCurrency(total, locale as Locale)}</span>
+                      </div>
+                    </div>
+                  </div>
+                  <SkiButton
+                    href={`/shop/cart/checkout`}
+                    variant="primary"
+                    size="lg"
+                    className="mt-6 w-full rounded-full"
+                  >
+                    Proceed to Checkout
+                  </SkiButton>
+                </div>
+              </div>
+            </>
+          )}
+        </div>
+      )}
+    </Wrapper>
+  );
+};
+
+const CartViewSkeleton = () => {
+  return (
+    <section className="">
+      <Skeleton className="mb-6 h-8 w-48 sm:mb-8 sm:h-10" />
+
+      <div className="grid gap-8 lg:grid-cols-3">
+        {/* Mobile Card View Skeleton */}
+        <div className="space-y-4 lg:hidden">
+          {Array.from({ length: 3 }).map((_, index) => (
+            <div key={index} className="rounded-lg border p-4">
+              <div className="flex justify-between">
+                <div className="flex items-start gap-4">
+                  <Skeleton className="h-16 w-16 rounded" />
+                  <div className="space-y-2">
+                    <Skeleton className="h-5 w-32" />
+                    <Skeleton className="h-4 w-24" />
+                    <Skeleton className="h-5 w-20" />
+                  </div>
+                </div>
+                <Skeleton className="h-5 w-5" />
+              </div>
+
+              <div className="mt-4 flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <Skeleton className="h-8 w-8 rounded" />
+                  <Skeleton className="h-6 w-8" />
+                  <Skeleton className="h-8 w-8 rounded" />
+                </div>
+                <Skeleton className="h-5 w-16" />
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Desktop Table View Skeleton */}
+        <div className="hidden lg:col-span-2 lg:block">
+          <div className="overflow-hidden rounded-lg border">
+            <table className="w-full">
+              <thead className="bg-gray-50">
+                <tr>
+                  {["Product", "Price", "Quantity", "Total", ""].map((header, index) => (
+                    <th key={index} className="px-4 py-3 text-left text-sm font-medium">
+                      <Skeleton className="h-5 w-24" />
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-200">
+                {Array.from({ length: 3 }).map((_, index) => (
+                  <tr key={index}>
+                    <td className="px-4 py-4">
+                      <div className="flex items-center gap-4">
+                        <Skeleton className="h-16 w-16 rounded" />
+                        <div className="space-y-2">
+                          <Skeleton className="h-5 w-32" />
+                          <Skeleton className="h-4 w-24" />
+                        </div>
+                      </div>
+                    </td>
+                    <td className="px-4 py-4">
+                      <Skeleton className="h-5 w-16" />
+                      <Skeleton className="mt-1 h-4 w-12" />
+                    </td>
+                    <td className="px-4 py-4">
+                      <div className="flex items-center gap-2">
+                        <Skeleton className="h-8 w-8 rounded" />
+                        <Skeleton className="h-6 w-8" />
+                        <Skeleton className="h-8 w-8 rounded" />
+                      </div>
+                    </td>
+                    <td className="px-4 py-4">
+                      <Skeleton className="h-5 w-16" />
+                    </td>
+                    <td className="px-4 py-4">
+                      <Skeleton className="h-5 w-5" />
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        {/* Order Summary Skeleton */}
+        <div className="lg:col-span-1">
+          <div className="rounded-lg border bg-gray-50 p-6">
+            <Skeleton className="mb-4 h-8 w-48" />
+            <Skeleton className="mb-5 h-px w-full" />
+            <div className="space-y-4">
+              <div className="flex justify-between">
+                <Skeleton className="h-5 w-16" />
+                <Skeleton className="h-5 w-20" />
+              </div>
+              <div className="flex justify-between">
+                <Skeleton className="h-5 w-16" />
+                <Skeleton className="h-5 w-20" />
+              </div>
+              <div className="border-t pt-4">
+                <div className="flex justify-between">
+                  <Skeleton className="h-6 w-16" />
+                  <Skeleton className="h-6 w-24" />
+                </div>
+              </div>
+            </div>
+            <Skeleton className="mt-6 h-12 w-full rounded-full" />
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+};

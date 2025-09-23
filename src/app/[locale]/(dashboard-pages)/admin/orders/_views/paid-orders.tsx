@@ -1,0 +1,140 @@
+"use client";
+
+import { SearchInput } from "@/components/core/miscellaneous/search-input";
+import { DashboardTable } from "@/components/shared/dashboard-table";
+import { useAdminOrderColumn } from "@/components/shared/dashboard-table/admin/admin-table-data";
+import { DownloadCsvButton } from "@/components/shared/download-csv-button";
+import { EmptyState } from "@/components/shared/empty-state";
+import { useDashboardSearchParameters } from "@/lib/nuqs/use-dashboard-search-parameters";
+import { useDashboardOrderService } from "@/services/dashboard/vendor/orders/use-order-service";
+import { useRouter } from "next/navigation";
+import { useCallback, useMemo } from "react";
+
+import { TableSkeleton } from "../../home/_components/page-skeleton";
+
+export const PaidOrders = () => {
+  const router = useRouter();
+  const {
+    search: searchQuery,
+    limit,
+    page,
+    setSearch: setSearchQuery,
+    resetToFirstPage,
+  } = useDashboardSearchParameters();
+
+  const filters = useMemo(
+    () => ({
+      page,
+      status: "paid" as const,
+      ...(searchQuery && { search: searchQuery }),
+      ...(limit && { limit }),
+    }),
+    [page, searchQuery, limit],
+  );
+
+  const { useGetAllOrders } = useDashboardOrderService();
+  const { data: orderData, isLoading, isError, refetch } = useGetAllOrders(filters);
+
+  const orders = orderData?.data?.items || [];
+  const totalOrders = orderData?.data?.metadata?.total || 0;
+  const totalPages = orderData?.data?.metadata?.totalPages || 1;
+  const hasNextPage = orderData?.data?.metadata?.hasNextPage || false;
+  const hasPreviousPage = orderData?.data?.metadata?.hasPreviousPage || false;
+
+  const orderColumn = useAdminOrderColumn();
+
+  const handleSearchChange = useCallback(
+    (newSearch: string) => {
+      if (newSearch !== searchQuery) {
+        setSearchQuery(newSearch);
+        resetToFirstPage();
+      }
+    },
+    [setSearchQuery, resetToFirstPage, searchQuery],
+  );
+
+  const handleRowClick = useCallback(
+    (order: Order) => {
+      router.push(`/admin/orders/${order.id}`);
+    },
+    [router],
+  );
+
+  const renderLoadingSkeleton = () => <TableSkeleton />;
+
+  const renderErrorState = () => (
+    <EmptyState
+      images={[{ src: "/images/empty-state.svg", width: 80, height: 80, alt: "Error" }]}
+      title="Something went wrong"
+      description="Failed to load paid orders. Please try again."
+      className="bg-mid-grey-I space-y-0 rounded-lg"
+      titleClassName="!text-2xl"
+      descriptionClassName="text-base mb-4"
+      actionButton={
+        <button onClick={() => refetch()} className="bg-primary hover:bg-primary/90 rounded-md px-4 py-2 text-white">
+          Try Again
+        </button>
+      }
+    />
+  );
+
+  const renderEmptyState = () => (
+    <EmptyState
+      images={[{ src: "/images/empty-state.svg", width: 80, height: 80, alt: "No paid orders" }]}
+      title="No paid orders"
+      description="There are no paid orders at the moment."
+      className="bg-mid-grey-I space-y-0 rounded-lg"
+      titleClassName="!text-2xl"
+      descriptionClassName="text-base mb-4"
+    />
+  );
+
+  const renderOrdersTable = () => (
+    <section>
+      <div className="mb-2 flex items-center justify-between gap-2">
+        <h6 className="!text-lg font-semibold">Paid Orders</h6>
+        <div className="flex items-center gap-2">
+          <SearchInput className="" onSearch={handleSearchChange} initialValue={searchQuery} />
+          <DownloadCsvButton
+            data={(orders || []) as Record<string, unknown>[]}
+            filename="paid-orders"
+            headers={{
+              id: "Order ID",
+              customerName: "Customer Name",
+              totalAmount: "Total Amount",
+              status: "Status",
+              createdAt: "Date Created",
+            }}
+          />
+        </div>
+      </div>
+      <div>
+        {isLoading ? (
+          renderLoadingSkeleton()
+        ) : isError ? (
+          renderErrorState()
+        ) : !orders || orders.length === 0 ? (
+          renderEmptyState()
+        ) : (
+          <DashboardTable
+            data={orders}
+            columns={orderColumn}
+            totalPages={totalPages}
+            itemsPerPage={totalOrders}
+            hasNextPage={hasNextPage}
+            hasPreviousPage={hasPreviousPage}
+            showPagination
+            pageParameter="page"
+            onRowClick={handleRowClick}
+          />
+        )}
+      </div>
+    </section>
+  );
+
+  const renderPaidOrdersContent = () => {
+    return renderOrdersTable();
+  };
+
+  return renderPaidOrdersContent();
+};
