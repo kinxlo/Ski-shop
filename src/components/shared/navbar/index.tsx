@@ -55,7 +55,12 @@ const useScrollBehavior = () => {
 export const Navbar = forwardRef<HTMLElement, NavbarProperties>(
   (
     {
-      logo = <Logo width={40} logo="/images/skicom-mini.svg" />,
+      logo = (
+        <Logo
+          width={40}
+          logo="https://res.cloudinary.com/kingsleysolomon/image/upload/f_auto,q_auto/v1758641970/skicom/vd6d83v5f4nmh7jtaqlf.png"
+        />
+      ),
       links = NAV_LINKS,
       className,
       navbarStyle,
@@ -378,22 +383,6 @@ export const Navbar = forwardRef<HTMLElement, NavbarProperties>(
                       <div className="space-y-3">
                         <h3 className="!text-primary text-sm font-medium">More</h3>
                         <div className="space-y-2">
-                          <SkiButton
-                            href={`/${locale}/about`}
-                            variant="ghost"
-                            className="w-full justify-start"
-                            size="sm"
-                          >
-                            About Us
-                          </SkiButton>
-                          <SkiButton
-                            href={`/${locale}/contact`}
-                            variant="ghost"
-                            className="w-full justify-start"
-                            size="sm"
-                          >
-                            Contact Support
-                          </SkiButton>
                           <SkiButton
                             href={`/${locale}/help`}
                             variant="ghost"

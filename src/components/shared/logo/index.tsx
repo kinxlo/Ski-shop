@@ -15,7 +15,7 @@ export const Logo: FC<LogoProperties> = ({ logo = "/images/skicom.svg", width = 
   return (
     <LocaleLink href="/" data-testid="logo" className="">
       {logo ? (
-        <Image src={logo} alt="Logo" width={width} height={height} className={className} />
+        <Image priority src={logo} alt="Logo" width={width} height={height} className={className} />
       ) : (
         <p className="text-xl font-bold">LOGO</p>
       )}
