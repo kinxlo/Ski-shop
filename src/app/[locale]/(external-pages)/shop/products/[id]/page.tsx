@@ -19,31 +19,39 @@ export default function Page() {
 
   if (isLoading)
     return (
-      <Wrapper>
-        <ProductDetailSkeleton />
-      </Wrapper>
+      <main>
+        <Wrapper className="px-4 sm:px-6 lg:px-8">
+          <ProductDetailSkeleton />
+        </Wrapper>
+      </main>
     );
   if (isError || !productResponse?.data)
     return (
-      <Wrapper className="min-h-[480px] pt-16">
-        <EmptyState
-          images={[
-            {
-              src: "/images/empty-state.svg",
-              alt: "Empty Cart",
-              width: 100,
-              height: 100,
-            },
-          ]}
-          description={"Failed to load product. Please try again."}
-          actionButton={
-            <SkiButton onClick={() => refetch()} variant="default" className="bg-high-grey-I mt-4">
-              Retry
-            </SkiButton>
-          }
-        />
-      </Wrapper>
+      <main>
+        <Wrapper className="min-h-[480px] px-4 pt-[10rem] sm:px-6 lg:px-8">
+          <EmptyState
+            images={[
+              {
+                src: "/images/empty-state.svg",
+                alt: "Empty Cart",
+                width: 100,
+                height: 100,
+              },
+            ]}
+            description={"Failed to load product. Please try again."}
+            actionButton={
+              <SkiButton onClick={() => refetch()} variant="default" className="bg-high-grey-I mt-4">
+                Retry
+              </SkiButton>
+            }
+          />
+        </Wrapper>
+      </main>
     );
 
-  return <ProductDetail product={productResponse.data} />;
+  return (
+    <main>
+      <ProductDetail product={productResponse.data} />
+    </main>
+  );
 }

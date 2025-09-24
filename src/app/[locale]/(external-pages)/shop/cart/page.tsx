@@ -4,7 +4,7 @@ import { InterestedProducts } from "../../(home)/_views/interested-products";
 
 const CartPage = () => {
   return (
-    <section className="pt-[10rem]">
+    <section className="pt-18 lg:pt-[10rem]">
       <ProductBreadcrumb productTitle="Cart" />
       <CartView />
       <InterestedProducts />

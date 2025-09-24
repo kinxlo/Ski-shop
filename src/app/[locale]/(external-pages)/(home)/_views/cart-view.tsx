@@ -17,7 +17,7 @@ export const CartView = () => {
   const router = useRouter();
   const { data: session } = useSession();
   const { useGetCart, useRemoveFromCart, useUpdateCartItem } = useAppService();
-  const locale = useLocale();
+  const locale = useLocale() as Locale;
   // Mutations
   const { mutateAsync: updateQuantity, isPending: isUpdating } = useUpdateCartItem();
   const { mutateAsync: removeItem, isPending: isRemoving } = useRemoveFromCart();
@@ -130,7 +130,7 @@ export const CartView = () => {
 
   return (
     <Wrapper className="py-6 sm:py-10">
-      <p className="mb-6 text-lg font-bold sm:mb-8 sm:text-2xl">
+      <p className="mb-6 !text-lg !font-bold sm:mb-8 sm:!text-2xl">
         Cart {cartMetadata && `(${cartMetadata.total} items)`}
       </p>
 
@@ -164,7 +164,7 @@ export const CartView = () => {
               <div className="space-y-4 lg:hidden">
                 {cartItems.map((item: CartItem) => (
                   <div key={item.id} className="rounded-lg border p-4">
-                    <div className="flex justify-between">
+                    <div className="flex items-start justify-between">
                       <div className="flex items-start gap-4">
                         <div className="relative h-16 w-16 flex-shrink-0 overflow-hidden rounded bg-gray-100">
                           <div className="flex h-full items-center justify-center text-gray-400">
@@ -179,17 +179,25 @@ export const CartView = () => {
                           </div>
                         </div>
                         <div>
-                          <p className="font-medium">{item.product.name}</p>
-                          <p className="text-xs text-gray-500">SKU: {item.product.id}</p>
+                          <p className="!text-foreground !font-semibold">{item.product.name}</p>
+                          <p className="text-mid-grey-I text-[10px] md:text-xs">SKU: {item.product.id}</p>
                           <div className="mt-2">
-                            <p className="font-medium">
-                              ${item.product.price?.toFixed(2)}
-                              {item.product.discountPrice && (
-                                <span className="ml-2 text-sm text-gray-500 line-through">
-                                  ${item.product.discountPrice.toFixed(2)}
-                                </span>
+                            <div className="flex items-baseline gap-2">
+                              {item.product.discountPrice ? (
+                                <>
+                                  <p className="!text-primary text-sm !font-semibold">
+                                    {formatCurrency(item.product.discountPrice, locale)}
+                                  </p>
+                                  <p className="!text-destructive !text-xs !font-medium line-through">
+                                    {formatCurrency(item.product.price, locale)}
+                                  </p>
+                                </>
+                              ) : (
+                                <p className="!text-primary !text-sm !font-semibold">
+                                  {formatCurrency(item.product.price, locale)}
+                                </p>
                               )}
-                            </p>
+                            </div>
                           </div>
                         </div>
                       </div>
@@ -204,24 +212,32 @@ export const CartView = () => {
                     </div>
 
                     <div className="mt-4 flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <button
+                      <div className="flex items-center">
+                        <SkiButton
+                          isIconOnly
+                          icon={<Minus className="h-4 w-4" />}
+                          size={`icon`}
+                          variant={`primary`}
                           onClick={() => handleQuantityChange(item.id, "decrease")}
-                          disabled={isUpdating}
-                          className="flex h-8 w-8 items-center justify-center rounded border bg-gray-50 hover:bg-gray-100 disabled:opacity-50"
-                        >
-                          <Minus className="h-4 w-4" />
-                        </button>
-                        <span className="w-8 text-center">{item.quantity}</span>
-                        <button
+                          className="items-center justify-center rounded-sm border disabled:opacity-50"
+                          isDisabled={isUpdating}
+                        />
+                        <span className="bg-primary/10 flex h-[34px] w-20 items-center justify-center text-center font-medium">
+                          {item.quantity}
+                        </span>
+                        <SkiButton
+                          isIconOnly
+                          size={`icon`}
+                          variant={`primary`}
                           onClick={() => handleQuantityChange(item.id, "increase")}
-                          disabled={isUpdating}
-                          className="flex h-8 w-8 items-center justify-center rounded border bg-gray-50 hover:bg-gray-100 disabled:opacity-50"
-                        >
-                          <Plus className="h-4 w-4" />
-                        </button>
+                          className="items-center justify-center rounded-sm border disabled:opacity-50"
+                          icon={<Plus className="h-4 w-4" />}
+                          isDisabled={isUpdating}
+                        />
                       </div>
-                      <p className="font-medium">${((item.product.price || 0) * item.quantity).toFixed(2)}</p>
+                      <p className="!text-primary !text-sm !font-semibold">
+                        {formatCurrency(item.product.price * item.quantity, locale)}
+                      </p>
                     </div>
                   </div>
                 ))}
@@ -231,7 +247,7 @@ export const CartView = () => {
               <div className="hidden lg:col-span-2 lg:block">
                 <div className="overflow-hidden rounded-lg border">
                   <table className="w-full">
-                    <thead className="bg-gray-50">
+                    <thead className="bg-background">
                       <tr>
                         <th className="px-4 py-3 text-left text-sm font-medium">Product</th>
                         <th className="px-4 py-3 text-left text-sm font-medium">Price</th>
@@ -240,12 +256,12 @@ export const CartView = () => {
                         <th className="px-4 py-3 text-left text-sm font-medium"></th>
                       </tr>
                     </thead>
-                    <tbody className="divide-y divide-gray-200">
+                    <tbody className="divide-border divide-y">
                       {cartItems.map((item: CartItem) => (
                         <tr key={item.id}>
                           <td className="px-4 py-4">
                             <div className="flex items-center gap-4">
-                              <div className="relative h-16 w-16 flex-shrink-0 overflow-hidden rounded bg-gray-100">
+                              <div className="border-border relative h-16 w-16 flex-shrink-0 overflow-hidden rounded border dark:bg-[#111111]">
                                 <div className="flex h-full items-center justify-center text-gray-400">
                                   <svg className="h-8 w-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path
@@ -258,48 +274,58 @@ export const CartView = () => {
                                 </div>
                               </div>
                               <div>
-                                <p className="!mb-0 font-medium">{item.product.name}</p>
-                                <p className="text-high-grey-II !mb-0 text-[11px]">SKU: {item.product.id}</p>
+                                <p className="!text-foreground !mb-0 !font-semibold">{item.product.name}</p>
+                                <p className="!mb-0 text-[11px]">SKU: {item.product.id}</p>
                               </div>
                             </div>
                           </td>
                           <td className="px-4 py-4">
-                            {item.product.discountPrice ? (
-                              <>
-                                <span className="font-semibold">
-                                  {formatCurrency(item.product.discountPrice, locale as Locale)}
-                                </span>
-                                {/* <span className="text-destructive mr-2 text-[10px] line-through">
-                                  {formatCurrency(item.product.price, locale as Locale)}
-                                </span> */}
-                              </>
-                            ) : (
-                              <span>{formatCurrency(item.product.price, locale as Locale)}</span>
-                            )}
+                            <div className="flex items-baseline gap-2">
+                              {item.product.discountPrice ? (
+                                <>
+                                  <p className="!text-primary text-sm !font-semibold">
+                                    {formatCurrency(item.product.discountPrice, locale)}
+                                  </p>
+                                  <p className="!text-destructive !text-xs !font-medium line-through">
+                                    {formatCurrency(item.product.price, locale)}
+                                  </p>
+                                </>
+                              ) : (
+                                <p className="!text-primary !text-sm !font-semibold">
+                                  {formatCurrency(item.product.price, locale)}
+                                </p>
+                              )}
+                            </div>
                           </td>
                           <td className="px-4 py-4">
-                            <div className="flex items-center gap-2">
-                              <button
+                            <div className="flex items-center">
+                              <SkiButton
+                                isIconOnly
+                                icon={<Minus className="h-4 w-4" />}
+                                size={`icon`}
+                                variant={`primary`}
                                 onClick={() => handleQuantityChange(item.id, "decrease")}
-                                disabled={isUpdating}
-                                className="flex h-8 w-8 items-center justify-center rounded border bg-gray-50 hover:bg-gray-100 disabled:opacity-50"
-                              >
-                                <Minus className="h-4 w-4" />
-                              </button>
-                              <span className="w-8 text-center">{item.quantity}</span>
-                              <button
+                                className="items-center justify-center rounded-sm border disabled:opacity-50"
+                                isDisabled={isUpdating}
+                              />
+                              <span className="bg-primary/10 flex h-[34px] w-20 items-center justify-center text-center font-medium">
+                                {item.quantity}
+                              </span>
+                              <SkiButton
+                                isIconOnly
+                                size={`icon`}
+                                variant={`primary`}
                                 onClick={() => handleQuantityChange(item.id, "increase")}
-                                disabled={isUpdating}
-                                className="flex h-8 w-8 items-center justify-center rounded border bg-gray-50 hover:bg-gray-100 disabled:opacity-50"
-                              >
-                                <Plus className="h-4 w-4" />
-                              </button>
+                                className="items-center justify-center rounded-sm border disabled:opacity-50"
+                                icon={<Plus className="h-4 w-4" />}
+                                isDisabled={isUpdating}
+                              />
                             </div>
                           </td>
                           <td className="px-4 py-4 font-medium">
                             {formatCurrency(
                               (item.product.discountPrice || item.product.price || 0) * item.quantity,
-                              locale as Locale,
+                              locale,
                             )}
                           </td>
                           <td className="px-4 py-4">
@@ -323,22 +349,22 @@ export const CartView = () => {
 
               {/* Order Summary (Visible on both mobile and desktop) */}
               <div className="lg:col-span-1">
-                <div className="rounded-lg border bg-gray-50 p-6">
-                  <p className="mb-4 text-lg font-semibold sm:text-2xl">Cart Summary</p>
+                <div className="bg-background rounded-lg border p-6">
+                  <p className="mb-4 !text-lg font-semibold sm:text-2xl">Cart Summary</p>
                   <hr className={`mb-5`} />
                   <div className="space-y-4">
                     <div className="flex justify-between">
                       <span>Subtotal</span>
-                      <span>{formatCurrency(subtotal, locale as Locale)}</span>
+                      <span>{formatCurrency(subtotal, locale)}</span>
                     </div>
                     <div className="flex justify-between">
                       <span>Shipping</span>
-                      <span>{shipping === 0 ? "Free" : `${formatCurrency(shipping, locale as Locale)}`}</span>
+                      <span>{shipping === 0 ? "Free" : `${formatCurrency(shipping, locale)}`}</span>
                     </div>
                     <div className="border-t pt-4">
                       <div className="flex justify-between font-semibold">
                         <span>Total</span>
-                        <span>{formatCurrency(total, locale as Locale)}</span>
+                        <span className={`text-mid-success`}>{formatCurrency(total, locale)}</span>
                       </div>
                     </div>
                   </div>

@@ -16,7 +16,7 @@ export const SimilarProducts = ({ category }: SimilarProductsProperties) => {
   return (
     <div className="space-y-6">
       <h2 className="!text-xl font-semibold">Similar Products</h2>
-      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid grid-cols-2 gap-1 sm:grid-cols-3 lg:grid-cols-4">
         {isLoading &&
           Array.from({ length: 12 }).map((_, index: number) => {
             return <ShopCardSkeleton key={index} />;

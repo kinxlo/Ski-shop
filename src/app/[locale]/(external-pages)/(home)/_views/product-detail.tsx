@@ -18,7 +18,6 @@ import { useSession } from "next-auth/react";
 import { useLocale } from "next-intl";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { MdStarBorderPurple500 } from "react-icons/md";
 import { toast } from "sonner";
 
 import { ProductBreadcrumb } from "../_components/product-breadcrumb";
@@ -29,7 +28,7 @@ type Tab = "description" | "reviews";
 
 export const ProductDetail = ({ product, isLoading = false }: any) => {
   const router = useRouter();
-  const locale = useLocale();
+  const locale = useLocale() as Locale;
   const { data: session } = useSession();
   const [selectedImage, setSelectedImage] = useState(0);
   const [quantity, setQuantity] = useState(1);
@@ -159,18 +158,18 @@ export const ProductDetail = ({ product, isLoading = false }: any) => {
   };
 
   return (
-    <section className="pt-[10rem]">
+    <section className="pt-18 lg:pt-[10rem]">
       <ProductBreadcrumb productTitle={product.name} />
-      <Wrapper className="py-8">
-        <div className="space-y-12">
-          <div className="grid gap-8 md:grid-cols-2">
+      <Wrapper className="px-4 py-6 sm:px-6 sm:py-8 lg:px-8 lg:py-10">
+        <div className="space-y-8 sm:space-y-10 lg:space-y-12">
+          <div className="grid gap-4 sm:gap-6 md:grid-cols-2 lg:gap-8">
             {/* Image Gallery */}
             {isLoading ? (
               <ImageGallerySkeleton />
             ) : (
               <div className="space-y-4">
                 <div className="relative aspect-square max-h-[482px] w-full overflow-hidden rounded-lg border p-4 sm:p-[2rem]">
-                  <BlurImage src={gallery[selectedImage]} alt={product.name} fill className="object-cover" />
+                  <BlurImage priority src={gallery[selectedImage]} alt={product.name} fill className="object-cover" />
                   {/* Heart button positioned absolutely over the image */}
                   <button
                     role="button"
@@ -206,7 +205,7 @@ export const ProductDetail = ({ product, isLoading = false }: any) => {
                       }`}
                       onClick={() => setSelectedImage(index)}
                     >
-                      <BlurImage src={image} alt={product.name} fill className="object-cover" />
+                      <BlurImage priority src={image} alt={product.name} fill className="object-cover" />
                     </button>
                   ))}
                 </div>
@@ -217,54 +216,69 @@ export const ProductDetail = ({ product, isLoading = false }: any) => {
             {isLoading ? (
               <ProductInfoSkeleton />
             ) : (
-              <div className="space-y-6">
-                <h4 className="mb-4 text-3xl leading-7 font-semibold">{product.name}</h4>
+              <div className="space-y-4 sm:space-y-5 lg:space-y-6">
+                <h4 className={`!text-foreground pt-4 text-xl !font-bold md:!text-3xl`}>{product.name}</h4>
+                {/* <h4 className="mb-4 text-2xl leading-7 font-semibold sm:text-3xl lg:text-4xl">{product.name}</h4> */}
                 <div className="flex items-center gap-4">
-                  <Ratings size={`!size-8`} rating={product.rating || 0} />
-                  <p className={`text-high-grey-II text-2xl font-medium`}>
+                  <Ratings size={`size-4 lg:!size-8`} rating={product.rating || 0} />
+                  <p className={`font-medium sm:!text-xl lg:!text-2xl`}>
                     ({averageRating?.toFixed(1) || "4.5"}) {reviewsData?.length || 0} Reviews
                   </p>
                 </div>
                 <div className="flex items-center gap-4">
-                  <p className={`text-high-grey-II text-[22px] underline`}>By {product.store.name}</p>
-                  <p className={`text-primary flex items-end font-medium`}>
-                    <MdStarBorderPurple500 className={`text-2xl`} size={24} />
-                    <span className={`text-xl leading-4.5 font-semibold`}>Star Seller</span>
+                  <p className={`text-high-grey-II text-base underline sm:text-lg lg:text-[22px]`}>
+                    By {product.store.name}
                   </p>
+                  {/* <p className={`text-primary flex items-end font-medium`}>
+                    <MdStarBorderPurple500 className={`text-lg sm:text-xl lg:text-2xl`} size={24} />
+                    <span className={`text-base leading-4.5 font-semibold sm:text-lg lg:text-xl`}>Star Seller</span>
+                  </p> */}
                 </div>
-                <div className="mt-8 flex items-baseline gap-4">
-                  <span className="text-primary text-4xl font-semibold">
-                    {formatCurrency(product.price, locale as Locale)}
-                  </span>
-                  {product.discountPrice && (
-                    <span className="text-destructive text-xl line-through">
-                      {formatCurrency(product.discountPrice, locale as Locale)}
-                    </span>
+                <div className="flex items-baseline gap-2">
+                  {product.discountPrice ? (
+                    <>
+                      <p className="!text-primary text-lg !font-semibold md:!text-2xl lg:!text-3xl">
+                        {formatCurrency(product.discountPrice, locale)}
+                      </p>
+                      <p className="!text-destructive !font-medium line-through md:!text-2xl">
+                        {formatCurrency(product.price, locale)}
+                      </p>
+                    </>
+                  ) : (
+                    <p className="!text-primary text-lg !font-semibold md:!text-2xl lg:!text-3xl">
+                      {formatCurrency(product.price, locale)}
+                    </p>
                   )}
                 </div>
                 {/* <div>{product.description}</div> */}
                 <div className="flex flex-col items-start gap-6">
                   <section className="flex w-full flex-row items-center justify-between gap-4">
-                    <div className="flex items-center gap-2">
-                      <button
+                    <div className="flex items-center">
+                      <SkiButton
+                        isIconOnly
+                        icon={<Minus className="h-4 w-4" />}
+                        size={`icon`}
+                        variant={`primary`}
                         onClick={() => handleQuantityChange("decrease")}
-                        className="flex h-8 w-8 items-center justify-center rounded-full border bg-gray-50 hover:bg-gray-100 disabled:opacity-50"
-                      >
-                        <Minus className="h-4 w-4" />
-                      </button>
-                      <span className="w-8 text-center font-medium">{quantity}</span>
-                      <button
+                        className="items-center justify-center rounded-sm border disabled:opacity-50"
+                      />
+                      <span className="bg-primary/10 flex h-[34px] w-20 items-center justify-center text-center font-medium">
+                        {quantity}
+                      </span>
+                      <SkiButton
+                        isIconOnly
+                        size={`icon`}
+                        variant={`primary`}
                         onClick={() => handleQuantityChange("increase")}
-                        className="flex h-8 w-8 items-center justify-center rounded-full border bg-gray-50 hover:bg-gray-100 disabled:opacity-50"
-                      >
-                        <Plus className="h-4 w-4" />
-                      </button>
+                        className="items-center justify-center rounded-sm border disabled:opacity-50"
+                        icon={<Plus className="h-4 w-4" />}
+                      />
                     </div>
                   </section>
-                  <div className="flex w-full gap-4">
+                  <div className="mt-10 flex w-full gap-4">
                     <SkiButton
                       variant="primary"
-                      size="xl"
+                      size="lg"
                       className="flex flex-1 items-center gap-2 rounded-full px-8 py-8"
                       isDisabled={product.stockCount === 0 || isPending}
                       onClick={handleAddToCart}
@@ -279,7 +293,7 @@ export const ProductDetail = ({ product, isLoading = false }: any) => {
           </div>
 
           {/* Description & Reviews Tabs */}
-          <div className="space-y-6">
+          <div className="space-y-4 sm:space-y-5 lg:space-y-6">
             <div className="border-b">
               <div className="flex gap-8">
                 <button
@@ -312,7 +326,7 @@ export const ProductDetail = ({ product, isLoading = false }: any) => {
                   </div>
                 ) : (
                   <div className="prose max-w-none">
-                    <p>{product.description}</p>
+                    <p className={`text-sm lg:text-base`}>{product.description}</p>
                   </div>
                 )
               ) : (
@@ -333,7 +347,7 @@ export const ProductDetail = ({ product, isLoading = false }: any) => {
                         <>
                           <div className="flex flex-col gap-2">
                             <div className="flex items-center">
-                              <Ratings size={`size-10`} rating={averageRating} readonly />
+                              <Ratings size={`!size-4 lg:!size-5`} rating={averageRating} readonly />
                             </div>
                             <span className="text-sm text-gray-600">Based on {reviewsData?.length} reviews</span>
                           </div>
@@ -343,13 +357,13 @@ export const ProductDetail = ({ product, isLoading = false }: any) => {
                                 <div className="flex items-start justify-between">
                                   <div className="flex-1">
                                     <div className="flex items-center gap-2">
-                                      <Ratings size={`size-10`} rating={review.rating} readonly />
+                                      <Ratings size={`!size-3 lg:!size-4`} rating={review.rating} readonly />
                                     </div>
-                                    <h6 className="mt-2 !text-lg font-medium capitalize">
+                                    <h6 className="mt-2 !text-base !font-semibold capitalize sm:!text-lg">
                                       {review.reviewer.firstName} {review.reviewer.lastName}
                                     </h6>
-                                    <p className="text-gray-600">{review.comment}</p>
-                                    <p className="text-low-grey-II mt-2 text-sm">
+                                    <p className="text-sm text-gray-600 sm:text-base">{review.comment}</p>
+                                    <p className="!text-primary mt-2 !text-xs md:text-sm">
                                       {formatDate(review.createdAt, locale as Locale)}
                                     </p>
                                   </div>
@@ -501,9 +515,9 @@ export const ProductDetailSkeleton = () => {
   return (
     <section className="pt-[10rem]">
       <ProductBreadcrumb productTitle={`...loading product details`} />
-      <Wrapper className="py-8">
-        <div className="space-y-12">
-          <div className="grid gap-8 md:grid-cols-2">
+      <Wrapper className="py-6 sm:py-8 lg:py-10">
+        <div className="space-y-8 sm:space-y-10 lg:space-y-12">
+          <div className="grid gap-4 sm:gap-6 md:grid-cols-2 lg:gap-8">
             <ImageGallerySkeleton />
             <ProductInfoSkeleton />
           </div>
