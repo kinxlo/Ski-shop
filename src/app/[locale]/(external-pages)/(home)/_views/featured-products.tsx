@@ -58,7 +58,7 @@ const ProductCard = memo(({ product, isLarge = false, className = "" }: ProductC
         className="absolute inset-0 z-[1] h-full w-full bg-black transition-all duration-300 group-hover:scale-105 group-hover:blur-sm"
         aria-hidden="true"
       />
-      <div className="backdrop-blur-0 relative z-[2] flex h-full transform flex-col justify-between gap-6 bg-black/40 p-6 text-white transition-all duration-300 group-hover:backdrop-blur-[2px]">
+      <div className="backdrop-blur-0 relative z-[2] flex h-full transform flex-col justify-between gap-6 bg-black/60 p-6 text-white transition-all duration-300 group-hover:backdrop-blur-[2px]">
         <Badge variant="default" className="bg-accent w-fit rounded-md px-3 py-1.5 !text-[8px] md:!text-xs">
           Sponsored Ad
         </Badge>
@@ -74,15 +74,15 @@ const ProductCard = memo(({ product, isLarge = false, className = "" }: ProductC
           <div className="flex items-baseline gap-2">
             {product?.discountPrice ? (
               <>
-                <p className="!text-accent !text-xs !font-semibold lg:!text-xl">
+                <p className="!text-accent !text-sm !font-semibold lg:!text-lg">
                   {formatCurrency(product?.discountPrice, locale)}
                 </p>
-                <p className="!text-mid-danger !text-sm !font-medium line-through lg:!text-sm">
+                <p className="!text-mid-danger !text-xs !font-medium line-through lg:!text-sm">
                   {formatCurrency(product?.price, locale)}
                 </p>
               </>
             ) : (
-              <p className="!text-accent !text-xs !font-semibold lg:!text-xl">
+              <p className="!text-accent !text-sm !font-semibold lg:!text-lg">
                 {formatCurrency(product?.price || 0, locale)}
               </p>
             )}
