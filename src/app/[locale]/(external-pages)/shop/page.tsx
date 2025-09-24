@@ -10,7 +10,7 @@ import { Input } from "@/components/ui/input";
 import { useAppService } from "@/services/externals/app/use-app-service";
 import { useTranslations } from "next-intl";
 import { useQueryState } from "nuqs";
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { PiFunnel } from "react-icons/pi";
 import { useDebounce } from "use-debounce";
 
@@ -23,6 +23,7 @@ import { Hero } from "./_views/hero";
 const Page = () => {
   const { useGetAllProducts, useGetAllProductCategory, useGetTopVendors } = useAppService();
   const t = useTranslations("shopPage");
+  const [drawerOpen, setDrawerOpen] = useState(false);
 
   // Use nuqs for URL parameter management
   const [page, setPage] = useQueryState("page", { defaultValue: "1" });
@@ -92,6 +93,7 @@ const Page = () => {
   const handleCategoryChange = async (value: string) => {
     setCategory(value === t("filters.allCategories") ? null : value);
     setPage("1"); // Reset to first page when changing category
+    setDrawerOpen(false); // Close drawer on mobile
   };
 
   // Handle search input change
@@ -105,6 +107,7 @@ const Page = () => {
   const handleVendorChange = (value: string) => {
     setStoreId(value === t("filters.allVendor") ? null : value);
     setPage("1"); // Reset to first page when changing vendor
+    setDrawerOpen(false); // Close drawer on mobile
   };
 
   // Handle sort change
@@ -120,31 +123,31 @@ const Page = () => {
         setRatings(null);
         break;
       }
-      case "1 star": {
-        setRatings("1");
-        setSortBy(null);
-        break;
-      }
-      case "2 stars": {
-        setRatings("2");
-        setSortBy(null);
-        break;
-      }
-      case "3 stars": {
-        setRatings("3");
-        setSortBy(null);
-        break;
-      }
-      case "4 stars": {
-        setRatings("4");
-        setSortBy(null);
-        break;
-      }
-      case "5 stars": {
-        setRatings("5");
-        setSortBy(null);
-        break;
-      }
+      // case "1 star": {
+      //   setRatings("1");
+      //   setSortBy(null);
+      //   break;
+      // }
+      // case "2 stars": {
+      //   setRatings("2");
+      //   setSortBy(null);
+      //   break;
+      // }
+      // case "3 stars": {
+      //   setRatings("3");
+      //   setSortBy(null);
+      //   break;
+      // }
+      // case "4 stars": {
+      //   setRatings("4");
+      //   setSortBy(null);
+      //   break;
+      // }
+      // case "5 stars": {
+      //   setRatings("5");
+      //   setSortBy(null);
+      //   break;
+      // }
       // No default
     }
     setPage("1"); // Reset to first page when changing sort
@@ -193,10 +196,10 @@ const Page = () => {
   return (
     <>
       <Hero />
-      <Wrapper className="my-8 sm:my-14">
+      <Wrapper className="my-6 sm:my-12 lg:my-16">
         {/* Mobile Filters Toggle */}
-        <div className="mb-6 flex items-center justify-between lg:hidden">
-          <Drawer>
+        <div className="mb-4 flex items-center justify-between sm:mb-6 lg:hidden">
+          <Drawer open={drawerOpen} onOpenChange={setDrawerOpen}>
             <DrawerTrigger asChild>
               <SkiButton
                 variant="outline"
@@ -208,7 +211,7 @@ const Page = () => {
                 {t("filters.title") || "Filters"}
               </SkiButton>
             </DrawerTrigger>
-            <DrawerContent className="h-[85vh]">
+            <DrawerContent className="h-[80vh] sm:h-[85vh]">
               <DrawerHeader>
                 <DrawerTitle>{t("filters.title") || "Filters"}</DrawerTitle>
               </DrawerHeader>
@@ -243,17 +246,17 @@ const Page = () => {
               </div>
             </DrawerContent>
           </Drawer>
-          <div className="text-sm text-gray-600">
+          <div className="text-sm text-gray-600 lg:text-base">
             {totalProducts} {t("activeFilters.resultsFound") || "results"}
           </div>
         </div>
 
-        <div className="grid grid-cols-1 gap-6 lg:grid-cols-12">
+        <div className="grid grid-cols-1 gap-4 sm:gap-6 lg:grid-cols-12 lg:gap-8">
           {/* Filters sidebar - Hidden on mobile, shown on desktop */}
-          <section className="hidden space-y-10 lg:sticky lg:top-8 lg:col-span-2 lg:block lg:self-start">
+          <section className="hidden space-y-6 lg:sticky lg:top-8 lg:col-span-2 lg:block lg:space-y-10 lg:self-start">
             {isCategoriesLoading ? (
               <div className="space-y-2">
-                <h6 className="font-black uppercase">{t("filters.categories")}</h6>
+                <h6 className="!font-bold uppercase">{t("filters.categories")}</h6>
                 <div className="space-y-4">
                   {Array.from({ length: 7 }).map((_, index) => (
                     <div key={index} className="flex items-center space-x-2">
@@ -273,7 +276,7 @@ const Page = () => {
             )}
             {isTopVendorsLoading ? (
               <div className="space-y-2">
-                <h6 className="font-semibold uppercase">{t("filters.vendor")}</h6>
+                <h6 className="!font-bold uppercase">{t("filters.vendor")}</h6>
                 <div className="space-y-4">
                   {Array.from({ length: 7 }).map((_, index) => (
                     <div key={index} className="flex items-center space-x-2">
@@ -302,7 +305,7 @@ const Page = () => {
           {/* Main content */}
           <section className="lg:col-span-10">
             {/* Search and sort header */}
-            <article className="mb-6 flex gap-4 sm:flex-row sm:items-center sm:justify-between">
+            <article className="mb-4 flex flex-col gap-4 sm:mb-6 sm:flex-row sm:items-center sm:justify-between lg:mb-8">
               <div className="w-full sm:w-[20rem]">
                 <Input
                   name="search"
@@ -325,10 +328,10 @@ const Page = () => {
             </article>
 
             {/* Active filters info */}
-            <article className="bg-high-grey-I my-4 flex flex-col gap-3 rounded-md p-4 sm:flex-row sm:items-center sm:justify-between dark:bg-[#111111]">
+            <article className="bg-high-grey-I my-4 flex flex-col gap-3 rounded-md p-4 sm:flex-row sm:items-center sm:justify-between md:my-6 lg:my-8 dark:bg-[#111111]">
               <div>
-                <span className="text-mid-grey-II text-sm">{t("activeFilters.title")} </span>
-                <span className="space-x-4 text-sm">
+                <span className="text-mid-grey-II text-sm lg:text-base">{t("activeFilters.title")} </span>
+                <span className="space-x-4 text-sm lg:text-base">
                   {category || t("filters.allCategories")} /{" "}
                   {(() => {
                     if (!storeId || storeId === t("filters.allVendor")) {
@@ -341,16 +344,16 @@ const Page = () => {
                 </span>
               </div>
               <div>
-                <p className="text-mid-grey-II !m-0 text-sm">
-                  <span className="text-high-grey-II text-sm font-semibold">{totalProducts}</span>{" "}
+                <p className="text-mid-grey-II !m-0 text-sm lg:text-base">
+                  <span className="text-high-grey-II text-sm font-semibold lg:text-base">{totalProducts}</span>{" "}
                   {t("activeFilters.resultsFound")}
                 </p>
               </div>
             </article>
 
             {/* Products grid */}
-            <section className="mb-8">
-              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+            <section className="mb-6 sm:mb-8 lg:mb-12">
+              <div className="grid grid-cols-2 gap-1 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4">
                 {isLoadingProducts && Array.from({ length: 12 }).map((_, index) => <ShopCardSkeleton key={index} />)}
 
                 {!isLoadingProducts && !products?.length && (
@@ -391,7 +394,7 @@ const Page = () => {
 
               {/* Pagination */}
               {!isLoadingProducts && totalPages > 1 && (
-                <div className="mt-10">
+                <div className="mt-6 sm:mt-10 lg:mt-12">
                   <Paginations
                     currentPage={page ? Number.parseInt(page) : 1}
                     totalPages={totalPages}

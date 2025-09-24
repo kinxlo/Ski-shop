@@ -38,7 +38,7 @@ export const BlackFridayReusableBanner: FC<BannerProperties> = ({
         <div className={`w-full max-w-[457px] flex-1`}>
           <p className={`!text-mid-grey-I text-xs italic lg:!text-lg`}>{tagTitle}</p>
           {heading}
-          <p className={`!text-mid-grey-I my-[22px] text-sm font-[300] lg:!text-lg`}>{description}</p> {action}
+          <p className={`!text-mid-grey-I my-[22px] lg:!text-lg`}>{description}</p> {action}
         </div>
       )}
 

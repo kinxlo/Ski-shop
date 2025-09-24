@@ -45,7 +45,7 @@ export const ReusableBanner: FC<BannerProperties> = ({
             {tagTitle}
           </Badge>
           <h1 className="mt-4 !text-2xl !text-black md:!text-3xl lg:!text-4xl">{title}</h1>
-          <p className={`!text-high-grey-II my-[22px] !text-lg font-medium md:!text-xl lg:!text-xl`}>{description}</p>
+          <p className={`my-[22px] font-medium md:!text-xl lg:!text-xl`}>{description}</p>
           {action}
         </div>
       )}

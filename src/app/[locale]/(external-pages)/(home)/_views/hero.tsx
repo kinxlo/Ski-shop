@@ -35,7 +35,7 @@ const HeroSlide = ({ slide, position, t }: { slide: Slide; position: string; t: 
         src={slide.image}
         alt="hero-image"
       />
-      <div className="absolute inset-0 bg-gradient-to-r from-black/60 to-transparent" />
+      <div className="absolute inset-0 bg-gradient-to-r from-black/90 to-transparent" />
       <Wrapper>
         <div
           className={cn(
@@ -51,7 +51,7 @@ const HeroSlide = ({ slide, position, t }: { slide: Slide; position: string; t: 
             <h1 className="!text-[32px] leading-[44px] font-bold !text-white lg:!text-[48px] lg:leading-[78px]">
               {slide.title}
             </h1>
-            <p className="!text-mid-grey-I mb-8 !text-sm lg:!text-base">{slide.subtitle}</p>
+            <p className="!text-mid-grey-I mb-8 lg:!text-base">{slide.subtitle}</p>
           </div>
           <div className="mx-auto mt-8 flex flex-col items-center gap-4 lg:mx-0 lg:flex-row">
             <SkiButton

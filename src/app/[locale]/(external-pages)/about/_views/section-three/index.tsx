@@ -12,27 +12,30 @@ export const SectionThree = () => {
     {
       title: t("services.vendors.title"),
       description: t("services.vendors.description"),
-      image: "/images/about/vendor.svg",
+      image:
+        "https://res.cloudinary.com/kingsleysolomon/image/upload/f_auto,q_auto/v1758742974/skicom/jhg2r7dedvmhmdhs6dfl.svg",
     },
     {
       title: t("services.buyers.title"),
       description: t("services.buyers.description"),
-      image: "/images/about/buyer.svg",
+      image:
+        "https://res.cloudinary.com/kingsleysolomon/image/upload/f_auto,q_auto/v1758742972/skicom/kpwfclns0c9wroe6efy8.svg",
     },
     {
       title: t("services.deliveryPartners.title"),
       description: t("services.deliveryPartners.description"),
-      image: "/images/about/partner.svg",
+      image:
+        "https://res.cloudinary.com/kingsleysolomon/image/upload/f_auto,q_auto/v1758742972/skicom/dxzetakqsdxpyftskqzw.svg",
     },
   ];
 
   return (
-    <section className={`my-30`}>
-      <div className={`space-y-4 pt-6 text-center`}>
-        <h2 className={``}>{t("title")}</h2>
-        <p className={`text-mid-grey-II mx-auto max-w-2xl text-lg`}>{t("description")}</p>
+    <section className={`my-16 sm:my-20 lg:my-30`}>
+      <div className={`space-y-4 pt-4 text-center sm:pt-6`}>
+        <h2 className={`!text-2xl md:!text-4xl`}>{t("title")}</h2>
+        <p className={`mx-auto max-w-2xl sm:!text-lg`}>{t("description")}</p>
       </div>
-      <div className="mt-8 flex flex-col items-center justify-between gap-4 pb-10 lg:flex-row">
+      <div className="mt-6 flex flex-col items-center justify-between gap-4 pb-8 sm:mt-8 sm:pb-10 lg:flex-row lg:pb-10">
         {OUR_SERVICE.map((service) => (
           <ServiceCard strength={service} key={service.title} />
         ))}

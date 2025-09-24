@@ -48,7 +48,8 @@ export const ShopCard = ({
       className={cn(
         "relative block rounded-lg border bg-no-repeat p-2 md:p-4", // Added 'relative' for positioning
         isStarSeller &&
-          "bg-[url(https://res.cloudinary.com/kingsleysolomon/image/upload/h_100,f_auto,q_auto/v1758641972/skicom/f7ajczgvhobbzpwehd8g.png)]",
+          // "bg-[url(https://res.cloudinary.com/kingsleysolomon/image/upload/h_100,f_auto,q_auto/v1758641972/skicom/f7ajczgvhobbzpwehd8g.png)]",
+          "bg-[url(/images/star-seller.svg)]",
         className,
       )}
     >

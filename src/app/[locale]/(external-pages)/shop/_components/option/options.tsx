@@ -17,18 +17,18 @@ export const OptionsSelector = ({ categories, value, onChange, title }: Selector
   // const t = useTranslations("shopPage.filters");
 
   return (
-    <div className="space-y-4">
-      <h6 className="font-bold uppercase">{title}</h6>
-      <RadioGroup value={value} onValueChange={onChange} className="flex flex-col gap-3">
+    <div className="space-y-4 lg:space-y-6">
+      <h6 className="text-sm !font-bold uppercase lg:text-base">{title}</h6>
+      <RadioGroup value={value} onValueChange={onChange} className="flex flex-col gap-3 lg:gap-4">
         {categories.map((cat) => {
           const isObject = typeof cat === "object";
           const catValue = isObject ? cat.value : cat;
           const catLabel = isObject ? cat.label : formatCategory(cat);
 
           return (
-            <div key={catValue} className="flex items-center space-x-2">
+            <div key={catValue} className="flex items-center space-x-2 lg:space-x-3">
               <RadioGroupItem value={catValue} id={catValue} />
-              <Label htmlFor={catValue} className="text-mid-grey-II text-xs">
+              <Label htmlFor={catValue} className="text-mid-grey-II text-xs lg:text-sm">
                 {catLabel}
               </Label>
             </div>

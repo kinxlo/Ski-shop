@@ -148,7 +148,7 @@ export const Categories = () => {
   return (
     <Wrapper className="min-h-[480px] pt-16">
       <div className="mb-8 flex items-baseline justify-center">
-        <h2 className={cn("!text-lg lg:!text-4xl lg:!leading-[41.62px] lg:!tracking-[1px]")}>{`Categories`}</h2>
+        <h2 className={cn("!text-xl lg:!text-4xl lg:!leading-[41.62px] lg:!tracking-[1px]")}>{`Categories`}</h2>
       </div>
 
       {renderCategoriesGrid()}

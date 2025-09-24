@@ -21,8 +21,8 @@ export const MobileDownloadBanner = () => {
         className={`min-h-[493px] flex-col overflow-hidden rounded-[25px] bg-black text-white`}
       >
         <div className={`w-full max-w-[457px] flex-1`}>
-          <h3 className="mt-4 text-xl !text-white md:!text-2xl lg:!text-3xl">{t("title")}</h3>
-          <p className={`my-[22px] font-[300] lg:!text-lg`}>{t("description")}</p>
+          <h3 className="mt-4 text-xl !text-white md:text-2xl lg:text-3xl">{t("title")}</h3>
+          <p className={`my-[22px] font-[300] md:text-base lg:text-lg`}>{t("description")}</p>
           <div className={`mt-8 flex flex-col gap-4 lg:flex-row`}>
             <SkiButton className={`h-[54px] w-full rounded-md px-4`}>
               <section className={`flex items-center gap-2`}>
