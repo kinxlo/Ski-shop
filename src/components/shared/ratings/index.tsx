@@ -8,6 +8,7 @@ interface RatingsProperties {
   readonly?: boolean;
   onChange?: (rating: number) => void;
   className?: string;
+  starColor?: string;
 }
 
 export const Ratings: React.FC<RatingsProperties> = ({ rating, size, readonly = true, onChange, className = "" }) => {

@@ -6,7 +6,7 @@ import SkiButton from "@/components/shared/button";
 import { UniversalSwiper } from "@/components/shared/carousel";
 import { EmptyState } from "@/components/shared/empty-state";
 import { Skeleton } from "@/components/ui/skeleton";
-import { formatCategory } from "@/lib/utils";
+import { cn, formatCategory } from "@/lib/utils";
 import { useAppService } from "@/services/externals/app/use-app-service";
 import Link from "next/link";
 
@@ -148,7 +148,7 @@ export const Categories = () => {
   return (
     <Wrapper className="min-h-[480px] pt-16">
       <div className="mb-8 flex items-baseline justify-center">
-        <h2 className="text-center text-3xl">{`Categories`}</h2>
+        <h2 className={cn("!text-lg lg:!text-4xl lg:!leading-[41.62px] lg:!tracking-[1px]")}>{`Categories`}</h2>
       </div>
 
       {renderCategoriesGrid()}

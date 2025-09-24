@@ -24,8 +24,8 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
           className="h-full w-full object-cover"
           src={
             switchSides
-              ? "https://res.cloudinary.com/kingsleysolomon/image/upload/v1758641977/skicom/qhyhxofrhhj0rnvhm75j.png"
-              : "https://res.cloudinary.com/kingsleysolomon/image/upload/v1758641981/skicom/eeh7fkzdeb9zubwirbts.png"
+              ? "https://res.cloudinary.com/kingsleysolomon/image/upload/f_auto,q_auto/v1758641977/skicom/qhyhxofrhhj0rnvhm75j.png"
+              : "https://res.cloudinary.com/kingsleysolomon/image/upload/f_auto,q_auto/v1758641981/skicom/eeh7fkzdeb9zubwirbts.png"
           }
           alt="model"
           priority

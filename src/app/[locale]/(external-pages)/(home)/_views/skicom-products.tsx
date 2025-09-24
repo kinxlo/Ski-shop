@@ -56,6 +56,7 @@ export const SkicomProducts = ({
           discount={product.discountPrice || 0}
           image={product.images[0]}
           name={product.store.name || "Skicom"}
+          isStarSeller
         />
       ))}
     </div>

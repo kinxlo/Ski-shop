@@ -47,7 +47,8 @@ export const ShopCard = ({
       href={`/shop/products/${id}`}
       className={cn(
         "relative block rounded-lg border bg-no-repeat p-2 md:p-4", // Added 'relative' for positioning
-        isStarSeller && "bg-[url('/images/star-seller.svg')]",
+        isStarSeller &&
+          "bg-[url(https://res.cloudinary.com/kingsleysolomon/image/upload/h_100,f_auto,q_auto/v1758641972/skicom/f7ajczgvhobbzpwehd8g.png)]",
         className,
       )}
     >
@@ -84,6 +85,7 @@ export const ShopCard = ({
 
       <div className="relative z-[-1] mb-3 aspect-square overflow-hidden rounded-lg md:mb-4">
         <Image
+          priority
           src={image}
           alt={title}
           width={400}
@@ -102,7 +104,7 @@ export const ShopCard = ({
               <p className="!text-primary !text-sm !font-semibold md:!text-base lg:!text-lg">
                 {formatCurrency(discount, locale)}
               </p>
-              <p className="!text-destructive !text-[10px] !font-medium line-through md:!text-base lg:!text-lg">
+              <p className="!text-destructive !text-[10px] !font-medium line-through md:!text-sm">
                 {formatCurrency(price, locale)}
               </p>
             </>

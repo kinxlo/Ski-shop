@@ -37,8 +37,8 @@ export const Testimonial = () => {
       <section className="my-9 xl:my-14">
         <section className="items-center gap-3 md:flex">
           <div className="flex-1">
-            <h6 className="text-primary">{t("tagTitle")}</h6>
-            <h2 className="text-high-grey-II mt-2 font-medium">{t("title")}</h2>
+            <h6 className="!text-primary !text-sm md:text-xl">{t("tagTitle")}</h6>
+            <h2 className="my-2 text-base font-medium md:!text-4xl">{t("title")}</h2>
           </div>
           <div className="flex justify-end gap-[15px] xl:gap-[35px]">
             {testimonialImages.map((t, index) =>
@@ -46,6 +46,7 @@ export const Testimonial = () => {
                 <section key={t.id}>
                   <div className="">
                     <BlurImage
+                      priority
                       width={100}
                       height={100}
                       src={t.image}
@@ -69,7 +70,10 @@ export const Testimonial = () => {
 
           <div className="gap-10 xl:flex">
             <BlurImage
-              src={"/images/testimonials/msg.svg"}
+              priority
+              src={
+                "https://res.cloudinary.com/kingsleysolomon/image/upload/f_auto,q_auto/v1758641970/skicom/l1m07sgrrnuocb7wbpe7.svg"
+              }
               className="hidden h-[200px] w-[270px] object-cover xl:block"
               alt={"msg"}
               width={280}
@@ -84,8 +88,8 @@ export const Testimonial = () => {
               <div className="relative">
                 <div className="flex items-start justify-between">
                   <div className="">
-                    <h3 className="!mb-0">{selectedTestimonial.name}</h3>
-                    <p className={`text-primary font-medium`}>{selectedTestimonial.position}</p>
+                    <h5 className="!mb-0 text-base md:!text-2xl">{selectedTestimonial.name}</h5>
+                    <p className={`!text-primary text-xs font-medium md:text-xl`}>{selectedTestimonial.position}</p>
                   </div>
                   <Ratings rating={selectedTestimonial?.rating || 0} />
                 </div>

@@ -37,8 +37,9 @@ const Page = () => {
       <FeaturedProducts />
       <Wrapper className={`my-[78px] mt-[10rem]`}>
         <ReusableBanner
+          textClassName={`max-w-[900px] lg:pr-[40%]`}
           action={
-            <SkiButton className="px-14" size="xl" variant="primary">
+            <SkiButton href={`/signup/vendor`} className="px-14" size="xl" variant="primary">
               {"Get Started"}
             </SkiButton>
           }
@@ -58,20 +59,23 @@ const Page = () => {
       <Wrapper className={`my-[78px]`}>
         <ReusableBanner
           action={
-            <SkiButton className="px-14" size="xl" variant="primary">
+            <SkiButton href={`/signup/vendor`} className="px-14" size="xl" variant="primary">
               {t("beAVendor.action")}
             </SkiButton>
           }
           description={t("beAVendor.description")}
-          image="https://res.cloudinary.com/kingsleysolomon/image/upload/v1758641969/skicom/rzixupei0jmxjjfkv6mg.png"
+          image="https://res.cloudinary.com/kingsleysolomon/image/upload/f_auto,q_auto/v1758641969/skicom/rzixupei0jmxjjfkv6mg.png"
           tagTitle={t("beAVendor.tagTitle")}
           title={t("beAVendor.title")}
+          className={`bg-[url(https://res.cloudinary.com/kingsleysolomon/image/upload/f_auto,q_auto/v1758712177/skicom/kisfpnyvjvgoz198tu3z.svg)] bg-right bg-no-repeat dark:bg-[#E2F4FF]`}
+          textClassName={`max-w-[1000px] lg:pr-[40%]`}
         />
       </Wrapper>
       <Wrapper className={`my-[78px]`}>
         <BlackFridayReusableBanner
           description={t("blackFriday.description")}
           image="/images/black-friday-tag.svg"
+          // image="https://res.cloudinary.com/kingsleysolomon/image/upload/f_auto,q_auto/v1758641969/skicom/jd4cghgscojdft8wizdj.png"
           tagTitle={t("blackFriday.tagTitle")}
           heading={
             <h1 className="mt-4 !text-2xl !text-white md:!text-3xl lg:!w-[500px] lg:!text-5xl">
@@ -86,6 +90,7 @@ const Page = () => {
           showSalesTag
           description={t("blackFriday.comingSoon.description")}
           image="/images/jbl.svg"
+          // image="https://res.cloudinary.com/kingsleysolomon/image/upload/f_auto,q_auto/v1758641976/skicom/yeotmta3qswfm7iq0zes.png"
           className={`lg:py-0`}
         >
           <div className={`w-full max-w-[457px] flex-1`}>
@@ -108,15 +113,16 @@ const Page = () => {
       <Wrapper className={`my-[78px]`}>
         <ReusableBanner
           action={
-            <SkiButton className="px-14" size="xl" variant="primary">
+            <SkiButton href={`/signup/vendor`} className="px-14" size="xl" variant="primary">
               {t("deliveryNetwork.action")}
             </SkiButton>
           }
           description={t("deliveryNetwork.description")}
-          image="https://res.cloudinary.com/kingsleysolomon/image/upload/v1758641975/skicom/qvb0ok9axlax3hjpcg5n.png"
+          image="https://res.cloudinary.com/kingsleysolomon/image/upload/f_auto,q_auto/v1758641975/skicom/qvb0ok9axlax3hjpcg5n.png"
           tagTitle={t("deliveryNetwork.tagTitle")}
           title={t("deliveryNetwork.title")}
           className={`bg-accent/10`}
+          textClassName={`max-w-[1200px] lg:pr-[40%]`}
         />
       </Wrapper>
       <Wrapper className={`my-[78px]`}>

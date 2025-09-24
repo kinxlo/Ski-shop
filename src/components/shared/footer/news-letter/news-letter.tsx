@@ -13,21 +13,16 @@ export const NewsLetter = () => {
       </section>
 
       <section className="mb-4">
-        <p className="mb-4 text-center text-[28px] font-medium text-white lg:text-[44px]">
-          Subscribe to our newsletter
-        </p>
+        <p className="mb-4 text-center text-xl font-medium !text-white lg:!text-4xl">Subscribe to our newsletter</p>
         <div className="mt-3 lg:mt-7">
-          <form action="" className="items-center justify-center gap-3 px-4 xl:flex">
+          <form action="" className="items-center justify-center gap-3 !p-0 px-4 xl:flex">
             <Input
               type="email"
               placeholder="Email Address"
-              className="h-[48px] max-w-full rounded-full outline-none xl:w-[456px]"
+              className="h-[48px] w-full max-w-full rounded-full text-xs outline-none placeholder:text-xs md:text-base md:placeholder:text-base xl:w-[456px]"
             />
-
             <div className="text-center">
-              <SkiButton className="bg-accent text-background mt-3 w-[178px] rounded-full xl:mt-0" size="xl">
-                Subscribe
-              </SkiButton>
+              <SkiButton className="bg-accent text-background mt-3 w-[178px] rounded-full xl:mt-0">Subscribe</SkiButton>
             </div>
           </form>
         </div>

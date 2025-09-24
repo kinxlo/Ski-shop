@@ -11,6 +11,7 @@ interface BannerProperties extends HtmlHTMLAttributes<HTMLDivElement> {
   image?: string;
   imageStyle?: string;
   asChild?: boolean;
+  textClassName?: string;
 }
 
 export const ReusableBanner: FC<BannerProperties> = ({
@@ -22,6 +23,7 @@ export const ReusableBanner: FC<BannerProperties> = ({
   asChild = false,
   children,
   className,
+  textClassName,
   imageStyle,
 }) => {
   return (
@@ -37,16 +39,13 @@ export const ReusableBanner: FC<BannerProperties> = ({
       {asChild ? (
         children
       ) : (
-        <div className={`w-full lg:pr-[40%]`}>
+        <div className={cn(textClassName)}>
           {/* Full width on mobile, original padding on desktop */}
           <Badge variant={`default`} className={`bg-accent rounded-md px-[12px] py-[6px]`}>
             {tagTitle}
           </Badge>
-          <h1 className="mt-4 text-2xl md:text-3xl lg:text-4xl">{title}</h1> {/* Responsive text */}
-          <p className={`!text-high-grey-II my-[22px] !text-lg font-[300] md:!text-xl lg:!text-2xl`}>
-            {description}
-          </p>{" "}
-          {/* Responsive text */}
+          <h1 className="mt-4 !text-2xl !text-black md:!text-3xl lg:!text-4xl">{title}</h1>
+          <p className={`!text-high-grey-II my-[22px] !text-lg font-medium md:!text-xl lg:!text-xl`}>{description}</p>
           {action}
         </div>
       )}
@@ -60,7 +59,7 @@ export const ReusableBanner: FC<BannerProperties> = ({
           imageStyle,
         )}
       >
-        <Image src={image || ""} alt="wheel" fill className="object-contain" />
+        <Image priority src={image || ""} alt="wheel" fill className="object-contain" />
       </div>
     </section>
   );

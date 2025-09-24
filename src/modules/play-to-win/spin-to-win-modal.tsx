@@ -3,7 +3,7 @@
 import SkiButton from "@/components/shared/button";
 import { ReusableDialog } from "@/components/shared/dialog/Dialog";
 import { cn } from "@/lib/utils";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Confetti from "react-confetti";
 
 interface SpinToWinModalProperties {
@@ -31,6 +31,30 @@ export const SpinToWinModal = ({ children }: SpinToWinModalProperties) => {
   const [selectedPrize, setSelectedPrize] = useState<(typeof PRIZES)[0] | null>(null);
   const [rotation, setRotation] = useState(0);
   const [showResult, setShowResult] = useState(false);
+
+  // Auto-open modal after 20 seconds, only once per browser (persisted flag)
+  useEffect(() => {
+    const STORAGE_KEY = "spin_to_win_shown";
+    if (typeof window === "undefined") return;
+
+    try {
+      const alreadyShown = window.localStorage.getItem(STORAGE_KEY);
+      if (alreadyShown) return;
+    } catch {
+      // Ignore storage access errors
+    }
+
+    const timer = window.setTimeout(() => {
+      setIsModalOpen(true);
+      try {
+        window.localStorage.setItem(STORAGE_KEY, "1");
+      } catch {
+        // Ignore storage access errors
+      }
+    }, 20 * 1000);
+
+    return () => window.clearTimeout(timer);
+  }, []);
 
   const handleOpenChange = (open: boolean) => {
     setIsModalOpen(open);

@@ -6,10 +6,10 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-import Apple from "~/images/Apple.png";
+// import Apple from "~/images/Apple.png";
 import facebook from "~/images/facebook.png";
 import instagram from "~/images/instagram.png";
-import Playstore from "~/images/Playstore.png";
+// import Playstore from "~/images/Playstore.png";
 import Logo from "~/images/skicom.svg";
 import twitter from "~/images/twitter.png";
 import { NewsLetter } from "./news-letter/news-letter";
@@ -28,7 +28,7 @@ export const Footer = () => {
           </div>
 
           <div className="mt-10 flex items-center justify-center gap-3 xl:hidden">
-            <a href="" className="rounded-lg border p-2 pr-3 md:flex-none">
+            {/* <a href="" className="rounded-lg border p-2 pr-3 md:flex-none">
               <div className="flex items-center gap-2">
                 <Image src={Playstore} alt={"Google Play"} height={30} />
                 <div className="text-white">
@@ -46,12 +46,12 @@ export const Footer = () => {
                   <p className="mt-0 text-sm">{t("appStore")}</p>
                 </div>
               </div>
-            </a>
+            </a> */}
           </div>
 
           <div className="mt-10 items-center justify-between text-white xl:flex">
             <div className="flex flex-col items-center justify-center xl:block">
-              <Image src={Logo} alt={"Skicom Logo"} height={50} />
+              <Image src={Logo} alt={"Skicom Logo"} height={50} className={`rounded-md bg-white p-1`} />
               <div className="mt-5 flex items-center gap-4">
                 <a href="" className="rounded-full border p-2">
                   <Image src={instagram} alt="Instagram" className="h-[25px] w-[25px] rounded-full" />
@@ -125,8 +125,8 @@ export const Footer = () => {
             </div>
           </div>
 
-          <hr className="my-10" />
-          <p className="text-center text-[17px] text-[#71717A] lg:text-2xl">{t("copyright", { year: getYear })}</p>
+          <hr className="bg-background/50 my-10" />
+          <p className="text-center text-sm lg:!text-xl">{t("copyright", { year: getYear })}</p>
         </section>
       </Wrapper>
     </main>

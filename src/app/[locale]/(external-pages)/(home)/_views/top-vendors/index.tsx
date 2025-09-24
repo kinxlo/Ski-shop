@@ -5,6 +5,7 @@ import { BlurImage } from "@/components/core/miscellaneous/blur-image";
 import { UniversalSwiper } from "@/components/shared/carousel";
 import { EmptyState } from "@/components/shared/empty-state";
 import { Ratings } from "@/components/shared/ratings";
+import { cn } from "@/lib/utils";
 import { useAppService } from "@/services/externals/app/use-app-service";
 import { StarFilledIcon } from "@radix-ui/react-icons";
 
@@ -19,8 +20,8 @@ export const TopVendors = () => {
       <>
         <EmptyState
           className={`space-y-0`}
-          title="No trending products at the moment."
-          description="There are no best selling products yet."
+          title="Failed to load products"
+          description="There was an error fetching the products. Please try again later."
           images={[]}
         />
       </>
@@ -30,7 +31,7 @@ export const TopVendors = () => {
   if (!products?.length) {
     return (
       <Wrapper className={`my-[78px] min-h-[308px]`}>
-        <h2 className="">Top Vendors</h2>
+        <h2 className={cn("!text-lg lg:!text-4xl lg:!leading-[41.62px] lg:!tracking-[1px]")}>Top Vendors</h2>
         <EmptyState
           images={[
             {
@@ -40,9 +41,9 @@ export const TopVendors = () => {
               height: 80,
             },
           ]}
-          title="No products found"
+          title="No top vendors found"
           titleClassName={`!text-lg font-bold !text-mid-warning`}
-          description={"There are no products in the database. Please add a product to get started."}
+          description={"There are no top vendors available at the moment. Please check back later."}
           descriptionClassName={`text-mid-grey-II`}
           className="bg-mid-grey-I space-y-0 rounded-lg py-10"
         />
@@ -53,7 +54,7 @@ export const TopVendors = () => {
   return (
     <Wrapper className={`my-[78px] min-h-[308px]`}>
       <section className={`mb-6`}>
-        <h1 className="text-h3 sm:text-h3-sm md:text-h3-md text-high-grey-II">Top Vendors</h1>
+        <h2 className={cn("!text-lg lg:!text-4xl lg:!leading-[41.62px] lg:!tracking-[1px]")}>Top Vendors</h2>
       </section>
       {isLoading ? (
         <TopVendorsSkeleton />
