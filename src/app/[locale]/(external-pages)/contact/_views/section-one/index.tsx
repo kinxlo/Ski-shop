@@ -27,12 +27,12 @@ export const SectionOne = () => {
   return (
     <section className="bg-high-grey-I pt-14 dark:bg-[#111111]">
       <Wrapper>
-        <div className="mx-auto max-w-[1000px] text-center">
-          <h2 className="">{t("title")}</h2>
-          <p className="text-mid-grey-II mx-auto max-w-2xl text-lg">{t("description")}</p>
+        <div className="mx-auto max-w-[1000px] space-y-4 text-center">
+          <h2 className={`!text-2xl md:!text-4xl`}>{t("title")}</h2>
+          <p className={`mx-auto max-w-2xl sm:!text-lg`}>{t("description")}</p>
         </div>
 
-        <section className="bg-background mx-auto mt-[53px] gap-[66px] rounded-[10px] p-4 lg:flex lg:justify-center lg:p-7 lg:px-[42px]">
+        <section className="bg-background gap-[66px]mx-auto mx-auto mt-[53px] space-x-4 rounded-[10px] p-4 lg:flex lg:justify-center lg:p-7 lg:px-[42px]">
           {/* contact form */}
           <div className="bg-mid-grey-III relative hidden h-[600px] w-full flex-col overflow-hidden rounded-tl-xl rounded-bl-xl p-8 text-white lg:flex">
             <h4 className="text-[28px] font-semibold !text-white">{t("contactInfo.title")}</h4>
@@ -96,7 +96,7 @@ export const SectionOne = () => {
             </div>
           </div>
 
-          <div className="">
+          <div className="mx-auto max-w-md py-10 lg:max-w-full lg:py-0">
             {/* form */}
             <form className="w-full space-y-[23px]">
               <Input
@@ -119,7 +119,7 @@ export const SectionOne = () => {
                 className="resize-non1 h-[280px] resize-none bg-[#FFFFFF] placeholder:text-sm lg:w-[500px] lg:bg-transparent dark:bg-[#111111]"
                 placeholder={t("form.message")}
               />
-              <SkiButton variant="primary" className="mt-5 w-full rounded-full">
+              <SkiButton variant="primary" className="mt-3 w-full rounded-full">
                 {t("form.sendMessage")}
               </SkiButton>
             </form>
@@ -127,7 +127,7 @@ export const SectionOne = () => {
           </div>
         </section>
       </Wrapper>
-      <div className="mt-5 px-4 lg:mt-20 lg:px-0">
+      <div className="my-5 px-4 lg:mt-20 lg:px-0">
         <div className="">
           {!GOOGLE_MAPS_API_KEY ? (
             <GoogleMap location={location} apiKey={GOOGLE_MAPS_API_KEY} />

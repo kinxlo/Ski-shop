@@ -66,7 +66,7 @@ export const GoogleMap = ({ location, apiKey }: GoogleMapProperties) => {
           // Create info window
           const infoWindow = new google.maps.InfoWindow({
             content: `
-    
+
   			className="max-w-[200px] p-2 overflow-hidden hide-scrollbar">
                 <h3 style="margin: 0 0 5px 0; font-weight: 600; color: #333;">Ski-Shop</h3>
                 <p style="margin: 0; color: #666; font-size: 14px;">${address}</p>
@@ -95,7 +95,7 @@ export const GoogleMap = ({ location, apiKey }: GoogleMapProperties) => {
 
   if (!location.lat || !location.lng) {
     return (
-      <div className="flex h-full w-full items-center justify-center rounded-lg bg-gray-100">
+      <div className="flex h-full w-full items-center justify-center bg-gray-100">
         <p className="text-gray-500">Invalid location data</p>
       </div>
     );
@@ -104,7 +104,7 @@ export const GoogleMap = ({ location, apiKey }: GoogleMapProperties) => {
   return (
     <div
       ref={mapReference}
-      className="h-[400px] w-full rounded-lg shadow-lg lg:h-[500px]"
+      className="h-[400px] w-full rounded-lg shadow-lg lg:h-[500px] lg:rounded-none"
       style={{ minHeight: "400px" }}
     />
   );

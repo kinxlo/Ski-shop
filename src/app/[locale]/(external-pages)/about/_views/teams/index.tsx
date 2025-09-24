@@ -42,7 +42,7 @@ export const Teams = () => {
                 ? "h-[220px] w-[220px] sm:h-[240px] sm:w-[240px] lg:h-[350px] lg:w-[350px] relative top-15"
                 : "h-[140px] w-[140px] sm:h-[160px] sm:w-[160px] lg:h-[300px] lg:w-[300px] scale-[0.8] relative top-35";
 
-              const ringWidth = isActive ? "ring-[8px]" : "ring-[6px]";
+              const ringWidth = isActive ? "ring-[10px]" : "ring-[10px]";
               const bgColor = isActive ? "bg-primary" : "bg-low-blue";
 
               return (
