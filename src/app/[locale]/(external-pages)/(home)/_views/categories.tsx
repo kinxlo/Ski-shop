@@ -52,7 +52,8 @@ export const Categories = () => {
       const formattedTitle = formatCategory(category);
       return {
         title: formattedTitle,
-        image: "/images/shop/hero.svg",
+        image:
+          "https://res.cloudinary.com/kingsleysolomon/image/upload/f_auto,q_auto/v1758668597/skicom/t2kc2sioj4vt4xgiesnw.svg",
         href: `/shop?category=${encodeURIComponent(category)}`,
       };
     }) || [];
@@ -147,7 +148,7 @@ export const Categories = () => {
   return (
     <Wrapper className="min-h-[480px] pt-16">
       <div className="mb-8 flex items-baseline justify-center">
-        <h2 className="text-high-grey-II text-center text-3xl font-semibold">{`Categories`}</h2>
+        <h2 className="text-center text-3xl">{`Categories`}</h2>
       </div>
 
       {renderCategoriesGrid()}

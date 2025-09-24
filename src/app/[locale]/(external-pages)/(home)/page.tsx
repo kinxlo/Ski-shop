@@ -45,7 +45,7 @@ const Page = () => {
           description={
             "Invite friends and family to shop on Ski-Shop and earn exciting rewards when they sign up and place their first order."
           }
-          image="https://res.cloudinary.com/kingsleysolomon/image/upload/v1758641973/skicom/meog7pfhsglhvjawbc2o.svg"
+          image="https://res.cloudinary.com/kingsleysolomon/image/upload/f_auto,q_auto/v1758641973/skicom/meog7pfhsglhvjawbc2o.svg"
           imageStyle={`!w-[524px] !h-[418px] absolute !bottom-10 !right-10`}
           tagTitle={"Refer & Earn"}
           title={"Turn Your Network to Rewards"}

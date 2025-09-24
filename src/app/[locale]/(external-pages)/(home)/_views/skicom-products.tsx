@@ -44,7 +44,7 @@ export const SkicomProducts = ({
   );
 
   const renderProductCards = () => (
-    <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
+    <div className="grid grid-cols-2 gap-1 sm:grid-cols-3 md:gap-2 lg:grid-cols-4 lg:gap-4">
       {products.map((product: Product) => (
         <ShopCard
           key={product.id.toString()}
@@ -122,7 +122,7 @@ export const SkicomProducts = ({
   return (
     <Wrapper className="min-h-[480px] pt-16">
       <div className={cn(`mb-8 flex items-baseline justify-between`, headerStyle)}>
-        <h2 className={cn("", headerStyle)}>{title}</h2>
+        <h2 className={cn("!text-lg lg:!text-4xl lg:!leading-[41.62px] lg:!tracking-[1px]", headerStyle)}>{title}</h2>
         {hasAction && (
           <LocaleLink
             href={storeId ? `/shop?storeId=${storeId}` : "/shop"}

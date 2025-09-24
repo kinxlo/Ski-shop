@@ -59,11 +59,11 @@ const ProductCard = memo(({ product, isLarge = false, className = "" }: ProductC
         aria-hidden="true"
       />
       <div className="backdrop-blur-0 relative z-[2] flex h-full transform flex-col justify-between gap-6 bg-black/40 p-6 text-white transition-all duration-300 group-hover:backdrop-blur-[2px]">
-        <Badge variant="default" className="bg-accent w-fit rounded-md px-3 py-1.5">
+        <Badge variant="default" className="bg-accent w-fit rounded-md px-3 py-1.5 !text-[8px] md:!text-xs">
           Sponsored Ad
         </Badge>
         <div className="space-y-2">
-          <h3 className="!text-background line-clamp-2 !text-xs !font-semibold lg:!text-2xl">
+          <h3 className="!text-background line-clamp-2 !text-base !font-semibold lg:!text-2xl">
             {product?.name || "Product Name"}
           </h3>
           <p className="!text-mid-grey-I line-clamp-2 max-w-[500px] !text-xs !font-medium lg:!text-sm">
@@ -136,7 +136,7 @@ export const FeaturedProducts = memo(() => {
       {/* Second Featured Product */}
       <ProductCard product={featuredProducts?.data?.items?.[1]} className="md:h-full" />
       {/* Grid of two smaller cards */}
-      <div className="grid grid-cols-2 gap-2 lg:gap-8">
+      <div className="grid gap-2 md:grid-cols-2 lg:gap-8">
         {featuredProducts?.data?.items
           ?.slice(2, 4)
           .map((product: Product, index: number) => <ProductCard key={product.id || index} product={product} />)}

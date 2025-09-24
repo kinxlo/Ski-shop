@@ -46,7 +46,7 @@ export const ShopCard = ({
     <LocaleLink
       href={`/shop/products/${id}`}
       className={cn(
-        "relative block rounded-lg border bg-no-repeat p-2", // Added 'relative' for positioning
+        "relative block rounded-lg border bg-no-repeat p-2 md:p-4", // Added 'relative' for positioning
         isStarSeller && "bg-[url('/images/star-seller.svg')]",
         className,
       )}
@@ -57,7 +57,7 @@ export const ShopCard = ({
           tabIndex={0}
           aria-label={isSaved ? "Remove from favorites" : "Save product"}
           className={cn(
-            "absolute top-4 right-4 z-10 cursor-pointer rounded-full bg-white/80 p-2 backdrop-blur-sm transition-all",
+            "absolute top-4 right-4 z-10 cursor-pointer rounded-full bg-white/80 p-1 backdrop-blur-sm transition-all md:p-2",
             isSaved ? "text-red-500 hover:bg-red-50" : "text-mid-grey-II hover:bg-white hover:text-red-500",
             isPending && "pointer-events-none opacity-60",
           )}
@@ -74,11 +74,15 @@ export const ShopCard = ({
             }
           }}
         >
-          {isSaved ? <PiHeartFill className="h-6 w-6 text-red-500" /> : <PiHeart className="h-6 w-6 text-gray-500" />}
+          {isSaved ? (
+            <PiHeartFill className="text-red-500 lg:h-6 lg:w-6" />
+          ) : (
+            <PiHeart className="text-gray-500 lg:h-6 lg:w-6" />
+          )}
         </button>
       )}
 
-      <div className="relative z-[-1] mb-3 aspect-square overflow-hidden rounded-lg">
+      <div className="relative z-[-1] mb-3 aspect-square overflow-hidden rounded-lg md:mb-4">
         <Image
           src={image}
           alt={title}
@@ -88,20 +92,24 @@ export const ShopCard = ({
         />
       </div>
       <div className="space-y-2">
-        <p className="text-mid-grey-II text-[10px] capitalize lg:text-sm">{category}</p>
-        <p className="!text-foreground line-clamp-2 text-xs !font-semibold lg:text-sm">{title}</p>
+        <p className="!text-[10px] capitalize md:!text-xs lg:!text-sm">{category}</p>
+        <p className="!text-foreground line-clamp-2 !text-xs !font-semibold md:!text-sm lg:!text-base">{title}</p>
         <Ratings rating={rating} />
-        <p className={`text-mid-grey-II text-[10px] underline lg:text-sm`}>By {name}</p>
+        <p className={`!text-[10px] underline md:!text-xs lg:!text-sm`}>By {name}</p>
         <div className="flex items-baseline gap-2">
           {discount ? (
             <>
-              <p className="!text-primary !font-semibold lg:text-[16px]">{formatCurrency(discount, locale)}</p>
-              <p className="!text-destructive !font-medium line-through lg:text-[16px]">
+              <p className="!text-primary !text-sm !font-semibold md:!text-base lg:!text-lg">
+                {formatCurrency(discount, locale)}
+              </p>
+              <p className="!text-destructive !text-[10px] !font-medium line-through md:!text-base lg:!text-lg">
                 {formatCurrency(price, locale)}
               </p>
             </>
           ) : (
-            <p className="!text-primary !font-semibold lg:text-[16px]">{formatCurrency(price, locale)}</p>
+            <p className="!text-primary text-sm !font-semibold md:!text-base lg:!text-lg">
+              {formatCurrency(price, locale)}
+            </p>
           )}
         </div>
       </div>

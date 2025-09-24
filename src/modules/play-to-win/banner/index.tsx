@@ -15,11 +15,11 @@ const PlayToWinBanner = () => {
       className={`my-[78px] flex flex-col-reverse items-center justify-between gap-4 rounded-lg bg-[#FFF9F2] p-8 lg:flex-row lg:px-[62px] lg:py-[64px] dark:bg-[#111111]`}
     >
       <div className={`max-w-[456px]`}>
-        <Badge variant={`default`} className={`bg-accent mb-8 rounded-md px-[12px] py-[6px]`}>
+        <Badge variant={`default`} className={`bg-accent mb-4 rounded-md px-[12px] py-[6px]`}>
           {t("badge")}
         </Badge>
-        <h1 className={`text-foreground !mb-0`}>{t("title")}</h1>
-        <p className={`my-[22px] text-xl`}>{t("description")}</p>
+        <h1 className={`!text-foreground !mb-0 text-2xl lg:!text-5xl`}>{t("title")}</h1>
+        <p className={`my-[22px] !font-medium md:!text-xl`}>{t("description")}</p>
 
         <SpinToWinModal>
           <Button size={`xl`} variant={`default`} className={`bg-black text-white`}>
@@ -28,7 +28,13 @@ const PlayToWinBanner = () => {
         </SpinToWinModal>
       </div>
       <div>
-        <Image src="/images/wheel.png" alt="wheel" height={419} width={479} />
+        <Image
+          priority
+          src="https://res.cloudinary.com/kingsleysolomon/image/upload/f_auto,q_auto/v1758671591/skicom/aucizgph1fg1dj4m2nw4.png"
+          alt="wheel"
+          height={419}
+          width={479}
+        />
       </div>
     </section>
   );
