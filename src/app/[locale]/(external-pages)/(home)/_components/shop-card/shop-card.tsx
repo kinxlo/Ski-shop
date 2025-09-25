@@ -1,5 +1,6 @@
 import { LocaleLink } from "@/components/shared/locale-link";
 import { Ratings } from "@/components/shared/ratings";
+import { Badge } from "@/components/ui/badge";
 import { Locale } from "@/lib/i18n/config";
 import { formatCurrency } from "@/lib/i18n/utils";
 import { cn } from "@/lib/utils";
@@ -39,6 +40,7 @@ export const ShopCard = ({
   // const oldPrice = discount ? price / (1 - discount / 100) : null;
   const { isSaved, isPending, toggleSave } = useSaveProduct(id || "");
   const locale = useLocale() as Locale;
+  const discountPercentage = discount ? Math.round(((price - discount) / price) * 100) : 0;
   // Don't render save button if no ID
   const shouldShowSaveButton = showSaveButton && id;
 
@@ -46,7 +48,7 @@ export const ShopCard = ({
     <LocaleLink
       href={`/shop/products/${id}`}
       className={cn(
-        "relative block rounded-lg border bg-no-repeat p-2 md:p-4", // Added 'relative' for positioning
+        "relative block overflow-hidden rounded-lg border bg-no-repeat p-2 md:p-4", // Added 'relative' for positioning
         isStarSeller &&
           // "bg-[url(https://res.cloudinary.com/kingsleysolomon/image/upload/h_100,f_auto,q_auto/v1758641972/skicom/f7ajczgvhobbzpwehd8g.png)]",
           "bg-[url(/images/star-seller.svg)]",
@@ -87,7 +89,10 @@ export const ShopCard = ({
       <div className="relative z-[-1] mb-3 aspect-square overflow-hidden rounded-lg md:mb-4">
         <Image
           priority
-          src={image}
+          src={
+            image ||
+            `https://res.cloudinary.com/kingsleysolomon/image/upload/f_auto,q_auto/v1624958924/audiophile/assets/category-headphones/desktop/image-xx99-mark-two_lkqy5n.jpg`
+          }
           alt={title}
           width={400}
           height={400}
@@ -97,7 +102,17 @@ export const ShopCard = ({
       <div className="space-y-2">
         <p className="!text-[10px] capitalize md:!text-xs lg:!text-sm">{category}</p>
         <p className="!text-foreground line-clamp-2 !text-xs !font-semibold md:!text-sm lg:!text-base">{title}</p>
-        <Ratings rating={rating} />
+        <div className={`flex items-center justify-between`}>
+          <Ratings size={` md:!size-4`} rating={rating} />
+          {discountPercentage > 0 && (
+            <Badge
+              variant={`destructive`}
+              className="rounded px-1 py-[0.5px] text-[7px] font-medium text-white md:!text-[9px]"
+            >
+              {discountPercentage}% OFF
+            </Badge>
+          )}
+        </div>
         <p className={`!text-[10px] underline md:!text-xs lg:!text-sm`}>By {name}</p>
         <div className="flex items-baseline gap-2">
           {discount ? (

@@ -36,7 +36,7 @@ export const PopularProducts = ({
   const products = data?.data?.items || [];
 
   const renderLoadingSkeletons = () => (
-    <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
+    <div className="xs:grid-cols-2 grid grid-cols-1 gap-1 sm:grid-cols-3 md:gap-2 lg:grid-cols-4 lg:gap-4">
       {Array.from({ length: 4 }).map((_, index) => (
         <ShopCardSkeleton key={index} />
       ))}
@@ -44,7 +44,7 @@ export const PopularProducts = ({
   );
 
   const renderProductCards = () => (
-    <div className="grid grid-cols-2 gap-1 sm:grid-cols-3 md:gap-2 lg:grid-cols-4 lg:gap-4">
+    <div className="xs:grid-cols-2 grid grid-cols-1 gap-1 sm:grid-cols-3 md:gap-2 lg:grid-cols-4 lg:gap-4">
       {products.map((product: Product) => (
         <ShopCard
           key={product.id.toString()}
@@ -136,7 +136,7 @@ export const PopularProducts = ({
 
 export const ShopCardSkeleton = () => (
   <div className="border-border animate-pulse space-y-3 rounded-lg border p-4">
-    <Skeleton className="h-72 rounded-md"></Skeleton>
+    <Skeleton className="h-40 rounded-md"></Skeleton>
     <Skeleton className="h-4 rounded" />
     <Skeleton className="h-4 w-3/4 rounded"></Skeleton>
     <Skeleton className="h-4 w-1/2 rounded"></Skeleton>

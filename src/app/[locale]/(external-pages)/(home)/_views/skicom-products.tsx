@@ -36,7 +36,7 @@ export const SkicomProducts = ({
   const products = data?.data?.items || [];
 
   const renderLoadingSkeletons = () => (
-    <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
+    <div className="xs:grid-cols-2 grid grid-cols-1 gap-4 sm:grid-cols-3 lg:grid-cols-4">
       {Array.from({ length: 4 }).map((_, index) => (
         <ShopCardSkeleton key={index} />
       ))}
@@ -44,7 +44,7 @@ export const SkicomProducts = ({
   );
 
   const renderProductCards = () => (
-    <div className="grid grid-cols-2 gap-1 sm:grid-cols-3 md:gap-2 lg:grid-cols-4 lg:gap-4">
+    <div className="xs:grid-cols-2 grid grid-cols-1 gap-1 sm:grid-cols-3 md:gap-2 lg:grid-cols-4 lg:gap-4">
       {products.map((product: Product) => (
         <ShopCard
           key={product.id.toString()}
