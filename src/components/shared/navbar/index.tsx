@@ -2,7 +2,7 @@
 
 import { Wrapper } from "@/components/core/layout/wrapper";
 import { SearchInput } from "@/components/core/miscellaneous/search-input";
-import { ThemeSwitchers } from "@/components/core/miscellaneous/theme-variant-switcher";
+import { ModernThemeSwitcher } from "@/components/core/miscellaneous/theme-variant-switcher";
 import { UserAvatarProfile } from "@/components/core/miscellaneous/user-avatar-profile";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Drawer, DrawerContent, DrawerTrigger } from "@/components/ui/drawer";
@@ -398,7 +398,7 @@ export const Navbar = forwardRef<HTMLElement, NavbarProperties>(
                     {/* Language Toggle - Bottom placement */}
                     <div className="border-t pt-6">
                       <div className="flex items-center justify-between px-2 py-1.5">
-                        <ThemeSwitchers className={`flex-col`} />
+                        <ModernThemeSwitcher />
                       </div>
                       <div className="space-y-3">
                         <h3 className="!text-primary text-sm font-medium">Language</h3>
@@ -434,6 +434,11 @@ export const Navbar = forwardRef<HTMLElement, NavbarProperties>(
                   </SkiButton>
                 </div>
               )}
+
+              {/* Theme Switcher */}
+              <div className="hidden lg:block">
+                <ModernThemeSwitcher />
+              </div>
 
               {/* Language Toggle */}
               <div className="hidden lg:block">

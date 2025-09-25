@@ -18,8 +18,6 @@ import { useState } from "react";
 import { PiCaretDown, PiHeart } from "react-icons/pi";
 import { toast } from "sonner";
 
-import { ThemeSwitchers } from "./theme-variant-switcher";
-
 interface UserAvatarProfileProperties {
   className?: string;
   showInfo?: boolean;
@@ -107,10 +105,6 @@ export function UserAvatarProfile({ className, showInfo = false }: UserAvatarPro
             </DropdownMenuItem>
           </LocaleLink>
         </ComponentGuard>
-        <DropdownMenuSeparator />
-        <div className="flex items-center justify-between px-2 py-1.5">
-          <ThemeSwitchers className={`flex-col`} />
-        </div>
         <DropdownMenuSeparator />
         <DropdownMenuItem className="text-destructive focus:text-destructive cursor-pointer" onClick={handleLogout}>
           <LogOut className="text-destructive mr-2 h-4 w-4" />

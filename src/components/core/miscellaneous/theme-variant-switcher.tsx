@@ -1,9 +1,11 @@
 "use client";
 
 import SkiButton from "@/components/shared/button";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Separator } from "@/components/ui/separator";
 import type { ThemeMode, ThemeVariant } from "@/lib/theme/variant";
 import { cn } from "@/lib/utils";
-import { Monitor, Moon, Palette, Sun } from "lucide-react";
+import { Check, Monitor, Moon, Palette, Sun } from "lucide-react";
 import { useContext, useEffect, useState } from "react";
 
 import { AppThemeContext } from "./theme-provider";
@@ -111,12 +113,144 @@ export function ThemeModeSwitcher({ className }: { className?: string }) {
   );
 }
 
-// Convenience component for using both together
-export function ThemeSwitchers({ className }: { className?: string }) {
+// Modern theme switcher with popover interface
+export function ModernThemeSwitcher({ className }: { className?: string }) {
+  const context = useContext(AppThemeContext);
+  const [open, setOpen] = useState(false);
+
+  const getModeIcon = (mode: ThemeMode) => {
+    switch (mode) {
+      case "light": {
+        return <Sun className="h-4 w-4" />;
+      }
+      case "dark": {
+        return <Moon className="h-4 w-4" />;
+      }
+      case "system": {
+        return <Monitor className="h-4 w-4" />;
+      }
+    }
+  };
+
+  const currentIcon = getModeIcon(context?.mode ?? "system");
+
   return (
-    <div className={cn("flex w-full items-center gap-2", className)}>
-      <ThemeVariantSwitcher />
-      <ThemeModeSwitcher />
-    </div>
+    <Popover open={open} onOpenChange={setOpen}>
+      <PopoverTrigger asChild>
+        <SkiButton
+          variant="ghost"
+          size="icon"
+          className={cn("hover:bg-accent h-8 w-8 transition-colors", className)}
+          aria-label="Theme settings"
+        >
+          {currentIcon}
+        </SkiButton>
+      </PopoverTrigger>
+      <PopoverContent className="w-64" align="end">
+        <div className="space-y-4">
+          <div>
+            <h4 className="mb-3 text-sm font-medium">Appearance</h4>
+            <div className="space-y-1">
+              <button
+                type="button"
+                onClick={() => {
+                  context?.setMode("system");
+                  setOpen(false);
+                }}
+                className={cn(
+                  "hover:bg-accent flex w-full items-center rounded-md px-2 py-2 text-left text-sm",
+                  context?.mode === "system" && "bg-accent",
+                )}
+              >
+                <Monitor className="mr-2 h-4 w-4" />
+                System
+                {context?.mode === "system" && <Check className="ml-auto h-4 w-4" />}
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  context?.setMode("light");
+                  setOpen(false);
+                }}
+                className={cn(
+                  "hover:bg-accent flex w-full items-center rounded-md px-2 py-2 text-left text-sm",
+                  context?.mode === "light" && "bg-accent",
+                )}
+              >
+                <Sun className="mr-2 h-4 w-4" />
+                Light
+                {context?.mode === "light" && <Check className="ml-auto h-4 w-4" />}
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  context?.setMode("dark");
+                  setOpen(false);
+                }}
+                className={cn(
+                  "hover:bg-accent flex w-full items-center rounded-md px-2 py-2 text-left text-sm",
+                  context?.mode === "dark" && "bg-accent",
+                )}
+              >
+                <Moon className="mr-2 h-4 w-4" />
+                Dark
+                {context?.mode === "dark" && <Check className="ml-auto h-4 w-4" />}
+              </button>
+            </div>
+          </div>
+          <Separator />
+          <div>
+            <h4 className="mb-3 text-sm font-medium">Accent Color</h4>
+            <div className="space-y-1">
+              <button
+                type="button"
+                onClick={() => {
+                  context?.setVariant("default");
+                  setOpen(false);
+                }}
+                className={cn(
+                  "hover:bg-accent flex w-full items-center rounded-md px-2 py-2 text-left text-sm",
+                  context?.variant === "default" && "bg-accent",
+                )}
+              >
+                <Palette className="mr-2 h-4 w-4" />
+                Default
+                {context?.variant === "default" && <Check className="ml-auto h-4 w-4" />}
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  context?.setVariant("red");
+                  setOpen(false);
+                }}
+                className={cn(
+                  "hover:bg-accent flex w-full items-center rounded-md px-2 py-2 text-left text-sm",
+                  context?.variant === "red" && "bg-accent",
+                )}
+              >
+                <div className="mr-2 h-3 w-3 rounded-full bg-[oklch(0.6_0.23_25)]" />
+                Red
+                {context?.variant === "red" && <Check className="ml-auto h-4 w-4" />}
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  context?.setVariant("green");
+                  setOpen(false);
+                }}
+                className={cn(
+                  "hover:bg-accent flex w-full items-center rounded-md px-2 py-2 text-left text-sm",
+                  context?.variant === "green" && "bg-accent",
+                )}
+              >
+                <div className="mr-2 h-3 w-3 rounded-full bg-[oklch(0.62_0.18_155)]" />
+                Green
+                {context?.variant === "green" && <Check className="ml-auto h-4 w-4" />}
+              </button>
+            </div>
+          </div>
+        </div>
+      </PopoverContent>
+    </Popover>
   );
 }
