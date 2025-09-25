@@ -213,9 +213,9 @@ export const SpinToWinModal = ({ children }: SpinToWinModalProperties) => {
                   <BlurImage
                     priority
                     alt={`logo`}
-                    src={`https://res.cloudinary.com/kingsleysolomon/image/upload/f_auto,q_auto/v1758641970/skicom/vd6d83v5f4nmh7jtaqlf.png`}
-                    width={30}
-                    height={30}
+                    src={`/images/skicom-mini.svg`}
+                    width={100}
+                    height={100}
                     className={`h-[30px] w-[30px]`}
                   />
                   {/* <div className="absolute inset-2 rounded-full bg-gray-200" /> */}
