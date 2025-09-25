@@ -12,7 +12,7 @@ interface OrderCardProperties extends HTMLAttributes<HTMLDivElement> {
   image: string;
   isStarSeller?: boolean;
   discount?: number;
-  status: string;
+  status: OrderStatus;
 }
 
 export const OrderCard = ({
@@ -58,6 +58,8 @@ export const OrderCard = ({
           `!text-xs capitalize md:!text-sm`,
           status === "pending" && "bg-[#C5A83C]",
           status === "paid" && "bg-[#008000]",
+          status === "delivered" && "bg-mid-success",
+          status === "cancelled" && "bg-mid-danger",
         )}
       >
         {status}

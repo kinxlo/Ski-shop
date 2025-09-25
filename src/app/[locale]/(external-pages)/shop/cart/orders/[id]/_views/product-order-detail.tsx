@@ -13,7 +13,8 @@ import Image from "next/image";
 interface ProductOrderDetailProperties {
   order: {
     id: string;
-    status: "paid" | "pending" | "cancelled" | "delivered";
+    status: OrderStatus;
+    deliveryStatus: OrderDeliveryStatus;
     buyer: {
       id: string;
       name: string;
@@ -57,7 +58,7 @@ export const ProductOrderDetail = ({ order }: ProductOrderDetailProperties) => {
       <ProductBreadcrumb productTitle={`Order Details`} />
       <Wrapper className={`py-16`}>
         <div className={cn(`mb-8 flex items-baseline justify-between`)}>
-          <h3 className={cn("")}>Order Details</h3>
+          <h3 className={cn("!text-lg md:!text-xl")}>Order Details</h3>
         </div>
         <div
           className={cn(
@@ -75,38 +76,47 @@ export const ProductOrderDetail = ({ order }: ProductOrderDetailProperties) => {
             />
           </div>
           <div className="flex-1 space-y-2">
-            <p className="text-mid-grey-II text-[10px] capitalize lg:text-xl">Order #{order.id}</p>
-            <p className="line-clamp-2 text-xs font-medium lg:text-2xl">{product.name}</p>
+            <p className="text-[10px] capitalize lg:text-xl">Order #{order.id}</p>
+            <p className="!text-foreground line-clamp-2 !text-lg !font-semibold lg:!text-2xl">{product.name}</p>
             <Ratings rating={product.rating} />
-            <p>QTY: {product.quantity}</p>
+            <p className="text-foreground line-clamp-2 !text-sm !font-medium lg:!text-base">QTY: {product.quantity}</p>
             {/* <div className="flex items-baseline gap-2">
               <p className="text-primary text-xs font-medium lg:text-xl">
                 {formatCurrency(product.price, locale as Locale)}
               </p>
             </div> */}
-            <p className={`text-mid-grey-II text-[10px] underline lg:text-sm`}>By {product.vendor.name}</p>
+            <p className={`text-sm underline`}>By {product.vendor.name}</p>
             <div className="mt-8 space-y-2 text-xl">
-              <p className={`text-mid-grey-II text-sm`}>Placed On {orderDate}</p>
+              <p className={`text-sm`}>Placed On {orderDate}</p>
               <Badge
                 className={cn(
                   `text-[10px] capitalize lg:text-sm`,
-                  order.status === "pending" && "bg-[#C5A83C]",
-                  order.status === "paid" && "bg-[#008000]",
-                  order.status === "delivered" && "bg-mid-success",
-                  order.status === "cancelled" && "bg-mid-danger",
+                  order.deliveryStatus === "pending" && "bg-[#C5A83C]",
+                  order.deliveryStatus === "paid" && "bg-[#008000]",
+                  order.deliveryStatus === "delivered" && "bg-mid-success",
+                  order.deliveryStatus === "cancelled" && "bg-mid-danger",
                 )}
               >
-                {order.status}
+                {order.deliveryStatus} delivery
               </Badge>
-              {order.status === "paid" && <p>Delivered on {deliveryDate.toLocaleDateString("en-GB")}</p>}
-              {order.status === "pending" && <p>To be delivered {deliveryDate.toLocaleDateString("en-GB")}</p>}
+              {order.deliveryStatus === "delivered" && (
+                <p className={`text-sm`}>Delivered on {deliveryDate.toLocaleDateString("en-GB")}</p>
+              )}
+              {order.deliveryStatus === "pending" && (
+                <p className={`text-sm`}>To be delivered {deliveryDate.toLocaleDateString("en-GB")}</p>
+              )}
             </div>
-            {order.status === "pending" && (
-              <SkiButton variant="primary" size="xl" className="flex w-full items-center gap-2 rounded-full px-8">
+            {order.deliveryStatus === "pending" && (
+              <SkiButton
+                href={`/shop/cart/orders/${order.id}/tracking-order`}
+                variant="primary"
+                size="xl"
+                className="flex w-full items-center gap-2 rounded-full px-8"
+              >
                 Track Order
               </SkiButton>
             )}
-            {order.status === "paid" && (
+            {order.deliveryStatus === "delivered" && (
               <RatingModal
                 product={{
                   id: product.id,

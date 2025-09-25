@@ -118,7 +118,7 @@ declare global {
     totalAmount: number;
     paymentMethod: string;
     paidAt: string;
-    deliveryStatus: string;
+    deliveryStatus: OrderDeliveryStatus;
     reference: string;
     createdAt: string;
     [key: string]: unknown;
@@ -126,6 +126,9 @@ declare global {
 
   /** Order status types */
   type OrderStatus = "paid" | "pending" | "cancelled" | "delivered";
+
+  /** Order delivery status types */
+  type OrderDeliveryStatus = "pending" | "paid" | "delivered" | "cancelled";
 
   /** Order buyer information */
   interface OrderBuyer {

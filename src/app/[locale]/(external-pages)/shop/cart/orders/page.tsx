@@ -71,7 +71,7 @@ const Orders = ({ headerStyle }: { title: string; headerStyle?: string; hasActio
 
         {/* Orders Grid */}
         {!isLoading && !isError && orderData?.data.items && orderData.data.items.length > 0 && (
-          <div className="grid grid-cols-2 gap-1 md:gap-4">
+          <div className="grid grid-cols-1 gap-1 sm:grid-cols-2 md:gap-4">
             {orderData.data.items.map((product) => {
               return (
                 <OrderCard

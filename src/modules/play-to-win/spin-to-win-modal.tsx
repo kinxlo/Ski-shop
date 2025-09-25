@@ -126,7 +126,7 @@ export const SpinToWinModal = ({ children }: SpinToWinModalProperties) => {
           colors={["#ffffff", "#fde68a", "#ef4444", "#f59e0b"]}
         />
       )}
-      <section className="animate-in fade-in zoom-in-95 items-center justify-center rounded-2xl border border-amber-500/20 bg-[#2f2f2f] p-4 shadow-2xl shadow-black/30 backdrop-blur-sm duration-500 sm:rounded-3xl sm:p-6 md:p-8 lg:p-10">
+      <section className="animate-in fade-in zoom-in-95 items-center justify-center rounded-2xl p-4 shadow-2xl shadow-black/30 backdrop-blur-sm duration-500 sm:rounded-3xl sm:p-6 md:p-8 lg:p-10">
         <div className={`scale-[0.9]`}>
           {/* Header */}
           <div className="mb-8 text-center">

@@ -25,18 +25,20 @@ export const ProductBreadcrumb = ({ productTitle }: ProductBreadcrumbProperties)
         <Breadcrumb>
           <BreadcrumbList>
             <BreadcrumbItem>
-              <BreadcrumbLink href="/" className="flex items-center gap-1">
+              <BreadcrumbLink href="/" className="flex items-center gap-1 text-xs md:text-sm">
                 <PiHouse size={16} />
                 <span>Home</span>
               </BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbSeparator />
             <BreadcrumbItem>
-              <BreadcrumbLink href="/shop">Shop</BreadcrumbLink>
+              <BreadcrumbLink className={`text-xs md:text-sm`} href="/shop">
+                Shop
+              </BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbSeparator />
             <BreadcrumbItem>
-              <BreadcrumbPage>{productTitle}</BreadcrumbPage>
+              <BreadcrumbPage className={`text-xs md:text-sm`}>{productTitle}</BreadcrumbPage>
             </BreadcrumbItem>
           </BreadcrumbList>
         </Breadcrumb>

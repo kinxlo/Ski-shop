@@ -11,16 +11,16 @@ interface TrackingTimelineProperties {
 export const TrackingTimeline = ({ steps }: TrackingTimelineProperties) => {
   return (
     <div className="space-y-4">
-      <h3 className="text-high-grey-II !text-2xl font-semibold">Delivery Progress</h3>
+      <h3 className="!text-lg font-semibold md:!text-2xl">Delivery Progress</h3>
       <div className="space-y-4">
         {steps.map((step, index) => (
           <div key={step.status} className="relative flex items-start space-x-3">
             {/* Status Icon */}
             <div className="flex-shrink-0">
               {step.completed ? (
-                <div className="border-accent flex h-8 w-8 items-center justify-center rounded-full border-10 bg-white" />
+                <div className="border-accent flex h-8 w-8 scale-[0.7] items-center justify-center rounded-full border-10 bg-white md:scale-[1]" />
               ) : (
-                <div className="border-border flex h-8 w-8 items-center justify-center rounded-full border-2 bg-white">
+                <div className="border-border flex h-8 w-8 scale-[0.7] items-center justify-center rounded-full border-2 bg-white md:scale-[1]">
                   <Clock className="text-mid-grey-II h-4 w-4" />
                 </div>
               )}
@@ -29,11 +29,11 @@ export const TrackingTimeline = ({ steps }: TrackingTimelineProperties) => {
             {/* Content */}
             <div className="min-w-0 flex-1">
               <div className="flex items-center justify-between">
-                <h4 className={`!text-sm font-medium ${step.completed ? "text-high-grey-II" : "!text-low-grey-II"}`}>
+                <h4 className={`!text-xs md:!text-sm ${step.completed ? "text-high-grey-II" : "!text-low-grey-II"}`}>
                   {step.title}
                 </h4>
                 {step.timestamp && (
-                  <span className="text-mid-grey-II text-xs">
+                  <span className="text-mid-grey-II text-[10px] font-semibold">
                     {new Date(step.timestamp).toLocaleTimeString("en-US", {
                       hour: "2-digit",
                       minute: "2-digit",
@@ -42,7 +42,9 @@ export const TrackingTimeline = ({ steps }: TrackingTimelineProperties) => {
                   </span>
                 )}
               </div>
-              <p className={`text-xs ${step.completed ? "text-high-grey-II" : "text-border"}`}>{step.description}</p>
+              <p className={`!text-[10px] md:!text-xs ${step.completed ? "text-high-grey-II" : "text-border"}`}>
+                {step.description}
+              </p>
             </div>
 
             {/* Connector Line */}

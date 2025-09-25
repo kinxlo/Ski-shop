@@ -71,12 +71,17 @@ export const Navbar = forwardRef<HTMLElement, NavbarProperties>(
     const pathname = usePathname();
     const { data: session } = useSession();
     const { isScrolled, scrollDirection } = useScrollBehavior();
-    const { useGetCart } = useAppService();
+    const { useGetCart, useGetOrders, useGetSavedProducts } = useAppService();
     const t = useTranslations("navbar");
     const locale = useLocale();
     // Fetch cart data
     const { data: cartResponse } = useGetCart();
     const cartItemCount = cartResponse?.data?.metadata?.total || 0;
+    // Fetch orders and saved products data
+    const { data: ordersResponse } = useGetOrders();
+    const { data: savedProductsResponse } = useGetSavedProducts();
+    const ordersCount = ordersResponse?.data?.metadata?.total || 0;
+    const savedItemsCount = savedProductsResponse?.data?.metadata?.total || 0;
     const [drawerOpen, setDrawerOpen] = useState(false);
 
     const isActiveLink = (href: string) => (href === "/" ? pathname === href : pathname.includes(href));
@@ -235,6 +240,22 @@ export const Navbar = forwardRef<HTMLElement, NavbarProperties>(
                           onClick={() => setDrawerOpen(false)}
                         >
                           View Cart ({cartItemCount})
+                        </SkiButton>
+                        <SkiButton
+                          href={`/${locale}/shop/cart/orders`}
+                          variant="outline"
+                          className="w-full justify-center"
+                          onClick={() => setDrawerOpen(false)}
+                        >
+                          View orders ({ordersCount})
+                        </SkiButton>
+                        <SkiButton
+                          href={`/${locale}/shop/cart/saved-items`}
+                          variant="outline"
+                          className="w-full justify-center"
+                          onClick={() => setDrawerOpen(false)}
+                        >
+                          View saved items ({savedItemsCount})
                         </SkiButton>
                       </div>
                     </div>

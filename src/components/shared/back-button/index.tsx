@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import { ArrowLeft } from "lucide-react";
+import { ChevronLeft } from "lucide-react";
 import { useRouter } from "next/navigation";
 import React from "react";
 
@@ -23,7 +23,7 @@ export const BackButton: React.FC<BackButtonProperties> = ({
   className = "",
   size = "icon",
   variant = "ghost",
-  iconClassName = "h-5 w-5 text-gray-600",
+  iconClassName = "h-6 w-6 text-gray-600",
   ariaLabel = "Go back",
 }) => {
   const router = useRouter();
@@ -43,7 +43,7 @@ export const BackButton: React.FC<BackButtonProperties> = ({
       isIconOnly
       size={size as any}
       variant={variant}
-      icon={<ArrowLeft className={iconClassName} />}
+      icon={<ChevronLeft className={iconClassName} />}
       onClick={handleBack}
       className={className}
       aria-label={ariaLabel}
