@@ -22,6 +22,7 @@ interface ShopCardProperties extends HTMLAttributes<HTMLDivElement> {
   discount?: number;
   name: string;
   showSaveButton?: boolean;
+  action?: () => void;
 }
 
 export const ShopCard = ({
@@ -36,9 +37,28 @@ export const ShopCard = ({
   name,
   showSaveButton = true,
   isStarSeller = false,
+  action,
 }: ShopCardProperties) => {
   // const oldPrice = discount ? price / (1 - discount / 100) : null;
-  const { isSaved, isPending, toggleSave } = useSaveProduct(id || "");
+  const product: Product | undefined = id
+    ? {
+        id,
+        name: title,
+        status: "published",
+        category,
+        description: "",
+        discountPrice: discount || null,
+        images: [image],
+        price,
+        stockCount: 0,
+        rating,
+        store: { id: "", name: "" },
+        user: { id: "", name },
+        createdAt: "",
+        updatedAt: "",
+      }
+    : undefined;
+  const { isSaved, isPending, toggleSave } = useSaveProduct(id || "", product);
   const locale = useLocale() as Locale;
   const discountPercentage = discount ? Math.round(((price - discount) / price) * 100) : 0;
   // Don't render save button if no ID
@@ -69,6 +89,7 @@ export const ShopCard = ({
             event.preventDefault(); // Prevent link navigation
             event.stopPropagation(); // Stop event bubbling
             if (!isPending) toggleSave();
+            if (action) action();
           }}
           onKeyDown={(event) => {
             if ((event.key === "Enter" || event.key === " ") && !isPending) {

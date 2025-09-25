@@ -21,7 +21,7 @@ const SavedItems = ({ headerStyle }: { title: string; headerStyle?: string; hasA
       <ProductBreadcrumb productTitle={`Saved Items`} />
       <Wrapper className={`py-16`}>
         <div className={cn(`mb-8 flex items-baseline justify-between`, headerStyle)}>
-          <h2 className={cn("!text-sm lg:!text-3xl", headerStyle)}>Saved Items</h2>
+          <h2 className={cn("!text-lg lg:!text-3xl", headerStyle)}>Saved Items</h2>
         </div>
 
         {/* Loading State */}
@@ -73,7 +73,7 @@ const SavedItems = ({ headerStyle }: { title: string; headerStyle?: string; hasA
 
         {/* Products Grid */}
         {!isLoading && !isError && hasSavedItems && (
-          <div className="grid grid-cols-2 gap-8 sm:grid-cols-3 lg:grid-cols-4">
+          <div className="xs:grid-cols-2 grid grid-cols-1 gap-1 md:grid-cols-3 lg:grid-cols-4">
             {data?.data?.items?.map((product: Product) => (
               <ShopCard
                 key={product.id}

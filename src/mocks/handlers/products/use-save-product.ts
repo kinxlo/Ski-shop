@@ -1,8 +1,10 @@
+import { queryClient } from "@/lib/react-query/query-client";
+import { queryKeys } from "@/lib/react-query/query-keys";
 import { useAppService } from "@/services/externals/app/use-app-service";
 import { useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";
 
-export const useSaveProduct = (productId: string) => {
+export const useSaveProduct = (productId: string, product?: Product) => {
   const { useGetSavedProducts, useSaveProduct, useRemoveFromFavorites } = useAppService();
 
   // Get saved products to check if current product is saved
@@ -25,6 +27,27 @@ export const useSaveProduct = (productId: string) => {
     },
     onError: () => {
       setLocalIsSaved(false); // Revert optimistic update
+      // Revert query data
+      if (product) {
+        queryClient.setQueryData(
+          queryKeys.product.saved(),
+          (oldData: { data: { items: Product[]; metadata: { total: number } } } | undefined) => {
+            if (!oldData) return oldData;
+            const newItems = oldData.data.items.filter((p: Product) => p.id !== productId);
+            return {
+              ...oldData,
+              data: {
+                ...oldData.data,
+                items: newItems,
+                metadata: {
+                  ...oldData.data.metadata,
+                  total: newItems.length,
+                },
+              },
+            };
+          },
+        );
+      }
       toast.error("Failed to save product");
     },
   });
@@ -36,6 +59,29 @@ export const useSaveProduct = (productId: string) => {
     },
     onError: () => {
       setLocalIsSaved(true); // Revert optimistic update
+      // Revert query data
+      if (product) {
+        queryClient.setQueryData(
+          queryKeys.product.saved(),
+          (oldData: { data: { items: Product[]; metadata: { total: number } } } | undefined) => {
+            if (!oldData) return oldData;
+            const newItems = oldData.data.items.some((p: Product) => p.id === productId)
+              ? oldData.data.items
+              : [...oldData.data.items, product];
+            return {
+              ...oldData,
+              data: {
+                ...oldData.data,
+                items: newItems,
+                metadata: {
+                  ...oldData.data.metadata,
+                  total: newItems.length,
+                },
+              },
+            };
+          },
+        );
+      }
       toast.error("Failed to remove product from favorites");
     },
   });
@@ -47,17 +93,60 @@ export const useSaveProduct = (productId: string) => {
       return;
     }
 
-    // Optimistic update
-    setLocalIsSaved(!localIsSaved);
+    const newIsSaved = !localIsSaved;
 
-    if (localIsSaved) {
-      // Remove from favorites
-      removeFromFavorites(productId);
-    } else {
-      // Save product
+    // Optimistic update for local state
+    setLocalIsSaved(newIsSaved);
+
+    // Optimistic update for query data
+    if (newIsSaved) {
+      // Adding to saved
+      if (product) {
+        queryClient.setQueryData(
+          queryKeys.product.saved(),
+          (oldData: { data: { items: Product[]; metadata: { total: number } } } | undefined) => {
+            if (!oldData) return oldData;
+            const newItems = oldData.data.items.some((p: Product) => p.id === productId)
+              ? oldData.data.items
+              : [...oldData.data.items, product];
+            return {
+              ...oldData,
+              data: {
+                ...oldData.data,
+                items: newItems,
+                metadata: {
+                  ...oldData.data.metadata,
+                  total: newItems.length,
+                },
+              },
+            };
+          },
+        );
+      }
       saveProduct({ productId });
+    } else {
+      // Removing from saved
+      queryClient.setQueryData(
+        queryKeys.product.saved(),
+        (oldData: { data: { items: Product[]; metadata: { total: number } } } | undefined) => {
+          if (!oldData) return oldData;
+          const newItems = oldData.data.items.filter((p: Product) => p.id !== productId);
+          return {
+            ...oldData,
+            data: {
+              ...oldData.data,
+              items: newItems,
+              metadata: {
+                ...oldData.data.metadata,
+                total: newItems.length,
+              },
+            },
+          };
+        },
+      );
+      removeFromFavorites(productId);
     }
-  }, [productId, localIsSaved, saveProduct, removeFromFavorites]);
+  }, [productId, localIsSaved, product, saveProduct, removeFromFavorites]);
 
   return {
     isSaved: localIsSaved,

@@ -557,4 +557,231 @@ p {
 .leaflet-container {
   height: 100%;
   width: 100%;
+/* Custom Toast Styles */
+.toaster {
+  font-family: var(--font-inter);
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+.toaster [data-sonner-toast] {
+  border-radius: var(--radius-lg);
+  border-width: 1px;
+  padding: 12px 16px;
+  font-weight: var(--font-weight-medium);
+  transition: all 0.2s ease-in-out;
+}
+
+.toaster [data-sonner-toast][data-type="success"] {
+  background: linear-gradient(135deg, var(--low-success) 0%, var(--mid-success) 100%);
+  border-color: var(--mid-success);
+}
+
+.toaster [data-sonner-toast][data-type="error"] {
+  background: linear-gradient(135deg, var(--low-danger) 0%, var(--mid-danger) 100%);
+  border-color: var(--mid-danger);
+}
+
+.toaster [data-sonner-toast][data-type="warning"] {
+  background: linear-gradient(135deg, var(--low-warning) 0%, var(--mid-warning) 100%);
+  border-color: var(--mid-warning);
+}
+
+.toaster [data-sonner-toast][data-type="info"] {
+  background: linear-gradient(135deg, var(--low-blue) 0%, var(--mid-blue) 100%);
+  border-color: var(--mid-blue);
+}
+
+.toaster [data-sonner-toast] [data-title] {
+  font-weight: var(--font-weight-semibold);
+  font-size: var(--font-size-sm);
+}
+
+.toaster [data-sonner-toast] [data-description] {
+  font-size: var(--font-size-xs);
+  opacity: 0.9;
+  margin-top: 4px;
+}
+
+.toaster [data-close-button] {
+  opacity: 0.7;
+  transition: opacity 0.2s ease;
+}
+
+.toaster [data-close-button]:hover {
+  opacity: 1;
+}
+}
+
+/* Skishop Toaster – robust, accessible, responsive */
+.toaster {
+  pointer-events: none; /* container shouldn't block interactions */
+  margin-top: calc(16px + env(safe-area-inset-top, 0px));
+  margin-right: calc(16px + env(safe-area-inset-right, 0px));
+  z-index: 9999;
+}
+
+/* Each toast is interactive */
+.toaster .skishop-toast {
+  pointer-events: auto;
+  width: var(--width, min(92vw, 420px));
+  border-radius: var(--border-radius, var(--radius-lg));
+  background: var(--normal-bg);
+  color: var(--normal-text);
+  border: 1px solid var(--normal-border);
+  box-shadow:
+    0 12px 24px -8px rgba(0, 0, 0, 0.25),
+    0 8px 12px -6px rgba(0, 0, 0, 0.15);
+  backdrop-filter: saturate(130%) blur(6px);
+  -webkit-backdrop-filter: saturate(130%) blur(6px);
+  transition: transform 0.18s ease, opacity 0.18s ease, box-shadow 0.18s ease;
+  overflow: hidden;
+}
+
+/* Focus ring for accessibility when any focusable inside is focused */
+.toaster .skishop-toast:focus-within {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+}
+
+/* Subtle elevation on hover */
+@media (hover: hover) and (pointer: fine) {
+  .toaster .skishop-toast:hover {
+    box-shadow:
+      0 16px 28px -10px rgba(0, 0, 0, 0.3),
+      0 10px 14px -8px rgba(0, 0, 0, 0.2);
+  }
+}
+
+/* Left accent bar per type for quick recognition */
+.toaster .skishop-toast::before {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 4px;
+  background: var(--normal-border);
+}
+
+/* Type-specific surfaces */
+.toaster .skishop-toast[data-type="success"] {
+  background: linear-gradient(135deg, var(--low-success) 0%, color-mix(in oklab, var(--low-success), var(--mid-success) 30%) 100%);
+  border-color: var(--success-border, var(--mid-success));
+}
+.toaster .skishop-toast[data-type="success"]::before {
+  background: var(--success-border, var(--mid-success));
+}
+
+.toaster .skishop-toast[data-type="error"] {
+  background: linear-gradient(135deg, var(--low-danger) 0%, color-mix(in oklab, var(--low-danger), var(--mid-danger) 30%) 100%);
+  border-color: var(--error-border, var(--mid-danger));
+}
+.toaster .skishop-toast[data-type="error"]::before {
+  background: var(--error-border, var(--mid-danger));
+}
+
+.toaster .skishop-toast[data-type="warning"] {
+  background: linear-gradient(135deg, var(--low-warning) 0%, color-mix(in oklab, var(--low-warning), var(--mid-warning) 30%) 100%);
+  border-color: var(--warning-border, var(--mid-warning));
+}
+.toaster .skishop-toast[data-type="warning"]::before {
+  background: var(--warning-border, var(--mid-warning));
+}
+
+.toaster .skishop-toast[data-type="info"] {
+  background: linear-gradient(135deg, var(--low-blue) 0%, color-mix(in oklab, var(--low-blue), var(--mid-blue) 30%) 100%);
+  border-color: var(--info-border, var(--mid-blue));
+}
+.toaster .skishop-toast[data-type="info"]::before {
+  background: var(--info-border, var(--mid-blue));
+}
+
+/* Content hierarchy */
+.toaster .skishop-toast .skishop-toast-title {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  color: inherit;
+  letter-spacing: var(--letter-spacing-tight);
+  line-height: var(--line-height-snug);
+}
+
+.toaster .skishop-toast .skishop-toast-description {
+  font-size: var(--font-size-xs);
+  color: color-mix(in oklab, var(--normal-text), black 10%);
+  opacity: 0.95;
+  margin-top: 2px;
+  line-height: var(--line-height-normal);
+}
+
+/* Buttons */
+.toaster .skishop-toast .skishop-toast-action,
+.toaster .skishop-toast .skishop-toast-cancel,
+.toaster .skishop-toast .skishop-toast-close {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+  border-radius: var(--radius-md);
+  padding: 6px 10px;
+  transition: background-color 0.18s ease, color 0.18s ease, opacity 0.18s ease, transform 0.12s ease;
+}
+
+/* Primary action aligns with brand primary */
+.toaster .skishop-toast .skishop-toast-action {
+  background: var(--primary);
+  color: var(--primary-foreground);
+  border: 1px solid color-mix(in oklab, var(--primary), black 10%);
+}
+@media (hover: hover) and (pointer: fine) {
+  .toaster .skishop-toast .skishop-toast-action:hover {
+    background: color-mix(in oklab, var(--primary), black 5%);
+  }
+}
+.toaster .skishop-toast .skishop-toast-action:active {
+  transform: translateY(1px);
+}
+
+/* Secondary/cancel is subtle */
+.toaster .skishop-toast .skishop-toast-cancel {
+  background: var(--subtle);
+  color: var(--subtle-foreground);
+  border: 1px solid var(--border);
+}
+@media (hover: hover) and (pointer: fine) {
+  .toaster .skishop-toast .skishop-toast-cancel:hover {
+    background: var(--subtle-hover, color-mix(in oklab, var(--subtle), black 4%));
+  }
+}
+.toaster .skishop-toast .skishop-toast-cancel:active {
+  transform: translateY(1px);
+}
+
+/* Close button minimal affordance */
+.toaster .skishop-toast .skishop-toast-close {
+  opacity: 0.8;
+  background: transparent;
+  color: inherit;
+  border: 0;
+}
+@media (hover: hover) and (pointer: fine) {
+  .toaster .skishop-toast .skishop-toast-close:hover {
+    opacity: 1;
+  }
+}
+
+/* Compact mode on narrow screens */
+@media (max-width: 480px) {
+  .toaster .skishop-toast {
+    width: min(96vw, 420px);
+    border-radius: var(--radius-md);
+  }
+  .toaster .skishop-toast .skishop-toast-title {
+    font-size: var(--font-size-xs);
+  }
+  .toaster .skishop-toast .skishop-toast-description {
+    font-size: 0.75rem; /* lock to avoid too small text */
+  }
+}
+
+/* Respect reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .toaster .skishop-toast {
+    transition: none;
+  }
 }

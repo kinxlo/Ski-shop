@@ -1,3 +1,5 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable unicorn/no-array-reduce */
 "use client";
 
 import { Wrapper } from "@/components/core/layout/wrapper";
@@ -11,7 +13,9 @@ import { Minus, Plus, Trash2 } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { useLocale } from "next-intl";
 import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
+import { useDebounce } from "use-debounce";
 
 export const CartView = () => {
   const router = useRouter();
@@ -26,6 +30,73 @@ export const CartView = () => {
   const { data: cartResponse, isLoading, error, refetch } = useGetCart();
   const cartItems = cartResponse?.data?.items || [];
   const cartMetadata = cartResponse?.data?.metadata;
+
+  // Local quantity state that updates immediately on button clicks
+  const [localQuantities, setLocalQuantities] = useState<Record<string, number>>({});
+
+  // Sync local quantities from server cart on load/refetch
+  useEffect(() => {
+    const initial: Record<string, number> = {};
+    for (const ci of cartItems as CartItem[]) {
+      initial[ci.id] = ci.quantity;
+    }
+    setLocalQuantities(initial);
+  }, [cartItems]);
+
+  // Debounce the local quantities, so rapid clicks coalesce
+  const [debouncedQuantities] = useDebounce(localQuantities, 500);
+
+  // Apply debounced quantities to server (update/remove)
+  useEffect(() => {
+    if (!cartItems?.length) return;
+
+    for (const ci of cartItems as CartItem[]) {
+      const target = debouncedQuantities?.[ci.id];
+
+      // Skip if unchanged or not available yet
+      if (typeof target !== "number" || target === ci.quantity) continue;
+
+      if (target < 1) {
+        removeItem(ci.id, {
+          onSuccess: () => {
+            toast.success("Item removed from cart");
+            refetch();
+          },
+          onError: (error) => {
+            toast.error("Failed to remove item", {
+              description: error.message,
+            });
+          },
+        });
+        continue;
+      }
+
+      updateQuantity(
+        { itemId: ci.id, quantity: target },
+        {
+          onSuccess: () => {
+            toast.success("Quantity updated");
+            refetch();
+          },
+        },
+      );
+    }
+  }, [debouncedQuantities, cartItems, removeItem, updateQuantity, refetch]);
+
+  // Button handler: update local state immediately, UI reflects instantly
+  const handleLocalQuantityChange = (itemId: string, action: "increase" | "decrease") => {
+    setLocalQuantities((previous) => {
+      const current =
+        typeof previous[itemId] === "number"
+          ? previous[itemId]
+          : (cartItems.find((it: CartItem) => it.id === itemId)?.quantity ?? 0);
+
+      return {
+        ...previous,
+        [itemId]: action === "increase" ? current + 1 : current - 1,
+      };
+    });
+  };
 
   if (!session) {
     return (
@@ -54,28 +125,6 @@ export const CartView = () => {
   // const cartItems = cartResponse.data.items;
   // const cartMetadata = cartResponse.data.metadata;
 
-  const handleQuantityChange = (itemId: string, action: "increase" | "decrease") => {
-    const item = cartItems.find((item) => item.id === itemId);
-    if (!item) return;
-
-    const newQuantity = action === "increase" ? item.quantity + 1 : item.quantity - 1;
-
-    if (newQuantity < 1) {
-      handleRemoveItem(itemId);
-      return;
-    }
-
-    updateQuantity(
-      { itemId, quantity: newQuantity },
-      {
-        onSuccess: () => {
-          toast.success("Quantity updated");
-          refetch();
-        },
-      },
-    );
-  };
-
   const handleRemoveItem = (itemId: string) => {
     removeItem(itemId, {
       onSuccess: () => {
@@ -90,10 +139,10 @@ export const CartView = () => {
     });
   };
 
-  const subtotal = cartItems.reduce(
-    (sum: number, item: CartItem) => sum + (item.product.discountPrice || item.product.price || 0) * item.quantity,
-    0,
-  );
+  const subtotal = cartItems.reduce((sum: number, item: CartItem) => {
+    const q = localQuantities[item.id] ?? item.quantity;
+    return sum + (item.product.discountPrice || item.product.price || 0) * q;
+  }, 0);
   const shipping = subtotal > 100 ? 0 : 15;
   const total = subtotal + shipping;
 
@@ -218,25 +267,29 @@ export const CartView = () => {
                           icon={<Minus className="h-4 w-4" />}
                           size={`icon`}
                           variant={`primary`}
-                          onClick={() => handleQuantityChange(item.id, "decrease")}
-                          className="items-center justify-center rounded-sm border disabled:opacity-50"
+                          onClick={() => handleLocalQuantityChange(item.id, "decrease")}
+                          className="items-center justify-center rounded-none border disabled:opacity-50"
                           isDisabled={isUpdating}
                         />
                         <span className="bg-primary/10 flex h-[34px] w-20 items-center justify-center text-center font-medium">
-                          {item.quantity}
+                          {localQuantities[item.id] ?? item.quantity}
                         </span>
                         <SkiButton
                           isIconOnly
                           size={`icon`}
                           variant={`primary`}
-                          onClick={() => handleQuantityChange(item.id, "increase")}
-                          className="items-center justify-center rounded-sm border disabled:opacity-50"
+                          onClick={() => handleLocalQuantityChange(item.id, "increase")}
+                          className="items-center justify-center rounded-none border disabled:opacity-50"
                           icon={<Plus className="h-4 w-4" />}
                           isDisabled={isUpdating}
                         />
                       </div>
                       <p className="!text-primary !text-sm !font-semibold">
-                        {formatCurrency(item.product.price * item.quantity, locale)}
+                        {formatCurrency(
+                          (item.product.discountPrice || item.product.price || 0) *
+                            (localQuantities[item.id] ?? item.quantity),
+                          locale,
+                        )}
                       </p>
                     </div>
                   </div>
@@ -304,27 +357,28 @@ export const CartView = () => {
                                 icon={<Minus className="h-4 w-4" />}
                                 size={`icon`}
                                 variant={`primary`}
-                                onClick={() => handleQuantityChange(item.id, "decrease")}
-                                className="items-center justify-center rounded-sm border disabled:opacity-50"
+                                onClick={() => handleLocalQuantityChange(item.id, "decrease")}
+                                className="items-center justify-center rounded-none border disabled:opacity-50"
                                 isDisabled={isUpdating}
                               />
                               <span className="bg-primary/10 flex h-[34px] w-20 items-center justify-center text-center font-medium">
-                                {item.quantity}
+                                {localQuantities[item.id] ?? item.quantity}
                               </span>
                               <SkiButton
                                 isIconOnly
                                 size={`icon`}
                                 variant={`primary`}
-                                onClick={() => handleQuantityChange(item.id, "increase")}
-                                className="items-center justify-center rounded-sm border disabled:opacity-50"
+                                onClick={() => handleLocalQuantityChange(item.id, "increase")}
+                                className="items-center justify-center rounded-none border disabled:opacity-50"
                                 icon={<Plus className="h-4 w-4" />}
                                 isDisabled={isUpdating}
                               />
                             </div>
                           </td>
-                          <td className="px-4 py-4 font-medium">
+                          <td className="text-primary px-4 py-4 font-medium">
                             {formatCurrency(
-                              (item.product.discountPrice || item.product.price || 0) * item.quantity,
+                              (item.product.discountPrice || item.product.price || 0) *
+                                (localQuantities[item.id] ?? item.quantity),
                               locale,
                             )}
                           </td>
