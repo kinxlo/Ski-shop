@@ -1,5 +1,6 @@
 "use client";
 
+import { BlurImage } from "@/components/core/miscellaneous/blur-image";
 import SkiButton from "@/components/shared/button";
 import { ReusableDialog } from "@/components/shared/dialog/Dialog";
 import { cn } from "@/lib/utils";
@@ -78,7 +79,9 @@ export const SpinToWinModal = ({ children }: SpinToWinModalProperties) => {
     // Calculate rotation
     const baseRotation = 360 * 5; // 5 full rotations
     const targetAngle = randomIndex * SEGMENT_ANGLE;
-    const finalRotation = baseRotation + (360 - targetAngle) + SEGMENT_ANGLE / 2;
+    // Align selected segment center with the pointer (12 o'clock).
+    // Subtracting half a segment fixes the off-by-one-to-the-right issue.
+    const finalRotation = baseRotation + (360 - targetAngle) - SEGMENT_ANGLE / 2;
 
     setRotation((previous) => previous + finalRotation);
 
@@ -140,21 +143,21 @@ export const SpinToWinModal = ({ children }: SpinToWinModalProperties) => {
             {/* Spinning Wheel */}
             <div className="relative">
               {/* Top clamp behind pointer */}
-              <div className="absolute -top-4 left-1/2 z-20 h-6 w-14 -translate-x-1/2 rounded-b-md bg-amber-400 shadow-md shadow-black/40" />
+              <div className="absolute -top-4 left-1/2 z-20 h-6 w-14 -translate-x-1/2 rounded-b-md bg-amber-300 shadow-md shadow-black/40" />
 
               {/* Outer Rim */}
               <div className="absolute inset-0 rounded-full bg-black p-3 shadow-2xl shadow-black/50">
-                <div className="h-full w-full rounded-full bg-[#2b2b2b] ring-2 ring-black/70"></div>
+                <div className="h-full w-full rounded-full bg-[#2b2b2b] ring-2 ring-black/70" />
               </div>
 
               {/* Wheel Container */}
               <div className="relative p-3">
                 {/* Pointer */}
-                <div className="absolute top-0 left-1/2 z-30 -translate-x-1/2 transform">
+                <div className="absolute top-11 left-1/2 z-30 origin-top -translate-x-1/2 rotate-180 transform">
                   <div className="relative">
-                    <div className="h-0 w-0 border-r-[22px] border-b-[44px] border-l-[22px] border-r-transparent border-b-amber-500 border-l-transparent drop-shadow-[0_8px_8px_rgba(0,0,0,0.35)]"></div>
-                    <div className="absolute top-2 left-1/2 h-0 w-0 -translate-x-1/2 border-r-[16px] border-b-[32px] border-l-[16px] border-r-transparent border-b-amber-300 border-l-transparent"></div>
-                    <div className="absolute top-1 left-1/2 h-2 w-2 -translate-x-1/2 rounded-full bg-white shadow-sm"></div>
+                    {/* <div className="h-0 w-0" /> */}
+                    <div className="absolute top-2 left-1/2 h-0 w-0 -translate-x-1/2 border-r-[16px] border-b-[32px] border-l-[16px] border-r-transparent border-b-amber-300 border-l-transparent" />
+                    <div className="bg-primary absolute top-1 left-1/2 h-2 w-2 -translate-x-1/2 rounded-full shadow-sm" />
                   </div>
                 </div>
 
@@ -189,13 +192,13 @@ export const SpinToWinModal = ({ children }: SpinToWinModalProperties) => {
                       >
                         <div
                           className={cn(
-                            "absolute text-[14px] font-extrabold tracking-wide drop-shadow select-none sm:text-[16px] md:text-[18px] lg:text-[20px]",
+                            "absolute text-[14px] font-extrabold tracking-wide drop-shadow select-none",
                             textClass,
                           )}
                           style={{
                             top: "50%",
                             left: "50%",
-                            transform: `translate(-50%, -50%) rotate(${startAngle + SEGMENT_ANGLE / 2}deg) translateY(-78px)`,
+                            transform: `translate(-50%, -50%) rotate(${startAngle + SEGMENT_ANGLE / 2}deg) translateY(-88px)`,
                             whiteSpace: "nowrap",
                           }}
                         >
@@ -204,17 +207,24 @@ export const SpinToWinModal = ({ children }: SpinToWinModalProperties) => {
                       </div>
                     );
                   })}
-
-                  {/* Center hub with golden ring */}
-                  <div className="absolute top-1/2 left-1/2 h-16 w-16 -translate-x-1/2 -translate-y-1/2 transform rounded-full bg-gray-300 shadow-md ring-4 ring-amber-400">
-                    <div className="absolute inset-2 rounded-full bg-gray-200"></div>
-                  </div>
+                </div>
+                {/* Center hub with golden ring */}
+                <div className="absolute top-1/2 left-1/2 z-20 flex h-16 w-16 -translate-x-1/2 -translate-y-1/2 transform items-center justify-center rounded-full bg-white shadow-md ring-4 ring-amber-400">
+                  <BlurImage
+                    priority
+                    alt={`logo`}
+                    src={`https://res.cloudinary.com/kingsleysolomon/image/upload/f_auto,q_auto/v1758641970/skicom/vd6d83v5f4nmh7jtaqlf.png`}
+                    width={30}
+                    height={30}
+                    className={`h-[30px] w-[30px]`}
+                  />
+                  {/* <div className="absolute inset-2 rounded-full bg-gray-200" /> */}
                 </div>
               </div>
 
               {/* Base */}
-              <div className="absolute -bottom-6 left-1/2 z-0 h-6 w-24 -translate-x-1/2 rounded-t-xl bg-black shadow-lg"></div>
-              <div className="absolute -bottom-9 left-1/2 z-0 h-3 w-28 -translate-x-1/2 rounded-t-xl bg-black/80"></div>
+              <div className="absolute -bottom-6 left-1/2 z-0 h-6 w-24 -translate-x-1/2 rounded-t-xl bg-black shadow-lg" />
+              <div className="absolute -bottom-9 left-1/2 z-0 h-3 w-28 -translate-x-1/2 rounded-t-xl bg-black/80" />
             </div>
 
             {/* Result Display */}
