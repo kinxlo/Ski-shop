@@ -17,11 +17,11 @@ const SavedItems = ({ headerStyle }: { title: string; headerStyle?: string; hasA
   const hasSavedItems = data?.data?.items && data.data.items.length > 0;
 
   return (
-    <section className="min-h-[480px] pt-[10rem]">
+    <section className="min-h-[480px] pt-18 lg:pt-[10rem]">
       <ProductBreadcrumb productTitle={`Saved Items`} />
       <Wrapper className={`py-16`}>
         <div className={cn(`mb-8 flex items-baseline justify-between`, headerStyle)}>
-          <h2 className={cn("text-high-grey-II text-sm font-black lg:text-3xl", headerStyle)}>Saved Items</h2>
+          <h2 className={cn("!text-sm lg:!text-3xl", headerStyle)}>Saved Items</h2>
         </div>
 
         {/* Loading State */}

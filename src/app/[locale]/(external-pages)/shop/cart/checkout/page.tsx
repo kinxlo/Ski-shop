@@ -238,13 +238,13 @@ const CheckoutPage = () => {
   };
 
   return (
-    <section className="pt-[10rem]">
+    <section className="pt-18 lg:pt-[10rem]">
       <ProductBreadcrumb productTitle={`checkout`} />
       <Wrapper className="px-4 py-8">
         <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
           {/* Delivery and Payment Section */}
           <div>
-            <h4 className="">Delivery Method</h4>
+            <h4 className="!text-lg md:!text-xl">Delivery Method</h4>
 
             <form onSubmit={handleFormSubmit}>
               <div className="space-y-20">
@@ -258,9 +258,9 @@ const CheckoutPage = () => {
                       onChange={() => setDeliveryMethod("station")}
                       className="mt-2 mr-2"
                     />
-                    <p className={`text-lg font-semibold`}>Pick-up Station</p>
+                    <p className={`!text-base font-semibold md:!text-lg`}>Pick-up Station</p>
                   </div>
-                  <p className={`my-4`}>
+                  <p className={`my-4 !text-sm md:!text-base`}>
                     Delivery Between <strong>10 May</strong> and <strong>12 May</strong>
                   </p>
                   <div className="overflow-hidden rounded-lg border">
@@ -270,14 +270,14 @@ const CheckoutPage = () => {
                       className="bg-low-blue text-mid-blue flex w-full items-center justify-between p-4 focus:outline-none"
                       onClick={() => setShowPickupModal(true)}
                     >
-                      <p className="text-lg font-semibold">Select Pick-up Station</p>
+                      <p className="!text-base font-semibold md:!text-lg">Select Pick-up Station</p>
                       <ChevronRight />
                     </button>
                     {deliveryMethod === "station" && (
                       <div className="p-4">
-                        <span className="font-semibold">{selectedStation.place}</span>
-                        <div className="text-xs text-gray-500">{selectedStation.address}</div>
-                        <div className="mt-1 font-bold text-[#FF9900]">
+                        <span className="!text-sm font-semibold md:!text-base">{selectedStation.place}</span>
+                        <div className="!text-xs text-gray-500 md:!text-sm">{selectedStation.address}</div>
+                        <div className="mt-1 !text-sm font-bold text-[#FF9900] md:!text-base">
                           {formatCurrency(selectedStation.price, locale as Locale)}
                         </div>
                       </div>
@@ -294,9 +294,9 @@ const CheckoutPage = () => {
                       onChange={() => setDeliveryMethod("door")}
                       className="mt-2 mr-2"
                     />
-                    <p className={`text-lg font-semibold`}>Door Delivery</p>
+                    <p className={`!text-base font-semibold md:!text-lg`}>Door Delivery</p>
                   </div>
-                  <p className={`my-4`}>
+                  <p className={`my-4 !text-sm md:!text-base`}>
                     Delivery Between <strong>12 May</strong> and <strong>14 May</strong>
                   </p>
                   {deliveryMethod === "door" && (
@@ -308,25 +308,27 @@ const CheckoutPage = () => {
                           className="bg-low-blue text-mid-blue flex w-full items-center justify-between p-4 focus:outline-none"
                           onClick={() => setShowAddressBookModal(true)}
                         >
-                          <p className="text-lg font-semibold">Select From Address Book</p>
+                          <p className="!text-base font-semibold md:!text-lg">Select From Address Book</p>
                           <ChevronRight />
                         </button>
                         {selectedAddress ? (
                           <div className="p-4">
-                            <span className="font-semibold">{selectedAddress.receiverName}</span>
-                            <div className="text-xs text-gray-500">{selectedAddress.streetAddress}</div>
-                            <div className="mt-1 text-xs text-gray-500">{selectedAddress.phone}</div>
+                            <span className="!text-sm font-semibold md:!text-base">{selectedAddress.receiverName}</span>
+                            <div className="!text-xs text-gray-500 md:!text-sm">{selectedAddress.streetAddress}</div>
+                            <div className="mt-1 !text-xs text-gray-500 md:!text-sm">{selectedAddress.phone}</div>
                           </div>
                         ) : (
                           <div className="p-4">
-                            <p className="text-sm">Make sure you select the right address from your address book.</p>
+                            <p className="!text-xs md:!text-sm">
+                              Make sure you select the right address from your address book.
+                            </p>
                           </div>
                         )}
                       </div>
                       <button
                         type="button"
                         onClick={() => setShowAddAddressModal(true)}
-                        className="flex items-center font-medium text-blue-600"
+                        className="flex items-center !text-sm font-medium text-blue-600 md:!text-base"
                       >
                         <Plus className="mr-2 h-4 w-4" />
                         Add New Address
@@ -338,7 +340,7 @@ const CheckoutPage = () => {
 
               {/* Payment Method */}
               <div className="mt-8">
-                <h4 className="">Payment Method</h4>
+                <h4 className="!text-lg md:!text-xl">Payment Method</h4>
                 <div className="space-y-4">
                   <label className="flex cursor-pointer items-center py-4">
                     <input
@@ -380,18 +382,20 @@ const CheckoutPage = () => {
 
           {/* Order Summary */}
           <div className="h-fit rounded-lg border p-6">
-            <h4 className="mb-6 text-xl">Your order</h4>
+            <h4 className="mb-6 !text-xl md:!text-2xl">Your order</h4>
             <hr />
 
             {isCartLoading ? (
               <div className="mt-4 flex justify-center py-8">
-                <p>Loading cart items...</p>
+                <p className="!text-sm md:!text-base">Loading cart items...</p>
               </div>
             ) : cartError ? (
-              <div className="text-destructive mt-4 rounded-lg bg-red-50 p-4">Error loading cart items</div>
+              <div className="text-destructive mt-4 rounded-lg bg-red-50 p-4 !text-sm md:!text-base">
+                Error loading cart items
+              </div>
             ) : (
               <div className="mt-4 space-y-4">
-                <div className="flex justify-between font-medium">
+                <div className="flex justify-between !text-sm font-medium md:!text-base">
                   <span>Product</span>
                   <span>Subtotal</span>
                 </div>
@@ -410,7 +414,7 @@ const CheckoutPage = () => {
                               className="h-12 w-12 rounded object-cover"
                             />
                           )}
-                          <span>
+                          <span className="!text-sm md:!text-base">
                             {item.product.name} × {item.quantity}
                           </span>
                         </div>
@@ -423,12 +427,12 @@ const CheckoutPage = () => {
                       </div>
                     ))}
 
-                    <div className="flex justify-between border-t pt-4">
+                    <div className="flex justify-between border-t pt-4 !text-sm md:!text-base">
                       <span>Subtotal</span>
                       <span>{formatCurrency(subtotal, locale as Locale)}</span>
                     </div>
 
-                    <div className="flex justify-between pt-4">
+                    <div className="flex justify-between pt-4 !text-sm md:!text-base">
                       <span>Shipping</span>
                       <span className="text-right">
                         <span className="text-gray-500">
@@ -439,13 +443,13 @@ const CheckoutPage = () => {
                       </span>
                     </div>
 
-                    <div className="flex justify-between border-t pt-4 font-semibold">
+                    <div className="flex justify-between border-t pt-4 !text-sm font-semibold md:!text-base">
                       <span>Total</span>
                       <span className="text-primary">{formatCurrency(total, locale as Locale)}</span>
                     </div>
                   </>
                 ) : (
-                  <div className="py-8 text-center text-gray-500">Your cart is empty</div>
+                  <div className="py-8 text-center !text-sm text-gray-500 md:!text-base">Your cart is empty</div>
                 )}
               </div>
             )}
@@ -461,7 +465,7 @@ const CheckoutPage = () => {
         title="Pick-up Stations Near You"
         hideClose={false}
         className="max-w-md"
-        headerClassName={`!text-xl font-semibold`}
+        headerClassName={`!text-lg font-semibold md:!text-xl`}
       >
         <FormProvider {...methods}>
           <div className="space-y-4">
@@ -498,9 +502,9 @@ const CheckoutPage = () => {
                     className="mt-1 accent-blue-600"
                   />
                   <div>
-                    <span className="font-semibold">{station.place}</span>
-                    <div className="text-xs text-gray-500">{station.address}</div>
-                    <div className="mt-1 font-bold text-[#FF9900]">
+                    <span className="!text-sm font-semibold md:!text-base">{station.place}</span>
+                    <div className="!text-xs text-gray-500 md:!text-sm">{station.address}</div>
+                    <div className="mt-1 !text-sm font-bold text-[#FF9900] md:!text-base">
                       {formatCurrency(station.price, locale as Locale)}
                     </div>
                   </div>
@@ -510,7 +514,7 @@ const CheckoutPage = () => {
 
             <button
               type="button"
-              className="w-full rounded-full bg-[#0090D0] py-2 text-lg font-semibold text-white"
+              className="w-full rounded-full bg-[#0090D0] py-2 !text-base font-semibold text-white md:!text-lg"
               disabled={!selectedStation.station}
               onClick={handleStationSelection}
             >
@@ -520,8 +524,8 @@ const CheckoutPage = () => {
             {/* Display selected station information */}
             {selectedStation.station && (
               <div className="mt-4 rounded-lg bg-gray-50 p-4">
-                <h4 className="!text-xl font-semibold text-gray-800">Selected Station:</h4>
-                <div className="mt-2 space-y-1 text-sm text-gray-600">
+                <h4 className="!text-lg font-semibold text-gray-800 md:!text-xl">Selected Station:</h4>
+                <div className="mt-2 space-y-1 !text-xs text-gray-600 md:!text-sm">
                   <p>
                     <strong>Place:</strong> {selectedStation.place}
                   </p>
@@ -555,7 +559,7 @@ const CheckoutPage = () => {
         title="Address Book"
         hideClose={false}
         className="max-w-md"
-        headerClassName={`!text-xl font-semibold`}
+        headerClassName={`!text-lg font-semibold md:!text-xl`}
       >
         <div className="space-y-4">
           <div className="mb-6 max-h-48 space-y-4 overflow-y-auto">
@@ -570,9 +574,9 @@ const CheckoutPage = () => {
                   className="mt-1 accent-blue-600"
                 />
                 <div>
-                  <span className="font-semibold">{address.receiverName}</span>
-                  <div className="text-xs text-gray-500">{address.streetAddress}</div>
-                  <div className="mt-1 text-xs text-gray-500">{address.phone}</div>
+                  <span className="!text-sm font-semibold md:!text-base">{address.receiverName}</span>
+                  <div className="!text-xs text-gray-500 md:!text-sm">{address.streetAddress}</div>
+                  <div className="mt-1 !text-xs text-gray-500 md:!text-sm">{address.phone}</div>
                 </div>
               </label>
             ))}
@@ -580,7 +584,7 @@ const CheckoutPage = () => {
 
           <button
             type="button"
-            className="w-full rounded-full bg-[#0090D0] py-2 text-lg font-semibold text-white"
+            className="w-full rounded-full bg-[#0090D0] py-2 !text-base font-semibold text-white md:!text-lg"
             disabled={!selectedAddress}
             onClick={() => {
               if (selectedAddress) {
@@ -597,7 +601,7 @@ const CheckoutPage = () => {
               setShowAddressBookModal(false);
               setShowAddAddressModal(true);
             }}
-            className="flex w-full items-center justify-center py-2 font-medium text-blue-600"
+            className="flex w-full items-center justify-center py-2 !text-sm font-medium text-blue-600 md:!text-base"
           >
             <Plus className="mr-2 h-4 w-4" />
             Add New Address
@@ -606,8 +610,8 @@ const CheckoutPage = () => {
           {/* Display selected address information */}
           {selectedAddress && (
             <div className="mt-4 rounded-lg bg-gray-50 p-4">
-              <h4 className="!text-xl font-semibold text-gray-800">Selected Address:</h4>
-              <div className="mt-2 space-y-1 text-sm text-gray-600">
+              <h4 className="!text-lg font-semibold text-gray-800 md:!text-xl">Selected Address:</h4>
+              <div className="mt-2 space-y-1 !text-xs text-gray-600 md:!text-sm">
                 <p>
                   <strong>Name:</strong> {selectedAddress.receiverName}
                 </p>
@@ -637,7 +641,7 @@ const CheckoutPage = () => {
         title="Add New Address"
         hideClose={false}
         className="max-w-md"
-        headerClassName={`!text-xl font-semibold`}
+        headerClassName={`!text-lg font-semibold md:!text-xl`}
       >
         <FormProvider {...addressMethods}>
           <form onSubmit={addressMethods.handleSubmit(handleAddAddress)} className="space-y-4">
@@ -666,11 +670,14 @@ const CheckoutPage = () => {
             </div>
 
             <div className="flex items-center justify-between py-2">
-              <span className="font-medium">Set As Default Address</span>
+              <span className="!text-sm font-medium md:!text-base">Set As Default Address</span>
               <input type="checkbox" {...addressMethods.register("isDefault")} className="h-4 w-4 accent-green-600" />
             </div>
 
-            <button type="submit" className="w-full rounded-full bg-[#0090D0] py-2 text-lg font-semibold text-white">
+            <button
+              type="submit"
+              className="w-full rounded-full bg-[#0090D0] py-2 !text-base font-semibold text-white md:!text-lg"
+            >
               Save Address
             </button>
           </form>

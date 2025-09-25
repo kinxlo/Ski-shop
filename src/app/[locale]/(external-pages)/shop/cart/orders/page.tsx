@@ -14,11 +14,11 @@ const Orders = ({ headerStyle }: { title: string; headerStyle?: string; hasActio
   const { data: orderData, isLoading, isError, refetch } = useGetOrders();
 
   return (
-    <section className="min-h-[480px] pt-[10rem]">
+    <section className="min-h-[480px] pt-18 lg:pt-[10rem]">
       <ProductBreadcrumb productTitle={`Orders`} />
       <Wrapper className={`py-16`}>
         <div className={cn(`mb-8 flex items-baseline justify-between`, headerStyle)}>
-          <h3 className={cn("", headerStyle)}>My Orders</h3>
+          <h3 className={cn("!text-lg md:!text-xl", headerStyle)}>My Orders</h3>
         </div>
 
         {/* Error State */}
@@ -28,8 +28,8 @@ const Orders = ({ headerStyle }: { title: string; headerStyle?: string; hasActio
             title="Failed to load orders"
             description="Something went wrong while loading your orders. Please try again."
             className="space-y-0 rounded-lg"
-            titleClassName="!text-2xl !text-mid-danger"
-            descriptionClassName="text-mid-danger mb-4"
+            titleClassName="!text-lg md:!text-2xl !text-mid-danger"
+            descriptionClassName="!text-sm md:!text-base text-mid-danger mb-4"
             actionButton={
               <SkiButton
                 onClick={() => refetch()}
@@ -59,8 +59,8 @@ const Orders = ({ headerStyle }: { title: string; headerStyle?: string; hasActio
               title="No orders yet"
               description="You haven't placed any orders yet. Start shopping to see your orders here."
               className="bg-mid-grey-I space-y-0 rounded-lg"
-              titleClassName="!text-2xl"
-              descriptionClassName="text-base mb-4"
+              titleClassName="!text-lg md:!text-2xl"
+              descriptionClassName="!text-sm md:!text-base mb-4"
               actionButton={
                 <SkiButton href="/shop" variant="primary">
                   Start Shopping
@@ -71,7 +71,7 @@ const Orders = ({ headerStyle }: { title: string; headerStyle?: string; hasActio
 
         {/* Orders Grid */}
         {!isLoading && !isError && orderData?.data.items && orderData.data.items.length > 0 && (
-          <div className="grid grid-cols-1 gap-8">
+          <div className="grid grid-cols-2 gap-1 md:gap-4">
             {orderData.data.items.map((product) => {
               return (
                 <OrderCard

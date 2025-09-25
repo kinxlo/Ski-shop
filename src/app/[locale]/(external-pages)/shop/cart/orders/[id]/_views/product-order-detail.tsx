@@ -53,7 +53,7 @@ export const ProductOrderDetail = ({ order }: ProductOrderDetailProperties) => {
   deliveryDate.setDate(deliveryDate.getDate() + 5); // Add 5 days for delivery
 
   return (
-    <section className={`mt-[10rem]`}>
+    <section className={`mt-18 lg:mt-[10rem]`}>
       <ProductBreadcrumb productTitle={`Order Details`} />
       <Wrapper className={`py-16`}>
         <div className={cn(`mb-8 flex items-baseline justify-between`)}>
@@ -62,7 +62,7 @@ export const ProductOrderDetail = ({ order }: ProductOrderDetailProperties) => {
         <div
           className={cn(
             "flex flex-col items-center gap-8 rounded-lg border bg-no-repeat p-4 lg:flex-row",
-            "bg-[url('/images/star-seller.svg')]",
+            // "bg-[url('/images/star-seller.svg')]",
           )}
         >
           <div className="relative z-[-1] aspect-square flex-1 overflow-hidden rounded-lg">

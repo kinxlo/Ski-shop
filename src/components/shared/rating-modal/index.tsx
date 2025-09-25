@@ -98,17 +98,17 @@ export const RatingModal = ({ product, onRatingSubmit, triggerStructure }: Ratin
     <Modal title="" description="" triggerStructure={triggerStructure} width="max-w-2xl">
       <div className="flex flex-col items-center justify-between space-y-6">
         <div className="flex flex-col items-center justify-center gap-2">
-          <h5 className="text-high-grey-II text-sm font-black lg:text-3xl">Rate This Product</h5>
+          <h5 className="!text-foreground !text-lg lg:!text-3xl">Rate This Product</h5>
           <p className="text-mid-grey-II text-sm">How would you rate this product?</p>
         </div>
         {/* Product Display */}
         <div className="border-border flex gap-4 rounded-lg border p-2">
           <div className="border-border relative h-20 w-20 flex-shrink-0 overflow-hidden rounded-lg border">
-            <Image src={product.images[0]} alt={product.name} fill className="object-cover" />
+            <Image priority src={product.images[0]} alt={product.name} fill className="object-cover" />
           </div>
           <div className="flex-1">
-            <p className="text-xl font-medium text-gray-900">{product.name}</p>
-            {product.description && <p className="mt-1 text-sm text-gray-600">{product.description}</p>}
+            <p className="!text-foreground !text-lg !font-semibold">{product.name}</p>
+            {product.description && <p className="mt-1 !text-sm">{product.description}</p>}
           </div>
         </div>
         <FormProvider {...methods}>
@@ -117,7 +117,7 @@ export const RatingModal = ({ product, onRatingSubmit, triggerStructure }: Ratin
             <div className="flex flex-col items-center justify-center gap-2">
               <p className="text-sm text-gray-600">Tap the stars to choose</p>
               <div className="flex gap-1">
-                <Ratings readonly={false} rating={rating} size={32} onChange={handleStarClick} />
+                <Ratings readonly={false} rating={rating} size={"!size-8"} onChange={handleStarClick} />
               </div>
             </div>
             {/* Review Input */}
