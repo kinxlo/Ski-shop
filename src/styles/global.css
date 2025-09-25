@@ -519,11 +519,11 @@ p {
 }
 
 /* Accessibility improvements */
+/* Do not globally disable animations. Respect reduced motion by removing smooth scrolling only.
+   Use Tailwind's motion-reduce utilities or add .motion-reduce on specific components if needed. */
 @media (prefers-reduced-motion: reduce) {
-  * {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
+  html:focus-within {
+    scroll-behavior: auto !important;
   }
 }
 
