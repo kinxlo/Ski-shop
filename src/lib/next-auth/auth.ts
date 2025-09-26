@@ -37,14 +37,10 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           }
 
           const callbackUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/auth/oauth/google/callback?code=${credentials.code}`;
-          
 
           const response = await axios.get(callbackUrl);
 
           if (response.data.success) {
-            
-            
-            
             return {
               id: response.data.data.user.id,
               name: response.data.data.user.fullName,
@@ -57,10 +53,6 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           return null;
         } catch (error) {
           if (axios.isAxiosError(error)) {
-            
-            
-            
-
             // Handle specific HTTP errors
             if (error.response?.status === 404) {
               throw new CredentialsSignin("Backend service not found. Please check your configuration.");
@@ -72,7 +64,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
             const message = error.response?.data?.message || "Google authentication failed";
             throw new CredentialsSignin(message);
           }
-          
+
           throw new CredentialsSignin("Google authentication failed");
         }
       },
@@ -128,8 +120,6 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     async jwt({ token, user, trigger, session }) {
       // Initial sign in
       if (user) {
-        
-        
         return {
           ...token,
           id: user.id,
@@ -161,8 +151,6 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     },
 
     session({ session, token }): Promise<any> {
-      // 
-      // 
       return Promise.resolve({
         ...session,
         user: {
