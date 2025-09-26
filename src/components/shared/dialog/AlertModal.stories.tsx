@@ -34,7 +34,7 @@ const AlertModalWithState = ({ type, ...properties }: { type: AlertType; [key: s
   const [isOpen, setIsOpen] = useState(false);
 
   const handleConfirm = () => {
-    console.log("Confirmed!");
+    
     setIsOpen(false);
   };
 

@@ -38,7 +38,7 @@ export const ProfileForm = () => {
   };
 
   const onSubmit = (data: ProfileFormData) => {
-    console.log(data);
+    
     // Handle form submission
   };
 

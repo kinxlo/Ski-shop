@@ -63,7 +63,7 @@ export default function TrackingPage({ params }: TrackingPageProperties) {
   const handleRateRider = async (rating: number, review?: string) => {
     // TODO: Implement rider rating API call
     // eslint-disable-next-line no-console
-    console.log("Rating submitted:", { rating, review });
+    
   };
 
   if (isLoading) {

@@ -26,7 +26,7 @@ export const NotificationSettingsForm = () => {
   } = methods;
 
   const onSubmit = (data: NotificationSettingsData) => {
-    console.log(data);
+    
     // Handle form submission
   };
 

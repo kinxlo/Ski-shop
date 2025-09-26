@@ -37,14 +37,14 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           }
 
           const callbackUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/auth/oauth/google/callback?code=${credentials.code}`;
-          console.log("Google OAuth callback URL:", callbackUrl);
+          
 
           const response = await axios.get(callbackUrl);
 
           if (response.data.success) {
-            console.log("Google OAuth successful, returning user data");
-            console.log("User role from backend:", response.data.data.user.role);
-            console.log("Full response data:", response.data.data);
+            
+            
+            
             return {
               id: response.data.data.user.id,
               name: response.data.data.user.fullName,
@@ -57,9 +57,9 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           return null;
         } catch (error) {
           if (axios.isAxiosError(error)) {
-            console.log("Google OAuth error:", error.response?.data || error.message);
-            console.log("Google OAuth error status:", error.response?.status);
-            console.log("Google OAuth error statusText:", error.response?.statusText);
+            
+            
+            
 
             // Handle specific HTTP errors
             if (error.response?.status === 404) {
@@ -72,7 +72,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
             const message = error.response?.data?.message || "Google authentication failed";
             throw new CredentialsSignin(message);
           }
-          console.log("Google OAuth unexpected error:", error);
+          
           throw new CredentialsSignin("Google authentication failed");
         }
       },
@@ -128,8 +128,8 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     async jwt({ token, user, trigger, session }) {
       // Initial sign in
       if (user) {
-        console.log("JWT callback - User:", user);
-        console.log("JWT callback - User role:", user.role);
+        
+        
         return {
           ...token,
           id: user.id,
@@ -161,8 +161,8 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     },
 
     session({ session, token }): Promise<any> {
-      // console.log("Session callback - Token:", token);
-      // console.log("Session callback - Token role:", token.role);
+      // 
+      // 
       return Promise.resolve({
         ...session,
         user: {

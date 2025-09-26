@@ -25,7 +25,7 @@ export const PasswordForm = () => {
   const { handleSubmit } = methods;
 
   const onSubmit = (data: PasswordFormData) => {
-    console.log(data);
+    
     // Handle form submission
   };
 

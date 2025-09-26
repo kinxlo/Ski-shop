@@ -31,7 +31,7 @@ const MockForm = ({ children, onSubmit }: { children: React.ReactNode; onSubmit?
 };
 
 const onSubmit = (data: any) => {
-  console.log(data);
+  
 };
 
 export const Default: Story = {

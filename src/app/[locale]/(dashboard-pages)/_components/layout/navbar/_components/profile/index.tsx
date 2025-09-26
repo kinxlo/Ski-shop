@@ -22,7 +22,7 @@ export const BaseProfile = ({ authService }: { authService: AuthService }) => {
   // eslint-disable-next-line unicorn/consistent-function-scoping
   const handleLogOut = async () => {
     // eslint-disable-next-line no-console
-    console.log(`logout`);
+    
   };
 
   // if (loading) {

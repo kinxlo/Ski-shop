@@ -21,13 +21,13 @@ export const MockServiceWorkerProvider = ({ children, isEnabled }: MockServiceWo
             onUnhandledRequest: "bypass", // or "warn" or "error"
             quiet: false, // set to true to suppress MSW logs
           });
-          console.log("[MSW] Mocking enabled.");
+          
         } catch (error) {
           console.error("[MSW] Failed to start worker:", error);
         }
         setIsReady(true);
       } else {
-        console.log("[MSW] Mocking disabled.");
+        
         setIsReady(true);
       }
     };

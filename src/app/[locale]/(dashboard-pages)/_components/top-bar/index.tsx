@@ -19,7 +19,7 @@ export default function TopBar({ notificationsCount = 0, className = "" }: TopBa
   const { data: session } = useSession();
   useEffect(() => {
     // eslint-disable-next-line no-console
-    console.log(session);
+    
   }, [session]);
   // Dropdown handled by shadcn DropdownMenu
 
