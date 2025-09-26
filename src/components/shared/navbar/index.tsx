@@ -274,8 +274,8 @@ export const Navbar = forwardRef<HTMLElement, NavbarProperties>(
                         <div className="space-y-4">
                           {/* User Role-Based Navigation */}
                           <div className="space-y-3">
-                            <ComponentGuard requireAuth allowedRoles={["admin"]}>
-                              <h3 className="!text-primary text-sm font-medium">Dashboard</h3>
+                            <h3 className="!text-primary text-sm font-medium">Dashboard</h3>
+                            <ComponentGuard requireAuth allowedRoles={["ADMIN"]}>
                               <div className="space-y-2">
                                 <SkiButton
                                   href="/admin/home"
@@ -303,7 +303,7 @@ export const Navbar = forwardRef<HTMLElement, NavbarProperties>(
                                 </SkiButton>
                               </div>
                             </ComponentGuard>
-                            <ComponentGuard requireAuth allowedRoles={["vendor"]}>
+                            <ComponentGuard requireAuth allowedRoles={["VENDOR"]}>
                               <div className="space-y-2">
                                 <SkiButton
                                   href={`/${locale}/dashboard/home`}
@@ -336,7 +336,7 @@ export const Navbar = forwardRef<HTMLElement, NavbarProperties>(
                           {/* Account Actions */}
                           <div className="space-y-3">
                             <h3 className="!text-primary text-sm font-medium">Account</h3>
-                            <ComponentGuard requireAuth allowedRoles={["vendor"]}>
+                            <ComponentGuard requireAuth allowedRoles={["VENDOR"]}>
                               <div className="space-y-4">
                                 <SkiButton
                                   href={`/${locale}/dashboard/profile`}
