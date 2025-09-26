@@ -8,11 +8,14 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
+import { Locale } from "@/lib/i18n/config";
+import { useLocale } from "next-intl";
 import { usePathname } from "next/navigation";
 import { PiHouse } from "react-icons/pi";
 
 export const BreadCrumb = () => {
   const pathName = usePathname();
+  const locale = useLocale() as Locale;
 
   return (
     <main className="mt-2 flex justify-center">
@@ -26,7 +29,7 @@ export const BreadCrumb = () => {
           </BreadcrumbItem>
           <BreadcrumbSeparator className="text-white" />
           <BreadcrumbItem>
-            <BreadcrumbPage className="text-white capitalize">{pathName.replace("/", "")}</BreadcrumbPage>
+            <BreadcrumbPage className="text-white capitalize">{pathName.replace(`/${locale}/`, "")}</BreadcrumbPage>
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>

@@ -122,19 +122,19 @@ export const ShopCard = ({
       </div>
       <div className="space-y-2">
         <p className="!text-[10px] capitalize md:!text-xs lg:!text-sm">{category}</p>
-        <p className="!text-foreground line-clamp-2 !text-xs !font-semibold md:!text-sm lg:!text-base">{title}</p>
+        <p className="!text-foreground !truncate !text-xs !font-semibold md:!text-sm lg:!text-base">{title}</p>
         <div className={`flex items-center justify-between`}>
-          <Ratings size={` md:!size-4`} rating={rating} />
+          <Ratings size={`!size-2.5 md:!size-4`} rating={rating} />
           {discountPercentage > 0 && (
             <Badge
               variant={`destructive`}
-              className="rounded px-1 py-[0.5px] text-[7px] font-medium text-white md:!text-[9px]"
+              className="rounded px-1 py-[0.5px] text-[8px] font-medium text-white md:!text-[9px]"
             >
               {discountPercentage}% OFF
             </Badge>
           )}
         </div>
-        <p className={`!text-[10px] underline md:!text-xs lg:!text-sm`}>By {name}</p>
+        <p className={`!truncate !text-[10px] underline md:!text-xs lg:!text-sm`}>By {name}</p>
         <div className="flex items-baseline gap-2">
           {discount ? (
             <>

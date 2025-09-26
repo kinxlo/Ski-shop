@@ -49,7 +49,7 @@ export const Footer = () => {
             </a> */}
           </div>
 
-          <div className="mt-10 items-center justify-between text-white xl:flex">
+          <div className="mt-10 items-center justify-between text-center text-white xl:flex xl:text-left">
             <div className="flex flex-col items-center justify-center xl:block">
               <Image src={Logo} alt={"Skicom Logo"} height={50} className={`rounded-md bg-white p-1`} />
               <div className="mt-5 flex items-center gap-4">
@@ -65,7 +65,7 @@ export const Footer = () => {
               </div>
             </div>
 
-            <div className="hidden xl:block">
+            <div className="mt-10 flex flex-col items-center justify-center xl:mt-0 xl:block">
               <h6 className="text-sm font-semibold !text-white uppercase">{t("contactInfo.title")}</h6>
               <p className="mt-5 text-sm text-white">{t("contactInfo.address")}</p>
               <div className="mt-2 flex items-center gap-1">
@@ -78,9 +78,9 @@ export const Footer = () => {
               </div>
             </div>
 
-            <div className="hidden xl:block">
-              <h6 className="text-sm font-semibold !text-white uppercase">{t("quickLinks.title")}</h6>
-              <div className="flex items-center gap-20">
+            <div className="mt-10 flex flex-col justify-center xl:mt-0 xl:block">
+              <h6 className="text-sm !font-semibold !text-white uppercase">{t("quickLinks.title")}</h6>
+              <div className="flex flex-col xl:flex-row xl:items-center xl:gap-20">
                 <div className="mt-5 flex flex-col gap-2">
                   <Link href="/about" className={`text-sm ${pathname === "/about" ? "text-primary font-bold" : ""}`}>
                     {t("about")}
@@ -104,29 +104,29 @@ export const Footer = () => {
               </div>
             </div>
 
-            <div className="hidden xl:block">
-              <h6 className="text-sm font-semibold !text-white uppercase">{t("help")}</h6>
-              <div className="flex items-center gap-20">
-                <div className="mt-5 flex flex-col gap-2">
-                  <Link
-                    href="/live-chat"
-                    className={`text-sm ${pathname === "/live-chat" ? "text-primary font-bold" : ""}`}
-                  >
-                    {t("liveChat")}
-                  </Link>
-                  <Link
-                    href="/terms-condition"
-                    className={`text-sm ${pathname === "/terms-condition" ? "text-primary font-bold" : ""}`}
-                  >
-                    {t("terms")}
-                  </Link>
-                </div>
+            <div className="mt-10 flex flex-col justify-center lg:mt-0 xl:block">
+              <h6 className="text-sm !font-semibold !text-white uppercase">{t("help")}</h6>
+              {/* <div className="flex items-center gap-20"> */}
+              <div className="mt-5 flex flex-col gap-2">
+                <Link
+                  href="/live-chat"
+                  className={`text-sm ${pathname === "/live-chat" ? "text-primary font-bold" : ""}`}
+                >
+                  {t("liveChat")}
+                </Link>
+                <Link
+                  href="/terms-condition"
+                  className={`text-sm ${pathname === "/terms-condition" ? "text-primary font-bold" : ""}`}
+                >
+                  {t("terms")}
+                </Link>
               </div>
             </div>
+            {/* </div> */}
           </div>
 
           <hr className="bg-background/50 my-10" />
-          <p className="text-center text-sm lg:!text-xl">{t("copyright", { year: getYear })}</p>
+          <p className="text-center !text-xs">{t("copyright", { year: getYear })}</p>
         </section>
       </Wrapper>
     </main>
