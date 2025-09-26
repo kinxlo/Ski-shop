@@ -10,6 +10,7 @@ import { Locale } from "@/lib/i18n/config";
 import { formatCurrency } from "@/lib/i18n/utils";
 import { useAppService } from "@/services/externals/app/use-app-service";
 import { useLocale, useTranslations } from "next-intl";
+import Link from "next/link";
 import { memo } from "react";
 
 interface ProductCardProperties {
@@ -43,7 +44,8 @@ const ProductCard = memo(({ product, isLarge = false, className = "" }: ProductC
   const backgroundPosition = isLarge ? "center" : "right";
 
   return (
-    <section
+    <Link
+      href={`/shop/products/${product?.id}`}
       className={`group relative overflow-hidden rounded-md ${className}`}
       role="article"
       aria-label={`Featured product: ${product?.name}`}
@@ -99,7 +101,7 @@ const ProductCard = memo(({ product, isLarge = false, className = "" }: ProductC
           </div> */}
         </div>
       </div>
-    </section>
+    </Link>
   );
 });
 

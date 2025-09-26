@@ -19,18 +19,20 @@ interface CategoryItemProperties {
 const CategoryItem = ({ title, image, href }: CategoryItemProperties) => {
   return (
     <section>
-      <Link href={href} className="group relative aspect-[3/4] overflow-hidden rounded-lg">
+      <Link href={href} className="group relative overflow-hidden rounded-lg">
         <BlurImage
           src={image}
           alt={title}
           width={300}
           height={400}
-          className="h-[400px] object-cover transition-transform duration-300 group-hover:scale-110"
+          className="h-[200px] object-cover transition-transform duration-300 group-hover:scale-110 lg:h-[400px]"
           // sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
         <div className="absolute inset-0 flex items-center justify-center px-10">
-          <span className="text-center text-sm font-medium text-white lg:!text-xl">{title}</span>
+          <span className="text-center !text-xs font-semibold tracking-[1px] text-white lg:!text-xl lg:tracking-normal">
+            {title}
+          </span>
         </div>
       </Link>
     </section>
@@ -69,6 +71,7 @@ export const Categories = () => {
   const renderCategoryItems = () => (
     <UniversalSwiper
       className={``}
+      swiperClassName={``}
       items={categories}
       renderItem={(category) => <CategoryItem title={category.title} image={category.image} href={category.href} />}
       swiperOptions={{
@@ -146,7 +149,7 @@ export const Categories = () => {
   };
 
   return (
-    <Wrapper className="min-h-[480px] pt-16">
+    <Wrapper className="pt-16">
       <div className="mb-8 flex items-baseline justify-center">
         <h2 className={cn("!text-xl lg:!text-4xl lg:!leading-[41.62px] lg:!tracking-[1px]")}>{`Categories`}</h2>
       </div>

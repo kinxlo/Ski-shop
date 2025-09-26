@@ -18,6 +18,7 @@ type Slide = {
   title: string;
   subtitle: string;
   image: string;
+  position: number;
 };
 
 const slidePositions = ["center", "left", "right"];
@@ -29,13 +30,23 @@ const HeroSlide = ({ slide, position, t }: { slide: Slide; position: string; t: 
     <div className="relative min-h-[700px] w-full">
       <BlurImage
         priority
-        className="absolute inset-0 h-full w-full object-cover"
+        className={cn(
+          "absolute inset-0 h-full w-full object-cover",
+          slide.position === 0 && `object-right`,
+          slide.position === 1 && `object-right`,
+          slide.position === 2 && `object-left`,
+        )}
         width={1440}
         height={800}
         src={slide.image}
         alt="hero-image"
       />
-      <div className="absolute inset-0 bg-gradient-to-r from-black/90 to-transparent" />
+      <div
+        className={cn(
+          "absolute inset-0 bg-gradient-to-r from-black/70 to-black/50 lg:from-black/90 lg:to-transparent",
+          slide.position === 2 && `lg:from-transparent lg:to-black/90`,
+        )}
+      />
       <Wrapper>
         <div
           className={cn(
@@ -51,7 +62,7 @@ const HeroSlide = ({ slide, position, t }: { slide: Slide; position: string; t: 
             <h1 className="!text-[32px] leading-[44px] font-bold !text-white lg:!text-[48px] lg:leading-[78px]">
               {slide.title}
             </h1>
-            <p className="!text-mid-grey-I mb-8 lg:!text-base">{slide.subtitle}</p>
+            <p className="!text-mid-grey-I mb-8 !text-base lg:!text-xl">{slide.subtitle}</p>
           </div>
           <div className="mx-auto mt-8 flex flex-col items-center gap-4 lg:mx-0 lg:flex-row">
             <SkiButton
@@ -85,27 +96,77 @@ const HeroSlide = ({ slide, position, t }: { slide: Slide; position: string; t: 
 
 export const Hero = () => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [isWindowLoaded, setIsWindowLoaded] = useState(false);
+  const [loadedImages, setLoadedImages] = useState(0);
   const t = useTranslations("home.hero");
   const slides = t.raw("slides");
+  const isReady = isWindowLoaded && loadedImages >= heroImages.length;
 
   useEffect(() => {
+    const handleLoad = () => setIsWindowLoaded(true);
+    if (typeof window !== "undefined") {
+      if (document.readyState === "complete") {
+        setIsWindowLoaded(true);
+      } else {
+        window.addEventListener("load", handleLoad);
+      }
+    }
+    return () => {
+      if (typeof window !== "undefined") {
+        window.removeEventListener("load", handleLoad);
+      }
+    };
+  }, []);
+
+  useEffect(() => {
+    let isCanceled = false;
+
+    const imageElements: HTMLImageElement[] = [];
+
+    const handleDone = () => {
+      if (!isCanceled) setLoadedImages((previous) => previous + 1);
+    };
+
+    for (const source of heroImages) {
+      const img = new Image();
+      imageElements.push(img);
+      img.addEventListener("load", handleDone);
+      img.addEventListener("error", handleDone);
+      img.src = source;
+    }
+
+    return () => {
+      isCanceled = true;
+      for (const img of imageElements) {
+        img.removeEventListener("load", handleDone);
+        img.removeEventListener("error", handleDone);
+      }
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!isReady) return;
+
     const interval = setInterval(() => {
       setCurrentImageIndex((previous) => (previous + 1) % heroImages.length);
-    }, 10_000);
+    }, 7000);
 
     return () => clearInterval(interval);
-  }, []);
+  }, [isReady]);
 
   return (
     <section className="bg-subtle relative overflow-hidden">
       <div
-        className="flex h-full w-[300%] transition-transform duration-[2.5s] ease-in-out"
-        style={{ transform: `translateX(-${currentImageIndex * (100 / 3)}%)` }}
+        className={cn(
+          "flex h-full w-[300%]",
+          isReady ? "transition-transform duration-[2.5s] ease-in-out" : "transition-none",
+        )}
+        style={{ transform: isReady ? `translateX(-${currentImageIndex * (100 / 3)}%)` : "translateX(0%)" }}
       >
-        {slides.map((slide: { title: string; subtitle: string }, index: number) => (
+        {slides.map((slide: { title: string; subtitle: string; position: number }, index: number) => (
           <HeroSlide
             key={index}
-            slide={{ ...slide, image: heroImages[index] }}
+            slide={{ ...slide, image: heroImages[index], position: index }}
             position={slidePositions[index]}
             t={t}
           />
@@ -117,10 +178,16 @@ export const Hero = () => {
         {heroImages.map((_, index) => (
           <button
             key={index}
-            className={`h-2 w-2 rounded-full transition-all ${
-              currentImageIndex === index ? "bg-accent w-6" : "bg-white"
-            }`}
-            onClick={() => setCurrentImageIndex(index)}
+            disabled={!isReady}
+            className={cn(
+              "h-2 w-2 rounded-full transition-all",
+              currentImageIndex === index ? "bg-accent w-6" : "bg-white",
+              !isReady && "cursor-not-allowed opacity-50",
+            )}
+            onClick={() => {
+              if (!isReady) return;
+              setCurrentImageIndex(index);
+            }}
           />
         ))}
       </div>
