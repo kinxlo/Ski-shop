@@ -19,6 +19,17 @@ export const Footer = () => {
   const pathname = usePathname();
   const t = useTranslations("footer");
 
+  // Normalize path to remove the locale segment (e.g., "/en/about" -> "/about")
+  const normalizedPath = (() => {
+    if (!pathname) return "/";
+    const parts = pathname.split("/");
+    if (parts.length > 2) {
+      const rest = parts.slice(2).join("/");
+      return rest ? `/${rest}` : "/";
+    }
+    return "/";
+  })();
+
   return (
     <main className="w-full bg-black py-10 md:py-14">
       <Wrapper>
@@ -82,21 +93,27 @@ export const Footer = () => {
               <h6 className="text-sm !font-semibold !text-white uppercase">{t("quickLinks.title")}</h6>
               <div className="flex flex-col xl:flex-row xl:items-center xl:gap-20">
                 <div className="mt-5 flex flex-col gap-2">
-                  <Link href="/about" className={`text-sm ${pathname === "/about" ? "text-primary font-bold" : ""}`}>
+                  <Link
+                    href="/about"
+                    className={`text-sm ${normalizedPath.startsWith("/about") ? "text-primary font-bold" : ""}`}
+                  >
                     {t("about")}
                   </Link>
-                  <Link href="/" className={`text-sm ${pathname === "/" ? "text-primary font-bold" : ""}`}>
+                  <Link href="/" className={`text-sm ${normalizedPath === "/" ? "text-primary font-bold" : ""}`}>
                     {t("explore")}
                   </Link>
                 </div>
 
                 <div className="mt-5 flex flex-col gap-2">
-                  <Link href="/shop" className={`text-sm ${pathname === "/shop" ? "text-primary font-bold" : ""}`}>
+                  <Link
+                    href="/shop"
+                    className={`text-sm ${normalizedPath.startsWith("/shop") ? "text-primary font-bold" : ""}`}
+                  >
                     {t("shop")}
                   </Link>
                   <Link
                     href="/contact"
-                    className={`text-sm ${pathname === "/contact" ? "text-primary font-bold" : ""}`}
+                    className={`text-sm ${normalizedPath.startsWith("/contact") ? "text-primary font-bold" : ""}`}
                   >
                     {t("contact")}
                   </Link>
@@ -110,13 +127,13 @@ export const Footer = () => {
               <div className="mt-5 flex flex-col gap-2">
                 <Link
                   href="/live-chat"
-                  className={`text-sm ${pathname === "/live-chat" ? "text-primary font-bold" : ""}`}
+                  className={`text-sm ${normalizedPath.startsWith("/live-chat") ? "text-primary font-bold" : ""}`}
                 >
                   {t("liveChat")}
                 </Link>
                 <Link
                   href="/terms-condition"
-                  className={`text-sm ${pathname === "/terms-condition" ? "text-primary font-bold" : ""}`}
+                  className={`text-sm ${normalizedPath.startsWith("/terms-condition") ? "text-primary font-bold" : ""}`}
                 >
                   {t("terms")}
                 </Link>

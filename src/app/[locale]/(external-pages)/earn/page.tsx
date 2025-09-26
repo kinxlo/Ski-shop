@@ -1,6 +1,5 @@
 "use client";
 
-import { BreadCrumb } from "@/components/shared/breadcrumb";
 import SkiButton from "@/components/shared/button";
 import { Input } from "@/components/ui/input";
 import { useTranslations } from "next-intl";
@@ -53,14 +52,14 @@ export default function EarnPage() {
   };
 
   return (
-    <section className="pt-[10rem]">
+    <section className="pt-18 lg:pt-[10rem]">
       <ProductBreadcrumb productTitle={t("profile.investEarn")} />
-      {/* Breadcrumb */}
-      <div className="border-b bg-white">
+      {/* Breadcrumb
+      <div className="border-b">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <BreadCrumb />
         </div>
-      </div>
+      </div> */}
 
       {/* Main Content */}
       <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
@@ -69,13 +68,13 @@ export default function EarnPage() {
           <div className="space-y-8 lg:col-span-3">
             {/* Title */}
             <div>
-              <h1 className="mb-4 !text-4xl font-bold text-gray-900">Invite & Earn</h1>
-              <p className="text-xl text-gray-600">Share Ski-Shop with friends and get rewarded!</p>
+              <h1 className="mb-4 text-2xl font-bold text-gray-900 md:text-3xl lg:text-4xl">Invite & Earn</h1>
+              <p className="text-base lg:!text-xl">Share Ski-Shop with friends and get rewarded!</p>
             </div>
 
             {/* Description */}
             <div className="">
-              <p className="text-3xl leading-relaxed font-bold text-gray-700">
+              <p className="text-xl leading-relaxed font-bold md:text-2xl lg:text-3xl">
                 Earn <span className="text-mid-warning font-semibold">coupons/vouchers</span> for every friend who signs
                 up and <span className="text-mid-warning font-semibold">places their first order</span>.
               </p>
@@ -102,7 +101,7 @@ export default function EarnPage() {
 
               <button
                 onClick={handleCopyLink}
-                className="text-primary hover:text-accent flex items-center justify-center gap-2 text-sm"
+                className="text-primary hover:text-accent flex items-center justify-center gap-2 text-xs md:text-sm"
               >
                 <PiLink className="h-4 w-4" />
                 Copy Invite link
@@ -112,11 +111,11 @@ export default function EarnPage() {
 
           {/* Right Column - Statistics */}
           <div className="lg:col-span-3">
-            <div className="rounded-lg bg-white p-6 shadow-sm">
+            <div className="rounded-lg bg-white p-6 shadow-sm dark:bg-[#111111]">
               <div className="space-y-4 text-center">
                 <div>
-                  <p className="text-sm text-gray-600">Successful Invites</p>
-                  <p className="text-3xl font-bold text-orange-500">{successfulInvites}</p>
+                  <p className="text-xs md:!text-lg">Successful Invites</p>
+                  <p className="!text-accent text-xl !font-bold md:text-2xl lg:text-3xl">{successfulInvites}</p>
                 </div>
 
                 <SkiButton variant="outline" className="border-primary text-primary w-full border shadow-none">
