@@ -59,6 +59,10 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
             </div>
             {children}
           </div>
+          {/* Footer - Responsive positioning */}
+          <p className="!text-primary absolute right-4 bottom-4 !text-xs md:block lg:!text-sm">
+            &copy; {new Date().getFullYear()} Skicom Inc.
+          </p>
         </div>
       </section>
 
@@ -89,11 +93,6 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
           alt="model"
           priority
         />
-
-        {/* Footer - Responsive positioning */}
-        <p className="text-primary absolute right-4 bottom-4 hidden text-sm font-semibold md:block lg:text-base">
-          &copy; {new Date().getFullYear()} Skicom Inc.
-        </p>
       </section>
     </main>
   );

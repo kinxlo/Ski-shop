@@ -79,18 +79,18 @@ export const LoginForm = () => {
             </div>
           </section>
 
-          <section className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <section className="flex items-center justify-between">
             <div className="flex items-center space-x-2">
               <Checkbox id="remember" />
               <label
                 htmlFor="remember"
-                className="text-sm leading-none font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                className="text-xs leading-none font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70 lg:text-sm"
               >
                 Remember Me
               </label>
             </div>
             <LocaleLink href="/forgot-password">
-              <p className="text-destructive text-sm hover:underline">Forgot Password?</p>
+              <p className="!text-destructive !text-xs hover:underline md:!text-sm">Forgot Password?</p>
             </LocaleLink>
           </section>
 
