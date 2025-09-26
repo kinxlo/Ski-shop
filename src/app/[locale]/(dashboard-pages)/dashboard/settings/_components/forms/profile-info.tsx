@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 "use client";
 
 import { BlurImage } from "@/components/core/miscellaneous/blur-image";
@@ -38,8 +37,8 @@ export const ProfileForm = () => {
   };
 
   const onSubmit = (data: ProfileFormData) => {
-    
     // Handle form submission
+    data;
   };
 
   return (

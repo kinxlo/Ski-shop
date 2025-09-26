@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { InputField } from ".";
 import type { Meta, StoryObj } from "@storybook/react";
@@ -31,7 +30,7 @@ const MockForm = ({ children, onSubmit }: { children: React.ReactNode; onSubmit?
 };
 
 const onSubmit = (data: any) => {
-  
+  data;
 };
 
 export const Default: Story = {

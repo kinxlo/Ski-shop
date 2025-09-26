@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable no-console */
 import { Button } from "@/components/ui/button";
 import type { Meta, StoryObj } from "@storybook/react";
 import { useState } from "react";
@@ -34,7 +33,6 @@ const AlertModalWithState = ({ type, ...properties }: { type: AlertType; [key: s
   const [isOpen, setIsOpen] = useState(false);
 
   const handleConfirm = () => {
-    
     setIsOpen(false);
   };
 

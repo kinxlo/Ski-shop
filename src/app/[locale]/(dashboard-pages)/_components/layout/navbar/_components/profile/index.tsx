@@ -20,10 +20,7 @@ import { LuChevronDown } from "react-icons/lu";
 export const BaseProfile = ({ authService }: { authService: AuthService }) => {
   const t = useTranslations();
   // eslint-disable-next-line unicorn/consistent-function-scoping
-  const handleLogOut = async () => {
-    // eslint-disable-next-line no-console
-    
-  };
+  const handleLogOut = async () => {};
 
   // if (loading) {
   //   return <div>Loading...</div>;

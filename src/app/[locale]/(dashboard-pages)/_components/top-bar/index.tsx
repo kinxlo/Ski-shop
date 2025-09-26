@@ -5,9 +5,10 @@ import { UserAvatarProfile } from "@/components/core/miscellaneous/user-avatar-p
 import { LanguageToggle } from "@/components/shared/language-toggle";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { BellDot } from "lucide-react";
-import { useSession } from "next-auth/react";
+// import { useSession } from "next-auth/react";
 import Image from "next/image";
-import { useEffect } from "react";
+
+// import { useEffect } from "react";
 
 type TopBarProperties = {
   notificationsCount?: number;
@@ -16,11 +17,8 @@ type TopBarProperties = {
 
 // onSearch,
 export default function TopBar({ notificationsCount = 0, className = "" }: TopBarProperties) {
-  const { data: session } = useSession();
-  useEffect(() => {
-    // eslint-disable-next-line no-console
-    
-  }, [session]);
+  // const { data: session } = useSession();
+  // useEffect(() => {}, [session]);
   // Dropdown handled by shadcn DropdownMenu
 
   const notifications = [

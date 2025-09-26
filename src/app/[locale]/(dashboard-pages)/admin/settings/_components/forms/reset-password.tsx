@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 "use client";
 
 // PasswordForm.tsx
@@ -25,8 +24,8 @@ export const PasswordForm = () => {
   const { handleSubmit } = methods;
 
   const onSubmit = (data: PasswordFormData) => {
-    
     // Handle form submission
+    data;
   };
 
   return (

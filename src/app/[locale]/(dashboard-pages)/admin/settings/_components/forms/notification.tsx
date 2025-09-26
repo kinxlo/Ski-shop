@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 "use client";
 
 // NotificationSettingsForm.tsx
@@ -26,8 +25,8 @@ export const NotificationSettingsForm = () => {
   } = methods;
 
   const onSubmit = (data: NotificationSettingsData) => {
-    
     // Handle form submission
+    data;
   };
 
   return (
