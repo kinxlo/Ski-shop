@@ -18,25 +18,26 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
       )}
     >
       {/* Content Section */}
-      <section className="flex flex-1 justify-center lg:items-center">
-        <div className="w-full max-w-md sm:max-w-lg">
-          <div className={`relative h-[10rem]`}>
+      <section className="flex flex-1 lg:items-center lg:justify-center">
+        <div className="w-full">
+          <div className={`relative h-[10rem] lg:hidden`}>
+            <div className="absolute inset-0 bg-gradient-to-r from-black/70 to-black/30" />
             <Link
               className="absolute top-4 left-4 z-10 transition-transform hover:scale-105 hover:animate-pulse"
               href={`/`}
             >
               <Image
-                width={84}
-                height={84}
+                width={500}
+                height={500}
                 src={"/images/skicom.svg"}
                 alt="logo"
-                className="h-16 w-16 sm:h-20 sm:w-20 md:h-[84px] md:w-[84px]"
+                className="w-[70px] rounded-sm bg-white p-1"
               />
             </Link>
             <Image
               width={742}
               height={900}
-              className="absolute inset-0 h-full w-full bg-gradient-to-r from-black/70 to-black/50 object-cover object-top"
+              className="h-full w-full object-cover object-top"
               src={
                 switchSides
                   ? "https://res.cloudinary.com/kingsleysolomon/image/upload/f_auto,q_auto/v1758641977/skicom/qhyhxofrhhj0rnvhm75j.png"
@@ -46,24 +47,36 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
               priority
             />
           </div>
-          <div className={`p-4`}>{children}</div>
+          <div className={`mx-auto max-w-md p-4 sm:max-w-lg`}>
+            <div className={`hidden lg:block`}>
+              <Image
+                width={500}
+                height={500}
+                src={"/images/skicom.svg"}
+                alt="logo"
+                className={cn("mx-auto mb-20 w-[150px] rounded-sm bg-white p-1")}
+              />
+            </div>
+            {children}
+          </div>
         </div>
       </section>
 
       {/* Logo and Image Section */}
       <section className="relative hidden flex-1 md:min-h-[50vh] lg:block lg:h-screen">
-        <Link
+        <div className="absolute inset-0 bg-gradient-to-r from-black/70 to-black/30" />
+        {/* <Link
           className="absolute top-4 left-4 z-10 transition-transform hover:scale-105 hover:animate-pulse"
           href={`/`}
         >
           <Image
-            width={84}
-            height={84}
-            src={"/images/skicom.svg"}
+            width={500}
+            height={500}
+            src={"/images/skicom-mini.svg"}
             alt="logo"
-            className="h-16 w-16 sm:h-20 sm:w-20 md:h-[84px] md:w-[84px]"
+            className="w-[30px] rounded-sm bg-white p-1"
           />
-        </Link>
+        </Link> */}
         <Image
           width={742}
           height={900}
