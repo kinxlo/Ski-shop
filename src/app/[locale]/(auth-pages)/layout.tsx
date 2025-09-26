@@ -49,13 +49,15 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
           </div>
           <div className={`mx-auto max-w-md p-4 sm:max-w-lg`}>
             <div className={`hidden lg:block`}>
-              <Image
-                width={500}
-                height={500}
-                src={"/images/skicom.svg"}
-                alt="logo"
-                className={cn("mx-auto mb-20 w-[150px] rounded-sm bg-white p-1")}
-              />
+              <Link href={`/`}>
+                <Image
+                  width={500}
+                  height={500}
+                  src={"/images/skicom.svg"}
+                  alt="logo"
+                  className={cn("mx-auto mb-20 w-[150px] rounded-sm bg-white p-1")}
+                />
+              </Link>
             </div>
             {children}
           </div>
