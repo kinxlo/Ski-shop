@@ -9,7 +9,7 @@ import "../styles/global.css";
 import { AppThemeProvider } from "@/components/core/miscellaneous/theme-provider";
 import { Toast } from "@/components/shared/Toast";
 import { ReactQueryProvider } from "@/lib/react-query/query-provider";
-import { MockServiceWorkerProvider } from "@/mocks/mock-provider";
+// import { MockServiceWorkerProvider } from "@/mocks/mock-provider";
 import { fontVariables } from "@/styles/font";
 import { SessionProvider } from "next-auth/react";
 
@@ -32,7 +32,9 @@ export default async function RootLayout({ children }: { children: React.ReactNo
               <NuqsAdapter>
                 <NextTopLoader showSpinner={false} />
                 <Toast />
-                <MockServiceWorkerProvider isEnabled={true}>{children}</MockServiceWorkerProvider>
+                {/* <MockServiceWorkerProvider isEnabled={true}> */}
+                {children}
+                {/* </MockServiceWorkerProvider> */}
               </NuqsAdapter>
             </AppThemeProvider>
           </ReactQueryProvider>
