@@ -21,13 +21,11 @@ export const MockServiceWorkerProvider = ({ children, isEnabled }: MockServiceWo
             onUnhandledRequest: "bypass", // or "warn" or "error"
             quiet: false, // set to true to suppress MSW logs
           });
-          
         } catch (error) {
           console.error("[MSW] Failed to start worker:", error);
         }
         setIsReady(true);
       } else {
-        
         setIsReady(true);
       }
     };
