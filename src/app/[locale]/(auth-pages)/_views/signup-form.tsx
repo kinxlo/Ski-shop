@@ -66,21 +66,26 @@ export const BaseSignupForm = () => {
   // };
 
   const renderFormFields = () => (
-    <section className="space-y-4">
-      <FormField placeholder="Enter email address" className="h-14 w-full" name="email" />
-      <div className="grid grid-cols-1 gap-4 space-y-2 lg:grid-cols-2">
-        <FormField placeholder="Enter first name" className="h-14 w-full" name="firstName" />
-        <FormField placeholder="Enter last name" className="h-14 w-full" name="lastName" />
+    <section className="space-y-4 sm:space-y-5">
+      <FormField placeholder="Enter email address" className="h-12 w-full sm:h-14" name="email" />
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+        <FormField placeholder="Enter first name" className="h-12 w-full sm:h-14" name="firstName" />
+        <FormField placeholder="Enter last name" className="h-12 w-full sm:h-14" name="lastName" />
       </div>
-      <FormField type="password" placeholder="Enter password" className="h-14 w-full" name="password" />
-      <FormField type="password" placeholder="Enter confirm password" className="h-14 w-full" name="confirmPassword" />
+      <FormField type="password" placeholder="Enter password" className="h-12 w-full sm:h-14" name="password" />
+      <FormField
+        type="password"
+        placeholder="Enter confirm password"
+        className="h-12 w-full sm:h-14"
+        name="confirmPassword"
+      />
     </section>
   );
 
   const renderTermsSection = () => (
-    <section className="mt-[23px] flex items-center justify-between">
-      <div className="text-muted-foreground mb-4">
-        <p>
+    <section className="mt-6">
+      <div className="text-muted-foreground text-xs sm:text-sm">
+        <p className="leading-relaxed">
           By signing up, you&apos;re agreeing to Skicom&apos;s
           <LocaleLink href={`/${locale}/privacy`} className="text-primary hover:underline">
             {" "}
@@ -96,21 +101,21 @@ export const BaseSignupForm = () => {
   );
 
   const renderActionButtons = () => (
-    <section className="flex flex-col items-center justify-center gap-[20px] pt-[20px]">
+    <section className="flex flex-col items-center justify-center gap-5 pt-6">
       <SkiButton
         isDisabled={!isValid}
         isLoading={isSigningUp}
         size="lg"
-        className="h-[56px] w-full rounded-full"
+        className="h-12 w-full rounded-full sm:h-14"
         variant="primary"
         type="submit"
       >
-        {isSigningUp ? "Signing up.." : " Sign up"}
+        {isSigningUp ? "Signing up..." : "Sign up"}
       </SkiButton>
-      {/* <span className="text-mid-grey-II">-------------------- OR --------------------</span>
+      {/* <span className="text-muted-foreground text-xs sm:text-sm">-------------------- OR --------------------</span>
       <SkiButton
         size="lg"
-        className="border-primary text-primary h-[56px] w-full rounded-full"
+        className="border-primary text-primary h-12 w-full rounded-full sm:h-14"
         variant="outline"
         isRightIconVisible
         icon={<FaGoogle />}
@@ -124,7 +129,7 @@ export const BaseSignupForm = () => {
   );
 
   const renderLoginPrompt = () => (
-    <p className="mt-6 text-center text-gray-500">
+    <p className="text-muted-foreground mt-6 text-center text-sm sm:text-base">
       Already a user?{" "}
       <LocaleLink href={`/${locale}/login`} className="text-primary font-medium hover:underline">
         Log In

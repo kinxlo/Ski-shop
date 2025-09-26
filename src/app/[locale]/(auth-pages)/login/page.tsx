@@ -4,11 +4,11 @@ import { LoginForm } from "../_views/login-form";
 
 const LoginPage = () => {
   return (
-    <section>
-      <div className="mb-[22px] space-y-[5px]">
-        <h3 className="text-[20px] lg:text-[28px]">Welcome Back, Admin!</h3>
-        <p className="text-mid-grey-II text-[14px] lg:text-[18px]">
-          Lorem, ipsum dolor sit amet consectetur adipisicing elit.
+    <section className="w-full">
+      <div className="mb-6 space-y-2 text-center sm:mb-8 sm:text-left">
+        <h3 className="text-xl font-semibold sm:text-2xl lg:text-3xl">Welcome Back!</h3>
+        <p className="text-muted-foreground text-sm sm:text-base lg:text-lg">
+          Sign in to access your dashboard and continue your journey.
         </p>
       </div>
       <LoginForm />

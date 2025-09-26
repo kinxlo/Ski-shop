@@ -58,27 +58,28 @@ export const LoginForm = () => {
   };
 
   return (
-    <section className="mx-auto lg:min-w-[550px]">
+    <section className="w-full">
       <FormProvider {...methods}>
-        <form onSubmit={handleSubmit(handleSubmitForm)} className="">
-          <section className={`space-y-4`}>
+        <form onSubmit={handleSubmit(handleSubmitForm)} className="space-y-6">
+          <section className="space-y-4 sm:space-y-5">
             <FormField
-              placeholder={`Enter email address`}
-              className={`h-14 w-full`}
-              label={`Email Address`}
-              name={"email"}
+              placeholder="Enter email address"
+              className="h-12 w-full sm:h-14"
+              label="Email Address"
+              name="email"
             />
             <div className="space-y-2">
               <FormField
-                type={`password`}
-                placeholder={`Enter password`}
-                className={`h-14 w-full`}
-                label={`Password`}
-                name={"password"}
+                type="password"
+                placeholder="Enter password"
+                className="h-12 w-full sm:h-14"
+                label="Password"
+                name="password"
               />
             </div>
           </section>
-          <section className="mt-[23px] flex items-center justify-between">
+
+          <section className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex items-center space-x-2">
               <Checkbox id="remember" />
               <label
@@ -89,26 +90,28 @@ export const LoginForm = () => {
               </label>
             </div>
             <LocaleLink href="/forgot-password">
-              <p className="text-mid-danger text-sm">Forgot Password ?</p>
+              <p className="text-destructive text-sm hover:underline">Forgot Password?</p>
             </LocaleLink>
           </section>
 
           {/* CTA */}
-          <section className="flex flex-col items-center justify-center gap-[20px] pt-[20px]">
+          <section className="flex flex-col items-center justify-center gap-5 pt-2">
             <SkiButton
               isDisabled={isSubmitting || !isValid}
               isLoading={isSubmitting}
               size="lg"
-              className="h-[56px] w-full rounded-full"
+              className="h-12 w-full rounded-full sm:h-14"
               variant="primary"
               type="submit"
             >
               Login
             </SkiButton>
-            <span className="text-mid-grey-II">-------------------- OR --------------------</span>
+            <span className="text-muted-foreground text-xs sm:text-sm">
+              -------------------- OR --------------------
+            </span>
             <SkiButton
               size="lg"
-              className="border-primary text-primary h-[56px] w-full rounded-full"
+              className="border-primary text-primary h-12 w-full rounded-full sm:h-14"
               variant="outline"
               isRightIconVisible
               icon={<FcGoogle />}
@@ -119,7 +122,8 @@ export const LoginForm = () => {
               Login with Google
             </SkiButton>
           </section>
-          <p className="mt-6 text-center text-gray-500">
+
+          <p className="text-muted-foreground mt-6 text-center text-sm sm:text-base">
             New user?{" "}
             <LocaleLink href="/signup" className="text-primary font-medium hover:underline">
               Sign up
