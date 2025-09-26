@@ -1,12 +1,13 @@
 "use client";
 
 import { Wrapper } from "@/components/core/layout/wrapper";
-import { SearchInput } from "@/components/core/miscellaneous/search-input";
+// import { SearchInput } from "@/components/core/miscellaneous/search-input";
 import { ModernThemeSwitcher } from "@/components/core/miscellaneous/theme-variant-switcher";
 import { UserAvatarProfile } from "@/components/core/miscellaneous/user-avatar-profile";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Drawer, DrawerContent, DrawerTrigger } from "@/components/ui/drawer";
 import { NAV_LINKS } from "@/lib/constants";
+import { ComponentGuard } from "@/lib/routes/component-guard";
 import { cn } from "@/lib/utils";
 import { useAppService } from "@/services/externals/app/use-app-service";
 import { Menu, ShoppingCartIcon } from "lucide-react";
@@ -18,7 +19,7 @@ import React, { forwardRef, useEffect, useState } from "react";
 import SkiButton from "../button";
 import { LanguageToggle } from "../language-toggle";
 import { Logo } from "../logo";
-import { SearchDialog } from "./_components/search-modal";
+// import { SearchDialog } from "./_components/search-modal";
 import { NavItems } from "./nav-menu-item";
 
 interface NavbarProperties {
@@ -71,17 +72,17 @@ export const Navbar = forwardRef<HTMLElement, NavbarProperties>(
     const pathname = usePathname();
     const { data: session } = useSession();
     const { isScrolled, scrollDirection } = useScrollBehavior();
-    const { useGetCart, useGetOrders, useGetSavedProducts } = useAppService();
+    const { useGetCart } = useAppService();
     const t = useTranslations("navbar");
     const locale = useLocale();
     // Fetch cart data
     const { data: cartResponse } = useGetCart();
     const cartItemCount = cartResponse?.data?.metadata?.total || 0;
     // Fetch orders and saved products data
-    const { data: ordersResponse } = useGetOrders();
-    const { data: savedProductsResponse } = useGetSavedProducts();
-    const ordersCount = ordersResponse?.data?.metadata?.total || 0;
-    const savedItemsCount = savedProductsResponse?.data?.metadata?.total || 0;
+    // const { data: ordersResponse } = useGetOrders();
+    // const { data: savedProductsResponse } = useGetSavedProducts();
+    // const ordersCount = ordersResponse?.data?.metadata?.total || 0;
+    // const savedItemsCount = savedProductsResponse?.data?.metadata?.total || 0;
     const [drawerOpen, setDrawerOpen] = useState(false);
 
     const isActiveLink = (href: string) => (href === "/" ? pathname === href : pathname.includes(href));
@@ -125,9 +126,9 @@ export const Navbar = forwardRef<HTMLElement, NavbarProperties>(
             {/* Right Side Actions */}
             <div className="flex items-center gap-2 md:gap-3">
               {/* Search - Hidden on very small screens */}
-              <div className="hidden sm:block">
+              {/* <div className="hidden sm:block">
                 <SearchDialog />
-              </div>
+              </div> */}
 
               {/* Enhanced Cart Button with Badge */}
               <div className="relative">
@@ -156,6 +157,9 @@ export const Navbar = forwardRef<HTMLElement, NavbarProperties>(
                 </DrawerTrigger>
                 <DrawerContent className="">
                   <div className="max-h-[85vh] space-y-6 overflow-y-auto px-6 py-6 pb-8">
+                    <div className="flex items-center justify-end px-2 py-1.5">
+                      <ModernThemeSwitcher />
+                    </div>
                     {/* User Profile Header - Mobile-friendly design */}
                     {session?.user && (
                       <div className="dark:bg-border bg-high-grey-I flex items-center gap-3 rounded-lg p-4">
@@ -174,9 +178,9 @@ export const Navbar = forwardRef<HTMLElement, NavbarProperties>(
                       </div>
                     )}
                     {/* Mobile Search - Prominent placement */}
-                    <div className="space-y-3">
+                    {/* <div className="space-y-3">
                       <SearchInput onSearch={() => {}} className="!w-full" />
-                    </div>
+                    </div> */}
 
                     {/* Main Navigation Section - Direct mobile-friendly links */}
                     <div className="space-y-3">
@@ -222,21 +226,23 @@ export const Navbar = forwardRef<HTMLElement, NavbarProperties>(
                     </div>
 
                     {/* Quick Actions Section */}
-                    <div className="space-y-3">
+                    {/* <div className="space-y-3">
                       <h3 className="!text-primary text-sm font-medium">Quick Actions</h3>
                       <div className="grid grid-cols-2 gap-3">
                         <SkiButton
                           href={`/${locale}/shop`}
                           variant="outline"
-                          className="w-full justify-center"
                           onClick={() => setDrawerOpen(false)}
+                          size={`sm`}
+                          className={`w-full`}
                         >
                           Browse Shop
                         </SkiButton>
                         <SkiButton
                           href={`/${locale}/shop/cart`}
                           variant="outline"
-                          className="w-full justify-center"
+                          size={`sm`}
+                          className={`w-full`}
                           onClick={() => setDrawerOpen(false)}
                         >
                           View Cart ({cartItemCount})
@@ -244,7 +250,8 @@ export const Navbar = forwardRef<HTMLElement, NavbarProperties>(
                         <SkiButton
                           href={`/${locale}/shop/cart/orders`}
                           variant="outline"
-                          className="w-full justify-center"
+                          size={`sm`}
+                          className={`w-full`}
                           onClick={() => setDrawerOpen(false)}
                         >
                           View orders ({ordersCount})
@@ -252,22 +259,23 @@ export const Navbar = forwardRef<HTMLElement, NavbarProperties>(
                         <SkiButton
                           href={`/${locale}/shop/cart/saved-items`}
                           variant="outline"
-                          className="w-full justify-center"
+                          size={`sm`}
+                          className={`w-full`}
                           onClick={() => setDrawerOpen(false)}
                         >
                           View saved items ({savedItemsCount})
                         </SkiButton>
                       </div>
-                    </div>
+                    </div> */}
 
                     {/* User Section */}
-                    <div className="border-t pt-6">
+                    <div className="border-t pt-4">
                       {session?.user ? (
                         <div className="space-y-4">
                           {/* User Role-Based Navigation */}
                           <div className="space-y-3">
-                            <h3 className="!text-primary text-sm font-medium">Dashboard</h3>
-                            {session.user.role?.name === "admin" || session.user.role?.name === "super_admin" ? (
+                            <ComponentGuard requireAuth allowedRoles={["admin"]}>
+                              <h3 className="!text-primary text-sm font-medium">Dashboard</h3>
                               <div className="space-y-2">
                                 <SkiButton
                                   href="/admin/home"
@@ -294,7 +302,8 @@ export const Navbar = forwardRef<HTMLElement, NavbarProperties>(
                                   Manage Products
                                 </SkiButton>
                               </div>
-                            ) : session.user.role?.name === "vendor" ? (
+                            </ComponentGuard>
+                            <ComponentGuard requireAuth allowedRoles={["vendor"]}>
                               <div className="space-y-2">
                                 <SkiButton
                                   href={`/${locale}/dashboard/home`}
@@ -321,57 +330,41 @@ export const Navbar = forwardRef<HTMLElement, NavbarProperties>(
                                   Orders
                                 </SkiButton>
                               </div>
-                            ) : (
-                              <div className="space-y-2">
-                                <SkiButton
-                                  href={`/${locale}/dashboard/home`}
-                                  variant="ghost"
-                                  className="w-full justify-start"
-                                  size="sm"
-                                >
-                                  My Account
-                                </SkiButton>
-                                <SkiButton
-                                  href={`/${locale}/dashboard/orders`}
-                                  variant="ghost"
-                                  className="w-full justify-start"
-                                  size="sm"
-                                >
-                                  My Orders
-                                </SkiButton>
-                              </div>
-                            )}
+                            </ComponentGuard>
                           </div>
 
                           {/* Account Actions */}
                           <div className="space-y-3">
                             <h3 className="!text-primary text-sm font-medium">Account</h3>
-                            <div className="space-y-4">
-                              <SkiButton
-                                href={`/${locale}/dashboard/profile`}
-                                variant="ghost"
-                                className="w-full justify-start"
-                                size="sm"
-                              >
-                                Profile Settings
-                              </SkiButton>
-                              <SkiButton
-                                href={`/${locale}/dashboard/settings`}
-                                variant="ghost"
-                                className="w-full justify-start"
-                                size="sm"
-                              >
-                                Account Settings
-                              </SkiButton>
-                              <SkiButton
-                                href={`/${locale}/api/auth/signout`}
-                                variant="ghost"
-                                className="w-full justify-start text-red-600 hover:bg-red-50 hover:text-red-700"
-                                size="sm"
-                              >
-                                Sign Out
-                              </SkiButton>
-                            </div>
+                            <ComponentGuard requireAuth allowedRoles={["vendor"]}>
+                              <div className="space-y-4">
+                                <SkiButton
+                                  href={`/${locale}/dashboard/profile`}
+                                  variant="ghost"
+                                  className="w-full justify-start"
+                                  size="sm"
+                                >
+                                  Profile Settings
+                                </SkiButton>
+                                <SkiButton
+                                  href={`/${locale}/dashboard/settings`}
+                                  variant="ghost"
+                                  className="w-full justify-start"
+                                  size="sm"
+                                >
+                                  Account Settings
+                                </SkiButton>
+                              </div>
+                            </ComponentGuard>
+
+                            <SkiButton
+                              href={`/${locale}/api/auth/signout`}
+                              variant="ghost"
+                              className="w-full justify-start text-red-600 hover:bg-red-50 hover:text-red-700"
+                              size="sm"
+                            >
+                              Sign Out
+                            </SkiButton>
                           </div>
                         </div>
                       ) : (
@@ -400,7 +393,7 @@ export const Navbar = forwardRef<HTMLElement, NavbarProperties>(
                     </div>
 
                     {/* Additional Features Section */}
-                    <div className="border-t pt-6">
+                    <div className="border-t pt-4">
                       <div className="space-y-3">
                         <h3 className="!text-primary text-sm font-medium">More</h3>
                         <div className="space-y-2">
@@ -417,10 +410,7 @@ export const Navbar = forwardRef<HTMLElement, NavbarProperties>(
                     </div>
 
                     {/* Language Toggle - Bottom placement */}
-                    <div className="border-t pt-6">
-                      <div className="flex items-center justify-between px-2 py-1.5">
-                        <ModernThemeSwitcher />
-                      </div>
+                    <div className="border-t pt-4">
                       <div className="space-y-3">
                         <h3 className="!text-primary text-sm font-medium">Language</h3>
                         <LanguageToggle />

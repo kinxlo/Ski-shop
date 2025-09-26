@@ -146,10 +146,10 @@ export function ModernThemeSwitcher({ className }: { className?: string }) {
           {currentIcon}
         </SkiButton>
       </PopoverTrigger>
-      <PopoverContent className="w-64" align="end">
+      <PopoverContent className="mt-6 w-64" align="end">
         <div className="space-y-4">
           <div>
-            <h4 className="mb-3 text-sm font-medium">Appearance</h4>
+            <h4 className="!text-primary mb-3 !text-sm !font-semibold">Appearance</h4>
             <div className="space-y-1">
               <button
                 type="button"
@@ -158,13 +158,13 @@ export function ModernThemeSwitcher({ className }: { className?: string }) {
                   setOpen(false);
                 }}
                 className={cn(
-                  "hover:bg-accent flex w-full items-center rounded-md px-2 py-2 text-left text-sm",
+                  "hover:bg-accent flex w-full items-center rounded-md px-2 py-2 text-left !text-xs",
                   context?.mode === "system" && "bg-accent",
                 )}
               >
                 <Monitor className="mr-2 h-4 w-4" />
                 System
-                {context?.mode === "system" && <Check className="ml-auto h-4 w-4" />}
+                {context?.mode === "system" && <Check className="ml-auto h-3 w-3" />}
               </button>
               <button
                 type="button"
@@ -173,13 +173,13 @@ export function ModernThemeSwitcher({ className }: { className?: string }) {
                   setOpen(false);
                 }}
                 className={cn(
-                  "hover:bg-accent flex w-full items-center rounded-md px-2 py-2 text-left text-sm",
+                  "hover:bg-accent flex w-full items-center rounded-md px-2 py-2 text-left !text-xs",
                   context?.mode === "light" && "bg-accent",
                 )}
               >
                 <Sun className="mr-2 h-4 w-4" />
                 Light
-                {context?.mode === "light" && <Check className="ml-auto h-4 w-4" />}
+                {context?.mode === "light" && <Check className="ml-auto h-3 w-3" />}
               </button>
               <button
                 type="button"
@@ -188,19 +188,19 @@ export function ModernThemeSwitcher({ className }: { className?: string }) {
                   setOpen(false);
                 }}
                 className={cn(
-                  "hover:bg-accent flex w-full items-center rounded-md px-2 py-2 text-left text-sm",
+                  "hover:bg-accent flex w-full items-center rounded-md px-2 py-2 text-left !text-xs",
                   context?.mode === "dark" && "bg-accent",
                 )}
               >
                 <Moon className="mr-2 h-4 w-4" />
                 Dark
-                {context?.mode === "dark" && <Check className="ml-auto h-4 w-4" />}
+                {context?.mode === "dark" && <Check className="ml-auto h-3 w-3" />}
               </button>
             </div>
           </div>
           <Separator />
           <div>
-            <h4 className="mb-3 text-sm font-medium">Accent Color</h4>
+            <h4 className="!text-primary mb-3 !text-sm !font-semibold">Accent Color</h4>
             <div className="space-y-1">
               <button
                 type="button"
@@ -209,13 +209,13 @@ export function ModernThemeSwitcher({ className }: { className?: string }) {
                   setOpen(false);
                 }}
                 className={cn(
-                  "hover:bg-accent flex w-full items-center rounded-md px-2 py-2 text-left text-sm",
+                  "hover:bg-accent flex w-full items-center rounded-md px-2 py-2 text-left !text-xs",
                   context?.variant === "default" && "bg-accent",
                 )}
               >
                 <Palette className="mr-2 h-4 w-4" />
                 Default
-                {context?.variant === "default" && <Check className="ml-auto h-4 w-4" />}
+                {context?.variant === "default" && <Check className="ml-auto h-3 w-3" />}
               </button>
               <button
                 type="button"
@@ -224,13 +224,13 @@ export function ModernThemeSwitcher({ className }: { className?: string }) {
                   setOpen(false);
                 }}
                 className={cn(
-                  "hover:bg-accent flex w-full items-center rounded-md px-2 py-2 text-left text-sm",
+                  "hover:bg-accent flex w-full items-center rounded-md px-2 py-2 text-left !text-xs",
                   context?.variant === "red" && "bg-accent",
                 )}
               >
                 <div className="mr-2 h-3 w-3 rounded-full bg-[oklch(0.6_0.23_25)]" />
                 Red
-                {context?.variant === "red" && <Check className="ml-auto h-4 w-4" />}
+                {context?.variant === "red" && <Check className="ml-auto h-3 w-3" />}
               </button>
               <button
                 type="button"
@@ -239,13 +239,13 @@ export function ModernThemeSwitcher({ className }: { className?: string }) {
                   setOpen(false);
                 }}
                 className={cn(
-                  "hover:bg-accent flex w-full items-center rounded-md px-2 py-2 text-left text-sm",
+                  "hover:bg-accent flex w-full items-center rounded-md px-2 py-2 text-left !text-xs",
                   context?.variant === "green" && "bg-accent",
                 )}
               >
                 <div className="mr-2 h-3 w-3 rounded-full bg-[oklch(0.62_0.18_155)]" />
                 Green
-                {context?.variant === "green" && <Check className="ml-auto h-4 w-4" />}
+                {context?.variant === "green" && <Check className="ml-auto h-3 w-3" />}
               </button>
             </div>
           </div>

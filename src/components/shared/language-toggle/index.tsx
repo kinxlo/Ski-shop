@@ -77,16 +77,16 @@ export function LanguageToggle() {
             <DropdownMenuItem
               key={lang}
               onClick={() => handleLanguageChange(lang)}
-              className={`flex items-center gap-2 ${
-                isCurrentLang ? "bg-accent font-medium" : ""
+              className={`flex items-baseline gap-2 ${
+                isCurrentLang ? "bg-accent/50 font-medium" : ""
               } ${isPending ? "cursor-not-allowed opacity-50" : ""}`}
               disabled={isPending}
               aria-label={`${t("common.switchTo", { defaultValue: "Switch to" })} ${localeNames[lang]}`}
             >
-              <span role="img" aria-label={`${localeNames[lang]} flag`} className="text-lg">
+              <span role="img" aria-label={`${localeNames[lang]} flag`} className="">
                 {localeFlags[lang]}
               </span>
-              <span className="flex-1">{localeNames[lang]}</span>
+              <span className="flex-1 !text-xs">{localeNames[lang]}</span>
               {isCurrentLang && (
                 <span
                   className="text-primary ml-auto text-xs"
