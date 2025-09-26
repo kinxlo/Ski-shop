@@ -16,24 +16,17 @@ const BasePreLoader = () => {
 
   useEffect(() => {
     if (code) {
-      
-      
       // Use the server action to handle Google OAuth callback
       handleGoogleCallback(code)
         .then((result) => {
-          
           if (result.success) {
             // Add a small delay to ensure session is established
             setTimeout(() => {
-              
               // Try to get the current session to debug
               fetch("/api/auth/session")
                 .then((response) => response.json())
                 .then((session) => {
-                  
                   if (session && session.user) {
-                    
-                    
                     const locale = parameters.locale as string;
                     router.push(`/${locale}/dashboard/home`);
                   } else {

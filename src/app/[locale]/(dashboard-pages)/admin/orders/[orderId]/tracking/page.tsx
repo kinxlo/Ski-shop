@@ -63,8 +63,8 @@ export default function TrackingPage({ params }: TrackingPageProperties) {
   // eslint-disable-next-line unicorn/consistent-function-scoping
   const handleRateRider = async (rating: number, review?: string) => {
     // TODO: Implement rider rating API call
-    // eslint-disable-next-line no-console
-    
+    rating;
+    review;
   };
 
   if (isLoading) {
