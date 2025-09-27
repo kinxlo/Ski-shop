@@ -1,6 +1,8 @@
 import { HttpAdapter } from "@/lib/http/http-adapter";
 import { tryCatchWrapper } from "@/lib/tools/tryCatchFunction";
 
+import { getCurrentStoreCached } from "../store/current-store";
+
 export class PromotionService {
   private readonly http: HttpAdapter;
 
@@ -81,17 +83,6 @@ export class PromotionService {
     });
   }
 
-  // Get my store /stores/current
-  async getMyStore() {
-    return tryCatchWrapper(async () => {
-      const response = await this.http.get<{ success: boolean; data: Store }>(`/stores/current`);
-      if (response?.status === 200) {
-        return response.data;
-      }
-      throw new Error("Failed to fetch store id");
-    });
-  }
-
   async getActiveCampaigns(filters?: Filters) {
     return tryCatchWrapper(async () => {
       const appliedFilters = filters
@@ -99,7 +90,7 @@ export class PromotionService {
         : ({ status: "active" } as Filters);
       const queryString = this.buildQueryParameters(appliedFilters);
 
-      const storeResult = await this.getMyStore();
+      const storeResult = await getCurrentStoreCached(this.http);
       const storeQuery = storeResult?.success ? `&storeId=${storeResult.data.id}` : "";
 
       const url = `/ads?${queryString}${storeQuery}`;

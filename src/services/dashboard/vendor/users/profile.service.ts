@@ -2,6 +2,8 @@ import { HttpAdapter } from "@/lib/http/http-adapter";
 import { tryCatchWrapper } from "@/lib/tools/tryCatchFunction";
 import { VendorProfileFormData } from "@/schemas";
 
+import { getCurrentStoreCached } from "../store/current-store";
+
 export interface VendorProfileApiResponse {
   success: boolean;
   data: VendorProfile;
@@ -17,13 +19,7 @@ export class DashboardProfileService {
 
   // get store info with /store/current
   async getVendorStore() {
-    return tryCatchWrapper(async () => {
-      const response = await this.http.get<{ success: boolean; data: Store }>(`/stores/current`);
-      if (response?.status === 200) {
-        return response.data;
-      }
-      throw new Error("Failed to fetch vendor store");
-    });
+    return getCurrentStoreCached(this.http);
   }
 
   //get vendor profile

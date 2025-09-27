@@ -3,6 +3,8 @@ import { HttpAdapter } from "@/lib/http/http-adapter";
 import { tryCatchWrapper } from "@/lib/tools/tryCatchFunction";
 import { SimpleProductFormData } from "@/schemas";
 
+import { getCurrentStoreCached } from "../store/current-store";
+
 export class DashboardProductService {
   private readonly http: HttpAdapter;
 
@@ -11,10 +13,9 @@ export class DashboardProductService {
   }
 
   async getAllProducts(filters: Filters) {
-    // if (filters === undefined) return;
-    const storeId = await this.getMyStore();
-    if (storeId?.success) {
-      const response = await this.http.get<ProductApiResponse>(`/products`, { storeId: storeId.data.id, ...filters });
+    const store = await getCurrentStoreCached(this.http);
+    if (store?.success) {
+      const response = await this.http.get<ProductApiResponse>(`/products`, { storeId: store.data.id, ...filters });
       if (response?.status === 200) {
         return response.data;
       }
@@ -22,16 +23,6 @@ export class DashboardProductService {
     }
     throw new Error("Failed to fetch products");
   }
-
-  // async getStoreInfo() {
-  //   return tryCatchWrapper(async () => {
-  //     const response = await this.http.get<StoreApiResponse>(`/stores/current`);
-  //     if (response?.status === 200) {
-  //       return response.data;
-  //     }
-  //     throw new Error("Failed to fetch store id");
-  //   });
-  // }
 
   async getSingleProduct(id: string) {
     return tryCatchWrapper(async () => {
@@ -148,17 +139,6 @@ export class DashboardProductService {
         return response.data;
       }
       throw new Error("Failed to update product status");
-    });
-  }
-
-  //get my store /stores/current
-  async getMyStore() {
-    return tryCatchWrapper(async () => {
-      const response = await this.http.get<{ success: boolean; data: Store }>(`/stores/current`);
-      if (response?.status === 200) {
-        return response.data;
-      }
-      throw new Error("Failed to fetch store id");
     });
   }
 }

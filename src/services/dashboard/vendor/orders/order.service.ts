@@ -12,15 +12,9 @@ export class DashboardOrderService {
 
   async getAllOrders(filters: Filters) {
     const queryParameters = this.buildQueryParameters(filters);
-    const storeId = await this.getMyStore();
-
-    if (storeId?.success) {
-      // const response = await this.http.get<IOrderApiResponse>(`/orders?storeId=${storeId.data.id}&${queryParameters}`);
-      const response = await this.http.get<OrderApiResponse>(`/orders?${queryParameters}`);
-      if (response?.status === 200) {
-        return response.data;
-      }
-      throw new Error("Failed to fetch orders");
+    const response = await this.http.get<OrderApiResponse>(`/orders?${queryParameters}`);
+    if (response?.status === 200) {
+      return response.data;
     }
     throw new Error("Failed to fetch orders");
   }
@@ -47,17 +41,6 @@ export class DashboardOrderService {
         return response.data;
       }
       throw new Error("Failed to update order status");
-    });
-  }
-
-  // Get my store /stores/current
-  async getMyStore() {
-    return tryCatchWrapper(async () => {
-      const response = await this.http.get<{ success: boolean; data: Store }>(`/stores/current`);
-      if (response?.status === 200) {
-        return response.data;
-      }
-      throw new Error("Failed to fetch store id");
     });
   }
 
