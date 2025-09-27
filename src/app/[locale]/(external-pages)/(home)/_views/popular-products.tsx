@@ -74,7 +74,7 @@ export const PopularProducts = ({
         ]}
         title="No products found"
         titleClassName="!text-lg font-bold !text-mid-warning"
-        description="There are no products in the database. Please add a product to get started."
+        description="There are no top products available."
         descriptionClassName="text-mid-grey-II"
         className="bg-mid-grey-I space-y-0 rounded-lg py-10 dark:bg-[#111111]"
       />

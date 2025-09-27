@@ -75,8 +75,7 @@ export const SkicomProducts = ({
         ]}
         title="No products found"
         titleClassName="!text-lg font-bold !text-mid-warning"
-        description="There are no products in the database. Please add a product to get started."
-        descriptionClassName="text-mid-grey-II"
+        description="There are no Skishop products available."
         className="bg-mid-grey-I space-y-0 rounded-lg py-10 dark:bg-[#111111]"
       />
     </div>
