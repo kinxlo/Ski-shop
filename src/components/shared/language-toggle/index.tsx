@@ -70,7 +70,7 @@ export function LanguageToggle() {
           {/* <span className="hidden sm:inline">{localeNames[currentLocale]}</span> */}
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="min-w-[200px]">
+      <DropdownMenuContent sideOffset={26} align="end" className="min-w-[200px]">
         {locales.map((lang) => {
           const isCurrentLang = currentLocale === lang;
           return (

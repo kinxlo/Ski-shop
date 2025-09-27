@@ -10,7 +10,6 @@ import { usePathname } from "next/navigation";
 import facebook from "~/images/facebook.png";
 import instagram from "~/images/instagram.png";
 // import Playstore from "~/images/Playstore.png";
-import Logo from "~/images/skicom.svg";
 import twitter from "~/images/twitter.png";
 import { NewsLetter } from "./news-letter/news-letter";
 
@@ -62,7 +61,13 @@ export const Footer = () => {
 
           <div className="mt-10 items-center justify-between text-center text-white xl:flex xl:text-left">
             <div className="flex flex-col items-center justify-center xl:block">
-              <Image src={Logo} alt={"Skicom Logo"} height={50} className={`rounded-md bg-white p-1`} />
+              <Image
+                src={`https://res.cloudinary.com/kingsleysolomon/image/upload/f_auto,q_auto/v1759015059/skicom/zgwlfx3dkbzstxdgcrvj.svg`}
+                alt={"Skicom Logo"}
+                height={50}
+                width={100}
+                className={`rounded-md bg-white p-1`}
+              />
               <div className="mt-5 flex items-center gap-4">
                 <a href="" className="rounded-full border p-2">
                   <Image src={instagram} alt="Instagram" className="h-[25px] w-[25px] rounded-full" />

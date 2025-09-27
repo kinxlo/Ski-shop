@@ -1,7 +1,6 @@
 "use client";
 
 import { Wrapper } from "@/components/core/layout/wrapper";
-import { BlurImage } from "@/components/core/miscellaneous/blur-image";
 import SkiButton from "@/components/shared/button";
 import { UniversalSwiper } from "@/components/shared/carousel";
 import { EmptyState } from "@/components/shared/empty-state";
@@ -16,26 +15,15 @@ interface CategoryItemProperties {
   href: string;
 }
 
-const CategoryItem = ({ title, image, href }: CategoryItemProperties) => {
+const CategoryItem = ({ title, href }: CategoryItemProperties) => {
   return (
-    <section>
-      <Link href={href} className="group relative overflow-hidden rounded-lg">
-        <BlurImage
-          src={image}
-          alt={title}
-          width={300}
-          height={400}
-          className="h-[200px] object-cover transition-transform duration-300 group-hover:scale-110 lg:h-[400px]"
-          // sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw"
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
-        <div className="absolute inset-0 flex items-center justify-center px-10">
-          <span className="text-center !text-xs font-semibold tracking-[1px] text-white lg:!text-xl lg:tracking-normal">
-            {title}
-          </span>
-        </div>
-      </Link>
-    </section>
+    <Link href={href}>
+      <div className="flex h-[200px] items-center justify-center overflow-hidden rounded-lg bg-[url(https://res.cloudinary.com/kingsleysolomon/image/upload/f_auto,q_auto/v1758668597/skicom/t2kc2sioj4vt4xgiesnw.svg)] bg-[50%] px-10 md:h-[400px]">
+        <span className="text-center !text-xs font-semibold tracking-[1px] text-white lg:!text-xl lg:tracking-normal">
+          {title}
+        </span>
+      </div>
+    </Link>
   );
 };
 

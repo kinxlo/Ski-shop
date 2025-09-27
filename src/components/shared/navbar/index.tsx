@@ -60,6 +60,7 @@ export const Navbar = forwardRef<HTMLElement, NavbarProperties>(
     {
       logo = (
         <Logo
+          className={`w-[30px] md:w-[40px]`}
           width={40}
           logo="https://res.cloudinary.com/kingsleysolomon/image/upload/f_auto,q_auto/v1758641970/skicom/vd6d83v5f4nmh7jtaqlf.png"
         />
@@ -190,38 +191,42 @@ export const Navbar = forwardRef<HTMLElement, NavbarProperties>(
                             </span>
                           )}
                         </div>
-                        <div className="relative">
-                          <SkiButton
-                            href={`/shop/cart/orders`}
-                            variant={`outline`}
-                            onClick={() => setDrawerOpen(false)}
-                            size={`icon`}
-                            className={`w-full`}
-                            isIconOnly
-                            icon={<ClipboardList />}
-                          />
-                          {ordersCount > 0 && (
-                            <span className="bg-primary absolute -top-1 -right-1 flex h-5 w-5 animate-pulse items-center justify-center rounded-full text-xs font-medium text-white">
-                              {ordersCount > 9 ? "9+" : ordersCount}
-                            </span>
-                          )}
-                        </div>
-                        <div className="relative">
-                          <SkiButton
-                            href={`/shop/cart/saved-items`}
-                            variant={`outline`}
-                            onClick={() => setDrawerOpen(false)}
-                            size={`icon`}
-                            className={`text-destructive w-full`}
-                            isIconOnly
-                            icon={<MdOutlineFavorite />}
-                          />
-                          {savedItemsCount > 0 && (
-                            <span className="bg-primary absolute -top-1 -right-1 flex h-5 w-5 animate-pulse items-center justify-center rounded-full text-xs font-medium text-white">
-                              {savedItemsCount > 9 ? "9+" : savedItemsCount}
-                            </span>
-                          )}
-                        </div>
+                        <ComponentGuard requireAuth allowedRoles={["CUSTOMER"]}>
+                          <div className="relative">
+                            <SkiButton
+                              href={`/shop/cart/orders`}
+                              variant={`outline`}
+                              onClick={() => setDrawerOpen(false)}
+                              size={`icon`}
+                              className={`w-full`}
+                              isIconOnly
+                              icon={<ClipboardList />}
+                            />
+                            {ordersCount > 0 && (
+                              <span className="bg-primary absolute -top-1 -right-1 flex h-5 w-5 animate-pulse items-center justify-center rounded-full text-xs font-medium text-white">
+                                {ordersCount > 9 ? "9+" : ordersCount}
+                              </span>
+                            )}
+                          </div>
+                        </ComponentGuard>
+                        <ComponentGuard requireAuth allowedRoles={["CUSTOMER"]}>
+                          <div className="relative">
+                            <SkiButton
+                              href={`/shop/cart/saved-items`}
+                              variant={`outline`}
+                              onClick={() => setDrawerOpen(false)}
+                              size={`icon`}
+                              className={`text-destructive w-full`}
+                              isIconOnly
+                              icon={<MdOutlineFavorite />}
+                            />
+                            {savedItemsCount > 0 && (
+                              <span className="bg-primary absolute -top-1 -right-1 flex h-5 w-5 animate-pulse items-center justify-center rounded-full text-xs font-medium text-white">
+                                {savedItemsCount > 9 ? "9+" : savedItemsCount}
+                              </span>
+                            )}
+                          </div>
+                        </ComponentGuard>
                       </div>
                     </div>
                     {/* User Profile Header - Mobile-friendly design */}

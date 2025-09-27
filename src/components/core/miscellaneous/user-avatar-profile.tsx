@@ -68,7 +68,7 @@ export function UserAvatarProfile({ className, showInfo = false }: UserAvatarPro
         <PiCaretDown className={`mr-2 h-4 w-4 transition-transform duration-200 ${open ? "rotate-180" : ""}`} />
       </DropdownMenuTrigger>
 
-      <DropdownMenuContent className="w-56" align="end">
+      <DropdownMenuContent sideOffset={20} className="w-56" align="end">
         <ComponentGuard requireAuth allowedRoles={["CUSTOMER"]}>
           <LocaleLink href={`/shop/cart/saved-items`}>
             <DropdownMenuItem className="cursor-pointer">

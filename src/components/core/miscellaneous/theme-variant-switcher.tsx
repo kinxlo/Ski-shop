@@ -146,7 +146,7 @@ export function ModernThemeSwitcher({ className }: { className?: string }) {
           {currentIcon}
         </SkiButton>
       </PopoverTrigger>
-      <PopoverContent className="mt-6 w-64" align="end">
+      <PopoverContent sideOffset={26} className="w-64" align="end">
         <div className="space-y-4">
           <div>
             <h4 className="!text-primary mb-3 !text-sm !font-semibold">Appearance</h4>
