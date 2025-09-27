@@ -1,5 +1,6 @@
 "use client";
 
+import { Logo } from "@/components/shared/logo";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 import Link from "next/link";
@@ -49,7 +50,10 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
           </div>
           <div className={`mx-auto max-w-md p-4 sm:max-w-lg`}>
             <div className={`hidden lg:block`}>
-              <Link href={`/`}>
+              <div className="bg-primary/10 mx-auto w-fit rounded-lg px-8 py-4">
+                <Logo width={120} height={40} className="text-primary" />
+              </div>
+              {/* <Link href={`/`}>
                 <Image
                   width={500}
                   height={500}
@@ -57,12 +61,12 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
                   alt="logo"
                   className={cn("mx-auto mb-20 w-[150px] rounded-sm bg-white p-1")}
                 />
-              </Link>
+              </Link> */}
             </div>
             {children}
           </div>
           {/* Footer - Responsive positioning */}
-          <p className="!text-primary absolute right-4 bottom-4 !text-xs md:block lg:!text-sm">
+          <p className="!text-primary p-10 text-center !text-xs md:block lg:!text-sm">
             &copy; {new Date().getFullYear()} Skicom Inc.
           </p>
         </div>

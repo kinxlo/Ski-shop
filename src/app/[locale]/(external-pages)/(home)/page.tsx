@@ -24,7 +24,7 @@ const Page = () => {
   const t = useTranslations("home");
   const { useGetTopVendors } = useAppService();
   const { data: dataVendors } = useGetTopVendors();
-  const skishop = dataVendors?.data?.items.find((vendor) => vendor.name.toLowerCase() === "skishop");
+  const skishop = dataVendors?.data?.items.find((vendor) => vendor.name.toLowerCase().includes(`ski`));
   return (
     <>
       <Hero />

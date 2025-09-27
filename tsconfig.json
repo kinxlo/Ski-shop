@@ -41,7 +41,7 @@
     "**/*.tsx",
     ".next/types/**/*.ts",
     "next.config.mjs",
-    "src/app/(dashboard-pages)/admin/_components/forms/add-product-form",
+    // "src/app/(dashboard-pages)/admin/_components/forms/add-product-form",
   ],
   "exclude": [
     "node_modules"

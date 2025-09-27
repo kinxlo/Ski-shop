@@ -61,8 +61,8 @@ const SavedItems = ({ headerStyle }: { title: string; headerStyle?: string; hasA
             title={"No saved items yet"}
             description={"Start saving your favorite products to see them here."}
             className={`bg-mid-grey-I space-y-0 rounded-lg`}
-            titleClassName={`!text-2xl`}
-            descriptionClassName={`text-base mb-4`}
+            titleClassName="!text-lg md:!text-2xl"
+            descriptionClassName="!text-sm md:!text-base mb-4"
             actionButton={
               <SkiButton href="/shop" variant="primary">
                 Browse Products

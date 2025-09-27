@@ -111,9 +111,9 @@ export const CartView = () => {
             },
           ]}
           title="Can't view cart"
-          titleClassName={`!text-lg font-bold !text-mid-warning`}
           description={"Please login to view your cart"}
-          descriptionClassName={`text-mid-grey-II`}
+          titleClassName="!text-lg md:!text-2xl"
+          descriptionClassName="!text-sm md:!text-base mb-4"
           className="bg-mid-grey-I space-y-0 rounded-lg py-10"
         />
       </Wrapper>
@@ -194,9 +194,9 @@ export const CartView = () => {
             },
           ]}
           title="Your cart is empty"
-          titleClassName={`!text-2xl font-bold`}
           description={"Add products to your cart to get started"}
-          descriptionClassName={`text-mid-grey-II`}
+          titleClassName="!text-lg md:!text-2xl"
+          descriptionClassName="!text-sm md:!text-base"
           className="bg-mid-grey-I space-y-0 rounded-lg py-10"
           button={{
             text: "Continue Shopping",

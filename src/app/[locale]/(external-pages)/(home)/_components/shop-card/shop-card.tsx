@@ -124,7 +124,7 @@ export const ShopCard = ({
         <p className="!text-[10px] capitalize md:!text-xs lg:!text-sm">{category}</p>
         <p className="!text-foreground !truncate !text-xs !font-semibold md:!text-sm lg:!text-base">{title}</p>
         <div className={`flex items-center justify-between`}>
-          <Ratings size={`!size-2.5 md:!size-4`} rating={rating} />
+          <Ratings size={`xs:!size-3 md:!size-4`} rating={rating} />
           {discountPercentage > 0 && (
             <Badge
               variant={`destructive`}

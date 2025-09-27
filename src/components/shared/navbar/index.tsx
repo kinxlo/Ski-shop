@@ -10,11 +10,13 @@ import { NAV_LINKS } from "@/lib/constants";
 import { ComponentGuard } from "@/lib/routes/component-guard";
 import { cn } from "@/lib/utils";
 import { useAppService } from "@/services/externals/app/use-app-service";
-import { Menu, ShoppingCartIcon } from "lucide-react";
-import { useSession } from "next-auth/react";
+import { ClipboardList, Menu, ShoppingCartIcon } from "lucide-react";
+import { signOut, useSession } from "next-auth/react";
 import { useLocale, useTranslations } from "next-intl";
 import { usePathname } from "next/navigation";
 import React, { forwardRef, useEffect, useState } from "react";
+import { MdOutlineFavorite } from "react-icons/md";
+import { toast } from "sonner";
 
 import SkiButton from "../button";
 import { LanguageToggle } from "../language-toggle";
@@ -72,20 +74,32 @@ export const Navbar = forwardRef<HTMLElement, NavbarProperties>(
     const pathname = usePathname();
     const { data: session } = useSession();
     const { isScrolled, scrollDirection } = useScrollBehavior();
-    const { useGetCart } = useAppService();
+    const { useGetCart, useGetSavedProducts, useGetOrders } = useAppService();
     const t = useTranslations("navbar");
     const locale = useLocale();
     // Fetch cart data
     const { data: cartResponse } = useGetCart();
     const cartItemCount = cartResponse?.data?.metadata?.total || 0;
     // Fetch orders and saved products data
-    // const { data: ordersResponse } = useGetOrders();
-    // const { data: savedProductsResponse } = useGetSavedProducts();
-    // const ordersCount = ordersResponse?.data?.metadata?.total || 0;
-    // const savedItemsCount = savedProductsResponse?.data?.metadata?.total || 0;
+    const { data: ordersResponse } = useGetOrders();
+    const { data: savedProductsResponse } = useGetSavedProducts();
+    const ordersCount = ordersResponse?.data?.metadata?.total || 0;
+    const savedItemsCount = savedProductsResponse?.data?.metadata?.total || 0;
     const [drawerOpen, setDrawerOpen] = useState(false);
 
     const isActiveLink = (href: string) => (href === "/" ? pathname === href : pathname.includes(href));
+
+    const handleLogout = async () => {
+      try {
+        await signOut({
+          redirect: true,
+          callbackUrl: "/login",
+        });
+        toast.success(t("logoutSuccess"));
+      } catch {
+        toast.error(t("logoutFailed"));
+      }
+    };
 
     return (
       <nav
@@ -157,8 +171,58 @@ export const Navbar = forwardRef<HTMLElement, NavbarProperties>(
                 </DrawerTrigger>
                 <DrawerContent className="">
                   <div className="max-h-[85vh] space-y-6 overflow-y-auto px-6 py-6 pb-8">
-                    <div className="flex items-center justify-end px-2 py-1.5">
+                    <div className="flex items-center justify-between gap-4 px-2 py-1.5">
                       <ModernThemeSwitcher />
+                      <div className={`item-center flex gap-4`}>
+                        <div className="relative">
+                          <SkiButton
+                            href={`/shop/cart`}
+                            variant={`outline`}
+                            onClick={() => setDrawerOpen(false)}
+                            size={`icon`}
+                            className={`w-full`}
+                            isIconOnly
+                            icon={<ShoppingCartIcon />}
+                          />
+                          {cartItemCount > 0 && (
+                            <span className="bg-primary absolute -top-1 -right-1 flex h-5 w-5 animate-pulse items-center justify-center rounded-full text-xs font-medium text-white">
+                              {cartItemCount > 9 ? "9+" : cartItemCount}
+                            </span>
+                          )}
+                        </div>
+                        <div className="relative">
+                          <SkiButton
+                            href={`/shop/cart/orders`}
+                            variant={`outline`}
+                            onClick={() => setDrawerOpen(false)}
+                            size={`icon`}
+                            className={`w-full`}
+                            isIconOnly
+                            icon={<ClipboardList />}
+                          />
+                          {ordersCount > 0 && (
+                            <span className="bg-primary absolute -top-1 -right-1 flex h-5 w-5 animate-pulse items-center justify-center rounded-full text-xs font-medium text-white">
+                              {ordersCount > 9 ? "9+" : ordersCount}
+                            </span>
+                          )}
+                        </div>
+                        <div className="relative">
+                          <SkiButton
+                            href={`/shop/cart/saved-items`}
+                            variant={`outline`}
+                            onClick={() => setDrawerOpen(false)}
+                            size={`icon`}
+                            className={`text-destructive w-full`}
+                            isIconOnly
+                            icon={<MdOutlineFavorite />}
+                          />
+                          {savedItemsCount > 0 && (
+                            <span className="bg-primary absolute -top-1 -right-1 flex h-5 w-5 animate-pulse items-center justify-center rounded-full text-xs font-medium text-white">
+                              {savedItemsCount > 9 ? "9+" : savedItemsCount}
+                            </span>
+                          )}
+                        </div>
+                      </div>
                     </div>
                     {/* User Profile Header - Mobile-friendly design */}
                     {session?.user && (
@@ -224,49 +288,6 @@ export const Navbar = forwardRef<HTMLElement, NavbarProperties>(
                         </SkiButton>
                       </div>
                     </div>
-
-                    {/* Quick Actions Section */}
-                    {/* <div className="space-y-3">
-                      <h3 className="!text-primary text-sm font-medium">Quick Actions</h3>
-                      <div className="grid grid-cols-2 gap-3">
-                        <SkiButton
-                          href={`/${locale}/shop`}
-                          variant="outline"
-                          onClick={() => setDrawerOpen(false)}
-                          size={`sm`}
-                          className={`w-full`}
-                        >
-                          Browse Shop
-                        </SkiButton>
-                        <SkiButton
-                          href={`/${locale}/shop/cart`}
-                          variant="outline"
-                          size={`sm`}
-                          className={`w-full`}
-                          onClick={() => setDrawerOpen(false)}
-                        >
-                          View Cart ({cartItemCount})
-                        </SkiButton>
-                        <SkiButton
-                          href={`/${locale}/shop/cart/orders`}
-                          variant="outline"
-                          size={`sm`}
-                          className={`w-full`}
-                          onClick={() => setDrawerOpen(false)}
-                        >
-                          View orders ({ordersCount})
-                        </SkiButton>
-                        <SkiButton
-                          href={`/${locale}/shop/cart/saved-items`}
-                          variant="outline"
-                          size={`sm`}
-                          className={`w-full`}
-                          onClick={() => setDrawerOpen(false)}
-                        >
-                          View saved items ({savedItemsCount})
-                        </SkiButton>
-                      </div>
-                    </div> */}
 
                     {/* User Section */}
                     <div className="border-t pt-4">
@@ -358,12 +379,12 @@ export const Navbar = forwardRef<HTMLElement, NavbarProperties>(
                             </ComponentGuard>
 
                             <SkiButton
-                              href={`/${locale}/api/auth/signout`}
+                              onClick={handleLogout}
                               variant="ghost"
                               className="w-full justify-start text-red-600 hover:bg-red-50 hover:text-red-700"
                               size="sm"
                             >
-                              Sign Out
+                              Log Out
                             </SkiButton>
                           </div>
                         </div>
