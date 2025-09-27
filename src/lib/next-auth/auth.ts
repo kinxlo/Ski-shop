@@ -88,7 +88,6 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
             email,
             password,
           });
-
           if (response.status === 200) {
             return {
               id: response.data.data.user.id,
@@ -151,6 +150,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     },
 
     session({ session, token }): Promise<any> {
+      console.log(token);
       return Promise.resolve({
         ...session,
         user: {

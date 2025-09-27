@@ -69,28 +69,32 @@ export function UserAvatarProfile({ className, showInfo = false }: UserAvatarPro
       </DropdownMenuTrigger>
 
       <DropdownMenuContent className="w-56" align="end">
-        <LocaleLink href={`/shop/cart/saved-items`}>
-          <DropdownMenuItem className="cursor-pointer">
-            <PiHeart className="mr-2 h-4 w-4" />
-            <span>{t("saveItems")}</span>
-            {savedItemsCount > 0 && (
-              <span className="bg-primary text-primary-foreground ml-auto flex h-5 w-5 items-center justify-center rounded-full text-xs font-medium">
-                {savedItemsCount > 9 ? "9+" : savedItemsCount}
-              </span>
-            )}
-          </DropdownMenuItem>
-        </LocaleLink>
-        <LocaleLink href={`/shop/cart/orders`}>
-          <DropdownMenuItem className="cursor-pointer">
-            <ListOrdered className="mr-2 h-4 w-4" />
-            <span>{t("myOrders")}</span>
-            {ordersCount > 0 && (
-              <span className="bg-primary text-primary-foreground ml-auto flex h-5 w-5 items-center justify-center rounded-full text-xs font-medium">
-                {ordersCount > 9 ? "9+" : ordersCount}
-              </span>
-            )}
-          </DropdownMenuItem>
-        </LocaleLink>
+        <ComponentGuard requireAuth allowedRoles={["CUSTOMER"]}>
+          <LocaleLink href={`/shop/cart/saved-items`}>
+            <DropdownMenuItem className="cursor-pointer">
+              <PiHeart className="mr-2 h-4 w-4" />
+              <span>{t("saveItems")}</span>
+              {savedItemsCount > 0 && (
+                <span className="bg-primary text-primary-foreground ml-auto flex h-5 w-5 items-center justify-center rounded-full text-xs font-medium">
+                  {savedItemsCount > 9 ? "9+" : savedItemsCount}
+                </span>
+              )}
+            </DropdownMenuItem>
+          </LocaleLink>
+        </ComponentGuard>
+        <ComponentGuard requireAuth allowedRoles={["CUSTOMER"]}>
+          <LocaleLink href={`/shop/cart/orders`}>
+            <DropdownMenuItem className="cursor-pointer">
+              <ListOrdered className="mr-2 h-4 w-4" />
+              <span>{t("myOrders")}</span>
+              {ordersCount > 0 && (
+                <span className="bg-primary text-primary-foreground ml-auto flex h-5 w-5 items-center justify-center rounded-full text-xs font-medium">
+                  {ordersCount > 9 ? "9+" : ordersCount}
+                </span>
+              )}
+            </DropdownMenuItem>
+          </LocaleLink>
+        </ComponentGuard>
         <LocaleLink href={`/earn`}>
           <DropdownMenuItem className="cursor-pointer">
             <Users className="mr-2 h-4 w-4" />

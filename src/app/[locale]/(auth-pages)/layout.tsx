@@ -10,6 +10,7 @@ import React from "react";
 export default function AuthLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const switchSides = pathname.includes("signup");
+
   return (
     <main
       className={cn(
