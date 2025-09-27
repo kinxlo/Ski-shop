@@ -141,4 +141,9 @@ export class DashboardProductService {
       throw new Error("Failed to update product status");
     });
   }
+
+  // Get current store via shared cached fetch
+  async getMyStore() {
+    return getCurrentStoreCached(this.http);
+  }
 }

@@ -41,7 +41,6 @@ export const useDashboardProductService = () => {
   // Mutations
   const useCreateProduct = () => {
     const queryClient = useQueryClient();
-
     return useServiceMutation(
       (service, { productData, storeID }: { productData: SimpleProductFormData; storeID: string }) =>
         service.createProduct(productData, storeID),
