@@ -240,7 +240,7 @@ const CheckoutPage = () => {
   return (
     <section className="pt-18 lg:pt-[10rem]">
       <ProductBreadcrumb productTitle={`checkout`} />
-      <Wrapper className="px-4 py-8">
+      <Wrapper>
         <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
           {/* Delivery and Payment Section */}
           <div>

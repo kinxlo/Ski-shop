@@ -56,9 +56,9 @@ export const ProductOrderDetail = ({ order }: ProductOrderDetailProperties) => {
   return (
     <section className={`mt-18 lg:mt-[10rem]`}>
       <ProductBreadcrumb productTitle={`Order Details`} />
-      <Wrapper className={`py-16`}>
+      <Wrapper>
         <div className={cn(`mb-8 flex items-baseline justify-between`)}>
-          <h3 className={cn("!text-lg md:!text-xl")}>Order Details</h3>
+          <h3 className={cn("!text-lg md:!text-2xl")}>Order Details</h3>
         </div>
         <div
           className={cn(

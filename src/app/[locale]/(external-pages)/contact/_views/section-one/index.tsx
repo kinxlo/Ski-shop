@@ -26,13 +26,13 @@ export const SectionOne = () => {
 
   return (
     <section className="bg-high-grey-I pt-14 dark:bg-[#111111]">
-      <Wrapper>
+      <Wrapper className={``}>
         <div className="mx-auto max-w-[1000px] space-y-4 text-center">
           <h2 className={`!text-2xl md:!text-4xl`}>{t("title")}</h2>
           <p className={`mx-auto max-w-2xl sm:!text-lg`}>{t("description")}</p>
         </div>
 
-        <section className="bg-background gap-[66px]mx-auto mx-auto mt-[53px] space-x-4 rounded-[10px] p-4 lg:flex lg:justify-center lg:p-7 lg:px-[42px]">
+        <section className="bg-background !m-0 mx-auto mt-[53px] gap-[66px] space-x-4 rounded-[10px] p-4 lg:flex lg:justify-center lg:p-7 lg:px-[42px]">
           {/* contact form */}
           <div className="bg-mid-grey-III relative hidden h-[600px] w-full flex-col overflow-hidden rounded-tl-xl rounded-bl-xl p-8 text-white lg:flex">
             <h4 className="text-[28px] font-semibold !text-white">{t("contactInfo.title")}</h4>

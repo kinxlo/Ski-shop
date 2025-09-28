@@ -16,9 +16,9 @@ const Orders = ({ headerStyle }: { title: string; headerStyle?: string; hasActio
   return (
     <section className="min-h-[480px] pt-18 lg:pt-[10rem]">
       <ProductBreadcrumb productTitle={`Orders`} />
-      <Wrapper className={`py-16`}>
+      <Wrapper>
         <div className={cn(`mb-8 flex items-baseline justify-between`, headerStyle)}>
-          <h3 className={cn("!text-lg md:!text-xl", headerStyle)}>My Orders</h3>
+          <h3 className={cn("!text-lg md:!text-2xl", headerStyle)}>My Orders</h3>
         </div>
 
         {/* Error State */}

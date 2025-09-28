@@ -100,7 +100,7 @@ export const CartView = () => {
 
   if (!session) {
     return (
-      <Wrapper className="py-12">
+      <Wrapper>
         <EmptyState
           images={[
             {
@@ -148,7 +148,7 @@ export const CartView = () => {
 
   if (isLoading) {
     return (
-      <Wrapper className="py-12">
+      <Wrapper>
         <CartViewSkeleton />
       </Wrapper>
     );
@@ -156,7 +156,7 @@ export const CartView = () => {
 
   if (error) {
     return (
-      <Wrapper className="py-12">
+      <Wrapper>
         <EmptyState
           images={[
             {
@@ -178,7 +178,7 @@ export const CartView = () => {
   }
 
   return (
-    <Wrapper className="py-6 sm:py-10">
+    <Wrapper>
       <p className="mb-6 !text-lg !font-bold sm:mb-8 sm:!text-2xl">
         Cart {cartMetadata && `(${cartMetadata.total} items)`}
       </p>
