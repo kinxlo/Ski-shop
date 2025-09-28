@@ -19,7 +19,7 @@ export const metadata: Metadata = {
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="ng" suppressHydrationWarning>
+    <html lang="ng">
       <SessionProvider>
         <body className={cn("", fontVariables)}>
           <ReactQueryProvider>

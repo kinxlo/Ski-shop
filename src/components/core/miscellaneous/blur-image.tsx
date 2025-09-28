@@ -7,7 +7,7 @@ import { useState, type ComponentProps } from "react";
 const DEFAULT_PLACEHOLDER =
   "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFQEBAQAAAAAAAAAAAAAAAAAAAAX/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwA/vAA=";
 
-export function BlurImage(properties: ComponentProps<typeof Image>) {
+export function BlurImage({ style, ...properties }: ComponentProps<typeof Image>) {
   const [isLoading, setLoading] = useState(true);
 
   const source = properties.src as string | undefined;
@@ -22,6 +22,7 @@ export function BlurImage(properties: ComponentProps<typeof Image>) {
       alt={properties.alt}
       placeholder={computedBlur ? "blur" : undefined}
       blurDataURL={computedBlur}
+      style={style}
       className={cn(
         "duration-700 ease-in-out",
         isLoading ? "scale-105 blur-lg" : "blur-0 scale-100",

@@ -49,7 +49,8 @@ export const BlackFridayReusableBanner: FC<BannerProperties> = ({
           alt="wheel"
           width={600}
           height={420}
-          className="w-[600px] object-contain lg:h-[420px]"
+          style={{ height: "auto" }}
+          className="w-[600px] object-contain lg:max-h-[420px]"
         />
       </div>
       {showSalesTag && (
@@ -62,6 +63,7 @@ export const BlackFridayReusableBanner: FC<BannerProperties> = ({
           alt="wheel"
           width={244}
           height={323}
+          style={{ width: "auto" }}
           className="animate-swing absolute top-0 right-15 h-[80px] w-[80px] object-contain lg:h-[244px] lg:w-[323px]"
         />
       )}

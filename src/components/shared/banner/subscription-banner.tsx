@@ -16,6 +16,7 @@ const SubscriptionBanner: FC = () => {
         width={80}
         height={80}
         className={`h-[50px] w-[50px] lg:h-[80px] lg:w-[80px]`}
+        style={{ height: "auto" }}
       />
       <div>
         <h4 className="dark:text-mid-grey-II !text-base !tracking-wide !text-white lg:!text-3xl">{`Become a Star Seller`}</h4>{" "}

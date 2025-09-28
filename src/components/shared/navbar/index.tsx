@@ -62,6 +62,7 @@ export const Navbar = forwardRef<HTMLElement, NavbarProperties>(
         <Logo
           className={`w-[30px] md:w-[40px]`}
           width={40}
+          height={40}
           logo="https://res.cloudinary.com/kingsleysolomon/image/upload/f_auto,q_auto/v1758641970/skicom/vd6d83v5f4nmh7jtaqlf.png"
         />
       ),

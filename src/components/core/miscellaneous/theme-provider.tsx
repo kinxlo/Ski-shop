@@ -24,15 +24,22 @@ type ThemeContextValue = {
 export const AppThemeContext = createContext<ThemeContextValue | undefined>(undefined);
 
 export function AppThemeProvider({ children }: { children: ReactNode }) {
-  const [mode, setModeState] = useState<ThemeMode>(getThemeMode());
-  const [variant, setVariantState] = useState<ThemeVariant>(getThemeVariant());
-
-  const effectiveMode = useMemo(() => getEffectiveThemeMode(), []);
+  const [mode, setModeState] = useState<ThemeMode>("system");
+  const [variant, setVariantState] = useState<ThemeVariant>("default");
+  const [effectiveMode, setEffectiveModeState] = useState<Exclude<ThemeMode, "system">>("light");
 
   useEffect(() => {
     // Initialize on mount to ensure DOM reflects current storage
     initThemeMode();
     initThemeVariant();
+
+    const syncFromStorage = () => {
+      setModeState(getThemeMode());
+      setEffectiveModeState(getEffectiveThemeMode());
+      setVariantState(getThemeVariant());
+    };
+
+    syncFromStorage();
 
     // Sync with system preference when in system mode
     let media: MediaQueryList | undefined;
@@ -44,13 +51,17 @@ export function AppThemeProvider({ children }: { children: ReactNode }) {
     const handleSystem = () => {
       if (getThemeMode() === "system") {
         setModeState("system");
+        setEffectiveModeState(getEffectiveThemeMode());
       }
     };
     media?.addEventListener?.("change", handleSystem);
 
     // Cross-tab sync
     const onStorage = (event: StorageEvent) => {
-      if (event.key === "theme_mode") setModeState(getThemeMode());
+      if (event.key === "theme_mode") {
+        setModeState(getThemeMode());
+        setEffectiveModeState(getEffectiveThemeMode());
+      }
       if (event.key === "theme_variant") setVariantState(getThemeVariant());
     };
     window.addEventListener("storage", onStorage);
@@ -64,6 +75,7 @@ export function AppThemeProvider({ children }: { children: ReactNode }) {
   const setModeCallback = useCallback((m: ThemeMode) => {
     setModeState(m);
     setThemeMode(m);
+    setEffectiveModeState(getEffectiveThemeMode());
   }, []);
 
   const setVariantCallback = useCallback((v: ThemeVariant) => {
