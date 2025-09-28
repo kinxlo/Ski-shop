@@ -451,7 +451,7 @@ export const Navbar = forwardRef<HTMLElement, NavbarProperties>(
               </Drawer>
 
               {/* User Actions */}
-              <div className={cn(`hidden`, session?.user && `block`)}>
+              <div>
                 {session?.user ? (
                   <div className="hidden lg:block">
                     <UserAvatarProfile showInfo />

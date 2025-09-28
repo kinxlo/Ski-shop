@@ -6,17 +6,17 @@ import { LocaleLink } from "@/components/shared/locale-link";
 import { Checkbox } from "@/components/ui/checkbox";
 import { LoginFormData, loginSchema } from "@/schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useRouter } from "next/navigation";
-import { useTransition } from "react";
+import { signIn } from "next-auth/react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useTransition } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { FcGoogle } from "react-icons/fc";
 import { toast } from "sonner";
 
-import { login } from "../actions/auth-action";
-
 export const LoginForm = () => {
   const [isGooglePending, startGoogleTransition] = useTransition();
   const router = useRouter();
+  const searchParameters = useSearchParams();
   const methods = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
@@ -31,24 +31,48 @@ export const LoginForm = () => {
     setError,
   } = methods;
 
-  const handleSubmitForm = async (data: LoginFormData) => {
-    const result = await login(data);
-
-    if (result?.error) {
-      toast.error("Login Failed", {
-        description: result.error,
+  // Handle URL error parameters (from OAuth redirects)
+  useEffect(() => {
+    const error = searchParameters.get("error");
+    if (error) {
+      const decodedError = decodeURIComponent(error);
+      toast.error("Authentication Failed", {
+        description: decodedError,
       });
 
-      // Optionally set field errors
-      if (result.error.toLowerCase().includes("email")) {
-        setError("email", { message: result.error });
-      } else if (result.error.toLowerCase().includes("password")) {
-        setError("password", { message: result.error });
-      }
-    } else {
-      toast.success("Login Successful");
-      router.push("/dashboard/home");
+      // Clear the error from URL without page refresh
+      const newUrl = new URL(window.location.href);
+      newUrl.searchParams.delete("error");
+      window.history.replaceState({}, "", newUrl.toString());
     }
+  }, [searchParameters]);
+
+  const handleSubmitForm = async (data: LoginFormData) => {
+    const result = await signIn("credentials", {
+      redirect: false,
+      email: data.email,
+      password: data.password,
+    });
+
+    if (result?.error) {
+      let message = result.error as string;
+      if (message === "CredentialsSignin") {
+        message = "Invalid email or password. Please try again.";
+      }
+      toast.error("Login Failed", { description: message });
+      if (message.toLowerCase().includes("email")) {
+        setError("email", { message });
+      } else if (message.toLowerCase().includes("password")) {
+        setError("password", { message });
+      } else {
+        setError("email", { message: " " });
+        setError("password", { message });
+      }
+      return;
+    }
+
+    toast.success("Login Successful", { description: "Welcome back!" });
+    router.push("/dashboard/home");
   };
 
   const handleGoogleSignIn = () => {

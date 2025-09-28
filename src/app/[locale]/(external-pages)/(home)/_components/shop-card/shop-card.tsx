@@ -70,7 +70,7 @@ export const ShopCard = ({
     <LocaleLink
       href={`/shop/products/${id}`}
       className={cn(
-        "group borde relative block overflow-hidden rounded-lg bg-no-repeat p-2 md:p-4", // Added 'group' and 'relative' for positioning
+        "group relative block overflow-hidden rounded-lg bg-no-repeat p-2 md:p-4", // Added 'group' and 'relative' for positioning
         isStarSeller &&
           // "bg-[url(https://res.cloudinary.com/kingsleysolomon/image/upload/h_100,f_auto,q_auto/v1758641972/skicom/f7ajczgvhobbzpwehd8g.png)]",
           "bg-[url(/images/star-seller.svg)]",

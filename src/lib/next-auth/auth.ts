@@ -4,12 +4,7 @@ import axios from "axios";
 import NextAuth, { CredentialsSignin } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 
-// NextAuth module declarations are now globally available in src/types/
-declare module "next-auth" {
-  interface User extends NextAuthUser {}
-  interface Session extends NextAuthSession {}
-  interface JWT extends NextAuthJWT {}
-}
+// NextAuth module declarations are globally augmented in src/types/*.d.ts
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   // Support both legacy and new env names for the auth secret in different environments
@@ -28,6 +23,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       authorize: async (credentials) => {
         try {
           if (!credentials.code) {
+            console.error("Google OAuth: No code provided");
             throw new CredentialsSignin("Missing Google authentication data");
           }
 
@@ -37,10 +33,18 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           }
 
           const callbackUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/auth/oauth/google/callback?code=${credentials.code}`;
+          console.log("Google OAuth: Making request to backend");
 
-          const response = await axios.get(callbackUrl);
+          const response = await axios.get(callbackUrl, {
+            timeout: 10_000, // 10 second timeout
+            headers: {
+              Accept: "application/json",
+              "Content-Type": "application/json",
+            },
+          });
 
-          if (response.data.success) {
+          if (response.data?.success && response.data?.data?.user) {
+            console.log("Google OAuth: Backend authentication successful");
             return {
               id: response.data.data.user.id,
               name: response.data.data.user.fullName,
@@ -50,22 +54,51 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
               refreshToken: response.data.data.tokens.refreshToken,
             };
           }
-          return null;
+
+          console.error("Google OAuth: Backend returned unsuccessful response", response.data);
+          throw new CredentialsSignin(response.data?.message || "Google authentication failed");
         } catch (error) {
+          console.error("Google OAuth error:", error);
+
           if (axios.isAxiosError(error)) {
             // Handle specific HTTP errors
-            if (error.response?.status === 404) {
-              throw new CredentialsSignin("Backend service not found. Please check your configuration.");
+            if (error.code === "ECONNREFUSED") {
+              throw new CredentialsSignin("Backend service is unavailable. Please try again later.");
             }
+
+            if (error.code === "ENOTFOUND") {
+              throw new CredentialsSignin("Backend service could not be reached. Please check your connection.");
+            }
+
+            if (error.response?.status === 400) {
+              throw new CredentialsSignin(error.response?.data?.message || "Invalid authentication request");
+            }
+
+            if (error.response?.status === 401) {
+              throw new CredentialsSignin("Google authentication was rejected by the server");
+            }
+
+            if (error.response?.status === 404) {
+              throw new CredentialsSignin("Authentication service not found. Please contact support.");
+            }
+
             if (error.response?.status === 500) {
               throw new CredentialsSignin("Backend service error. Please try again later.");
+            }
+
+            if ((error.response?.status ?? 0) >= 500) {
+              throw new CredentialsSignin("Server error occurred. Please try again later.");
             }
 
             const message = error.response?.data?.message || "Google authentication failed";
             throw new CredentialsSignin(message);
           }
 
-          throw new CredentialsSignin("Google authentication failed");
+          if (error instanceof CredentialsSignin) {
+            throw error;
+          }
+
+          throw new CredentialsSignin("An unexpected error occurred during Google authentication");
         }
       },
     }),
@@ -119,21 +152,23 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     async jwt({ token, user, trigger, session }) {
       // Initial sign in
       if (user) {
+        const userAny = user as any;
+        const normalizedRole =
+          typeof userAny.role === "object"
+            ? {
+                id: String(userAny.role?.id ?? userAny.role?.name ?? "customer"),
+                name: String(userAny.role?.name ?? userAny.role?.id ?? "customer"),
+              }
+            : String(userAny.role ?? "customer");
+
         return {
           ...token,
-          id: user.id,
-          name: user.name,
-          email: user.email,
-          // Normalize role early to avoid case/format mismatches downstream
-          role:
-            typeof user.role === "object"
-              ? {
-                  id: String((user.role as any)?.id ?? (user.role as any)?.name ?? "customer"),
-                  name: String((user.role as any)?.name ?? (user.role as any)?.id ?? "customer"),
-                }
-              : String(user.role ?? "customer"),
-          accessToken: user.accessToken,
-          refreshToken: user.refreshToken,
+          id: (userAny.id as string) ?? (token as any).id,
+          name: (userAny.name as string) ?? (token as any).name,
+          email: (userAny.email as string) ?? (token as any).email,
+          role: normalizedRole,
+          accessToken: (userAny.accessToken as string) ?? (token as any).accessToken,
+          refreshToken: (userAny.refreshToken as string) ?? (token as any).refreshToken,
         };
       }
 
@@ -150,18 +185,17 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     },
 
     session({ session, token }): Promise<any> {
-      console.log(token);
       return Promise.resolve({
         ...session,
         user: {
           ...session.user,
-          id: token.id as string,
-          name: token.name as string,
-          email: token.email as string,
-          role: token.role,
+          id: (token as any).id as string,
+          name: (token as any).name as string,
+          email: (token as any).email as string,
+          role: (token as any).role,
         },
-        accessToken: token.accessToken,
-        refreshToken: token.refreshToken,
+        accessToken: (token as any).accessToken as string | undefined,
+        refreshToken: (token as any).refreshToken as string | undefined,
         expires: session.expires,
       });
     },

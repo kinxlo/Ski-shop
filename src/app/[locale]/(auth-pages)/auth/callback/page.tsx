@@ -4,8 +4,7 @@
 import Loading from "@/app/Loading";
 import { useSearchParameters } from "@/hooks/use-search-parameters";
 import { useParams, useRouter } from "next/navigation";
-import { useEffect } from "react";
-import { toast } from "sonner";
+import { useEffect, useState } from "react";
 
 import { handleGoogleCallback } from "../../actions/auth-action";
 
@@ -13,62 +12,91 @@ const BasePreLoader = () => {
   const router = useRouter();
   const parameters = useParams();
   const code = useSearchParameters("code");
+  const [isProcessing, setIsProcessing] = useState(true);
+  const [loadingMessage, setLoadingMessage] = useState("Getting credentials from Google...");
+
+  const redirectToLogin = (errorMessage: string) => {
+    const locale = parameters.locale as string;
+    router.push(`/${locale}/login?error=${encodeURIComponent(errorMessage)}`);
+  };
+
+  const redirectToDashboard = () => {
+    const locale = parameters.locale as string;
+    router.push(`/${locale}/dashboard/home`);
+  };
+
+  const verifySession = async (): Promise<boolean> => {
+    try {
+      setLoadingMessage("Verifying your session...");
+      const response = await fetch("/api/auth/session", {
+        method: "GET",
+        headers: {
+          "Cache-Control": "no-cache",
+        },
+      });
+
+      if (!response.ok) {
+        console.error("Session verification failed:", response.status);
+        return false;
+      }
+
+      const session = await response.json();
+      return !!(session && session.user);
+    } catch (error) {
+      console.error("Error verifying session:", error);
+      return false;
+    }
+  };
 
   useEffect(() => {
-    if (code) {
-      // Use the server action to handle Google OAuth callback
-      handleGoogleCallback(code)
-        .then((result) => {
-          if (result.success) {
-            // Add a small delay to ensure session is established
-            setTimeout(() => {
-              // Try to get the current session to debug
-              fetch("/api/auth/session")
-                .then((response) => response.json())
-                .then((session) => {
-                  if (session && session.user) {
-                    const locale = parameters.locale as string;
-                    router.push(`/${locale}/dashboard/home`);
-                  } else {
-                    console.error("No session or user found");
-                    const locale = parameters.locale as string;
-                    router.push(`/${locale}/login?error=` + encodeURIComponent("Session not established"));
-                  }
-                })
-                .catch((error) => {
-                  console.error("Error fetching session:", error);
-                  const locale = parameters.locale as string;
-                  router.push(`/${locale}/login?error=` + encodeURIComponent("Failed to verify session"));
-                });
-            }, 1000);
-          } else {
-            // Redirect to login with error on failure
-            const errorMessage = result.error || "Google authentication failed";
-            const locale = parameters.locale as string;
-            router.push(`/${locale}/login?error=` + encodeURIComponent(errorMessage));
-            toast.error("Google authentication failed", {
-              description: errorMessage,
-            });
-          }
-        })
-        .catch((error) => {
-          console.error("Google callback error:", error);
-          const locale = parameters.locale as string;
-          const errorMessage = error.message || "Google authentication failed";
-          router.push(`/${locale}/login?error=` + encodeURIComponent(errorMessage));
-          toast.error("Authentication Error", {
-            description: errorMessage,
-          });
-        });
-    } else {
-      // No code received, redirect to login
-      console.error("No Google auth code received");
-      const locale = parameters.locale as string;
-      router.push(`/${locale}/login?error=` + encodeURIComponent("No authentication code received"));
-    }
-  }, [code, router, parameters.locale]);
+    const processCallback = async () => {
+      try {
+        if (!code) {
+          redirectToLogin("No authentication code received from Google");
+          return;
+        }
 
-  return <Loading text={`Getting credentials from Google...`} />;
+        setLoadingMessage("Authenticating with Google...");
+        const result = await handleGoogleCallback(code);
+
+        if (!result.success) {
+          console.error("Google callback failed:", result.error);
+          redirectToLogin(result.error);
+          return;
+        }
+
+        // Success - verify session is established
+        const sessionEstablished = await verifySession();
+
+        if (sessionEstablished) {
+          setLoadingMessage("Authentication successful! Redirecting...");
+          // Small delay for better UX
+          setTimeout(() => {
+            redirectToDashboard();
+          }, 500);
+        } else {
+          console.error("Session not established after successful authentication");
+          redirectToLogin(
+            "Authentication succeeded but session could not be established. Please try logging in again.",
+          );
+        }
+      } catch (error) {
+        console.error("Callback processing error:", error);
+        const errorMessage =
+          error instanceof Error ? error.message : "An unexpected error occurred during authentication";
+        redirectToLogin(errorMessage);
+      } finally {
+        setIsProcessing(false);
+      }
+    };
+
+    if (isProcessing) {
+      processCallback();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [code, router, parameters.locale, isProcessing]);
+
+  return <Loading text={loadingMessage} />;
 };
 
 export default BasePreLoader;
