@@ -319,7 +319,7 @@ const Page = () => {
                 {/* <p className="!m-0 hidden text-sm text-gray-600 sm:block sm:text-base">{t("search.sortBy")}</p> */}
                 <p className="!m-0 hidden text-sm text-gray-600 sm:block sm:text-base">Filter:</p>
                 <CustomSelect
-                  options={["Oldest", "Newest", "1 star", "2 stars", "3 stars", "4 stars", "5 stars"]}
+                  options={["Oldest", "Newest"]}
                   placeholder={t("search.chooseSortOption")}
                   value={currentValue}
                   onChange={handleSortChange}

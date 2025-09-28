@@ -70,7 +70,7 @@ export const ShopCard = ({
     <LocaleLink
       href={`/shop/products/${id}`}
       className={cn(
-        "relative block overflow-hidden rounded-lg border bg-no-repeat p-2 md:p-4", // Added 'relative' for positioning
+        "group borde relative block overflow-hidden rounded-lg bg-no-repeat p-2 md:p-4", // Added 'group' and 'relative' for positioning
         isStarSeller &&
           // "bg-[url(https://res.cloudinary.com/kingsleysolomon/image/upload/h_100,f_auto,q_auto/v1758641972/skicom/f7ajczgvhobbzpwehd8g.png)]",
           "bg-[url(/images/star-seller.svg)]",
@@ -154,7 +154,7 @@ export const ShopCard = ({
         </div>
         <ComponentGuard requireAuth allowedRoles={["CUSTOMER"]}>
           {id && (
-            <div className="pt-2">
+            <div className="pt-2 opacity-0 transition-opacity duration-200 group-hover:opacity-100">
               <AddToCartButton isIconVisible={false} className={``} productId={id} fullWidth stopEventPropagation />
             </div>
           )}
