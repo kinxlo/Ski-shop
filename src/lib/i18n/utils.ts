@@ -7,7 +7,16 @@ export function formatCurrency(amount: number, locale: Locale = "ng", currency?:
   const currencyCode = currency || currencies[locale];
 
   // Map locales to BCP-47 tags for formatting
-  const formattingLocale = locale === "ng" ? "en-NG" : locale === "yo" ? "yo-NG" : locale === "ig" ? "ig-NG" : "ha-NG";
+  const formattingLocale =
+    locale === "ng"
+      ? "en-NG"
+      : locale === "yo"
+        ? "yo-NG"
+        : locale === "ig"
+          ? "ig-NG"
+          : locale === "ha"
+            ? "ha-NG"
+            : "en-NG"; // pcm
 
   return new Intl.NumberFormat(formattingLocale, {
     style: "currency",
@@ -25,7 +34,16 @@ export function formatDate(date: Date | string, locale: Locale = "ng", options?:
   const formatOptions = options || dateFormats[locale];
 
   // Map locales to BCP-47 tags for formatting
-  const formattingLocale = locale === "ng" ? "en-NG" : locale === "yo" ? "yo-NG" : locale === "ig" ? "ig-NG" : "ha-NG";
+  const formattingLocale =
+    locale === "ng"
+      ? "en-NG"
+      : locale === "yo"
+        ? "yo-NG"
+        : locale === "ig"
+          ? "ig-NG"
+          : locale === "ha"
+            ? "ha-NG"
+            : "en-NG"; // pcm
 
   return new Intl.DateTimeFormat(formattingLocale, formatOptions).format(dateObject);
 }
@@ -37,7 +55,16 @@ export function formatNumber(number: number, locale: Locale = "ng", options?: In
   const formatOptions = options || numberFormats[locale];
 
   // Map locales to BCP-47 tags for formatting
-  const formattingLocale = locale === "ng" ? "en-NG" : locale === "yo" ? "yo-NG" : locale === "ig" ? "ig-NG" : "ha-NG";
+  const formattingLocale =
+    locale === "ng"
+      ? "en-NG"
+      : locale === "yo"
+        ? "yo-NG"
+        : locale === "ig"
+          ? "ig-NG"
+          : locale === "ha"
+            ? "ha-NG"
+            : "en-NG"; // pcm
 
   return new Intl.NumberFormat(formattingLocale, formatOptions).format(number);
 }
@@ -61,7 +88,7 @@ export function getLocaleDirection(locale: Locale): "ltr" | "rtl" {
  * Validate if a string is a valid locale
  */
 export function isValidLocale(locale: string): locale is Locale {
-  return ["ng", "yo", "ig", "ha"].includes(locale);
+  return ["ng", "yo", "ig", "ha", "pcm"].includes(locale);
 }
 
 export const formatTime = (date: Date | string, locale: Locale = "ng", options?: Intl.DateTimeFormatOptions) => {
@@ -74,7 +101,16 @@ export const formatTime = (date: Date | string, locale: Locale = "ng", options?:
   };
 
   // Map locales to BCP-47 tags for formatting
-  const formattingLocale = locale === "ng" ? "en-NG" : locale === "yo" ? "yo-NG" : locale === "ig" ? "ig-NG" : "ha-NG";
+  const formattingLocale =
+    locale === "ng"
+      ? "en-NG"
+      : locale === "yo"
+        ? "yo-NG"
+        : locale === "ig"
+          ? "ig-NG"
+          : locale === "ha"
+            ? "ha-NG"
+            : "en-NG"; // pcm
 
   return new Intl.DateTimeFormat(formattingLocale, formatOptions).format(dateObject);
 };

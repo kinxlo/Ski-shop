@@ -1,4 +1,4 @@
-export const locales = ["ng", "yo", "ig", "ha"] as const;
+export const locales = ["ng", "yo", "ig", "ha", "pcm"] as const;
 export const defaultLocale = "ng" as const;
 
 export type Locale = (typeof locales)[number];
@@ -8,6 +8,7 @@ export const localeNames: Record<Locale, string> = {
   yo: "Yorùbá",
   ig: "Igbo",
   ha: "Hausa",
+  pcm: "Naija Pidgin",
 };
 
 export const localeFlags: Record<Locale, string> = {
@@ -15,6 +16,7 @@ export const localeFlags: Record<Locale, string> = {
   yo: "🇳🇬",
   ig: "🇳🇬",
   ha: "🇳🇬",
+  pcm: "🇳🇬",
 };
 
 export const currencies: Record<Locale, string> = {
@@ -22,6 +24,7 @@ export const currencies: Record<Locale, string> = {
   yo: "NGN",
   ig: "NGN",
   ha: "NGN",
+  pcm: "NGN",
 };
 
 export const dateFormats: Record<Locale, Intl.DateTimeFormatOptions> = {
@@ -45,6 +48,11 @@ export const dateFormats: Record<Locale, Intl.DateTimeFormatOptions> = {
     month: "long",
     day: "numeric",
   },
+  pcm: {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  },
 };
 
 export const numberFormats: Record<Locale, Intl.NumberFormatOptions> = {
@@ -64,6 +72,11 @@ export const numberFormats: Record<Locale, Intl.NumberFormatOptions> = {
     maximumFractionDigits: 2,
   },
   ha: {
+    style: "decimal",
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  },
+  pcm: {
     style: "decimal",
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,

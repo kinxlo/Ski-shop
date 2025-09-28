@@ -1,0 +1,658 @@
+{
+  "common": {
+    "loading": "E dey load...",
+    "error": "One error happen",
+    "success": "E work",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "view": "View",
+    "search": "Search",
+    "filter": "Filter",
+    "sort": "Sort",
+    "close": "Close",
+    "back": "Back",
+    "next": "Next",
+    "previous": "Previous",
+    "submit": "Submit",
+    "reset": "Reset",
+    "confirm": "Confirm",
+    "yes": "Yes",
+    "no": "No",
+    "ok": "OK",
+    "retry": "Try again",
+    "refresh": "Refresh",
+    "download": "Download",
+    "upload": "Upload",
+    "select": "Select",
+    "all": "All",
+    "none": "None",
+    "more": "More",
+    "less": "Less",
+    "show": "Show",
+    "hide": "Hide",
+    "enabled": "Enabled",
+    "disabled": "Disabled",
+    "active": "Active",
+    "inactive": "Inactive",
+    "online": "Online",
+    "offline": "Offline",
+    "public": "Public",
+    "private": "Private",
+    "draft": "Draft",
+    "published": "Published",
+    "pending": "Pending",
+    "approved": "Approved",
+    "rejected": "Rejected",
+    "completed": "Done",
+    "cancelled": "Cancelled",
+    "processing": "Processing",
+    "shipped": "Shipped",
+    "delivered": "Delivered",
+    "returned": "Returned",
+    "refunded": "Refunded",
+    "languageSelector": "Choose language",
+    "switchTo": "Switch to",
+    "currentLanguage": "Current language"
+  },
+  "auth": {
+    "login": "Log in",
+    "signup": "Sign up",
+    "logout": "Log out",
+    "email": "Email",
+    "password": "Password",
+    "confirmPassword": "Confirm password",
+    "firstName": "First name",
+    "lastName": "Last name",
+    "phone": "Phone",
+    "address": "Address",
+    "city": "City",
+    "state": "State",
+    "country": "Country",
+    "zipCode": "ZIP code",
+    "forgotPassword": "You forget password?",
+    "resetPassword": "Reset password",
+    "rememberMe": "Put me for mind",
+    "dontHaveAccount": "You no get account?",
+    "alreadyHaveAccount": "You don get account?",
+    "signInWithGoogle": "Sign in with Google",
+    "signUpWithGoogle": "Sign up with Google",
+    "loginSuccess": "Login success",
+    "loginFailed": "Login fail",
+    "signupSuccess": "Account create correct",
+    "signupFailed": "Account create fail",
+    "passwordResetSent": "We don send password reset email",
+    "passwordResetFailed": "Password reset fail",
+    "invalidCredentials": "Email or password no correct",
+    "emailAlreadyExists": "Email don dey",
+    "passwordsDoNotMatch": "Password no match",
+    "weakPassword": "Password no strong",
+    "invalidEmail": "Abeg enter correct email"
+  },
+  "navigation": {
+    "home": "Home",
+    "shop": "Shop",
+    "products": "Products",
+    "categories": "Categories",
+    "cart": "Cart",
+    "wishlist": "Wishlist",
+    "orders": "Orders",
+    "profile": "Profile",
+    "settings": "Settings",
+    "dashboard": "Dashboard",
+    "admin": "Admin",
+    "users": "Users",
+    "analytics": "Analytics",
+    "reports": "Reports",
+    "about": "About",
+    "contact": "Contact",
+    "help": "Help",
+    "support": "Support",
+    "faq": "FAQ",
+    "terms": "Terms of Service",
+    "privacy": "Privacy Policy",
+    "language": "Language",
+    "currency": "Currency",
+    "selectLanguage": "Choose language",
+    "examples": "Translation examples",
+    "greeting": "Greeting",
+    "hello": "Hello, World!",
+    "welcome": "Welcome",
+    "welcomeMessage": "Welcome to our app!",
+    "currentTime": "Current time",
+    "uiElements": "UI elements",
+    "status": "Status messages"
+  },
+  "shop": {
+    "addToCart": "Add to cart",
+    "buyNow": "Buy now",
+    "addToWishlist": "Add to wishlist",
+    "removeFromWishlist": "Remove from wishlist",
+    "price": "Price",
+    "originalPrice": "Original price",
+    "salePrice": "Sale price",
+    "discount": "Discount",
+    "description": "Description",
+    "specifications": "Specifications",
+    "reviews": "Reviews",
+    "rating": "Rating",
+    "availability": "Availability",
+    "inStock": "In stock",
+    "outOfStock": "Out of stock",
+    "lowStock": "Low stock",
+    "quantity": "Quantity",
+    "size": "Size",
+    "color": "Color",
+    "brand": "Brand",
+    "category": "Category",
+    "tags": "Tags",
+    "relatedProducts": "Related products",
+    "featuredProducts": "Featured products",
+    "newArrivals": "New arrivals",
+    "bestSellers": "Best sellers",
+    "onSale": "On sale",
+    "clearance": "Clearance",
+    "sortBy": "Sort by",
+    "filterBy": "Filter by",
+    "priceRange": "Price range",
+    "brandFilter": "Brand",
+    "categoryFilter": "Category",
+    "colorFilter": "Color",
+    "sizeFilter": "Size",
+    "ratingFilter": "Rating",
+    "availabilityFilter": "Availability",
+    "applyFilters": "Apply filters",
+    "clearFilters": "Clear filters",
+    "noProductsFound": "We no see any product",
+    "loadingProducts": "E dey load products...",
+    "productAddedToCart": "We don add product for cart",
+    "productRemovedFromCart": "We don remove product from cart",
+    "productAddedToWishlist": "We don add product for wishlist",
+    "productRemovedFromWishlist": "We don remove product from wishlist"
+  },
+  "cart": {
+    "title": "Shopping cart",
+    "empty": "Your cart empty",
+    "subtotal": "Subtotal",
+    "tax": "Tax",
+    "shipping": "Shipping",
+    "total": "Total",
+    "checkout": "Checkout",
+    "continueShopping": "Continue shopping",
+    "updateCart": "Update cart",
+    "removeItem": "Remove item",
+    "saveForLater": "Save for later",
+    "moveToWishlist": "Move go wishlist",
+    "estimatedTotal": "Estimated total",
+    "freeShipping": "Free shipping",
+    "shippingCalculated": "We go calculate shipping for checkout",
+    "promoCode": "Promo code",
+    "applyPromo": "Apply promo",
+    "invalidPromo": "Promo code no correct",
+    "promoApplied": "Promo code don enter",
+    "promoRemoved": "We don remove promo code"
+  },
+  "checkout": {
+    "title": "Checkout",
+    "billingAddress": "Billing address",
+    "shippingAddress": "Shipping address",
+    "paymentMethod": "Payment method",
+    "orderSummary": "Order summary",
+    "placeOrder": "Place order",
+    "orderConfirmation": "Order confirmation",
+    "orderNumber": "Order number",
+    "orderDate": "Order date",
+    "estimatedDelivery": "Estimated delivery",
+    "trackingNumber": "Tracking number",
+    "orderStatus": "Order status",
+    "creditCard": "Credit card",
+    "debitCard": "Debit card",
+    "paypal": "PayPal",
+    "applePay": "Apple Pay",
+    "googlePay": "Google Pay",
+    "cardNumber": "Card number",
+    "expiryDate": "Expiry date",
+    "cvv": "CVV",
+    "cardholderName": "Cardholder name",
+    "billingZip": "Billing ZIP",
+    "sameAsShipping": "Same as shipping address",
+    "differentBilling": "Use different billing address",
+    "orderNotes": "Order notes",
+    "termsAccepted": "I agree to Terms of Service",
+    "privacyAccepted": "I agree to Privacy Policy",
+    "orderPlaced": "Order don enter",
+    "orderFailed": "Order no go",
+    "paymentFailed": "Payment fail",
+    "insufficientStock": "Some items don finish for stock"
+  },
+  "dashboard": {
+    "overview": "Overview",
+    "sales": "Sales",
+    "orders": "Orders",
+    "customers": "Customers",
+    "products": "Products",
+    "inventory": "Inventory",
+    "analytics": "Analytics",
+    "reports": "Reports",
+    "settings": "Settings",
+    "profile": "Profile",
+    "notifications": "Notifications",
+    "help": "Help",
+    "logout": "Log out",
+    "totalSales": "Total sales",
+    "totalOrders": "Total orders",
+    "totalCustomers": "Total customers",
+    "totalProducts": "Total products",
+    "recentOrders": "Recent orders",
+    "topProducts": "Top products",
+    "salesChart": "Sales chart",
+    "orderStatus": "Order status",
+    "customerGrowth": "Customer growth",
+    "productPerformance": "Product performance",
+    "revenue": "Revenue",
+    "profit": "Profit",
+    "expenses": "Expenses",
+    "growth": "Growth",
+    "decline": "Decline",
+    "thisMonth": "This month",
+    "lastMonth": "Last month",
+    "thisYear": "This year",
+    "lastYear": "Last year",
+    "today": "Today",
+    "yesterday": "Yesterday",
+    "week": "Week",
+    "month": "Month",
+    "quarter": "Quarter",
+    "year": "Year"
+  },
+  "admin": {
+    "dashboard": "Admin dashboard",
+    "users": "User management",
+    "products": "Product management",
+    "orders": "Order management",
+    "categories": "Category management",
+    "brands": "Brand management",
+    "analytics": "Analytics",
+    "reports": "Reports",
+    "settings": "Settings",
+    "system": "System settings",
+    "backup": "Backup & Restore",
+    "logs": "System logs",
+    "permissions": "Permissions",
+    "roles": "Roles",
+    "addUser": "Add user",
+    "editUser": "Edit user",
+    "deleteUser": "Delete user",
+    "addProduct": "Add product",
+    "editProduct": "Edit product",
+    "deleteProduct": "Delete product",
+    "addCategory": "Add category",
+    "editCategory": "Edit category",
+    "deleteCategory": "Delete category",
+    "addBrand": "Add brand",
+    "editBrand": "Edit brand",
+    "deleteBrand": "Delete brand",
+    "viewOrder": "View order",
+    "updateOrder": "Update order",
+    "cancelOrder": "Cancel order",
+    "refundOrder": "Refund order",
+    "exportData": "Export data",
+    "importData": "Import data",
+    "bulkActions": "Bulk actions",
+    "selectAll": "Select all",
+    "deselectAll": "Deselect all",
+    "deleteSelected": "Delete selected",
+    "updateSelected": "Update selected"
+  },
+  "profile": {
+    "title": "Profile",
+    "personalInfo": "Personal info",
+    "accountSettings": "Account settings",
+    "security": "Security",
+    "notifications": "Notifications",
+    "preferences": "Preferences",
+    "language": "Language",
+    "currency": "Currency",
+    "timezone": "Timezone",
+    "dateFormat": "Date format",
+    "timeFormat": "Time format",
+    "theme": "Theme",
+    "light": "Light",
+    "dark": "Dark",
+    "system": "System",
+    "emailNotifications": "Email notifications",
+    "pushNotifications": "Push notifications",
+    "smsNotifications": "SMS notifications",
+    "marketingEmails": "Marketing emails",
+    "orderUpdates": "Order updates",
+    "productUpdates": "Product updates",
+    "securityAlerts": "Security alerts",
+    "changePassword": "Change password",
+    "currentPassword": "Current password",
+    "newPassword": "New password",
+    "confirmNewPassword": "Confirm new password",
+    "passwordChanged": "Password change correct",
+    "passwordChangeFailed": "Password change fail",
+    "profileUpdated": "Profile update correct",
+    "profileUpdateFailed": "Profile update fail",
+    "deleteAccount": "Delete account",
+    "deleteAccountWarning": "You no fit undo this action",
+    "accountDeleted": "We don delete your account",
+    "userAvatar": "User avatar",
+    "saveItems": "Save items",
+    "myOrders": "My orders",
+    "investEarn": "Invest & Earn",
+    "logout": "Log out",
+    "logoutSuccess": "You don log out",
+    "logoutFailed": "Log out fail"
+  },
+  "home": {
+    "hero": {
+      "slides": [
+        {
+          "title": "Buy smart and save more with Ski-Shop",
+          "subtitle": "One-stop marketplace for everything you need"
+        },
+        {
+          "title": "Become Star Seller and show more for Ski-Shop",
+          "subtitle": "Upgrade go Premium make your shop show well, reach more customers, and grow fast with special seller tools."
+        },
+        {
+          "title": "Make your reach long by join Ski-Shop logistics network",
+          "subtitle": "List your logistics service for free for Ski-Shop. Help vendors deliver quick and grow your business by connect with thousands of sellers for our market."
+        }
+      ],
+      "shopNow": "Shop now",
+      "becomeSeller": "Become seller"
+    },
+    "popularProducts": {
+      "seeAll": "See all",
+      "retry": "Try again",
+      "failedToLoad": "Product no load. Abeg try again.",
+      "noProductsFound": "No product wey match"
+    },
+    "skicomProducts": "Skicom products",
+    "topSellers": "Top sellers",
+    "featuredProducts": "Featured products",
+    "handPickedForYou": "We hand-pick am for you",
+    "blackFridayDeals": "Black Friday deals - Up to 70% off",
+    "beAVendor": {
+      "tagTitle": "Become vendor",
+      "title": "Start to sell for Ski-Shop",
+      "description": "Join thousands of vendors wey dey grow their business with Ski-Shop. List your products, reach more customers, and manage orders easy — for one place.",
+      "action": "Explore"
+    },
+    "blackFriday": {
+      "tagTitle": "Big discounts. Small time.",
+      "title": "E dey happen for Ski-Shop every year",
+      "description": "Every October, we dey bring exclusive deals for gadgets, fashion, home things, and more. Na our yearly tradition — no miss am!💃",
+      "comingSoon": {
+        "tagTitle": "Black Friday dey come...",
+        "title": "Coupons, Freebies & Fire deals dey wait!",
+        "description": "Every October, we dey bring exclusive deals for gadgets, fashion, home things, and more. Na our yearly tradition — no miss am!💃"
+      }
+    },
+    "deliveryNetwork": {
+      "tagTitle": "Deliver with us",
+      "title": "Join our delivery network",
+      "description": "Become logistics partner for Ski-Shop to help e-commerce. Whether you dey ride, drive, or run your own delivery business, we get space for you. Fast, flexible payouts.",
+      "action": "Explore"
+    },
+    "features": {
+      "freeDelivery": {
+        "title": "FREE AND FAST DELIVERY",
+        "description": "Free delivery for all orders wey pass $140"
+      },
+      "customerService": {
+        "title": "24/7 CUSTOMER SERVICE",
+        "description": "Friendly customer support 24/7"
+      },
+      "moneyBack": {
+        "title": "MONEY BACK GUARANTEE",
+        "description": "We dey return money inside 30 days"
+      }
+    },
+    "testimonial": {
+      "tagTitle": "Our testimonials",
+      "title": "Wetīn people dey talk about us"
+    },
+    "mobileDownload": {
+      "title": "Shop smarter and faster anywhere you dey.",
+      "description": "Download Ski-Shop app and get smooth shopping, faster delivery, wallet access, and special deals for your pocket.",
+      "appStore": {
+        "subtitle": "Download for",
+        "title": "App Store"
+      },
+      "googlePlay": {
+        "subtitle": "Download for",
+        "title": "Google Play"
+      }
+    },
+    "playToWin": {
+      "badge": "Win big",
+      "title": "Play-2-Win",
+      "description": "Enjoy freebies when you join our play-2-win",
+      "action": "Get the app"
+    }
+  },
+  "about": {
+    "hero": {
+      "title": "About us"
+    },
+    "sectionOne": {
+      "tagTitle": "About Ski-Shop",
+      "title": "New face of digital commerce for Africa",
+      "description": "Our mission na to power African commerce by creating digital marketplace wey every seller — from street vendor to global brand — fit grow. We dey provide tools, visibility, and infrastructure wey commerce need."
+    },
+    "sectionTwo": {
+      "title": "Wetīn make us different",
+      "description": "We dey build digital market wey every seller fit grow. We provide tools, visibility, and infrastructure to make commerce better.",
+      "strengths": {
+        "securedPayment": {
+          "title": "Secure payment",
+          "description": "Secure, instant payments and transactions with our finance solution."
+        },
+        "fastDelivery": {
+          "title": "Fast delivery",
+          "description": "Quick delivery with security and ease."
+        },
+        "verifiedVendors": {
+          "title": "Verified vendors",
+          "description": "Trusted vendors and fast transactions for one place."
+        },
+        "seamlessExperience": {
+          "title": "Smooth experience",
+          "description": "Easy, secure experience with quick payments."
+        }
+      }
+    },
+    "sectionThree": {
+      "title": "Who we dey serve",
+      "description": "We dey create digital marketplace wey every seller fit grow. We provide tools, visibility, and infrastructure.",
+      "services": {
+        "vendors": {
+          "title": "Vendors",
+          "description": "Businesses wey wan expand reach and get new customers online."
+        },
+        "buyers": {
+          "title": "Buyers",
+          "description": "People wey wan shop easy online."
+        },
+        "deliveryPartners": {
+          "title": "Delivery partners",
+          "description": "Logistics partners wey dey grow their business."
+        }
+      }
+    },
+    "teams": {
+      "title": "Meet our team",
+      "description": "Lorem ipsum dolor sit amet consectetur. Lorem libero arcu ut venenatis feugiat lacus. Elit tellus morbi quis a aliquam mi pretium nam donec. Duis posuere venenatis et amet sed."
+    }
+  },
+  "contact": {
+    "hero": {
+      "title": "Contact us"
+    },
+    "sectionOne": {
+      "title": "Feel free to reach us",
+      "description": "We dey here for you! Whether na shopping, selling, delivery, or you wan sabi more about how Ski-Shop dey shape commerce future, reach out — we go help you.",
+      "contactInfo": {
+        "title": "Contact info",
+        "phone": "+2348130054558",
+        "email": "seanlawson@skicomltd.com",
+        "address": "49, Adeyemi Street, Otubu Bus Stop, Agege, Lagos."
+      },
+      "form": {
+        "fullName": "Full name",
+        "emailAddress": "Email address",
+        "subject": "Subject",
+        "message": "Message",
+        "sendMessage": "Send message"
+      },
+      "map": {
+        "title": "Find us here",
+        "apiKeyNotConfigured": "Google Maps API key never set",
+        "apiKeyInstructions": "Add NEXT_PUBLIC_GOOGLE_MAPS_API_KEY for your environment"
+      }
+    }
+  },
+  "shopPage": {
+    "hero": {
+      "title": "Shop"
+    },
+    "filters": {
+      "categories": "Categories",
+      "vendor": "Vendor",
+      "allCategories": "All categories",
+      "allVendor": "All vendors"
+    },
+    "search": {
+      "placeholder": "Search products...",
+      "sortBy": "Sort by:",
+      "sortOptions": {
+        "newest": "newest",
+        "name": "name",
+        "price": "price",
+        "rating": "rating"
+      },
+      "chooseSortOption": "Choose sort option"
+    },
+    "activeFilters": {
+      "title": "Active filters:",
+      "resultsFound": "results found"
+    },
+    "errors": {
+      "failedToLoadProducts": "Products no load",
+      "retry": "Try again",
+      "noProductsFound": "No products wey match your filters"
+    }
+  },
+  "navbar": {
+    "cart": {
+      "ariaLabel": "Shopping cart ({count} items)",
+      "items": "items"
+    },
+    "menu": {
+      "toggleMenu": "Open/close menu",
+      "myAccount": "My account"
+    },
+    "auth": {
+      "signIn": "Sign in",
+      "signUp": "Sign up",
+      "createAccount": "Create account"
+    }
+  },
+  "userProfile": {
+    "userAvatar": "User avatar",
+    "user": "User",
+    "saveItems": "Save items",
+    "myOrders": "My orders",
+    "investEarn": "Invest & Earn",
+    "dashboard": "Dashboard",
+    "logout": "Log out",
+    "logoutSuccess": "You don log out",
+    "logoutFailed": "Log out fail"
+  },
+  "footer": {
+    "about": "About",
+    "contact": "Contact us",
+    "help": "Help",
+    "terms": "Terms & Condition",
+    "privacy": "Privacy policy",
+    "cookies": "Cookie policy",
+    "shipping": "Shipping info",
+    "returns": "Returns & Exchanges",
+    "sizeGuide": "Size guide",
+    "trackOrder": "Track order",
+    "newsletter": "Newsletter",
+    "subscribe": "Subscribe",
+    "emailPlaceholder": "Enter your email",
+    "followUs": "Follow us",
+    "socialMedia": "Social media",
+    "copyright": "© Copyright {year}. All Rights Reserved by SKICOM",
+    "poweredBy": "Powered by",
+    "madeWith": "Made with ❤️ by",
+    "getItOn": "GET IT ON",
+    "googlePlay": "Google Play",
+    "downloadOnThe": "Download on the",
+    "appStore": "App Store",
+    "explore": "Explore",
+    "shop": "Shop",
+    "liveChat": "Live chat",
+    "contactInfo": {
+      "title": "Contact",
+      "address": "Plot 1, Kwara Osun Street, Lagos.",
+      "phone1": "08130054558",
+      "phone2": "08123456443"
+    },
+    "quickLinks": {
+      "title": "Quick links"
+    }
+  },
+  "errors": {
+    "404": "Page no dey",
+    "404Message": "The page wey you dey find no dey exist.",
+    "500": "Server error",
+    "500Message": "Something spoil for our side. Try again later.",
+    "networkError": "Network error",
+    "networkErrorMessage": "Check your internet and try again.",
+    "unauthorized": "Unauthorized",
+    "unauthorizedMessage": "You no get permission to access this.",
+    "forbidden": "Forbidden",
+    "forbiddenMessage": "Access to this thing no allowed.",
+    "notFound": "No find am",
+    "notFoundMessage": "We no see the thing wey you ask for.",
+    "validationError": "Validation error",
+    "validationErrorMessage": "Check wetin you enter and try again.",
+    "serverError": "Server error",
+    "serverErrorMessage": "Unexpected error happen. Try again later.",
+    "timeoutError": "Request timeout",
+    "timeoutErrorMessage": "Request time don pass. Try again.",
+    "unknownError": "Unknown error",
+    "unknownErrorMessage": "One unknown error happen. Try again."
+  },
+  "validation": {
+    "required": "This field na must",
+    "email": "Abeg enter correct email",
+    "minLength": "Must reach at least {min} characters",
+    "maxLength": "No fit pass {max} characters",
+    "minValue": "Must reach at least {min}",
+    "maxValue": "No fit pass {max}",
+    "pattern": "Abeg enter correct value",
+    "url": "Enter correct URL",
+    "phone": "Enter correct phone number",
+    "password": "Password suppose get at least 8 characters",
+    "passwordMatch": "Passwords suppose match",
+    "unique": "This value suppose unique",
+    "exists": "This value suppose exist",
+    "futureDate": "Date suppose dey future",
+    "pastDate": "Date suppose dey past",
+    "positiveNumber": "Must be positive number",
+    "integer": "Must be whole number",
+    "decimal": "Must be decimal number",
+    "fileSize": "File size no suppose pass {max}MB",
+    "fileType": "File type no supported",
+    "imageDimensions": "Image size must be at least {width}x{height}px"
+  }
+}
