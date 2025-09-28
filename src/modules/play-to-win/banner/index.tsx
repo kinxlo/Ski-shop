@@ -21,7 +21,7 @@ const PlayToWinBanner = () => {
         <h1 className={`!text-foreground !mb-0 text-2xl lg:!text-5xl`}>{t("title")}</h1>
         <p className={`my-[22px] !font-medium md:!text-xl`}>{t("description")}</p>
 
-        <SpinToWinModal>
+        <SpinToWinModal autoOpen={false}>
           <Button size={`xl`} variant={`default`} className={`bg-black text-white`}>
             {t("action")}
           </Button>

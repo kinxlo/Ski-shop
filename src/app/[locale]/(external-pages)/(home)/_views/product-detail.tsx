@@ -3,20 +3,21 @@
 
 import { Wrapper } from "@/components/core/layout/wrapper";
 import { BlurImage } from "@/components/core/miscellaneous/blur-image";
+import { AddToCartButton } from "@/components/shared/add-to-cart-button";
 import SkiButton from "@/components/shared/button";
 import { DangerConfirmationDialog } from "@/components/shared/dialog/confirmation-dialog";
 import { Ratings } from "@/components/shared/ratings";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Locale } from "@/lib/i18n/config";
 import { formatCurrency, formatDate } from "@/lib/i18n/utils";
+import { ComponentGuard } from "@/lib/routes/component-guard";
 import { cn } from "@/lib/utils";
 import { useSaveProduct } from "@/mocks/handlers/products/use-save-product";
 import { useAppService } from "@/services/externals/app/use-app-service";
 import { useQueryClient } from "@tanstack/react-query";
-import { Heart, Minus, Plus, ShoppingCart, Trash2 } from "lucide-react";
+import { Heart, Minus, Plus, Trash2 } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { useLocale } from "next-intl";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
 
@@ -27,12 +28,11 @@ import { SimilarProducts } from "./similar-products";
 type Tab = "description" | "reviews";
 
 export const ProductDetail = ({ product, isLoading = false }: any) => {
-  const router = useRouter();
   const locale = useLocale() as Locale;
   const { data: session } = useSession();
   const [selectedImage, setSelectedImage] = useState(0);
   const [quantity, setQuantity] = useState(1);
-  const { useAddToCart, useGetAllReviews, useDeleteReview } = useAppService();
+  const { useGetAllReviews, useDeleteReview } = useAppService();
   const {
     data: reviews,
     isLoading: isReviewsLoading,
@@ -80,39 +80,6 @@ export const ProductDetail = ({ product, isLoading = false }: any) => {
       queryClient.invalidateQueries({ queryKey: ["review", "list"] });
     },
   });
-  const { mutate: addToCart, isPending } = useAddToCart({
-    onMutate: async (newItem: any) => {
-      // Cancel any outgoing refetches
-      await queryClient.cancelQueries({ queryKey: ["cart"] });
-      // Snapshot the previous value
-      const previousCart = queryClient.getQueryData(["cart"]);
-
-      // Optimistically update to the new value
-      queryClient.setQueryData(["cart"], (old: any) => {
-        const existingItem = old?.items?.find((item: any) => item.productId === newItem.productId);
-        if (existingItem) {
-          return {
-            ...old,
-            items: old.items.map((item: any) =>
-              item.productId === newItem.productId ? { ...item, quantity: item.quantity + newItem.quantity } : item,
-            ),
-          };
-        }
-        return {
-          ...old,
-          items: [...(old?.items || []), { ...newItem, id: Date.now().toString() }],
-        };
-      });
-
-      return { previousCart };
-    },
-    onError: (error: any, newItem: any, context: any) => {
-      queryClient.setQueryData(["cart"], context?.previousCart);
-    },
-    onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: ["cart"] });
-    },
-  });
 
   const reviewsData = reviews?.data?.items || [];
 
@@ -136,19 +103,6 @@ export const ProductDetail = ({ product, isLoading = false }: any) => {
       }
     }
   };
-
-  const handleAddToCart = () => {
-    addToCart(
-      { productId: product.id, quantity },
-      {
-        onSuccess: () => {
-          toast.success(`Added to cart successfully`);
-          router.push(`/shop/cart`);
-        },
-      },
-    );
-  };
-
   const handleDeleteReview = (reviewId: string) => {
     deleteReview(reviewId);
   };
@@ -171,30 +125,36 @@ export const ProductDetail = ({ product, isLoading = false }: any) => {
                 <div className="relative aspect-square max-h-[482px] w-full overflow-hidden rounded-lg border p-4 sm:p-[2rem]">
                   <BlurImage priority src={gallery[selectedImage]} alt={product.name} fill className="object-cover" />
                   {/* Heart button positioned absolutely over the image */}
-                  <button
-                    role="button"
-                    tabIndex={0}
-                    aria-label={isSaved ? "Remove from favorites" : "Save product"}
-                    className={cn(
-                      "absolute top-4 right-4 z-10 flex h-10 w-10 cursor-pointer items-center justify-center rounded-full bg-white/80 p-2 backdrop-blur-sm transition-all hover:bg-white",
-                      isSaved ? "text-red-500 hover:bg-red-50" : "text-gray-500 hover:text-red-500",
-                      isSaving && "pointer-events-none opacity-60",
-                    )}
-                    onClick={(event) => {
-                      event.preventDefault();
-                      event.stopPropagation();
-                      if (!isSaving) toggleSave();
-                    }}
-                    onKeyDown={(event) => {
-                      if ((event.key === "Enter" || event.key === " ") && !isSaving) {
+                  <ComponentGuard requireAuth allowedRoles={["CUSTOMER"]}>
+                    <button
+                      role="button"
+                      tabIndex={0}
+                      aria-label={isSaved ? "Remove from favorites" : "Save product"}
+                      className={cn(
+                        "absolute top-4 right-4 z-10 flex h-10 w-10 cursor-pointer items-center justify-center rounded-full bg-white/80 p-2 backdrop-blur-sm transition-all hover:bg-white",
+                        isSaved ? "text-red-500 hover:bg-red-50" : "text-gray-500 hover:text-red-500",
+                        isSaving && "pointer-events-none opacity-60",
+                      )}
+                      onClick={(event) => {
                         event.preventDefault();
                         event.stopPropagation();
-                        toggleSave();
-                      }
-                    }}
-                  >
-                    {isSaved ? <Heart className="h-6 w-6 fill-red-500 text-red-500" /> : <Heart className="h-6 w-6" />}
-                  </button>
+                        if (!isSaving) toggleSave();
+                      }}
+                      onKeyDown={(event) => {
+                        if ((event.key === "Enter" || event.key === " ") && !isSaving) {
+                          event.preventDefault();
+                          event.stopPropagation();
+                          toggleSave();
+                        }
+                      }}
+                    >
+                      {isSaved ? (
+                        <Heart className="h-6 w-6 fill-red-500 text-red-500" />
+                      ) : (
+                        <Heart className="h-6 w-6" />
+                      )}
+                    </button>
+                  </ComponentGuard>
                 </div>
                 <div className="grid grid-cols-4 gap-2 sm:gap-4">
                   {gallery.map((image: any, index: any) => (
@@ -251,43 +211,44 @@ export const ProductDetail = ({ product, isLoading = false }: any) => {
                   )}
                 </div>
                 {/* <div>{product.description}</div> */}
-                <div className="flex flex-col items-start gap-6">
-                  <section className="flex w-full flex-row items-center justify-between gap-4">
-                    <div className="flex items-center">
-                      <SkiButton
-                        isIconOnly
-                        icon={<Minus className="h-4 w-4" />}
-                        size={`icon`}
-                        variant={`primary`}
-                        onClick={() => handleQuantityChange("decrease")}
-                        className="items-center justify-center rounded-sm border disabled:opacity-50"
-                      />
-                      <span className="bg-primary/10 flex h-[34px] w-20 items-center justify-center text-center font-medium">
-                        {quantity}
-                      </span>
-                      <SkiButton
-                        isIconOnly
-                        size={`icon`}
-                        variant={`primary`}
-                        onClick={() => handleQuantityChange("increase")}
-                        className="items-center justify-center rounded-sm border disabled:opacity-50"
-                        icon={<Plus className="h-4 w-4" />}
+                <ComponentGuard requireAuth allowedRoles={["CUSTOMER"]}>
+                  <div className="flex flex-col items-start gap-6">
+                    <section className="flex w-full flex-row items-center justify-between gap-4">
+                      <div className="flex items-center">
+                        <SkiButton
+                          isIconOnly
+                          icon={<Minus className="h-4 w-4" />}
+                          size={`icon`}
+                          variant={`primary`}
+                          onClick={() => handleQuantityChange("decrease")}
+                          className="items-center justify-center rounded-sm border disabled:opacity-50"
+                        />
+                        <span className="bg-primary/10 flex h-[34px] w-20 items-center justify-center text-center font-medium">
+                          {quantity}
+                        </span>
+                        <SkiButton
+                          isIconOnly
+                          size={`icon`}
+                          variant={`primary`}
+                          onClick={() => handleQuantityChange("increase")}
+                          className="items-center justify-center rounded-sm border disabled:opacity-50"
+                          icon={<Plus className="h-4 w-4" />}
+                        />
+                      </div>
+                    </section>
+                    <div className="mt-10 flex w-full gap-4">
+                      <AddToCartButton
+                        productId={product.id}
+                        quantity={quantity}
+                        stockCount={product.stockCount}
+                        redirectOnSuccess
+                        size="lg"
+                        fullWidth={false}
+                        className="flex flex-1 rounded-full px-8 py-8"
                       />
                     </div>
-                  </section>
-                  <div className="mt-10 flex w-full gap-4">
-                    <SkiButton
-                      variant="primary"
-                      size="lg"
-                      className="flex flex-1 items-center gap-2 rounded-full px-8 py-8"
-                      isDisabled={product.stockCount === 0 || isPending}
-                      onClick={handleAddToCart}
-                    >
-                      <ShoppingCart size={20} />
-                      {isPending ? "Adding..." : product.stockCount === 0 ? "Out of Stock" : "Add to Cart"}
-                    </SkiButton>
                   </div>
-                </div>
+                </ComponentGuard>
               </div>
             )}
           </div>

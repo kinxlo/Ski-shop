@@ -146,22 +146,24 @@ export const Navbar = forwardRef<HTMLElement, NavbarProperties>(
               </div> */}
 
               {/* Enhanced Cart Button with Badge */}
-              <div className="relative">
-                <SkiButton
-                  href="/shop/cart"
-                  variant="ghost"
-                  size="icon"
-                  isIconOnly
-                  icon={<ShoppingCartIcon size={isScrolled ? 18 : 20} />}
-                  aria-label={t("cart.ariaLabel", { count: cartItemCount })}
-                  className="transition-all duration-300"
-                />
-                {cartItemCount > 0 && (
-                  <span className="bg-primary absolute -top-1 -right-1 flex h-5 w-5 animate-pulse items-center justify-center rounded-full text-xs font-medium text-white">
-                    {cartItemCount > 9 ? "9+" : cartItemCount}
-                  </span>
-                )}
-              </div>
+              <ComponentGuard requireAuth allowedRoles={["CUSTOMER"]}>
+                <div className="relative">
+                  <SkiButton
+                    href="/shop/cart"
+                    variant="ghost"
+                    size="icon"
+                    isIconOnly
+                    icon={<ShoppingCartIcon size={isScrolled ? 18 : 20} />}
+                    aria-label={t("cart.ariaLabel", { count: cartItemCount })}
+                    className="transition-all duration-300"
+                  />
+                  {cartItemCount > 0 && (
+                    <span className="bg-primary absolute -top-1 -right-1 flex h-5 w-5 animate-pulse items-center justify-center rounded-full text-xs font-medium text-white">
+                      {cartItemCount > 9 ? "9+" : cartItemCount}
+                    </span>
+                  )}
+                </div>
+              </ComponentGuard>
 
               {/* Mobile Menu Toggle */}
               <Drawer open={drawerOpen} onOpenChange={setDrawerOpen}>
@@ -175,22 +177,24 @@ export const Navbar = forwardRef<HTMLElement, NavbarProperties>(
                     <div className="flex items-center justify-between gap-4 px-2 py-1.5">
                       <ModernThemeSwitcher />
                       <div className={`item-center flex gap-4`}>
-                        <div className="relative">
-                          <SkiButton
-                            href={`/shop/cart`}
-                            variant={`outline`}
-                            onClick={() => setDrawerOpen(false)}
-                            size={`icon`}
-                            className={`w-full`}
-                            isIconOnly
-                            icon={<ShoppingCartIcon />}
-                          />
-                          {cartItemCount > 0 && (
-                            <span className="bg-primary absolute -top-1 -right-1 flex h-5 w-5 animate-pulse items-center justify-center rounded-full text-xs font-medium text-white">
-                              {cartItemCount > 9 ? "9+" : cartItemCount}
-                            </span>
-                          )}
-                        </div>
+                        <ComponentGuard requireAuth allowedRoles={["CUSTOMER"]}>
+                          <div className="relative">
+                            <SkiButton
+                              href={`/shop/cart`}
+                              variant={`outline`}
+                              onClick={() => setDrawerOpen(false)}
+                              size={`icon`}
+                              className={`w-full`}
+                              isIconOnly
+                              icon={<ShoppingCartIcon />}
+                            />
+                            {cartItemCount > 0 && (
+                              <span className="bg-primary absolute -top-1 -right-1 flex h-5 w-5 animate-pulse items-center justify-center rounded-full text-xs font-medium text-white">
+                                {cartItemCount > 9 ? "9+" : cartItemCount}
+                              </span>
+                            )}
+                          </div>
+                        </ComponentGuard>
                         <ComponentGuard requireAuth allowedRoles={["CUSTOMER"]}>
                           <div className="relative">
                             <SkiButton

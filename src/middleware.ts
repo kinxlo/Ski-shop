@@ -1,6 +1,12 @@
 import { defaultLocale } from "@/lib/i18n/config";
 import { isValidLocale } from "@/lib/i18n/utils";
-import { ADMIN_ROUTES, PUBLIC_ROUTES, SUPER_ADMIN_ROUTES, VENDOR_ROUTES } from "@/lib/routes/routes";
+import {
+  ADMIN_ROUTES,
+  PUBLIC_ROUTES,
+  SUPER_ADMIN_ROUTES,
+  VENDOR_FORBIDDEN_ROUTES,
+  VENDOR_ROUTES,
+} from "@/lib/routes/routes";
 import { getToken } from "next-auth/jwt";
 import { NextResponse, type NextRequest } from "next/server";
 
@@ -112,6 +118,14 @@ export default async function middleware(request: NextRequest) {
       const destination = withLocalePrefix(getDefaultHomeForRole(role), localePrefix);
       return NextResponse.redirect(new URL(destination, request.url));
     }
+
+    // Restrict certain public routes for specific roles
+    const isVendorForbidden = pathMatchesAny(basePath, VENDOR_FORBIDDEN_ROUTES);
+    if (isVendorForbidden && role === "vendor") {
+      const destination = withLocalePrefix(getDefaultHomeForRole(role), localePrefix);
+      return NextResponse.redirect(new URL(destination, request.url));
+    }
+
     return NextResponse.next();
   }
 

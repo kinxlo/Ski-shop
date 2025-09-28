@@ -1,8 +1,10 @@
+import { AddToCartButton } from "@/components/shared/add-to-cart-button";
 import { LocaleLink } from "@/components/shared/locale-link";
 import { Ratings } from "@/components/shared/ratings";
 import { Badge } from "@/components/ui/badge";
 import { Locale } from "@/lib/i18n/config";
 import { formatCurrency } from "@/lib/i18n/utils";
+import { ComponentGuard } from "@/lib/routes/component-guard";
 import { cn } from "@/lib/utils";
 import { useSaveProduct } from "@/mocks/handlers/products/use-save-product";
 import { useLocale } from "next-intl";
@@ -75,45 +77,44 @@ export const ShopCard = ({
         className,
       )}
     >
-      {shouldShowSaveButton && (
-        <button
-          role="button"
-          tabIndex={0}
-          aria-label={isSaved ? "Remove from favorites" : "Save product"}
-          className={cn(
-            "absolute top-4 right-4 z-10 cursor-pointer rounded-full bg-white/80 p-1 backdrop-blur-sm transition-all md:p-2",
-            isSaved ? "text-red-500 hover:bg-red-50" : "text-mid-grey-II hover:bg-white hover:text-red-500",
-            isPending && "pointer-events-none opacity-60",
-          )}
-          onClick={(event) => {
-            event.preventDefault(); // Prevent link navigation
-            event.stopPropagation(); // Stop event bubbling
-            if (!isPending) toggleSave();
-            if (action) action();
-          }}
-          onKeyDown={(event) => {
-            if ((event.key === "Enter" || event.key === " ") && !isPending) {
-              event.preventDefault();
-              event.stopPropagation();
-              toggleSave();
-            }
-          }}
-        >
-          {isSaved ? (
-            <PiHeartFill className="text-red-500 lg:h-6 lg:w-6" />
-          ) : (
-            <PiHeart className="text-gray-500 lg:h-6 lg:w-6" />
-          )}
-        </button>
-      )}
+      <ComponentGuard requireAuth allowedRoles={["CUSTOMER"]}>
+        {shouldShowSaveButton && (
+          <button
+            role="button"
+            tabIndex={0}
+            aria-label={isSaved ? "Remove from favorites" : "Save product"}
+            className={cn(
+              "absolute top-4 right-4 z-10 cursor-pointer rounded-full bg-white/80 p-1 backdrop-blur-sm transition-all md:p-2",
+              isSaved ? "text-red-500 hover:bg-red-50" : "text-mid-grey-II hover:bg-white hover:text-red-500",
+              isPending && "pointer-events-none opacity-60",
+            )}
+            onClick={(event) => {
+              event.preventDefault(); // Prevent link navigation
+              event.stopPropagation(); // Stop event bubbling
+              if (!isPending) toggleSave();
+              if (action) action();
+            }}
+            onKeyDown={(event) => {
+              if ((event.key === "Enter" || event.key === " ") && !isPending) {
+                event.preventDefault();
+                event.stopPropagation();
+                toggleSave();
+              }
+            }}
+          >
+            {isSaved ? (
+              <PiHeartFill className="text-red-500 lg:h-6 lg:w-6" />
+            ) : (
+              <PiHeart className="text-gray-500 lg:h-6 lg:w-6" />
+            )}
+          </button>
+        )}
+      </ComponentGuard>
 
       <div className="relative z-[-1] mb-3 aspect-square overflow-hidden rounded-lg md:mb-4">
         <Image
           priority
-          src={
-            image ||
-            `https://res.cloudinary.com/kingsleysolomon/image/upload/f_auto,q_auto/v1624958924/audiophile/assets/category-headphones/desktop/image-xx99-mark-two_lkqy5n.jpg`
-          }
+          src={image}
           alt={title}
           width={400}
           height={400}
@@ -151,6 +152,13 @@ export const ShopCard = ({
             </p>
           )}
         </div>
+        <ComponentGuard requireAuth allowedRoles={["CUSTOMER"]}>
+          {id && (
+            <div className="pt-2">
+              <AddToCartButton isIconVisible={false} className={``} productId={id} fullWidth stopEventPropagation />
+            </div>
+          )}
+        </ComponentGuard>
       </div>
     </LocaleLink>
   );

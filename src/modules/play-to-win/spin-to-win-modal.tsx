@@ -4,11 +4,12 @@ import { BlurImage } from "@/components/core/miscellaneous/blur-image";
 import SkiButton from "@/components/shared/button";
 import { ReusableDialog } from "@/components/shared/dialog/Dialog";
 import { cn } from "@/lib/utils";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Confetti from "react-confetti";
 
 interface SpinToWinModalProperties {
   children: React.ReactNode;
+  autoOpen?: boolean;
 }
 
 // Prize segments data
@@ -25,37 +26,121 @@ const PRIZES = [
 
 const TOTAL_SEGMENTS = 8;
 const SEGMENT_ANGLE = 360 / TOTAL_SEGMENTS;
+const AUTO_OPEN_INTERVAL_MS = 15 * 60 * 1000;
+const STORAGE_KEY = "skicom.spinToWin.lastShownAt";
 
-export const SpinToWinModal = ({ children }: SpinToWinModalProperties) => {
+export const SpinToWinModal = ({ children, autoOpen = true }: SpinToWinModalProperties) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isSpinning, setIsSpinning] = useState(false);
   const [selectedPrize, setSelectedPrize] = useState<(typeof PRIZES)[0] | null>(null);
   const [rotation, setRotation] = useState(0);
   const [showResult, setShowResult] = useState(false);
 
-  // Auto-open modal after 20 seconds, only once per browser (persisted flag)
-  useEffect(() => {
-    const STORAGE_KEY = "spin_to_win_shown";
-    if (typeof window === "undefined") return;
+  const intervalReference = useRef<number | null>(null);
+  const timeoutReference = useRef<number | null>(null);
+  const rafReference = useRef<number | null>(null);
+  // Guard to prevent duplicate opens within a short window (e.g., Strict Mode/double scheduling)
+  const openGuardReference = useRef<number>(0);
 
-    try {
-      const alreadyShown = window.localStorage.getItem(STORAGE_KEY);
-      if (alreadyShown) return;
-    } catch {
-      // Ignore storage access errors
+  useEffect(() => {
+    // Always clear any existing timers when autoOpen turns false
+    if (!autoOpen) {
+      if (timeoutReference.current) {
+        clearTimeout(timeoutReference.current);
+        timeoutReference.current = null;
+      }
+      if (intervalReference.current) {
+        clearInterval(intervalReference.current);
+        intervalReference.current = null;
+      }
+      if (rafReference.current) {
+        cancelAnimationFrame(rafReference.current);
+        rafReference.current = null;
+      }
+      return;
     }
 
-    const timer = window.setTimeout(() => {
-      setIsModalOpen(true);
-      try {
-        window.localStorage.setItem(STORAGE_KEY, "1");
-      } catch {
-        // Ignore storage access errors
-      }
-    }, 20 * 1000);
+    const openNow = () => {
+      // prevent duplicate opens within 1s window (handles StrictMode/double scheduling)
+      const nowTs = Date.now();
+      if (nowTs - openGuardReference.current < 1000) return;
+      openGuardReference.current = nowTs;
 
-    return () => window.clearTimeout(timer);
-  }, []);
+      // avoid redundant state churn if already open
+      setIsModalOpen((previous) => {
+        if (!previous) {
+          try {
+            localStorage.setItem(STORAGE_KEY, String(Date.now()));
+          } catch {
+            // no-op
+          }
+          return true;
+        }
+        return previous;
+      });
+    };
+
+    const startInterval = () => {
+      if (intervalReference.current) {
+        clearInterval(intervalReference.current);
+      }
+      intervalReference.current = window.setInterval(() => {
+        // only open when visible to prevent background pops stacking
+        if (document.visibilityState === "visible") {
+          openNow();
+        }
+      }, AUTO_OPEN_INTERVAL_MS);
+    };
+
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      const lastShown = raw ? Number.parseInt(raw, 10) || 0 : 0;
+      const now = Date.now();
+
+      if (!lastShown || now - lastShown >= AUTO_OPEN_INTERVAL_MS) {
+        // Open immediately, then start regular cadence
+        // Delay to next tick to avoid hydration flashes
+        rafReference.current = requestAnimationFrame(() => {
+          if (document.visibilityState === "visible") {
+            openNow();
+          }
+          startInterval();
+        });
+      } else {
+        // Wait remaining time, then open, then start interval
+        const remaining = AUTO_OPEN_INTERVAL_MS - (now - lastShown);
+        timeoutReference.current = window.setTimeout(() => {
+          if (document.visibilityState === "visible") {
+            openNow();
+          }
+          startInterval();
+        }, remaining);
+      }
+    } catch {
+      // Fallback if localStorage not accessible
+      timeoutReference.current = window.setTimeout(() => {
+        if (document.visibilityState === "visible") {
+          openNow();
+        }
+        startInterval();
+      }, AUTO_OPEN_INTERVAL_MS);
+    }
+
+    return () => {
+      if (timeoutReference.current) {
+        clearTimeout(timeoutReference.current);
+        timeoutReference.current = null;
+      }
+      if (intervalReference.current) {
+        clearInterval(intervalReference.current);
+        intervalReference.current = null;
+      }
+      if (rafReference.current) {
+        cancelAnimationFrame(rafReference.current);
+        rafReference.current = null;
+      }
+    };
+  }, [autoOpen]);
 
   const handleOpenChange = (open: boolean) => {
     setIsModalOpen(open);
