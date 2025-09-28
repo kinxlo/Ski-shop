@@ -1,6 +1,5 @@
 "use client";
 
-import { Wrapper } from "@/components/core/layout/wrapper";
 // import { SearchInput } from "@/components/core/miscellaneous/search-input";
 import { ModernThemeSwitcher } from "@/components/core/miscellaneous/theme-variant-switcher";
 import { UserAvatarProfile } from "@/components/core/miscellaneous/user-avatar-profile";
@@ -118,7 +117,7 @@ export const Navbar = forwardRef<HTMLElement, NavbarProperties>(
         {/* Full-width background when scrolled */}
         {isScrolled && <div className="bg-background absolute inset-0 -z-10 backdrop-blur-md" />}
 
-        <Wrapper className={cn("p-0")}>
+        <section className={cn("mx-auto max-w-[1240px]")}>
           <div
             className={cn(
               "bg-background flex items-center justify-between rounded-none px-4 transition-all duration-300 lg:mt-7 lg:rounded-full lg:px-7",
@@ -490,7 +489,7 @@ export const Navbar = forwardRef<HTMLElement, NavbarProperties>(
               </div>
             </div>
           </div>
-        </Wrapper>
+        </section>
       </nav>
     );
   },

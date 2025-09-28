@@ -13,7 +13,7 @@ export const MobileDownloadBanner = () => {
   const t = useTranslations("home.mobileDownload");
 
   return (
-    <Wrapper className={`my-[78px]`}>
+    <Wrapper className={`p-0`}>
       <ReusableBanner
         asChild
         image="https://res.cloudinary.com/kingsleysolomon/image/upload/f_auto,q_auto/v1758641971/skicom/u2pl8unk5rtp8zg2vscr.png"

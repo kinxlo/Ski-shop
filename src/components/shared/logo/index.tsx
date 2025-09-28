@@ -22,7 +22,7 @@ export const Logo: FC<LogoProperties> = ({ logo = "/images/skicom.svg", width = 
           width={width}
           height={height}
           className={className}
-          style={{ height: "auto" }}
+          style={{ height: "auto", width: "auto" }}
         />
       ) : (
         <p className="text-xl font-bold">LOGO</p>

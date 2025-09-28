@@ -41,7 +41,7 @@ export const EmptyState = ({
   return (
     <div
       className={cn(
-        "bg-mid-grey-I mb-4 flex min-h-[400px] w-full flex-col items-center justify-center space-y-0 rounded-lg px-4 py-10 text-center dark:bg-[#111111]",
+        "bg-mid-grey-I flex min-h-[400px] w-full flex-col items-center justify-center space-y-0 rounded-lg px-4 py-10 text-center dark:bg-[#111111]",
         className,
       )}
     >
@@ -70,7 +70,7 @@ export const EmptyState = ({
           {description}
         </p>
         {button ? (
-          <SkiButton onClick={button.onClick} variant="primary" size="xl" className="mt-6">
+          <SkiButton onClick={button.onClick} variant="primary" size="xl" className="">
             {button.icon && <span className="mr-2">{button.icon}</span>}
             {button.text}
           </SkiButton>
@@ -87,7 +87,7 @@ export const FilteredEmptyState = ({ onReset }: { onReset: () => void }) => (
     images={[{ src: empty1.src, alt: "No filtered results", width: 50, height: 50 }]}
     title="No matching results found"
     description="Try adjusting your date range or status filter to find what you're looking for."
-    className={`space-y-0`}
+    className={`space-y-0 py-10`}
     titleClassName={`!text-2xl text-primary font-semibold`}
     descriptionClassName={`text-muted-foreground max-w-[500px] font-medium`}
     button={{

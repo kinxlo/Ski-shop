@@ -30,7 +30,7 @@ export const TopVendors = () => {
 
   if (!products?.length) {
     return (
-      <Wrapper className={`my-[78px] min-h-[308px]`}>
+      <Wrapper className={`min-h-[308px] gap-6 py-0`}>
         <h2 className={cn("!text-lg lg:!text-4xl lg:!leading-[41.62px] lg:!tracking-[1px]")}>Top Vendors</h2>
         <EmptyState
           images={[
@@ -45,22 +45,21 @@ export const TopVendors = () => {
           titleClassName={`!text-lg font-bold !text-mid-warning`}
           description={"There are no top vendors available at the moment. Please check back later."}
           descriptionClassName={`text-mid-grey-II`}
-          className="bg-mid-grey-I space-y-0 rounded-lg py-10"
+          className="bg-mid-grey-I space-y-0 rounded-lg"
         />
       </Wrapper>
     );
   }
 
   return (
-    <Wrapper className={`my-[78px] min-h-[308px]`}>
-      <section className={`mb-6`}>
+    <Wrapper className={`min-h-[308px] gap-6 py-0`}>
+      <section>
         <h2 className={cn("!text-lg lg:!text-4xl lg:!leading-[41.62px] lg:!tracking-[1px]")}>Top Vendors</h2>
       </section>
       {isLoading ? (
         <TopVendorsSkeleton />
       ) : (
         <UniversalSwiper
-          className={`mb-20`}
           items={products}
           renderItem={(product: Product) => (
             <section className={`flex flex-col items-center gap-2 text-center`}>
@@ -99,7 +98,7 @@ export const TopVendors = () => {
 
 export const TopVendorsSkeleton = () => {
   return (
-    <Wrapper className="mb-[78px]">
+    <Wrapper className="gap-6 py-0">
       <div className="flex justify-between gap-6 overflow-hidden">
         {Array.from({ length: 6 }).map((_, index) => (
           <div key={index} className="flex min-w-[150px] flex-col items-center gap-4">

@@ -76,7 +76,7 @@ export const SkicomProducts = ({
         title="No products found"
         titleClassName="!text-lg font-bold !text-mid-warning"
         description="There are no Skishop products available."
-        className="bg-mid-grey-I space-y-0 rounded-lg py-10 dark:bg-[#111111]"
+        className="bg-mid-grey-I space-y-0 rounded-lg"
       />
     </div>
   );
@@ -98,7 +98,7 @@ export const SkicomProducts = ({
         <SkiButton
           onClick={() => refetch()}
           variant="outline"
-          className="border-mid-danger text-mid-danger hover:bg-mid-danger/10 mt-4 border"
+          className="border-mid-danger text-mid-danger hover:bg-mid-danger/10 border"
         >
           {t("retry")}
         </SkiButton>
@@ -120,8 +120,8 @@ export const SkicomProducts = ({
   };
 
   return (
-    <Wrapper className="min-h-[480px] pt-16">
-      <div className={cn(`mb-8 flex items-baseline justify-between`, headerStyle)}>
+    <Wrapper className="gap-6 py-0">
+      <div className={cn(`flex items-baseline justify-between`, headerStyle)}>
         <h2 className={cn("!text-xl lg:!text-4xl lg:!leading-[41.62px] lg:!tracking-[1px]", headerStyle)}>{title}</h2>
         {hasAction && (
           <LocaleLink

@@ -114,7 +114,7 @@ export const FeaturedProducts = memo(() => {
   const t = useTranslations("home.featuredProducts");
 
   const renderLoadingSkeletons = () => (
-    <Wrapper className="mx-auto my-[98px] grid gap-2 px-4 md:grid-cols-2 lg:gap-8">
+    <Wrapper className="mx-auto grid gap-2 px-4 py-0 md:grid-cols-2 lg:gap-8">
       {/* Large Product Banner Skeleton */}
       <FeaturedProductSkeleton isLarge={true} />
       {/* Second Featured Product Skeleton */}
@@ -128,7 +128,7 @@ export const FeaturedProducts = memo(() => {
   );
 
   const renderFeaturedProductsGrid = () => (
-    <Wrapper className="mx-auto my-[98px] grid gap-2 px-4 md:grid-cols-2 lg:gap-8">
+    <Wrapper className="mx-auto grid gap-2 px-4 py-0 md:grid-cols-2 lg:gap-8">
       {/* Large Featured Product Banner */}
       <ProductCard
         product={featuredProducts?.data?.items?.[0]}
@@ -147,7 +147,7 @@ export const FeaturedProducts = memo(() => {
   );
 
   const renderEmptyState = () => (
-    <Wrapper className="my-[78px] min-h-[480px]">
+    <Wrapper className="gap-6 py-0">
       <div className="flex min-h-[360px] items-center justify-center">
         <EmptyState
           images={[
@@ -162,14 +162,14 @@ export const FeaturedProducts = memo(() => {
           titleClassName="!text-lg font-bold !text-mid-warning"
           description="There are no featured products available at the moment. Please check back later."
           descriptionClassName="text-mid-grey-II"
-          className="bg-mid-grey-I space-y-0 rounded-lg py-10 dark:bg-[#111111]"
+          className="bg-mid-grey-I space-y-0 rounded-lg"
         />
       </div>
     </Wrapper>
   );
 
   const renderErrorState = () => (
-    <Wrapper className="my-[78px] min-h-[480px]">
+    <Wrapper className="min-h-[480px] gap-6 py-0">
       <div className="flex min-h-[360px] items-center justify-center">
         <EmptyState
           images={[
@@ -187,7 +187,7 @@ export const FeaturedProducts = memo(() => {
             <SkiButton
               onClick={() => refetch()}
               variant="outline"
-              className="border-mid-danger text-mid-danger hover:bg-mid-danger/10 mt-4 border"
+              className="border-mid-danger text-mid-danger hover:bg-mid-danger/10 border"
             >
               {t("retry")}
             </SkiButton>

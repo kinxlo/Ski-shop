@@ -1,6 +1,5 @@
 "use client";
 
-import { Wrapper } from "@/components/core/layout/wrapper";
 import { BlurImage } from "@/components/core/miscellaneous/blur-image";
 import SkiButton from "@/components/shared/button";
 import { ComponentGuard } from "@/lib/routes/component-guard";
@@ -34,8 +33,7 @@ const HeroSlide = ({ slide, position, t }: { slide: Slide; position: string; t: 
           slide.position === 1 && `object-right`,
           slide.position === 2 && `object-left`,
         )}
-        width={1440}
-        height={800}
+        fill
         src={slide.image}
         alt="hero-image"
       />
@@ -45,7 +43,7 @@ const HeroSlide = ({ slide, position, t }: { slide: Slide; position: string; t: 
           slide.position === 2 && `lg:from-transparent lg:to-black/90`,
         )}
       />
-      <Wrapper>
+      <section className="mx-auto max-w-[1240px]">
         <div
           className={cn(
             "relative z-10 flex min-h-[600px] flex-col text-white",
@@ -56,11 +54,11 @@ const HeroSlide = ({ slide, position, t }: { slide: Slide; position: string; t: 
                 : "items-center justify-center text-center lg:items-end lg:justify-center lg:text-right",
           )}
         >
-          <div className="mt-[10rem] max-w-2xl space-y-[12px]">
+          <div className="max-w-2xl space-y-[12px]">
             <h1 className="!text-[32px] leading-[44px] font-bold !text-white lg:!text-[48px] lg:leading-[78px]">
               {slide.title}
             </h1>
-            <p className="!text-mid-grey-I mb-8 !text-base lg:!text-xl">{slide.subtitle}</p>
+            <p className="!text-mid-grey-I !text-base lg:!text-xl">{slide.subtitle}</p>
           </div>
           <div className="mx-auto mt-8 flex flex-col items-center gap-4 lg:mx-0 lg:flex-row">
             <SkiButton
@@ -84,7 +82,7 @@ const HeroSlide = ({ slide, position, t }: { slide: Slide; position: string; t: 
             </ComponentGuard>
           </div>
         </div>
-      </Wrapper>
+      </section>
     </div>
   );
 };

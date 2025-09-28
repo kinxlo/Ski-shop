@@ -1,5 +1,6 @@
 "use client";
 
+import { Wrapper } from "@/components/core/layout/wrapper";
 import { BlurImage } from "@/components/core/miscellaneous/blur-image";
 import { Ratings } from "@/components/shared/ratings";
 import { testimonialImages } from "@/lib/constants";
@@ -33,74 +34,76 @@ export const Testimonial = () => {
   const selectedTestimonial = testimonialImages[selectedTestimonialIndex];
 
   return (
-    <section>
-      <section className="my-9 xl:my-14">
-        <section className="items-center gap-3 md:flex">
-          <div className="flex-1">
-            <h6 className="!text-primary !text-sm md:text-xl">{t("tagTitle")}</h6>
-            <h2 className="my-2 text-base font-medium md:!text-4xl">{t("title")}</h2>
-          </div>
-          <div className="flex justify-end gap-[15px] xl:gap-[35px]">
-            {testimonialImages.map((t, index) =>
-              t.image ? (
-                <section key={t.id}>
-                  <div className="">
-                    <BlurImage
-                      priority
-                      width={100}
-                      height={100}
-                      src={t.image}
-                      className={`h-10 w-10 cursor-pointer rounded-full object-cover transition-all duration-200 xl:h-20 xl:w-20 ${
-                        selectedTestimonialIndex === index
-                          ? "border-primary border-2 opacity-100 xl:border-4" // Active state: Double border and full opacity
-                          : "border-2 border-gray-300 opacity-50" // Inactive state: Thinner border and faded appearance
-                      }`}
-                      alt={t.name}
-                      onClick={() => handleImageClick(index)}
-                    />
+    <Wrapper>
+      <section className="flex flex-col gap-6">
+        <section className="flex flex-col gap-6">
+          <section className="items-center gap-3 md:flex">
+            <div className="flex-1 space-y-[6px] lg:space-y-[12px]">
+              <h6 className="!text-primary !text-sm !font-semibold md:!text-2xl">{t("tagTitle")}</h6>
+              <h2 className="text-base font-medium md:!text-4xl">{t("title")}</h2>
+            </div>
+            <div className="mt-[22px] flex justify-end gap-[15px] lg:mt-0 xl:gap-[35px]">
+              {testimonialImages.map((t, index) =>
+                t.image ? (
+                  <section key={t.id}>
+                    <div className="">
+                      <BlurImage
+                        priority
+                        width={100}
+                        height={100}
+                        src={t.image}
+                        className={`h-10 w-10 cursor-pointer rounded-full object-cover transition-all duration-200 xl:h-20 xl:w-20 ${
+                          selectedTestimonialIndex === index
+                            ? "border-primary border-2 opacity-100 xl:border-4" // Active state: Double border and full opacity
+                            : "border-2 border-gray-300 opacity-50" // Inactive state: Thinner border and faded appearance
+                        }`}
+                        alt={t.name}
+                        onClick={() => handleImageClick(index)}
+                      />
+                    </div>
+                  </section>
+                ) : undefined,
+              )}
+            </div>
+          </section>
+
+          <section className="relative">
+            <div className="h-[1px] w-full bg-[#CECECE]" />
+
+            <div className="mt-10 gap-10 xl:flex">
+              <BlurImage
+                priority
+                src={
+                  "https://res.cloudinary.com/kingsleysolomon/image/upload/f_auto,q_auto/v1758641970/skicom/l1m07sgrrnuocb7wbpe7.svg"
+                }
+                className="hidden h-[200px] w-[270px] object-cover xl:block"
+                alt={"msg"}
+                width={280}
+                height={214}
+              />
+
+              {/* Fade-in/out container */}
+              <section
+                key={selectedTestimonialIndex}
+                className={`transition-opacity duration-500 ${fade ? "opacity-100" : "opacity-0"}`}
+              >
+                <div className="relative space-y-[12px]">
+                  <div className="flex items-start justify-between">
+                    <div className="">
+                      <h5 className="text-base md:!text-2xl">{selectedTestimonial.name}</h5>
+                      <p className={`!text-primary !text-xs !font-medium md:!text-xl`}>
+                        {selectedTestimonial.position}
+                      </p>
+                    </div>
+                    <Ratings rating={selectedTestimonial?.rating || 0} />
                   </div>
-                </section>
-              ) : undefined,
-            )}
-          </div>
-        </section>
-
-        <section className="relative">
-          <div className="my-7 h-[1px] w-full bg-[#CECECE]" />
-
-          <div className="gap-10 xl:flex">
-            <BlurImage
-              priority
-              src={
-                "https://res.cloudinary.com/kingsleysolomon/image/upload/f_auto,q_auto/v1758641970/skicom/l1m07sgrrnuocb7wbpe7.svg"
-              }
-              className="hidden h-[200px] w-[270px] object-cover xl:block"
-              alt={"msg"}
-              width={280}
-              height={214}
-            />
-
-            {/* Fade-in/out container */}
-            <section
-              key={selectedTestimonialIndex}
-              className={`transition-opacity duration-500 ${fade ? "opacity-100" : "opacity-0"}`}
-            >
-              <div className="relative">
-                <div className="flex items-start justify-between">
-                  <div className="">
-                    <h5 className="!mb-0 text-base md:!text-2xl">{selectedTestimonial.name}</h5>
-                    <p className={`!text-primary text-xs font-medium md:text-xl`}>{selectedTestimonial.position}</p>
-                  </div>
-                  <Ratings rating={selectedTestimonial?.rating || 0} />
+                  <p className="max-w-7xl text-justify text-[14px] lg:!text-xl">{selectedTestimonial.message}</p>
                 </div>
-                <p className="mt-14 max-w-7xl text-justify text-[14px] leading-[23px] lg:text-xl">
-                  {selectedTestimonial.message}
-                </p>
-              </div>
-            </section>
-          </div>
+              </section>
+            </div>
+          </section>
         </section>
       </section>
-    </section>
+    </Wrapper>
   );
 };

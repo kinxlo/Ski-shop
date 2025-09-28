@@ -90,7 +90,7 @@ export const Categories = () => {
         titleClassName="!text-lg font-bold !text-mid-warning"
         description="There are no product categories available at the moment. Please check back later."
         descriptionClassName="text-mid-grey-II"
-        className="bg-mid-grey-I space-y-0 rounded-lg py-10"
+        className="bg-mid-grey-I space-y-0 rounded-lg"
       />
     </div>
   );
@@ -112,7 +112,7 @@ export const Categories = () => {
         <SkiButton
           onClick={() => refetch()}
           variant="outline"
-          className="border-mid-danger text-mid-danger hover:bg-mid-danger/10 mt-4 border"
+          className="border-mid-danger text-mid-danger hover:bg-mid-danger/10 border"
         >
           {`Retry`}
         </SkiButton>
@@ -137,11 +137,10 @@ export const Categories = () => {
   };
 
   return (
-    <Wrapper className="pt-16">
-      <div className="mb-8 flex items-baseline justify-center">
+    <Wrapper className="gap-6 py-0">
+      <div className="flex items-baseline justify-center">
         <h2 className={cn("!text-xl lg:!text-4xl lg:!leading-[41.62px] lg:!tracking-[1px]")}>{`Categories`}</h2>
       </div>
-
       {renderCategoriesGrid()}
     </Wrapper>
   );
