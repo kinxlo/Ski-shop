@@ -65,7 +65,7 @@ const ProductCard = memo(({ product, isLarge = false, className = "" }: ProductC
           Sponsored Ad
         </Badge>
         <div className="space-y-2">
-          <h3 className="!text-background line-clamp-2 !text-base !font-semibold lg:!text-2xl">
+          <h3 className="line-clamp-2 !text-base !font-semibold !text-white lg:!text-2xl">
             {product?.name || "Product Name"}
           </h3>
           <p className="!text-mid-grey-I line-clamp-2 max-w-[500px] !text-xs !font-medium lg:!text-sm">
