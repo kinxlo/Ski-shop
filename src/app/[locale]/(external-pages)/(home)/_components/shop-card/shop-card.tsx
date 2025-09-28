@@ -7,6 +7,7 @@ import { formatCurrency } from "@/lib/i18n/utils";
 import { ComponentGuard } from "@/lib/routes/component-guard";
 import { cn } from "@/lib/utils";
 import { useSaveProduct } from "@/mocks/handlers/products/use-save-product";
+import { useSession } from "next-auth/react";
 import { useLocale } from "next-intl";
 import Image from "next/image";
 import { HTMLAttributes } from "react";
@@ -65,6 +66,7 @@ export const ShopCard = ({
   const discountPercentage = discount ? Math.round(((price - discount) / price) * 100) : 0;
   // Don't render save button if no ID
   const shouldShowSaveButton = showSaveButton && id;
+  const { status } = useSession();
 
   return (
     <LocaleLink
@@ -77,7 +79,7 @@ export const ShopCard = ({
         className,
       )}
     >
-      <ComponentGuard requireAuth allowedRoles={["CUSTOMER"]}>
+      <ComponentGuard requireAuth={status === "authenticated"} allowedRoles={["CUSTOMER"]}>
         {shouldShowSaveButton && (
           <button
             role="button"
@@ -152,7 +154,7 @@ export const ShopCard = ({
             </p>
           )}
         </div>
-        <ComponentGuard requireAuth allowedRoles={["CUSTOMER"]}>
+        <ComponentGuard requireAuth={status === "authenticated"} allowedRoles={["CUSTOMER"]}>
           {id && (
             <div className="pt-2 opacity-0 transition-opacity duration-200 group-hover:opacity-100">
               <AddToCartButton isIconVisible={false} className={``} productId={id} fullWidth stopEventPropagation />
