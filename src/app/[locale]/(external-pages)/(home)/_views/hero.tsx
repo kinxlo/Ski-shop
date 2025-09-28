@@ -3,8 +3,8 @@
 import { Wrapper } from "@/components/core/layout/wrapper";
 import { BlurImage } from "@/components/core/miscellaneous/blur-image";
 import SkiButton from "@/components/shared/button";
+import { ComponentGuard } from "@/lib/routes/component-guard";
 import { cn } from "@/lib/utils";
-import { useSession } from "next-auth/react";
 import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
 
@@ -24,8 +24,6 @@ type Slide = {
 const slidePositions = ["center", "left", "right"];
 
 const HeroSlide = ({ slide, position, t }: { slide: Slide; position: string; t: (key: string) => string }) => {
-  const { data: session } = useSession();
-
   return (
     <div className="relative min-h-[700px] w-full">
       <BlurImage
@@ -77,16 +75,13 @@ const HeroSlide = ({ slide, position, t }: { slide: Slide; position: string; t: 
             >
               {position === "center" ? t("shopNow") : position === "left" ? "subscribe now" : "Join now"}
             </SkiButton>
-            {position === "center" && (
-              <SkiButton
-                href={`/signup/vendor`}
-                size={`xl`}
-                className={cn("w-[220px] text-white", session?.user?.role?.name === "vendor" && "hidden")}
-                variant="outline"
-              >
-                {t("becomeSeller")}
-              </SkiButton>
-            )}
+            <ComponentGuard requireAuth allowedRoles={["CUSTOMER"]}>
+              {position === "center" && (
+                <SkiButton href={`/signup/vendor`} size={`xl`} className={cn("w-[220px] text-white")} variant="outline">
+                  {t("becomeSeller")}
+                </SkiButton>
+              )}
+            </ComponentGuard>
           </div>
         </div>
       </Wrapper>

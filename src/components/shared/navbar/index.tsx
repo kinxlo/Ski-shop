@@ -451,30 +451,32 @@ export const Navbar = forwardRef<HTMLElement, NavbarProperties>(
               </Drawer>
 
               {/* User Actions */}
-              {session?.user ? (
-                <div className="hidden lg:block">
-                  <UserAvatarProfile showInfo />
-                </div>
-              ) : (
-                <div className="hidden gap-2 lg:flex">
-                  <SkiButton
-                    href="/login"
-                    variant="outline"
-                    size={isScrolled ? "lg" : "xl"}
-                    className="transition-all duration-300"
-                  >
-                    {t("auth.signIn")}
-                  </SkiButton>
-                  <SkiButton
-                    className="bg-accent transition-all duration-300"
-                    variant="primary"
-                    href="/signup"
-                    size={isScrolled ? "lg" : "xl"}
-                  >
-                    {t("auth.signUp")}
-                  </SkiButton>
-                </div>
-              )}
+              <div className={cn(`hidden`, session?.user && `block`)}>
+                {session?.user ? (
+                  <div className="hidden lg:block">
+                    <UserAvatarProfile showInfo />
+                  </div>
+                ) : (
+                  <div className="hidden gap-2 lg:flex">
+                    <SkiButton
+                      href="/login"
+                      variant="outline"
+                      size={isScrolled ? "lg" : "xl"}
+                      className="transition-all duration-300"
+                    >
+                      {t("auth.signIn")}
+                    </SkiButton>
+                    <SkiButton
+                      className="bg-accent transition-all duration-300"
+                      variant="primary"
+                      href="/signup"
+                      size={isScrolled ? "lg" : "xl"}
+                    >
+                      {t("auth.signUp")}
+                    </SkiButton>
+                  </div>
+                )}
+              </div>
 
               {/* Theme Switcher */}
               <div className="hidden lg:block">

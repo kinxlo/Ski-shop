@@ -27,7 +27,7 @@ export const ComponentGuard = ({
   allowedRoles = [],
   customCondition,
   fallback = null,
-  showLoading = true,
+  showLoading = false,
   loadingText = "Loading...",
   onUnauthorized,
   onError,
