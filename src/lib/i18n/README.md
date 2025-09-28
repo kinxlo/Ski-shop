@@ -94,7 +94,7 @@ import { Link, usePathname, useRouter } from "@/lib/i18n/navigation";
 
 The navigation helpers are configured in `config.ts` with the following settings:
 
-- **Locales**: `["en", "fr", "es", "ar", "ng"]`
+- **Locales**: `["ng", "yo", "ig", "ha"]`
 - **Default Locale**: `"ng"`
 - **Locale Prefix**: `"always"` (always include locale in URL)
 

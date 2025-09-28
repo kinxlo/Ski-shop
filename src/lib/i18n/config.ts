@@ -1,54 +1,46 @@
-export const locales = ["en", "fr", "es", "ar", "ng"] as const;
+export const locales = ["ng", "yo", "ig", "ha"] as const;
 export const defaultLocale = "ng" as const;
 
 export type Locale = (typeof locales)[number];
 
 export const localeNames: Record<Locale, string> = {
-  en: "English",
-  fr: "Français",
-  es: "Español",
-  ar: "العربية",
   ng: "English (Nigeria)",
+  yo: "Yorùbá",
+  ig: "Igbo",
+  ha: "Hausa",
 };
 
 export const localeFlags: Record<Locale, string> = {
-  en: "🇺🇸",
-  fr: "🇫🇷",
-  es: "🇪🇸",
-  ar: "🇸🇦",
   ng: "🇳🇬",
+  yo: "🇳🇬",
+  ig: "🇳🇬",
+  ha: "🇳🇬",
 };
 
 export const currencies: Record<Locale, string> = {
-  en: "USD",
-  fr: "EUR",
-  es: "EUR",
-  ar: "SAR",
   ng: "NGN",
+  yo: "NGN",
+  ig: "NGN",
+  ha: "NGN",
 };
 
 export const dateFormats: Record<Locale, Intl.DateTimeFormatOptions> = {
-  en: {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  },
-  fr: {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  },
-  es: {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  },
-  ar: {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  },
   ng: {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  },
+  yo: {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  },
+  ig: {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  },
+  ha: {
     year: "numeric",
     month: "long",
     day: "numeric",
@@ -56,27 +48,22 @@ export const dateFormats: Record<Locale, Intl.DateTimeFormatOptions> = {
 };
 
 export const numberFormats: Record<Locale, Intl.NumberFormatOptions> = {
-  en: {
-    style: "decimal",
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  },
-  fr: {
-    style: "decimal",
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  },
-  es: {
-    style: "decimal",
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  },
-  ar: {
-    style: "decimal",
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  },
   ng: {
+    style: "decimal",
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  },
+  yo: {
+    style: "decimal",
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  },
+  ig: {
+    style: "decimal",
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  },
+  ha: {
     style: "decimal",
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,

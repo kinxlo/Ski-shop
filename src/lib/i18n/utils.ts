@@ -3,11 +3,11 @@ import { currencies, dateFormats, Locale, numberFormats } from "./config";
 /**
  * Format currency based on locale
  */
-export function formatCurrency(amount: number, locale: Locale = "en", currency?: string): string {
+export function formatCurrency(amount: number, locale: Locale = "ng", currency?: string): string {
   const currencyCode = currency || currencies[locale];
 
-  // Map 'ng' to 'en-NG' for proper currency formatting
-  const formattingLocale = locale === "ng" ? "en-NG" : locale;
+  // Map locales to BCP-47 tags for formatting
+  const formattingLocale = locale === "ng" ? "en-NG" : locale === "yo" ? "yo-NG" : locale === "ig" ? "ig-NG" : "ha-NG";
 
   return new Intl.NumberFormat(formattingLocale, {
     style: "currency",
@@ -20,12 +20,12 @@ export function formatCurrency(amount: number, locale: Locale = "en", currency?:
 /**
  * Format date based on locale
  */
-export function formatDate(date: Date | string, locale: Locale = "en", options?: Intl.DateTimeFormatOptions): string {
+export function formatDate(date: Date | string, locale: Locale = "ng", options?: Intl.DateTimeFormatOptions): string {
   const dateObject = typeof date === "string" ? new Date(date) : date;
   const formatOptions = options || dateFormats[locale];
 
-  // Map 'ng' to 'en-NG' for proper formatting
-  const formattingLocale = locale === "ng" ? "en-NG" : locale;
+  // Map locales to BCP-47 tags for formatting
+  const formattingLocale = locale === "ng" ? "en-NG" : locale === "yo" ? "yo-NG" : locale === "ig" ? "ig-NG" : "ha-NG";
 
   return new Intl.DateTimeFormat(formattingLocale, formatOptions).format(dateObject);
 }
@@ -33,11 +33,11 @@ export function formatDate(date: Date | string, locale: Locale = "en", options?:
 /**
  * Format number based on locale
  */
-export function formatNumber(number: number, locale: Locale = "en", options?: Intl.NumberFormatOptions): string {
+export function formatNumber(number: number, locale: Locale = "ng", options?: Intl.NumberFormatOptions): string {
   const formatOptions = options || numberFormats[locale];
 
-  // Map 'ng' to 'en-NG' for proper formatting
-  const formattingLocale = locale === "ng" ? "en-NG" : locale;
+  // Map locales to BCP-47 tags for formatting
+  const formattingLocale = locale === "ng" ? "en-NG" : locale === "yo" ? "yo-NG" : locale === "ig" ? "ig-NG" : "ha-NG";
 
   return new Intl.NumberFormat(formattingLocale, formatOptions).format(number);
 }
@@ -45,8 +45,9 @@ export function formatNumber(number: number, locale: Locale = "en", options?: In
 /**
  * Check if locale is RTL
  */
+// eslint-disable-next-line unused-imports/no-unused-vars, @typescript-eslint/no-unused-vars
 export function isRTL(locale: Locale): boolean {
-  return locale === "ar";
+  return false;
 }
 
 /**
@@ -60,10 +61,10 @@ export function getLocaleDirection(locale: Locale): "ltr" | "rtl" {
  * Validate if a string is a valid locale
  */
 export function isValidLocale(locale: string): locale is Locale {
-  return ["en", "fr", "es", "ar", "ng"].includes(locale);
+  return ["ng", "yo", "ig", "ha"].includes(locale);
 }
 
-export const formatTime = (date: Date | string, locale: Locale = "en", options?: Intl.DateTimeFormatOptions) => {
+export const formatTime = (date: Date | string, locale: Locale = "ng", options?: Intl.DateTimeFormatOptions) => {
   const dateObject = typeof date === "string" ? new Date(date) : date;
   const formatOptions: Intl.DateTimeFormatOptions = {
     hour: "numeric",
@@ -72,8 +73,8 @@ export const formatTime = (date: Date | string, locale: Locale = "en", options?:
     ...options,
   };
 
-  // Map 'ng' to 'en-NG' for proper formatting
-  const formattingLocale = locale === "ng" ? "en-NG" : locale;
+  // Map locales to BCP-47 tags for formatting
+  const formattingLocale = locale === "ng" ? "en-NG" : locale === "yo" ? "yo-NG" : locale === "ig" ? "ig-NG" : "ha-NG";
 
   return new Intl.DateTimeFormat(formattingLocale, formatOptions).format(dateObject);
 };

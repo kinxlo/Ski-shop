@@ -125,7 +125,7 @@ export function PromoteProductModal({ isOpen, onClose, product }: PromoteProduct
               placeholder="0.00"
               className="!h-12 border-none !ring-0"
               containerClassName="w-full border-border w-full border rounded-md px-4"
-              leftAddon={<span className="text-gray-500">{locale === "en" ? "₦" : "$"}</span>}
+              leftAddon={<span className="text-gray-500">₦</span>}
               onChange={(event) => setPromotionPrice(event.target.value)}
             />
 
