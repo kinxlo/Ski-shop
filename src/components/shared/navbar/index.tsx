@@ -11,7 +11,7 @@ import { cn } from "@/lib/utils";
 import { useAppService } from "@/services/externals/app/use-app-service";
 import { ClipboardList, Menu, ShoppingCartIcon } from "lucide-react";
 import { signOut, useSession } from "next-auth/react";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { usePathname } from "next/navigation";
 import React, { forwardRef, useEffect, useState } from "react";
 import { MdOutlineFavorite } from "react-icons/md";
@@ -73,6 +73,7 @@ export const Navbar = forwardRef<HTMLElement, NavbarProperties>(
     reference,
   ) => {
     const pathname = usePathname();
+    const locale = useLocale();
     const { data: session } = useSession();
     const { isScrolled, scrollDirection } = useScrollBehavior();
     const { useGetCart, useGetSavedProducts, useGetOrders } = useAppService();
@@ -94,7 +95,7 @@ export const Navbar = forwardRef<HTMLElement, NavbarProperties>(
       try {
         await signOut({
           redirect: true,
-          callbackUrl: "/login",
+          callbackUrl: `/${locale}/login`,
         });
         toast.success(t("logoutSuccess"));
       } catch {
@@ -149,7 +150,7 @@ export const Navbar = forwardRef<HTMLElement, NavbarProperties>(
               <ComponentGuard requireAuth allowedRoles={["CUSTOMER"]}>
                 <div className="relative">
                   <SkiButton
-                    href="/shop/cart"
+                    href={`/${locale}/shop/cart`}
                     variant="ghost"
                     size="icon"
                     isIconOnly
@@ -260,7 +261,7 @@ export const Navbar = forwardRef<HTMLElement, NavbarProperties>(
                       <h3 className="!text-primary text-sm font-medium">Navigation</h3>
                       <div className="space-y-2">
                         <SkiButton
-                          href="/"
+                          href={`/${locale}`}
                           variant="ghost"
                           className={cn("w-full justify-start", isActiveLink("/") && "!text-primary !underline")}
                           size="sm"
@@ -269,7 +270,7 @@ export const Navbar = forwardRef<HTMLElement, NavbarProperties>(
                           Explore
                         </SkiButton>
                         <SkiButton
-                          href="/about"
+                          href={`/${locale}/about`}
                           variant="ghost"
                           className={cn("w-full justify-start", isActiveLink("/about") && "!text-primary !underline")}
                           size="sm"
@@ -278,7 +279,7 @@ export const Navbar = forwardRef<HTMLElement, NavbarProperties>(
                           About Us
                         </SkiButton>
                         <SkiButton
-                          href="/shop"
+                          href={`/${locale}/shop`}
                           variant="ghost"
                           className={cn("w-full justify-start", isActiveLink("/shop") && "!text-primary !underline")}
                           size="sm"
@@ -287,7 +288,7 @@ export const Navbar = forwardRef<HTMLElement, NavbarProperties>(
                           Shop
                         </SkiButton>
                         <SkiButton
-                          href="/contact"
+                          href={`/${locale}/contact`}
                           variant="ghost"
                           className={cn("w-full justify-start", isActiveLink("/contact") && "!text-primary !underline")}
                           size="sm"
@@ -308,7 +309,7 @@ export const Navbar = forwardRef<HTMLElement, NavbarProperties>(
                             <ComponentGuard requireAuth allowedRoles={["ADMIN"]}>
                               <div className="space-y-2">
                                 <SkiButton
-                                  href="/admin/home"
+                                  href={`/${locale}/admin/home`}
                                   variant="ghost"
                                   className="w-full justify-start"
                                   size="sm"
@@ -316,7 +317,7 @@ export const Navbar = forwardRef<HTMLElement, NavbarProperties>(
                                   Admin Dashboard
                                 </SkiButton>
                                 <SkiButton
-                                  href="/admin/users"
+                                  href={`/${locale}/admin/users`}
                                   variant="ghost"
                                   className="w-full justify-start"
                                   size="sm"
@@ -324,7 +325,7 @@ export const Navbar = forwardRef<HTMLElement, NavbarProperties>(
                                   Manage Users
                                 </SkiButton>
                                 <SkiButton
-                                  href="/admin/products"
+                                  href={`/${locale}/admin/products`}
                                   variant="ghost"
                                   className="w-full justify-start"
                                   size="sm"
@@ -402,7 +403,7 @@ export const Navbar = forwardRef<HTMLElement, NavbarProperties>(
                           <h3 className="!text-primary text-sm font-medium">Account</h3>
                           <div className="">
                             <SkiButton
-                              href={`/login`}
+                              href={`/${locale}/login`}
                               variant="outline"
                               className="mb-4 w-full"
                               onClick={() => setDrawerOpen(false)}
@@ -427,7 +428,12 @@ export const Navbar = forwardRef<HTMLElement, NavbarProperties>(
                       <div className="space-y-3">
                         <h3 className="!text-primary text-sm font-medium">More</h3>
                         <div className="space-y-2">
-                          <SkiButton href={`/help`} variant="ghost" className="w-full justify-start" size="sm">
+                          <SkiButton
+                            href={`/${locale}/help`}
+                            variant="ghost"
+                            className="w-full justify-start"
+                            size="sm"
+                          >
                             Help Center
                           </SkiButton>
                         </div>
@@ -454,7 +460,7 @@ export const Navbar = forwardRef<HTMLElement, NavbarProperties>(
                 ) : (
                   <div className="hidden gap-2 lg:flex">
                     <SkiButton
-                      href="/login"
+                      href={`/${locale}/login`}
                       variant="outline"
                       size={isScrolled ? "lg" : "xl"}
                       className="transition-all duration-300"
@@ -464,7 +470,7 @@ export const Navbar = forwardRef<HTMLElement, NavbarProperties>(
                     <SkiButton
                       className="bg-accent transition-all duration-300"
                       variant="primary"
-                      href="/signup"
+                      href={`/${locale}/signup`}
                       size={isScrolled ? "lg" : "xl"}
                     >
                       {t("auth.signUp")}
