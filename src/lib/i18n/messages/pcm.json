@@ -88,7 +88,37 @@
     "emailAlreadyExists": "Email don dey",
     "passwordsDoNotMatch": "Password no match",
     "weakPassword": "Password no strong",
-    "invalidEmail": "Abeg enter correct email"
+    "invalidEmail": "Abeg enter correct email",
+    "welcome": "Welcome back!",
+    "welcomeMessage": "Sign in make you enter your dashboard and continue your journey.",
+    "processing": "Processing",
+    "privacy": "Privacy policy",
+    "terms": "Terms & Condition",
+    "back": "Back",
+    "newPassword": "New password",
+    "confirmNewPassword": "Confirm new password",
+    "passwordChanged": "Password change correct",
+    "success": "Success",
+    "retry": "Try again",
+    "signUp": "Sign Up",
+    "termsAccepted": "As you dey sign up, you gree say",
+    "emailRequired": "Email dey important",
+    "passwordRequired": "Password dey important",
+    "firstNameRequired": "First name dey important",
+    "lastNameRequired": "Last name dey important",
+    "firstNameMin": "First name suppose get at least 2 letters",
+    "lastNameMin": "Last name suppose get at least 2 letters",
+    "passwordMin": "Password suppose get at least 8 letters",
+    "confirmPasswordRequired": "Abeg confirm your password",
+    "invalidEmailFormat": "Email format no correct",
+    "checkEmail": "Abeg check your email",
+    "resendEmail": "Send email again",
+    "backToLogin": "Go back to login",
+    "createNewPassword": "Create new password",
+    "enterNewPassword": "Enter your new password for down",
+    "passwordResetEmailSent": "We don send you email wey get how to reset password",
+    "didntReceiveEmail": "You no receive the email?",
+    "sendResetLink": "Send reset link"
   },
   "navigation": {
     "home": "Home",
@@ -434,6 +464,12 @@
       "title": "Play-2-Win",
       "description": "Enjoy freebies when you join our play-2-win",
       "action": "Get the app"
+    },
+    "referEarn": {
+      "tagTitle": "Refer & Earn",
+      "title": "Turn your network to rewards",
+      "description": "Invite friends and family make dem shop for Ski-Shop and collect better rewards when dem sign up and place their first order.",
+      "action": "Get started"
     }
   },
   "about": {

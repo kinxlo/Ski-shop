@@ -88,7 +88,37 @@
     "emailAlreadyExists": "Imeeli ti wà tẹ́lẹ̀",
     "passwordsDoNotMatch": "Ọrọ̀ aṣínà kò bá ara wọn mu",
     "weakPassword": "Ọrọ̀ aṣínà rẹ̀ rọrùn ju",
-    "invalidEmail": "Jọ̀wọ́ tẹ imeeli tó tọ́"
+    "invalidEmail": "Jọ̀wọ́ tẹ imeeli tó tọ́",
+    "welcome": "Ẹ káàbọ̀ padà!",
+    "welcomeMessage": "Wọlé kí o lè wọle sí dasibodu rẹ kí o tẹ̀síwájú.",
+    "processing": "N ń ṣiṣẹ́",
+    "privacy": "Ètò Àṣírí",
+    "terms": "Ọ̀rọ̀ Ètò & Ìpinnu",
+    "back": "Padà",
+    "newPassword": "Ọrọ̀ aṣínà tuntun",
+    "confirmNewPassword": "Jẹ́rìí Ọrọ̀ aṣínà tuntun",
+    "passwordChanged": "A yí Ọrọ̀ aṣínà padà ní aṣeyọri",
+    "success": "Aṣeyọri",
+    "retry": "Tun gbìyànjú",
+    "signUp": "Forúkọ sílẹ̀",
+    "termsAccepted": "Nípa fífi orúkọ sílẹ̀, o fara mọ́",
+    "emailRequired": "Ímeèlì jẹ́ dandan",
+    "passwordRequired": "Ọ̀rọ̀ aṣínà jẹ́ dandan",
+    "firstNameRequired": "Orúkọ àkọ́kọ́ jẹ́ dandan",
+    "lastNameRequired": "Orúkọ ìdílé jẹ́ dandan",
+    "firstNameMin": "Orúkọ àkọ́kọ́ gbọdọ̀ jẹ́ àmì mẹ́ta ó kéré jù",
+    "lastNameMin": "Orúkọ ìdílé gbọdọ̀ jẹ́ àmì mẹ́ta ó kéré jù",
+    "passwordMin": "Ọ̀rọ̀ aṣínà gbọdọ̀ jẹ́ àmì mẹ́jọ ó kéré jù",
+    "confirmPasswordRequired": "Jọ̀wọ́ jẹ́rìísí ọ̀rọ̀ aṣínà rẹ",
+    "invalidEmailFormat": "Ìlànà ímeèlì kò tọ́",
+    "checkEmail": "Jọ̀wọ́ yẹ ímeèlì rẹ wò",
+    "resendEmail": "Fi ímeèlì ránṣẹ́ lẹ́ẹ̀kan si",
+    "backToLogin": "Padà sí ìwọlé",
+    "createNewPassword": "Ṣẹ̀dá ọ̀rọ̀ aṣínà tuntun",
+    "enterNewPassword": "Tẹ ọ̀rọ̀ aṣínà tuntun rẹ sílẹ̀ nísàlẹ̀",
+    "passwordResetEmailSent": "A ti fi ímeèlì ránṣẹ́ sí ọ pẹ̀lú ìlànà láti tún ọ̀rọ̀ aṣínà ṣe",
+    "didntReceiveEmail": "Ṣé o kò gba ímeèlì náà?",
+    "sendResetLink": "Fi ìjápọ̀ ìtúnṣe ránṣẹ́"
   },
   "navigation": {
     "home": "Ojú-ìwé ìbẹ̀rẹ̀",
@@ -434,6 +464,12 @@
       "title": "Ṣeré-2-Ṣe iṣẹgun",
       "description": "Gbadun ohun ìfẹ́ nígbà tí o bá kópa nínú ere wa",
       "action": "Gba App náà"
+    },
+    "referEarn": {
+      "tagTitle": "Pe Ọrẹ & Jèrè",
+      "title": "Yí Nẹ́tíwọ́ọ̀kì Rẹ sí Èrè",
+      "description": "Pe àwọn ọ̀rẹ́ àti ẹbí kí wọ́n ra lórí Ski-Shop kí o sì jèrè ẹ̀bùn ìdánilẹ́kọ̀ọ́ nígbà tí wọ́n bá forúkọsílẹ̀ tí wọ́n sì ṣe ìbẹ̀rẹ̀ rira wọn.",
+      "action": "Bẹ̀rẹ̀"
     }
   },
   "about": {

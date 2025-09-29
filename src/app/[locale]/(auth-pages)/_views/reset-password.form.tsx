@@ -3,10 +3,10 @@
 import SkiButton from "@/components/shared/button";
 import { FormField } from "@/components/shared/inputs/FormFields";
 import { useSearchParameters } from "@/hooks/use-search-parameters";
-import { ResetPasswordData, resetPasswordSchema } from "@/schemas";
+import { createResetPasswordSchema, ResetPasswordData } from "@/schemas/auth-schemas";
 import { useAuthService } from "@/services/auth/use-auth-service";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useLocale } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import { FormProvider, useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -14,9 +14,20 @@ import { toast } from "sonner";
 export const ResetPasswordForm = () => {
   const token = useSearchParameters("token");
   const locale = useLocale();
+  const tAuth = useTranslations("auth");
   const router = useRouter();
   const { useResetPassword } = useAuthService();
   const { mutateAsync: resetPassword, isPending } = useResetPassword();
+
+  // Create schema with translations
+  const resetPasswordSchema = createResetPasswordSchema((key: string) => {
+    const keys = key.split(".");
+    if (keys[0] === "auth") {
+      return tAuth(keys[1]);
+    }
+    return key;
+  });
+
   const methods = useForm<ResetPasswordData>({
     resolver: zodResolver(resetPasswordSchema),
     defaultValues: {
@@ -39,8 +50,8 @@ export const ResetPasswordForm = () => {
     await resetPassword(tokenizedData, {
       onSuccess: (response) => {
         if (response?.data) {
-          toast.success(`Successful`, {
-            description: response?.data,
+          toast.success(tAuth("success"), {
+            description: tAuth("passwordChanged"),
           });
           router.push(`/${locale}/login`);
         }
@@ -50,8 +61,13 @@ export const ResetPasswordForm = () => {
 
   const renderPasswordFields = () => (
     <section className="space-y-4">
-      <FormField type="password" placeholder="Enter new password" className="h-14 w-full" name="password" />
-      <FormField type="password" placeholder="Confirm password" className="h-14 w-full" name="confirmPassword" />
+      <FormField type="password" placeholder={tAuth("newPassword")} className="h-14 w-full" name="password" />
+      <FormField
+        type="password"
+        placeholder={tAuth("confirmNewPassword")}
+        className="h-14 w-full"
+        name="confirmPassword"
+      />
     </section>
   );
 
@@ -65,7 +81,7 @@ export const ResetPasswordForm = () => {
         variant="primary"
         type="submit"
       >
-        Reset Password
+        {tAuth("resetPassword")}
       </SkiButton>
     </section>
   );

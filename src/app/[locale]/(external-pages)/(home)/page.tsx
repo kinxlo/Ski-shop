@@ -37,16 +37,14 @@ const Page = () => {
         textClassName={`max-w-[900px] lg:pr-[40%]`}
         action={
           <SkiButton href={`/signup/vendor`} className="px-14" size="xl" variant="primary">
-            {"Get Started"}
+            {t("referEarn.action")}
           </SkiButton>
         }
-        description={
-          "Invite friends and family to shop on Ski-Shop and earn exciting rewards when they sign up and place their first order."
-        }
+        description={t("referEarn.description")}
         image="https://res.cloudinary.com/kingsleysolomon/image/upload/f_auto,q_auto/v1758641973/skicom/meog7pfhsglhvjawbc2o.svg"
         imageStyle={`!w-[524px] !h-[418px] absolute !bottom-10 !right-10`}
-        tagTitle={"Refer & Earn"}
-        title={"Turn Your Network to Rewards"}
+        tagTitle={t("referEarn.tagTitle")}
+        title={t("referEarn.title")}
         className={`relative bg-[#E2F4FF]`}
       />
 

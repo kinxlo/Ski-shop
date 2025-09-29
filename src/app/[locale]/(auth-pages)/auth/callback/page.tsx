@@ -3,6 +3,7 @@
 
 import Loading from "@/app/Loading";
 import { useSearchParameters } from "@/hooks/use-search-parameters";
+import { useTranslations } from "next-intl";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -11,9 +12,11 @@ import { handleGoogleCallback } from "../../actions/auth-action";
 const BasePreLoader = () => {
   const router = useRouter();
   const parameters = useParams();
+  const tAuth = useTranslations("auth");
+  const tCommon = useTranslations("common");
   const code = useSearchParameters("code");
   const [isProcessing, setIsProcessing] = useState(true);
-  const [loadingMessage, setLoadingMessage] = useState("Getting credentials from Google...");
+  const [loadingMessage, setLoadingMessage] = useState(tCommon("processing") || "Getting credentials from Google...");
 
   const redirectToLogin = (errorMessage: string) => {
     const locale = parameters.locale as string;
@@ -27,7 +30,7 @@ const BasePreLoader = () => {
 
   const verifySession = async (): Promise<boolean> => {
     try {
-      setLoadingMessage("Verifying your session...");
+      setLoadingMessage(tCommon("processing") || "Verifying your session...");
       const response = await fetch("/api/auth/session", {
         method: "GET",
         headers: {
@@ -56,7 +59,7 @@ const BasePreLoader = () => {
           return;
         }
 
-        setLoadingMessage("Authenticating with Google...");
+        setLoadingMessage(tCommon("processing") || "Authenticating with Google...");
         const result = await handleGoogleCallback(code);
 
         if (!result.success) {
@@ -69,7 +72,7 @@ const BasePreLoader = () => {
         const sessionEstablished = await verifySession();
 
         if (sessionEstablished) {
-          setLoadingMessage("Authentication successful! Redirecting...");
+          setLoadingMessage(tAuth("loginSuccess") || "Authentication successful! Redirecting...");
           // Small delay for better UX
           setTimeout(() => {
             redirectToDashboard();

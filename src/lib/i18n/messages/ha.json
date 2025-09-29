@@ -88,7 +88,37 @@
     "emailAlreadyExists": "Imel ta riga ta wanzu",
     "passwordsDoNotMatch": "Kalmomin sirri ba su yi daidai ba",
     "weakPassword": "Kalmar sirri rauni ce",
-    "invalidEmail": "Shigar da imel mai inganci"
+    "invalidEmail": "Shigar da imel mai inganci",
+    "welcome": "Barka da dawowa!",
+    "welcomeMessage": "Shiga don samun damar allon kulawa kuma ci gaba da tafiyarka.",
+    "processing": "Ana aiwatarwa",
+    "privacy": "Manufar Sirri",
+    "terms": "Ka'idoji & Sharudda",
+    "back": "Komawa",
+    "newPassword": "Sabuwar kalmar sirri",
+    "confirmNewPassword": "Tabbatar da sabuwar kalmar sirri",
+    "passwordChanged": "An canza kalmar sirri cikin nasara",
+    "success": "Nasara",
+    "retry": "Sake gwadawa",
+    "signUp": "Yi rajista",
+    "termsAccepted": "Ta yin rajista, ka yarda da",
+    "emailRequired": "Ana bukatar imel",
+    "passwordRequired": "Ana bukatar kalmar sirri",
+    "firstNameRequired": "Ana bukatar sunan farko",
+    "lastNameRequired": "Ana bukatar sunan mahaifa",
+    "firstNameMin": "Sunan farko ya zama akalla haruffa biyu",
+    "lastNameMin": "Sunan mahaifa ya zama akalla haruffa biyu",
+    "passwordMin": "Kalmar sirri ta zama akalla haruffa takwas",
+    "confirmPasswordRequired": "Da fatan a tabbatar da kalmar sirri",
+    "invalidEmailFormat": "Tsarin imel bai dace ba",
+    "checkEmail": "Da fatan a duba imel ɗin ka",
+    "resendEmail": "Sake aika imel",
+    "backToLogin": "Koma shiga",
+    "createNewPassword": "Ƙirkirar sabuwar kalmar sirri",
+    "enterNewPassword": "Shigar da sabuwar kalmar sirri a ƙasa",
+    "passwordResetEmailSent": "Mun aika maka imel da umarnin sake saita kalmar sirri",
+    "didntReceiveEmail": "Ba ka sami imel ɗin ba?",
+    "sendResetLink": "Aika hanyar sake saitawa"
   },
   "navigation": {
     "home": "Gida",
@@ -434,6 +464,12 @@
       "title": "Play-2-Win",
       "description": "Ji daɗin kyaututtuka idan ka shiga wasanninmu",
       "action": "Samu Manhaja"
+    },
+    "referEarn": {
+      "tagTitle": "Gayyata & Samu",
+      "title": "Juya hanyar sadarwarka zuwa lada",
+      "description": "Gayyaci abokai da dangi su yi siyayya a Ski-Shop ka kuma sami kyaututtuka masu kayatarwa idan sun yi rijista kuma suka yi odarsu ta farko.",
+      "action": "Fara yanzu"
     }
   },
   "about": {

@@ -11,6 +11,7 @@ import {
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
 import { cn } from "@/lib/utils";
+import { useTranslations } from "next-intl";
 import { LinkProps } from "next/link";
 import * as React from "react";
 
@@ -27,6 +28,33 @@ interface ListItemProperties extends LinkProps {
 }
 
 export const NavItems: React.FC<NavItemProperties> = ({ links, isMobile, className, pathname }) => {
+  const tNav = useTranslations("navigation");
+  const tFooter = useTranslations("footer");
+
+  const getLabelForHref = (href: string, fallback: string) => {
+    switch (href) {
+      case "/": {
+        return tFooter("explore");
+      }
+      case "/about": {
+        return tNav("about");
+      }
+      case "/shop": {
+        return tNav("shop");
+      }
+      case "/contact": {
+        // Prefer footer.contact when available, fallback to navigation.contact
+        try {
+          return tFooter("contact");
+        } catch {
+          return tNav("contact");
+        }
+      }
+      default: {
+        return fallback;
+      }
+    }
+  };
   return (
     <NavigationMenu className={cn(isMobile && "block max-w-full", className)}>
       <NavigationMenuList className={cn(isMobile && "block")}>
@@ -39,7 +67,7 @@ export const NavItems: React.FC<NavItemProperties> = ({ links, isMobile, classNa
             return (
               <NavigationMenuItem key={index}>
                 <NavigationMenuTrigger className={cn("w-full", isDropdownActive && "text-accent")}>
-                  {link.title}
+                  {getLabelForHref(link.href, link.title)}
                 </NavigationMenuTrigger>
                 <NavigationMenuContent>
                   <ul className="grid gap-3 p-4 md:w-[600px] md:grid-cols-2">
@@ -47,7 +75,7 @@ export const NavItems: React.FC<NavItemProperties> = ({ links, isMobile, classNa
                       <ListItem
                         key={subLink.id}
                         href={subLink.href}
-                        title={subLink.title}
+                        title={getLabelForHref(subLink.href, subLink.title)}
                         className={cn(pathname === subLink.href && "bg-accent text-accent-foreground")}
                       >
                         {subLink.description}
@@ -73,7 +101,7 @@ export const NavItems: React.FC<NavItemProperties> = ({ links, isMobile, classNa
                     isActive && "text-primary underline",
                   )}
                 >
-                  {link.title}
+                  {getLabelForHref(link.href, link.title)}
                 </LocaleLink>
               </NavigationMenuLink>
             </NavigationMenuItem>

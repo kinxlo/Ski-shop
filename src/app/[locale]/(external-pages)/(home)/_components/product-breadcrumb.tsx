@@ -8,6 +8,7 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
+import { useLocale, useTranslations } from "next-intl";
 // import { usePathname } from "next/navigation";
 import { PiHouse } from "react-icons/pi";
 
@@ -18,6 +19,8 @@ interface ProductBreadcrumbProperties {
 export const ProductBreadcrumb = ({ productTitle }: ProductBreadcrumbProperties) => {
   //   const pathName = usePathname();
   //   const paths = pathName.split("/").filter(Boolean);
+  const locale = useLocale();
+  const tNav = useTranslations("navigation");
 
   return (
     <div className="bg-high-grey-I dark:bg-[#111111]">
@@ -25,15 +28,15 @@ export const ProductBreadcrumb = ({ productTitle }: ProductBreadcrumbProperties)
         <Breadcrumb>
           <BreadcrumbList>
             <BreadcrumbItem>
-              <BreadcrumbLink href="/" className="flex items-center gap-1 text-xs md:text-sm">
+              <BreadcrumbLink href={`/${locale}`} className="flex items-center gap-1 text-xs md:text-sm">
                 <PiHouse size={16} />
-                <span>Home</span>
+                <span>{tNav("home")}</span>
               </BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbSeparator />
             <BreadcrumbItem>
-              <BreadcrumbLink className={`text-xs md:text-sm`} href="/shop">
-                Shop
+              <BreadcrumbLink className={`text-xs md:text-sm`} href={`/${locale}/shop`}>
+                {tNav("shop")}
               </BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbSeparator />

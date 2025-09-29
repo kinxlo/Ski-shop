@@ -2,6 +2,7 @@
 
 import { Logo } from "@/components/shared/logo";
 import { cn } from "@/lib/utils";
+import { useTranslations } from "next-intl";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -10,6 +11,7 @@ import React from "react";
 export default function AuthLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const switchSides = pathname.includes("signup");
+  const tFooter = useTranslations("footer");
 
   return (
     <main
@@ -68,7 +70,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
           </div>
           {/* Footer - Responsive positioning */}
           <p className="!text-primary p-10 text-center !text-xs md:block lg:!text-sm">
-            &copy; {new Date().getFullYear()} Skicom Inc.
+            {tFooter("copyright", { year: new Date().getFullYear() })}
           </p>
         </div>
       </section>

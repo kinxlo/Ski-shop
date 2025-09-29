@@ -2,17 +2,29 @@
 
 import SkiButton from "@/components/shared/button";
 import { FormField } from "@/components/shared/inputs/FormFields";
-import { ForgotPasswordData, forgotPasswordSchema } from "@/schemas";
+import { createForgotPasswordSchema, ForgotPasswordData } from "@/schemas/auth-schemas";
 import { useAuthService } from "@/services/auth/use-auth-service";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useTranslations } from "next-intl";
 import { FormProvider, useForm } from "react-hook-form";
 import { toast } from "sonner";
 
 // import { toast } from "sonner";
 
 export const ForgotPasswordForm = () => {
+  const tAuth = useTranslations("auth");
   const { useForgotPassword } = useAuthService();
   const { mutateAsync: forgotPassword, isPending } = useForgotPassword();
+
+  // Create schema with translations
+  const forgotPasswordSchema = createForgotPasswordSchema((key: string) => {
+    const keys = key.split(".");
+    if (keys[0] === "auth") {
+      return tAuth(keys[1]);
+    }
+    return key;
+  });
+
   const methods = useForm<ForgotPasswordData>({
     resolver: zodResolver(forgotPasswordSchema),
     defaultValues: {
@@ -29,8 +41,8 @@ export const ForgotPasswordForm = () => {
     await forgotPassword(data, {
       onSuccess: (response) => {
         if (response?.data) {
-          toast.success(`Sent Successfully`, {
-            description: "Please check your email for the reset link.",
+          toast.success(tAuth("passwordResetSent"), {
+            description: tAuth("checkEmail"),
           });
           // the callback from the mail will serve as a redirect with the token attached to the url
         }
@@ -40,13 +52,7 @@ export const ForgotPasswordForm = () => {
 
   const renderEmailField = () => (
     <section className="space-y-4">
-      <FormField
-        type="email"
-        placeholder="Enter email address"
-        className="h-14 w-full"
-        name="email"
-        disabled={isPending}
-      />
+      <FormField type="email" placeholder={tAuth("email")} className="h-14 w-full" name="email" disabled={isPending} />
     </section>
   );
 
@@ -60,16 +66,16 @@ export const ForgotPasswordForm = () => {
         variant="primary"
         type="submit"
       >
-        Send Reset Link
+        {tAuth("sendResetLink")}
       </SkiButton>
     </section>
   );
 
   const renderResendPrompt = () => (
     <p className="mt-6 text-center text-gray-500">
-      Link not received?{" "}
+      {tAuth("didntReceiveEmail")}{" "}
       <SkiButton variant="link" size="sm" className="font-meium text-primary text-sm">
-        Resend Link
+        {tAuth("resendEmail")}
       </SkiButton>
     </p>
   );

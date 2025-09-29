@@ -4,9 +4,10 @@ import SkiButton from "@/components/shared/button";
 import { FormField } from "@/components/shared/inputs/FormFields";
 import { LocaleLink } from "@/components/shared/locale-link";
 import { Checkbox } from "@/components/ui/checkbox";
-import { LoginFormData, loginSchema } from "@/schemas";
+import { createLoginSchema, LoginFormData } from "@/schemas/auth-schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { signIn } from "next-auth/react";
+import { useLocale, useTranslations } from "next-intl";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useTransition } from "react";
 import { FormProvider, useForm } from "react-hook-form";
@@ -14,9 +15,22 @@ import { FcGoogle } from "react-icons/fc";
 import { toast } from "sonner";
 
 export const LoginForm = () => {
+  const tAuth = useTranslations("auth");
+  // const tCommon = useTranslations("common");
+  const locale = useLocale();
   const [isGooglePending, startGoogleTransition] = useTransition();
   const router = useRouter();
   const searchParameters = useSearchParams();
+
+  // Create schema with translations
+  const loginSchema = createLoginSchema((key: string) => {
+    const keys = key.split(".");
+    if (keys[0] === "auth") {
+      return tAuth(keys[1]);
+    }
+    return key;
+  });
+
   const methods = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
@@ -36,7 +50,7 @@ export const LoginForm = () => {
     const error = searchParameters.get("error");
     if (error) {
       const decodedError = decodeURIComponent(error);
-      toast.error("Authentication Failed", {
+      toast.error(tAuth("loginFailed"), {
         description: decodedError,
       });
 
@@ -45,6 +59,7 @@ export const LoginForm = () => {
       newUrl.searchParams.delete("error");
       window.history.replaceState({}, "", newUrl.toString());
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchParameters]);
 
   const handleSubmitForm = async (data: LoginFormData) => {
@@ -57,9 +72,9 @@ export const LoginForm = () => {
     if (result?.error) {
       let message = result.error as string;
       if (message === "CredentialsSignin") {
-        message = "Invalid email or password. Please try again.";
+        message = tAuth("invalidCredentials");
       }
-      toast.error("Login Failed", { description: message });
+      toast.error(tAuth("loginFailed"), { description: message });
       if (message.toLowerCase().includes("email")) {
         setError("email", { message });
       } else if (message.toLowerCase().includes("password")) {
@@ -71,8 +86,8 @@ export const LoginForm = () => {
       return;
     }
 
-    toast.success("Login Successful", { description: "Welcome back!" });
-    router.push("/dashboard/home");
+    toast.success(tAuth("loginSuccess"));
+    router.push(`/${locale}/dashboard/home`);
   };
 
   const handleGoogleSignIn = () => {
@@ -87,17 +102,17 @@ export const LoginForm = () => {
         <form onSubmit={handleSubmit(handleSubmitForm)} className="space-y-6">
           <section className="space-y-4 sm:space-y-5">
             <FormField
-              placeholder="Enter email address"
+              placeholder={tAuth("email")}
               className="h-12 w-full sm:h-14"
-              label="Email Address"
+              label={tAuth("email")}
               name="email"
             />
             <div className="space-y-2">
               <FormField
                 type="password"
-                placeholder="Enter password"
+                placeholder={tAuth("password")}
                 className="h-12 w-full sm:h-14"
-                label="Password"
+                label={tAuth("password")}
                 name="password"
               />
             </div>
@@ -110,11 +125,11 @@ export const LoginForm = () => {
                 htmlFor="remember"
                 className="text-xs leading-none font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70 lg:text-sm"
               >
-                Remember Me
+                {tAuth("rememberMe")}
               </label>
             </div>
             <LocaleLink href="/forgot-password">
-              <p className="!text-destructive !text-xs hover:underline md:!text-sm">Forgot Password?</p>
+              <p className="!text-destructive !text-xs hover:underline md:!text-sm">{tAuth("forgotPassword")}</p>
             </LocaleLink>
           </section>
 
@@ -128,7 +143,7 @@ export const LoginForm = () => {
               variant="primary"
               type="submit"
             >
-              Login
+              {tAuth("login")}
             </SkiButton>
             <span className="text-muted-foreground text-xs sm:text-sm">
               -------------------- OR --------------------
@@ -143,14 +158,14 @@ export const LoginForm = () => {
               isLoading={isGooglePending}
               onClick={handleGoogleSignIn}
             >
-              Login with Google
+              {tAuth("signInWithGoogle")}
             </SkiButton>
           </section>
 
           <p className="text-muted-foreground mt-6 text-center text-sm sm:text-base">
-            New user?{" "}
+            {tAuth("dontHaveAccount")}{" "}
             <LocaleLink href="/signup" className="text-primary font-medium hover:underline">
-              Sign up
+              {tAuth("signup")}
             </LocaleLink>
           </p>
         </form>

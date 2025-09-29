@@ -3,10 +3,10 @@
 import SkiButton from "@/components/shared/button";
 import { FormField } from "@/components/shared/inputs/FormFields";
 import { LocaleLink } from "@/components/shared/locale-link";
-import { RegisterFormData, registerSchema } from "@/schemas";
+import { createRegisterSchema, RegisterFormData } from "@/schemas/auth-schemas";
 import { useAuthService } from "@/services/auth/use-auth-service";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useLocale } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { usePathname, useRouter } from "next/navigation";
 // import { useTransition } from "react";
 import { FormProvider, useForm } from "react-hook-form";
@@ -18,11 +18,21 @@ export const BaseSignupForm = () => {
   const router = useRouter();
   const pathname = usePathname();
   const locale = useLocale();
+  const tAuth = useTranslations("auth");
   const { useSignUp } = useAuthService();
   const { mutateAsync: signUp, isPending: isSigningUp } = useSignUp();
 
   // Determine role based on pathname
   const role = pathname.includes("/vendor") ? "vendor" : "customer";
+
+  // Create schema with translations
+  const registerSchema = createRegisterSchema((key: string) => {
+    const keys = key.split(".");
+    if (keys[0] === "auth") {
+      return tAuth(keys[1]);
+    }
+    return key;
+  });
 
   const methods = useForm<RegisterFormData>({
     resolver: zodResolver(registerSchema),
@@ -45,13 +55,13 @@ export const BaseSignupForm = () => {
     await signUp(data, {
       onSuccess: (response) => {
         if (response?.success && !pathname.includes("/vendor")) {
-          toast.success("Registration Successful", {
-            description: "Registration Successful",
+          toast.success(tAuth("signupSuccess"), {
+            description: tAuth("signupSuccess"),
           });
           router.push(`/${locale}/onboarding/verify-email?email=${data?.email}&token=${response?.data?.token}`);
         } else if (response?.success && pathname.includes("/vendor")) {
-          toast.success("Registration Successful", {
-            description: "Please verify your email to complete registration",
+          toast.success(tAuth("signupSuccess"), {
+            description: tAuth("passwordResetSent"),
           });
           router.push(`/${locale}/onboarding/vendor/verify-email?email=${data?.email}&token=${response?.data?.token}`);
         }
@@ -67,15 +77,15 @@ export const BaseSignupForm = () => {
 
   const renderFormFields = () => (
     <section className="space-y-4 sm:space-y-5">
-      <FormField placeholder="Enter email address" className="h-12 w-full sm:h-14" name="email" />
+      <FormField placeholder={tAuth("email")} className="h-12 w-full sm:h-14" name="email" />
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-        <FormField placeholder="Enter first name" className="h-12 w-full sm:h-14" name="firstName" />
-        <FormField placeholder="Enter last name" className="h-12 w-full sm:h-14" name="lastName" />
+        <FormField placeholder={tAuth("firstName")} className="h-12 w-full sm:h-14" name="firstName" />
+        <FormField placeholder={tAuth("lastName")} className="h-12 w-full sm:h-14" name="lastName" />
       </div>
-      <FormField type="password" placeholder="Enter password" className="h-12 w-full sm:h-14" name="password" />
+      <FormField type="password" placeholder={tAuth("password")} className="h-12 w-full sm:h-14" name="password" />
       <FormField
         type="password"
-        placeholder="Enter confirm password"
+        placeholder={tAuth("confirmPassword")}
         className="h-12 w-full sm:h-14"
         name="confirmPassword"
       />
@@ -86,14 +96,13 @@ export const BaseSignupForm = () => {
     <section className="mt-6">
       <div className="text-muted-foreground text-xs sm:text-sm">
         <p className="leading-relaxed">
-          By signing up, you&apos;re agreeing to Skicom&apos;s
+          {tAuth("termsAccepted")}{" "}
           <LocaleLink href={`/${locale}/privacy`} className="text-primary hover:underline">
-            {" "}
-            Privacy Policy
+            {tAuth("privacy")}
           </LocaleLink>
-          , and{" "}
+          ,{" "}
           <LocaleLink href={`/${locale}/terms`} className="text-primary hover:underline">
-            Terms & Conditions.
+            {tAuth("terms")}
           </LocaleLink>
         </p>
       </div>
@@ -110,7 +119,7 @@ export const BaseSignupForm = () => {
         variant="primary"
         type="submit"
       >
-        {isSigningUp ? "Signing up..." : "Sign up"}
+        {isSigningUp ? tAuth("processing") : tAuth("signup")}
       </SkiButton>
       {/* <span className="text-muted-foreground text-xs sm:text-sm">-------------------- OR --------------------</span>
       <SkiButton
@@ -130,9 +139,9 @@ export const BaseSignupForm = () => {
 
   const renderLoginPrompt = () => (
     <p className="text-muted-foreground mt-6 text-center text-sm sm:text-base">
-      Already a user?{" "}
+      {tAuth("alreadyHaveAccount")}{" "}
       <LocaleLink href={`/${locale}/login`} className="text-primary font-medium hover:underline">
-        Log In
+        {tAuth("login")}
       </LocaleLink>
     </p>
   );

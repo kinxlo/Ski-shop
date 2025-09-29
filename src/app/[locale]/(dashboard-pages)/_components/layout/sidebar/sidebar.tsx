@@ -5,6 +5,7 @@ import { LocaleLink } from "@/components/shared/locale-link";
 import { Logo } from "@/components/shared/logo";
 import { sideItems } from "@/lib/constants";
 import { LucideProps } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { usePathname } from "next/navigation";
 import { FC, ForwardRefExoticComponent, RefAttributes } from "react";
 
@@ -19,6 +20,7 @@ interface Iproperties {
 
 const Sidebar: FC<Iproperties> = ({ sideNavitems = sideItems }) => {
   const pathname = usePathname();
+  const tNav = useTranslations("navigation");
 
   return (
     <>
@@ -40,7 +42,7 @@ const Sidebar: FC<Iproperties> = ({ sideNavitems = sideItems }) => {
               } flex items-center justify-center gap-2.5 rounded-full px-2.5 py-3 text-sm transition-all duration-300 ease-in md:h-auto md:w-auto md:justify-start md:rounded-sm`}
             >
               <item.icon className="h-5 w-5" role="sidebar-icon" />
-              <span className="hidden lg:block">{item.route}</span>
+              <span className="hidden lg:block">{tNav(item.id as any) || item.route}</span>
             </LocaleLink>
           ))}
         </section>
@@ -58,7 +60,7 @@ const Sidebar: FC<Iproperties> = ({ sideNavitems = sideItems }) => {
             } flex flex-col items-center justify-center transition-all duration-300 ease-in`}
           >
             <item.icon size="16px" role="bottom-nav-icon" />
-            <span className="hidden text-xs sm:block">{item.route}</span>
+            <span className="hidden text-xs sm:block">{tNav(item.id as any) || item.route}</span>
           </LocaleLink>
         ))}
       </div>

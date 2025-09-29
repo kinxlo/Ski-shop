@@ -88,7 +88,37 @@
     "emailAlreadyExists": "Email adịlarị",
     "passwordsDoNotMatch": "Okwuntughe adabaghị",
     "weakPassword": "Okwuntughe adịghị ike",
-    "invalidEmail": "Biko tinye email ziri ezi"
+    "invalidEmail": "Biko tinye email ziri ezi",
+    "welcome": "Nnọọ!",
+    "welcomeMessage": "Banye ka ịnweta dashbọọdụ gị ma gaa n'ihu njem gị.",
+    "processing": "Na-arụ ọrụ",
+    "privacy": "Iwu Nzuzo",
+    "terms": "Usoro & Kọndịshọn",
+    "back": "Laghachi",
+    "newPassword": "Okwuntughe ọhụrụ",
+    "confirmNewPassword": "Kwenye okwuntughe ọhụrụ",
+    "passwordChanged": "Agbanweela okwuntughe nke ọma",
+    "success": "Ọgaara nke ọma",
+    "retry": "Gbalịa ọzọ",
+    "signUp": "Debanye aha",
+    "termsAccepted": "Site n'idebanye aha, ị kwenyere na",
+    "emailRequired": "Email dị mkpa",
+    "passwordRequired": "Okwuntughe dị mkpa",
+    "firstNameRequired": "Aha mbụ dị mkpa",
+    "lastNameRequired": "Aha nna dị mkpa",
+    "firstNameMin": "Aha mbụ ga-abụrịrị mkpụrụ abụọ ma ọ pekarịa mpe",
+    "lastNameMin": "Aha nna ga-abụrịrị mkpụrụ abụọ ma ọ pekarịa mpe",
+    "passwordMin": "Okwuntughe ga-abụrịrị mkpụrụ asatọ ma ọ pekarịa mpe",
+    "confirmPasswordRequired": "Biko kwado okwuntughe gị",
+    "invalidEmailFormat": "Usoro email ezughị oke",
+    "checkEmail": "Biko lelee email gị",
+    "resendEmail": "Ziga email ọzọ",
+    "backToLogin": "Laghachi na nbanye",
+    "createNewPassword": "Mepụta okwuntughe ọhụrụ",
+    "enterNewPassword": "Tinye okwuntughe ọhụrụ gị n'okpuru",
+    "passwordResetEmailSent": "Anyị ezitela gị email nwere ntụziaka maka ịtụgharịa okwuntughe",
+    "didntReceiveEmail": "Ị natabeghị email ahụ?",
+    "sendResetLink": "Zipu njịkọ ntụgharị"
   },
   "navigation": {
     "home": "Ụlọ",
@@ -434,6 +464,12 @@
       "title": "Play-2-Win",
       "description": "Nwee ihe n'efu mgbe i sonyere na egwuregwu anyị",
       "action": "Nweta Ngwa"
+    },
+    "referEarn": {
+      "tagTitle": "Kpọrọ & Nweta",
+      "title": "Gbanwee netwọkụ gị ka ọ bụrụ ụgwọ ọrụ",
+      "description": "Kpọrọ ndị enyi na ndị ezinụlọ ka ha zụta na Ski-Shop ma nweta ụgwọ ọrụ na-atọ ụtọ mgbe ha debanyere aha ma tinye oder mbụ ha.",
+      "action": "Bido"
     }
   },
   "about": {

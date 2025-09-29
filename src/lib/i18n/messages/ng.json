@@ -88,7 +88,37 @@
     "emailAlreadyExists": "Email already exists",
     "passwordsDoNotMatch": "Passwords do not match",
     "weakPassword": "Password is too weak",
-    "invalidEmail": "Please enter a valid email address"
+    "invalidEmail": "Please enter a valid email address",
+    "welcome": "Welcome Back!",
+    "welcomeMessage": "Sign in to access your dashboard and continue your journey.",
+    "processing": "Processing",
+    "privacy": "Privacy Policy",
+    "terms": "Terms & Conditions",
+    "back": "Back",
+    "newPassword": "New Password",
+    "confirmNewPassword": "Confirm New Password",
+    "passwordChanged": "Password changed successfully",
+    "success": "Success",
+    "retry": "Retry",
+    "signUp": "Sign Up",
+    "termsAccepted": "By signing up, you agree to our",
+    "emailRequired": "Email is required",
+    "passwordRequired": "Password is required",
+    "firstNameRequired": "First name is required",
+    "lastNameRequired": "Last name is required",
+    "firstNameMin": "First name must be at least 2 characters",
+    "lastNameMin": "Last name must be at least 2 characters",
+    "passwordMin": "Password must be at least 8 characters",
+    "confirmPasswordRequired": "Please confirm your password",
+    "invalidEmailFormat": "Invalid email format",
+    "checkEmail": "Please check your email",
+    "resendEmail": "Resend email",
+    "backToLogin": "Back to login",
+    "createNewPassword": "Create new password",
+    "enterNewPassword": "Enter your new password below",
+    "passwordResetEmailSent": "We've sent you an email with password reset instructions",
+    "didntReceiveEmail": "Didn't receive the email?",
+    "sendResetLink": "Send reset link"
   },
   "navigation": {
     "home": "Home",
@@ -434,6 +464,12 @@
       "title": "Play-2-Win",
       "description": "Enjoy freebies when you participate in our play-2-win",
       "action": "Get The App"
+    },
+    "referEarn": {
+      "tagTitle": "Refer & Earn",
+      "title": "Turn Your Network to Rewards",
+      "description": "Invite friends and family to shop on Ski-Shop and earn exciting rewards when they sign up and place their first order.",
+      "action": "Get Started"
     }
   },
   "about": {
