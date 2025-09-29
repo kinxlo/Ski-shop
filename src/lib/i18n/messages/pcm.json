@@ -393,8 +393,10 @@
           "subtitle": "List your logistics service for free for Ski-Shop. Help vendors deliver quick and grow your business by connect with thousands of sellers for our market."
         }
       ],
-      "shopNow": "Shop now",
-      "becomeSeller": "Become seller"
+      "shopNow": "Buy now",
+      "subscribeNow": "Sign up now",
+      "joinNow": "Join now",
+      "becomeSeller": "Become Seller"
     },
     "popularProducts": {
       "seeAll": "See all",
@@ -471,6 +473,55 @@
       "description": "Invite friends and family make dem shop for Ski-Shop and collect better rewards when dem sign up and place their first order.",
       "action": "Get started"
     }
+  },
+  "shopPage": {
+    "search": {
+      "sort": { "oldest": "Oldest", "newest": "Newest" },
+      "chooseSortOption": "Choose how to sort",
+      "filterLabel": "Filter",
+      "searchLabel": "Search",
+      "placeholder": "Search products..."
+    },
+    "filters": {
+      "title": "Filters",
+      "categories": "Categories",
+      "allCategories": "All Categories",
+      "vendor": "Vendors",
+      "allVendor": "All Vendors"
+    },
+    "activeFilters": {
+      "title": "Active:",
+      "resultsFound": "results found"
+    },
+    "errors": {
+      "failedToLoadProducts": "We no fit load products",
+      "retry": "Try again",
+      "noProductsFoundTitle": "No products found",
+      "noProductsFound": "We no see any product for your filter"
+    },
+    "hero": {
+      "title": "Shop all products",
+      "subtitle": "Check categories, vendors and more"
+    }
+  },
+  "earn": {
+    "breadcrumbTitle": "Invest & Earn",
+    "title": "Invite & Earn",
+    "subtitle": "Share Ski-Shop with your guys and get reward!",
+    "description": {
+      "part1": "Earn",
+      "coupons": "coupons/vouchers",
+      "part2": "for every person wey sign up and",
+      "firstOrder": "do him first order"
+    },
+    "copied": "Copied!",
+    "copyCode": "Copy Code",
+    "shareWithFriends": "Share With Friends",
+    "copyInviteLink": "Copy Invite link",
+    "successfulInvites": "Successful Invites",
+    "viewCoupons": "View Coupons",
+    "shareTitle": "Join Ski-Shop",
+    "shareText": "Join Ski-Shop with my invite code {code} make you get correct deals on ski equipment!"
   },
   "about": {
     "hero": {
@@ -551,37 +602,6 @@
         "apiKeyNotConfigured": "Google Maps API key never set",
         "apiKeyInstructions": "Add NEXT_PUBLIC_GOOGLE_MAPS_API_KEY for your environment"
       }
-    }
-  },
-  "shopPage": {
-    "hero": {
-      "title": "Shop"
-    },
-    "filters": {
-      "categories": "Categories",
-      "vendor": "Vendor",
-      "allCategories": "All categories",
-      "allVendor": "All vendors"
-    },
-    "search": {
-      "placeholder": "Search products...",
-      "sortBy": "Sort by:",
-      "sortOptions": {
-        "newest": "newest",
-        "name": "name",
-        "price": "price",
-        "rating": "rating"
-      },
-      "chooseSortOption": "Choose sort option"
-    },
-    "activeFilters": {
-      "title": "Active filters:",
-      "resultsFound": "results found"
-    },
-    "errors": {
-      "failedToLoadProducts": "Products no load",
-      "retry": "Try again",
-      "noProductsFound": "No products wey match your filters"
     }
   },
   "navbar": {

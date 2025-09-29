@@ -1,4 +1,6 @@
 import { Button } from "@/components/ui/button";
+import { localizeHref } from "@/lib/i18n/navigation";
+import { useLocale } from "next-intl";
 import Link from "next/link";
 import { cloneElement, forwardRef, ReactElement } from "react";
 import { LuLoader, LuPlus } from "react-icons/lu";
@@ -31,6 +33,7 @@ const SkiButton = forwardRef<HTMLButtonElement, ButtonProperties>(
     },
     reference,
   ) => {
+    const locale = useLocale();
     const modifiedIcon = icon ? (
       cloneElement(
         icon as ReactElement,
@@ -81,8 +84,9 @@ const SkiButton = forwardRef<HTMLButtonElement, ButtonProperties>(
         );
       }
 
+      const localized = localizeHref(href, locale);
       return (
-        <Link href={isDisabled ? "" : href} passHref aria-label={ariaLabel}>
+        <Link href={isDisabled ? "" : localized} passHref aria-label={ariaLabel}>
           <Button
             variant={variant}
             size={size}

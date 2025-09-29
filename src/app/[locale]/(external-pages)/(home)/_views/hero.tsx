@@ -71,7 +71,7 @@ const HeroSlide = ({ slide, position, t }: { slide: Slide; position: string; t: 
               )}
               variant="primary"
             >
-              {position === "center" ? t("shopNow") : position === "left" ? "subscribe now" : "Join now"}
+              {position === "center" ? t("shopNow") : position === "left" ? t("subscribeNow") : t("joinNow")}
             </SkiButton>
             <ComponentGuard requireAuth allowedRoles={["CUSTOMER"]}>
               {position === "center" && (

@@ -394,6 +394,8 @@
         }
       ],
       "shopNow": "Fara siyayya",
+      "subscribeNow": "Yi rijista yanzu",
+      "joinNow": "Shiga yanzu",
       "becomeSeller": "Zama mai siyarwa"
     },
     "popularProducts": {
@@ -471,6 +473,55 @@
       "description": "Gayyaci abokai da dangi su yi siyayya a Ski-Shop ka kuma sami kyaututtuka masu kayatarwa idan sun yi rijista kuma suka yi odarsu ta farko.",
       "action": "Fara yanzu"
     }
+  },
+  "shopPage": {
+    "activeFilters": {
+      "title": "Tace masu aiki:",
+      "resultsFound": "sakamako an samu"
+    },
+    "search": {
+      "sort": { "oldest": "Tsoho", "newest": "Sabbi" },
+      "chooseSortOption": "Zaɓi tsarin jera",
+      "filterLabel": "Tace",
+      "searchLabel": "Nema",
+      "placeholder": "Nemo kayayyaki..."
+    },
+    "filters": {
+      "title": "Tace",
+      "categories": "Rukuni",
+      "vendor": "Mai siyarwa",
+      "allCategories": "Dukkan Rukuni",
+      "allVendor": "Dukkan Masu siyarwa"
+    },
+    "errors": {
+      "failedToLoadProducts": "An kasa ɗora kayayyaki",
+      "retry": "Sake gwadawa",
+      "noProductsFoundTitle": "Babu kayayyaki",
+      "noProductsFound": "Ba mu sami kayayyaki bisa tacewar ka ba"
+    },
+    "hero": {
+      "title": "Sayi Duk Kayayyaki",
+      "subtitle": "Duba rukuni, masu siyarwa da sauransu"
+    }
+  },
+  "earn": {
+    "breadcrumbTitle": "Zuba jari & Samu",
+    "title": "Gayyata & Samu",
+    "subtitle": "Raba Ski-Shop da abokai ka samu lada!",
+    "description": {
+      "part1": "Samu",
+      "coupons": "kuɗaɗen rangwame/katunan kyauta",
+      "part2": "ga kowane aboki da ya yi rijista kuma",
+      "firstOrder": "ya yi odar farko"
+    },
+    "copied": "An kwafe!",
+    "copyCode": "Kwafi Lamba",
+    "shareWithFriends": "Raba da Abokai",
+    "copyInviteLink": "Kwafi hanyar gayyata",
+    "successfulInvites": "Gayyata masu nasara",
+    "viewCoupons": "Duba Kupon",
+    "shareTitle": "Shiga Ski-Shop",
+    "shareText": "Shiga Ski-Shop da lambar gayyata ta {code} domin samun rangwame masu kyau kan kayan ski!"
   },
   "about": {
     "hero": {
@@ -551,37 +602,6 @@
         "apiKeyNotConfigured": "Ba a saita maɓallin Google Maps API ba",
         "apiKeyInstructions": "Da fatan za a ƙara NEXT_PUBLIC_GOOGLE_MAPS_API_KEY cikin canje-canjen muhalli na ku"
       }
-    }
-  },
-  "shopPage": {
-    "hero": {
-      "title": "Shago"
-    },
-    "filters": {
-      "categories": "Rukuni",
-      "vendor": "Mai siyarwa",
-      "allCategories": "Dukkan Rukuni",
-      "allVendor": "Dukkan Masu siyarwa"
-    },
-    "search": {
-      "placeholder": "Nemo kayayyaki...",
-      "sortBy": "Tsara Bisa:",
-      "sortOptions": {
-        "newest": "sabon ji",
-        "name": "suna",
-        "price": "farashi",
-        "rating": "maki"
-      },
-      "chooseSortOption": "Zaɓi zaɓin tsara"
-    },
-    "activeFilters": {
-      "title": "Tace masu aiki:",
-      "resultsFound": "sakamako an samu"
-    },
-    "errors": {
-      "failedToLoadProducts": "An kasa loda kayayyaki",
-      "retry": "Sake gwadawa",
-      "noProductsFound": "Babu kaya da suka dace da tacewar ku"
     }
   },
   "navbar": {

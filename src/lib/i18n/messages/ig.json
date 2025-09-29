@@ -393,8 +393,10 @@
           "subtitle": "Depụta ọrụ logistics gị n'efu na Ski-Shop. Nyere ndị na-ere ka ha zipu ngwa ngwa ma too azụmahịa gị site n'ịjikọọ na puku ndị na-ere na ahịa anyị."
         }
       ],
-      "shopNow": "Zụta ugbu a",
-      "becomeSeller": "Bụ onye na-ere"
+      "shopNow": "Zụta Ugbu a",
+      "subscribeNow": "Debanye ugbu a",
+      "joinNow": "Sonye ugbu a",
+      "becomeSeller": "Ghoọọ Onye na-ere"
     },
     "popularProducts": {
       "seeAll": "Hụ niile",
@@ -471,6 +473,55 @@
       "description": "Kpọrọ ndị enyi na ndị ezinụlọ ka ha zụta na Ski-Shop ma nweta ụgwọ ọrụ na-atọ ụtọ mgbe ha debanyere aha ma tinye oder mbụ ha.",
       "action": "Bido"
     }
+  },
+  "shopPage": {
+    "search": {
+      "sort": { "oldest": "O kacha ochie", "newest": "O kacha ọhụrụ" },
+      "chooseSortOption": "Họrọ nhọrọ nhazi",
+      "filterLabel": "Nyocha",
+      "searchLabel": "Chọọ",
+      "placeholder": "Chọọ ngwaahịa..."
+    },
+    "filters": {
+      "title": "Nyocha",
+      "categories": "Ụdị",
+      "allCategories": "Ụdị niile",
+      "vendor": "Ụlọ ahịa",
+      "allVendor": "Ụlọ ahịa niile"
+    },
+    "activeFilters": {
+      "title": "Na-arụ ọrụ:",
+      "resultsFound": "nsonaazụ achọtara"
+    },
+    "errors": {
+      "failedToLoadProducts": "Ọgwụgwụla ibudata ngwaahịa",
+      "retry": "Nwaa ọzọ",
+      "noProductsFoundTitle": "Enweghị ngwaahịa",
+      "noProductsFound": "Anyị enweghị ike ịchọta ngwaahịa maka nyochaa gị"
+    },
+    "hero": {
+      "title": "Zụta Ngwaahịa niile",
+      "subtitle": "Chọọ ụdị, ụlọ ahịa na ọtụtụ ndị ọzọ"
+    }
+  },
+  "earn": {
+    "breadcrumbTitle": "Tinye ego & Nweta",
+    "title": "Kpọọ ndị enyi & Nweta",
+    "subtitle": "Kekọrịta Ski-Shop na ndị enyi ka ị nweta ụgwọ!",
+    "description": {
+      "part1": "Nweta",
+      "coupons": "kupon/voucher",
+      "part2": "maka onye enyi ọ bụla debanyere aha ma",
+      "firstOrder": "mee iwu mbụ ya"
+    },
+    "copied": "Edepụtala!",
+    "copyCode": "Detuo Koodu",
+    "shareWithFriends": "Kekọrịta na ndị enyi",
+    "copyInviteLink": "Detuo njikọ ịkpọ",
+    "successfulInvites": "Ịkpọ gara nke ọma",
+    "viewCoupons": "Lelee Kupon",
+    "shareTitle": "Sonye na Ski-Shop",
+    "shareText": "Sonye na Ski-Shop jiri koodu ịkpọ m {code} ma nweta nnukwu onyinye na ngwa ski!"
   },
   "about": {
     "hero": {
@@ -551,37 +602,6 @@
         "apiKeyNotConfigured": "A naghị ahazi igodo Google Maps API",
         "apiKeyInstructions": "Biko tinye NEXT_PUBLIC_GOOGLE_MAPS_API_KEY na gburugburu gị"
       }
-    }
-  },
-  "shopPage": {
-    "hero": {
-      "title": "Ụlọ ahịa"
-    },
-    "filters": {
-      "categories": "Ụdị",
-      "vendor": "Onye na-ere",
-      "allCategories": "Ụdị niile",
-      "allVendor": "Onye na-ere niile"
-    },
-    "search": {
-      "placeholder": "Chọọ ngwaahịa...",
-      "sortBy": "Hazie site na:",
-      "sortOptions": {
-        "newest": "kacha ọhụrụ",
-        "name": "aha",
-        "price": "ọnụahịa",
-        "rating": "ntụle"
-      },
-      "chooseSortOption": "Họrọ nhọrọ nhazi"
-    },
-    "activeFilters": {
-      "title": "Fịltaa na-arụ ọrụ:",
-      "resultsFound": "nsonaazụ ahụrụ"
-    },
-    "errors": {
-      "failedToLoadProducts": "Enweghị ike ibubata ngwaahịa",
-      "retry": "Gbalịa ọhụụ",
-      "noProductsFound": "Enweghị ngwaahịa kwekọrọ na fịltaa gị"
     }
   },
   "navbar": {

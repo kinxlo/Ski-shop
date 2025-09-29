@@ -394,6 +394,8 @@
         }
       ],
       "shopNow": "Shop Now",
+      "subscribeNow": "Subscribe now",
+      "joinNow": "Join now",
       "becomeSeller": "Become a Seller"
     },
     "popularProducts": {
@@ -471,6 +473,55 @@
       "description": "Invite friends and family to shop on Ski-Shop and earn exciting rewards when they sign up and place their first order.",
       "action": "Get Started"
     }
+  },
+  "shopPage": {
+    "search": {
+      "sort": { "oldest": "Oldest", "newest": "Newest" },
+      "chooseSortOption": "Choose sort option",
+      "filterLabel": "Filter",
+      "searchLabel": "Search",
+      "placeholder": "Search products..."
+    },
+    "filters": {
+      "title": "Filters",
+      "categories": "Categories",
+      "allCategories": "All Categories",
+      "vendor": "Vendors",
+      "allVendor": "All Vendors"
+    },
+    "activeFilters": {
+      "title": "Active:",
+      "resultsFound": "results found"
+    },
+    "errors": {
+      "failedToLoadProducts": "Failed to load products",
+      "retry": "Retry",
+      "noProductsFoundTitle": "No products found",
+      "noProductsFound": "We couldn't find any products for your filters"
+    },
+    "hero": {
+      "title": "Shop All Products",
+      "subtitle": "Browse categories, vendors and more"
+    }
+  },
+  "earn": {
+    "breadcrumbTitle": "Invest & Earn",
+    "title": "Invite & Earn",
+    "subtitle": "Share Ski-Shop with friends and get rewarded!",
+    "description": {
+      "part1": "Earn",
+      "coupons": "coupons/vouchers",
+      "part2": "for every friend who signs up and",
+      "firstOrder": "places their first order"
+    },
+    "copied": "Copied!",
+    "copyCode": "Copy Code",
+    "shareWithFriends": "Share With Friends",
+    "copyInviteLink": "Copy Invite link",
+    "successfulInvites": "Successful Invites",
+    "viewCoupons": "View Coupons",
+    "shareTitle": "Join Ski-Shop",
+    "shareText": "Join Ski-Shop using my invite code {code} and get amazing deals on ski equipment!"
   },
   "about": {
     "hero": {
@@ -551,37 +602,6 @@
         "apiKeyNotConfigured": "Google Maps API key not configured",
         "apiKeyInstructions": "Please add NEXT_PUBLIC_GOOGLE_MAPS_API_KEY to your environment variables"
       }
-    }
-  },
-  "shopPage": {
-    "hero": {
-      "title": "Shop"
-    },
-    "filters": {
-      "categories": "Categories",
-      "vendor": "Vendor",
-      "allCategories": "All Categories",
-      "allVendor": "All Vendor"
-    },
-    "search": {
-      "placeholder": "Search products...",
-      "sortBy": "Sort By:",
-      "sortOptions": {
-        "newest": "newest",
-        "name": "name",
-        "price": "price",
-        "rating": "rating"
-      },
-      "chooseSortOption": "Choose sort option"
-    },
-    "activeFilters": {
-      "title": "Active Filters:",
-      "resultsFound": "results found"
-    },
-    "errors": {
-      "failedToLoadProducts": "Failed to load products",
-      "retry": "Retry",
-      "noProductsFound": "No products found matching your filters"
     }
   },
   "navbar": {

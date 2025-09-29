@@ -24,6 +24,8 @@ const Page = () => {
   const { useGetAllProducts, useGetAllProductCategory, useGetTopVendors } = useAppService();
   const t = useTranslations("shopPage");
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const sortOldest = t("search.sort.oldest");
+  const sortNewest = t("search.sort.newest");
 
   // Use nuqs for URL parameter management
   const [page, setPage] = useQueryState("page", { defaultValue: "1" });
@@ -113,12 +115,12 @@ const Page = () => {
   // Handle sort change
   const handleSortChange = (value: string) => {
     switch (value) {
-      case "Oldest": {
+      case sortOldest: {
         setSortBy("ASC");
         setRatings(null);
         break;
       }
-      case "Newest": {
+      case sortNewest: {
         setSortBy("DESC");
         setRatings(null);
         break;
@@ -186,12 +188,12 @@ const Page = () => {
   // Determine current value for sort dropdown
   const currentValue =
     sortBy === "ASC"
-      ? "Oldest"
+      ? sortOldest
       : sortBy === "DESC"
-        ? "Newest"
+        ? sortNewest
         : rating
           ? `${rating} star${rating === "1" ? "" : "s"}`
-          : "Newest";
+          : sortNewest;
 
   return (
     <>
@@ -247,7 +249,7 @@ const Page = () => {
             </DrawerContent>
           </Drawer>
           <div className="text-sm text-gray-600 lg:text-base">
-            {totalProducts} {t("activeFilters.resultsFound") || "results"}
+            {totalProducts} {t("activeFilters.resultsFound")}
           </div>
         </div>
 
@@ -317,9 +319,9 @@ const Page = () => {
               </div>
               <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:space-x-4">
                 {/* <p className="!m-0 hidden text-sm text-gray-600 sm:block sm:text-base">{t("search.sortBy")}</p> */}
-                <p className="!m-0 hidden text-sm text-gray-600 sm:block sm:text-base">Filter:</p>
+                <p className="!m-0 hidden text-sm text-gray-600 sm:block sm:text-base">{t("search.filterLabel")}</p>
                 <CustomSelect
-                  options={["Oldest", "Newest"]}
+                  options={[sortOldest, sortNewest]}
                   placeholder={t("search.chooseSortOption")}
                   value={currentValue}
                   onChange={handleSortChange}
@@ -340,7 +342,7 @@ const Page = () => {
                     const selectedVendor = topVendorsData?.data?.items.find((vendor) => vendor.id === storeId);
                     return selectedVendor?.name || storeId;
                   })()}
-                  {debouncedSearch && ` / Search: ${debouncedSearch}`}
+                  {debouncedSearch && ` / ${t("search.searchLabel")}: ${debouncedSearch}`}
                 </span>
               </div>
               <div>
@@ -367,7 +369,7 @@ const Page = () => {
                           height: 80,
                         },
                       ]}
-                      title="No products found"
+                      title={t("errors.noProductsFoundTitle")}
                       titleClassName={`!text-lg font-bold !text-mid-warning`}
                       description={t("errors.noProductsFound")}
                       descriptionClassName={`text-mid-grey-II`}

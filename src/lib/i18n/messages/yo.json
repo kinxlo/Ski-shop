@@ -394,7 +394,11 @@
         }
       ],
       "shopNow": "Ra ní báyìí",
-      "becomeSeller": "Di Onítà"
+      "becomeSeller": "Di Onítà",
+      "subscribeNow": "Forúkọ sílẹ̀ báyìí",
+      "title": "Ṣàwárí Gbogbo Ọjà",
+      "subtitle": "Ṣàwárí ẹ̀ka, oníṣòwò àti bẹ́ẹ̀ bẹ́ẹ̀ lọ",
+      "joinNow": "Darapọ̀ báyìí"
     },
     "popularProducts": {
       "seeAll": "Wo Gbogbo",
@@ -471,6 +475,64 @@
       "description": "Pe àwọn ọ̀rẹ́ àti ẹbí kí wọ́n ra lórí Ski-Shop kí o sì jèrè ẹ̀bùn ìdánilẹ́kọ̀ọ́ nígbà tí wọ́n bá forúkọsílẹ̀ tí wọ́n sì ṣe ìbẹ̀rẹ̀ rira wọn.",
       "action": "Bẹ̀rẹ̀"
     }
+  },
+  "shopPage": {
+    "search": {
+      "sort": { "oldest": "Atijọ", "newest": "Tuntun" },
+      "chooseSortOption": "Yan aṣayan ìtòlẹ́sẹẹsẹ",
+      "filterLabel": "Àlẹmọ",
+      "searchLabel": "Ṣàwárí",
+      "placeholder": "Ṣàwárí ọjà..."
+    },
+    "filters": {
+      "title": "Àlẹmọ",
+      "categories": "Ẹ̀ka",
+      "allCategories": "Gbogbo Ẹ̀ka",
+      "vendor": "Oníṣòwò",
+      "allVendor": "Gbogbo Oníṣòwò"
+    },
+    "activeFilters": {
+      "title": "Níṣe lọwọ:",
+      "resultsFound": "abajade rí"
+    },
+    "errors": {
+      "failedToLoadProducts": "Kò lè gba àwọn ọjà",
+      "retry": "Tun gbìyànjú",
+      "noProductsFoundTitle": "Kò sí ọjà kankan",
+      "noProductsFound": "A kò rí ọjà kankan fún àlẹmọ rẹ"
+    },
+    "hero": {
+      "title": "Ṣàwárí Gbogbo Ọjà",
+      "subtitle": "Ṣàwárí ẹ̀ka, oníṣòwò àti bẹ́ẹ̀ bẹ́ẹ̀ lọ",
+      "shopNow": "Báyìí ra",
+      "subscribeNow": "Forúkọ sílẹ̀ báyìí",
+      "joinNow": "Darapọ̀ báyìí",
+      "becomeSeller": "Di olùtà",
+      "slides": [
+        { "title": "Ọjà tó dára jù", "subtitle": "Àwọn ami orúkọ tó ga. Òjòwò tó péye." },
+        { "title": "Ra kí o sì fipamọ́", "subtitle": "Ìdìpọ̀ ọ̀sẹ̀ yìí kò ní parí" },
+        { "title": "Ìbẹ̀rẹ̀ tuntun", "subtitle": "Àwọn ohun tuntun fún ọ" }
+      ]
+    }
+  },
+  "earn": {
+    "breadcrumbTitle": "Ìdókòwò & Kó owó wọlé",
+    "title": "Pe àwọn ọ̀rẹ́ & Kó owó wọlé",
+    "subtitle": "Pín Ski-Shop pẹ̀lú ọ̀rẹ́ rẹ kí o sì gba èrè!",
+    "description": {
+      "part1": "Kó",
+      "coupons": "kúpọ̀n/fọ́ọ̀ṣọ̀",
+      "part2": "fún ọ̀rẹ́ kọọkan tó forúkọ sílẹ̀ kí o sì",
+      "firstOrder": "ṣe ìbẹ̀rẹ̀ ìṣẹ̀wọ̀n rẹ̀"
+    },
+    "copied": "Kọ́pìì dì!",
+    "copyCode": "Ṣe kóòdù sílẹ̀",
+    "shareWithFriends": "Pín pẹ̀lú ọ̀rẹ́",
+    "copyInviteLink": "Kọ́pì ìjápọ̀ ìpé",
+    "successfulInvites": "Ìpé tó ṣàṣeyọrí",
+    "viewCoupons": "Wo àwọn kúpọ̀n",
+    "shareTitle": "Darapọ̀ mọ́ Ski-Shop",
+    "shareText": "Darapọ̀ mọ́ Ski-Shop pẹ̀lú kóòdù ìpé mi {code} kí o sì rí ìfẹ̀sẹ̀mulẹ̀ tó dára lori irinṣẹ́ siki!"
   },
   "about": {
     "hero": {
@@ -551,37 +613,6 @@
         "apiKeyNotConfigured": "A kò ṣètò Google Maps API key",
         "apiKeyInstructions": "Jọ̀wọ́ fi NEXT_PUBLIC_GOOGLE_MAPS_API_KEY kun àwọn ayípadà ayika rẹ"
       }
-    }
-  },
-  "shopPage": {
-    "hero": {
-      "title": "Ọjà"
-    },
-    "filters": {
-      "categories": "Ẹ̀ka",
-      "vendor": "Onítà",
-      "allCategories": "Gbogbo Ẹ̀ka",
-      "allVendor": "Gbogbo Onítà"
-    },
-    "search": {
-      "placeholder": "Ṣàwárí ọja...",
-      "sortBy": "Ṣe ìtòlẹ́sẹẹsẹ Gẹ́gẹ́ Bí:",
-      "sortOptions": {
-        "newest": "títun jù",
-        "name": "orúkọ",
-        "price": "ìye owó",
-        "rating": "ìyẹ̀wò"
-      },
-      "chooseSortOption": "Yan aṣayan ìtòlẹ́sẹẹsẹ"
-    },
-    "activeFilters": {
-      "title": "Àlẹ̀mọ́ tó n ṣiṣẹ́:",
-      "resultsFound": "abajade rí"
-    },
-    "errors": {
-      "failedToLoadProducts": "Ìkó ọja kùnà",
-      "retry": "Tun gbìyànjú",
-      "noProductsFound": "Kò sí ọja tó bá àlẹ̀mọ́ rẹ mu"
     }
   },
   "navbar": {
