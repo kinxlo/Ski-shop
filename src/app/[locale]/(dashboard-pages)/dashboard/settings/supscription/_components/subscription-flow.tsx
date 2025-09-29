@@ -63,12 +63,16 @@ export function SubscriptionFlow() {
           planType: activePlan.name,
         },
         {
-          onSuccess: () => {
-            toast.success("Redirecting to Paystack to complete your subscription");
-            // Integrate with real checkout here
+          onSuccess: (response) => {
+            if (response?.success) {
+              toast.success("Redirecting to Paystack to complete your subscription");
+              window.open(response.data.payment.authorizationUrl as string, "_blank", "noopener,noreferrer");
+            }
           },
-          onError: () => {
-            toast.error("Failed to initiate subscription. Please try again.");
+          onError: (error) => {
+            toast.error("Failed to initiate subscription. Please try again.", {
+              description: error.message,
+            });
           },
         },
       );
@@ -167,7 +171,7 @@ export function SubscriptionFlow() {
       )}
 
       {step === 2 && (
-        <Card className={`shadow-none`}>
+        <Card className={`border-none px-4 shadow-none`}>
           <CardHeader className="border-b">
             <CardTitle>Payment</CardTitle>
             <CardDescription>Select a payment method to activate your Star Seller benefits.</CardDescription>

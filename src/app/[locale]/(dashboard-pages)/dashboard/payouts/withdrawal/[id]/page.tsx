@@ -1,6 +1,8 @@
 "use client";
 
+import { DashboardHeader } from "@/app/[locale]/(dashboard-pages)/_components/dashboard-header";
 import { Wrapper } from "@/components/core/layout/wrapper";
+import { BackButton } from "@/components/shared/back-button";
 import SkiButton from "@/components/shared/button";
 import { EmptyState } from "@/components/shared/empty-state";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -202,27 +204,13 @@ const WithdrawalDetailsPage = ({ params }: PageProperties) => {
   }
 
   return (
-    <div className="min-h-screen">
-      {/* Header */}
-      <div className="px-4 py-4 sm:px-6 sm:py-6">
-        <div className="flex items-center gap-3 sm:gap-4">
-          <button
-            onClick={handleGoBack}
-            className="rounded-full p-2 transition-colors hover:bg-gray-100 active:bg-gray-200 sm:p-3"
-            aria-label="Go back"
-          >
-            <TbArrowLeft className="h-5 w-5 sm:h-6 sm:w-6" />
-          </button>
-          <h1 className="!text-2xl">Withdraw Details</h1>
-        </div>
-      </div>
-
-      {/* Content */}
-      <Wrapper className="px-0 py-8">
-        <div className="border-border bg-background rounded-lg border p-4 sm:p-6 lg:p-8">
+    <main className="space-y-8">
+      <DashboardHeader title="Withdraw Details" showSubscriptionBanner={false} icon={<BackButton />} />
+      <Wrapper className="!mt-[1rem] px-0">
+        <div className="bg-background rounded-lg p-4 sm:p-6 lg:p-8">
           {/* Amount */}
           <div className="mb-6 sm:mb-8">
-            <h2 className="mb-2 !text-lg font-semibold">Withdraw Earnings</h2>
+            <h2 className="mb-2 !text-lg font-semibold">Withdraw Amount</h2>
             <p className="text-2xl font-bold text-gray-900 sm:text-3xl lg:text-4xl">
               {formatCurrency(withdrawalData.amount, locale)}
             </p>
@@ -303,7 +291,7 @@ const WithdrawalDetailsPage = ({ params }: PageProperties) => {
           </div>
         </div>
       </Wrapper>
-    </div>
+    </main>
   );
 };
 

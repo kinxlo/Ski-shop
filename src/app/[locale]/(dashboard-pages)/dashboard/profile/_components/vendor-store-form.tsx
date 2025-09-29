@@ -12,6 +12,8 @@ import { useEffect, useRef, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { toast } from "sonner";
 
+import { DashboardHeader } from "../../../_components/dashboard-header";
+
 interface VendorStoreFormProperties {
   initialData?: VendorProfile | null;
   onSubmit?: (data: VendorStoreFormData) => Promise<void>;
@@ -113,7 +115,9 @@ export const VendorStoreForm = ({
 
   return (
     <div className="bg-background rounded-lg p-6">
-      <h4 className="text-center">{title}</h4>
+      <div className="flex items-center justify-center text-center">
+        <DashboardHeader title={title} showSubscriptionBanner={false} />
+      </div>
       <FormProvider {...methods}>
         <form onSubmit={handleSubmit(handleFormSubmit)} className="mx-auto mt-8 max-w-2xl space-y-6">
           {/* Profile Image/Logo Section */}

@@ -52,7 +52,13 @@ const Page = () => {
 
       {/* Products for Promotion */}
       <div className="space-y-4">
-        <h5 className="text-lg font-semibold">Promote Your Products</h5>
+        <DashboardHeader
+          title="Promote Your Products"
+          subtitle={`Promote your products to increase your sales`}
+          titleClassName={"!text-xl !font-bold"}
+          subtitleClassName={`!text-sm`}
+          showSubscriptionBanner={false}
+        />
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {products?.data?.items?.map((product) => (
             <ProductPromotionCard key={product.id} product={product} onPromote={handlePromoteProduct} />

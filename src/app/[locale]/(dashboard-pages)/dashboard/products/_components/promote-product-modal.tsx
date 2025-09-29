@@ -1,17 +1,20 @@
 "use client";
 
+import { BackButton } from "@/components/shared/back-button";
 import SkiButton from "@/components/shared/button";
 import { FormField } from "@/components/shared/inputs/FormFields";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader } from "@/components/ui/dialog";
 import { Locale } from "@/lib/i18n/config";
 import { formatCurrency } from "@/lib/i18n/utils";
 import { usePromotionService } from "@/services/dashboard/vendor/promotions/use-promotion-service";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { AlertTriangle, ArrowLeft } from "lucide-react";
+import { AlertTriangle } from "lucide-react";
 import { useLocale } from "next-intl";
 import { useEffect, useMemo, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import * as z from "zod";
+
+import { DashboardHeader } from "../../../_components/dashboard-header";
 
 interface PromoteProductModalProperties {
   isOpen: boolean;
@@ -89,15 +92,14 @@ export function PromoteProductModal({ isOpen, onClose, product }: PromoteProduct
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <div className="flex items-center space-x-3">
-            <button onClick={onClose} className="rounded-lg p-1 transition-colors hover:bg-gray-100">
-              <ArrowLeft className="h-4 w-4 text-gray-600" />
-            </button>
-            <div>
-              <DialogTitle className="!text-2xl font-semibold">Promote Product</DialogTitle>
-              <p className="truncate text-sm text-gray-500">{product.name}</p>
-            </div>
-          </div>
+          <DashboardHeader
+            title="Promote Product"
+            subtitle={product.name}
+            showSubscriptionBanner={false}
+            titleClassName={`!text-2xl !font-bold`}
+            subtitleClassName={"ml-8 !text-sm"}
+            icon={<BackButton />}
+          />
         </DialogHeader>
 
         <FormProvider {...methods}>

@@ -26,7 +26,6 @@ import {
   IconShoppingBag,
   IconSun,
   IconTrash,
-  IconTrendingUp,
   IconUser,
   IconUserCircle,
   IconUserEdit,
@@ -35,7 +34,7 @@ import {
   IconX,
 } from "@tabler/icons-react";
 import { IoRibbonOutline } from "react-icons/io5";
-import { RiShoppingCartLine } from "react-icons/ri";
+import { RiAdvertisementLine, RiShoppingCartLine } from "react-icons/ri";
 
 export type Icon = React.ComponentType<IconProps>;
 
@@ -73,6 +72,6 @@ export const Icons = {
   twitter: IconBrandTwitter,
   check: IconCheck,
   wallet: IconWallet,
-  promotion: IconTrendingUp,
+  promotion: RiAdvertisementLine,
   ribbonOutline: IoRibbonOutline,
 };

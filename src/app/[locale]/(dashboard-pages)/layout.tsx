@@ -117,7 +117,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                 <TopBar notificationsCount={0} className="px-6" />
               </div>
             </header>
-            <main className="overflow-auto bg-[#F8F8F9] p-6 dark:bg-[#111111]">
+            <main className="min-h-screen overflow-auto bg-[#F8F8F9] p-6 dark:bg-[#111111]">
               <div className="mx-auto max-w-[1400px] space-y-6">{children}</div>
             </main>
           </div>
