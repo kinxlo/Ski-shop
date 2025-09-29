@@ -33,7 +33,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   if (!isHydrated) {
     return (
       <div className="flex h-screen w-full items-center justify-center">
-        <Loading />
+        <Loading showLogo />
       </div>
     );
   }

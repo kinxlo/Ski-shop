@@ -143,19 +143,6 @@ declare global {
     lastName?: string;
     phone?: string;
   }
-
-  interface User {
-    id: string;
-    name: string | null;
-    email: string | null;
-    role: { id: string; name: string };
-  }
-
-  interface SessionUser extends User {
-    accessToken?: string;
-    refreshToken?: string;
-    [key: string]: unknown;
-  }
 }
 
 export {};

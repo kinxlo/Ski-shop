@@ -62,10 +62,9 @@ export const ComponentGuard = ({
 
   // Check role requirements (support role as string or object)
   const currentRoleName = (() => {
-    const user = session?.user as unknown as { role?: { name?: string } | string } | undefined;
-    if (!user?.role) return "";
-    if (typeof user.role === "string") return user.role.toUpperCase();
-    return (user.role.name || "").toUpperCase();
+    const user = session?.user?.role.name.toUpperCase();
+    if (!user) return "";
+    return user;
   })();
   const hasRequiredRole = allowedRoles.length === 0 || (isAuthenticated && allowedRoles.includes(currentRoleName));
 

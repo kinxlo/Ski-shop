@@ -239,7 +239,7 @@ export const AddProductForm = () => {
     setValue("description", "", { shouldValidate: true });
     methods.reset();
     if (createdProductId) {
-      if ((session?.user as any)?.role?.name === "vendor") {
+      if (session?.user?.role.name === "vendor") {
         router.push(`/dashboard/products/${createdProductId}`);
       } else {
         router.push(`/admin/products/${createdProductId}`);
