@@ -76,7 +76,7 @@ export function DashboardSidebar({
 }: DashboardSidebarProperties) {
   const pathname = usePathname();
   const userID = pathname.split("/")[2];
-  const { setOpenMobile } = useSidebar();
+  const { setOpenMobile, state } = useSidebar();
   // Initialize expanded items state
   const getInitialExpandedItems = (): Set<string> => {
     const initialItems = new Set<string>();
@@ -216,7 +216,7 @@ export function DashboardSidebar({
             <SidebarMenuButton
               onClick={() => toggleExpanded(item.id)}
               className={cn(
-                "flex h-[48px] w-full items-center gap-3 rounded-lg text-base font-medium transition-all duration-200",
+                "mx-auto flex h-[48px] w-full items-center gap-3 rounded-lg text-base font-medium transition-all duration-200",
                 isActive
                   ? "bg-primary/10 text-primary shadow-active border-primary rounded-none border-l-4"
                   : "hover:bg-primary/10",
@@ -366,7 +366,7 @@ export function DashboardSidebar({
           <SidebarMenuButton
             asChild
             className={cn(
-              "flex h-[48px] items-center gap-3 rounded-lg text-base transition-all duration-200",
+              "mx-auto flex h-[48px] items-center gap-3 rounded-lg text-base transition-all duration-200",
               isActive
                 ? "bg-primary/10 text-primary shadow-active border-primary rounded-none border-l-4"
                 : "hover:bg-primary/10",
@@ -407,7 +407,9 @@ export function DashboardSidebar({
         <Logo width={logoProperties.width} height={logoProperties.height} className={logoProperties.className} />
       </SidebarHeader>
       <SidebarContent className="hide-scrollbar">
-        <SidebarMenu className="space-y-2 p-4">{navItems.map((item) => renderMenuItem(item))}</SidebarMenu>
+        <SidebarMenu className={cn(`space-y-2 p-4`, state === "collapsed" && "p-0")}>
+          {navItems.map((item) => renderMenuItem(item))}
+        </SidebarMenu>
       </SidebarContent>
     </Sidebar>
   );
