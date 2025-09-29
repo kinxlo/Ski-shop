@@ -1,7 +1,7 @@
 "use client";
 
+import { Icons } from "@/components/core/miscellaneous/icons";
 import { SearchInput } from "@/components/core/miscellaneous/search-input";
-import SubscriptionBanner from "@/components/shared/banner/subscription-banner";
 import { DashboardTable } from "@/components/shared/dashboard-table";
 import { useOrderColumn } from "@/components/shared/dashboard-table/table-data";
 import { EmptyState } from "@/components/shared/empty-state";
@@ -9,12 +9,14 @@ import { orderStatusOptions } from "@/lib/constants";
 import { useDashboardSearchParameters } from "@/lib/nuqs/use-dashboard-search-parameters";
 import { useDashboardOrderService } from "@/services/dashboard/vendor/orders/use-order-service";
 import { useDashboardProductService } from "@/services/dashboard/vendor/products/use-product-service";
+import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useCallback, useMemo } from "react";
 import { GiWallet } from "react-icons/gi";
 import { IoBag } from "react-icons/io5";
 import { RiShoppingCartLine } from "react-icons/ri";
 
+import { DashboardHeader } from "../../_components/dashboard-header";
 import { FilterDropdown } from "../../_components/dashboard-table/_components/filter-dropdown";
 import { OverViewCard } from "../../_components/overview-card";
 import { CurrencyDropdown } from "./_components/currency-dropdown";
@@ -32,7 +34,7 @@ const Page = () => {
     setStatus,
     resetToFirstPage,
   } = useDashboardSearchParameters();
-
+  const { data: session } = useSession();
   const filters = useMemo(
     () => ({
       // page,
@@ -77,13 +79,13 @@ const Page = () => {
   );
 
   const renderDashboardHeader = () => (
-    <>
-      <section className="flex items-center justify-between">
-        <h4 className="">Dashboard Overview</h4>
-        <CurrencyDropdown />
-      </section>
-      <SubscriptionBanner />
-    </>
+    <DashboardHeader
+      actionComponent={<CurrencyDropdown />}
+      title="Dashboard Overview"
+      subtitle={`Welcome to your dashboard, ${session?.user?.name}`}
+      showSubscriptionBanner
+      icon={<Icons.dashboard />}
+    />
   );
 
   const renderOverviewLoadingSkeleton = () => <AnalysisSkeleton />;

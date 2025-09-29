@@ -2,6 +2,7 @@
 "use client";
 
 import { BlurImage } from "@/components/core/miscellaneous/blur-image";
+import { Icons } from "@/components/core/miscellaneous/icons";
 import SkiButton from "@/components/shared/button";
 import MainButton from "@/components/shared/button";
 import { AlertModal } from "@/components/shared/dialog/alert-modal";
@@ -25,12 +26,14 @@ import { arrayMove, rectSortingStrategy, SortableContext, useSortable } from "@d
 import { CSS } from "@dnd-kit/utilities";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { SerializedEditorState } from "lexical";
-import { ChevronLeft, PaperclipIcon, Trash2Icon } from "lucide-react";
+import { PaperclipIcon, Trash2Icon } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useRef, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { toast } from "sonner";
+
+import { DashboardHeader } from "../../dashboard-header";
 
 interface SortableImageProperties {
   id: string;
@@ -236,7 +239,7 @@ export const AddProductForm = () => {
     setValue("description", "", { shouldValidate: true });
     methods.reset();
     if (createdProductId) {
-      if (session?.user?.role?.name === "vendor") {
+      if ((session?.user as any)?.role?.name === "vendor") {
         router.push(`/dashboard/products/${createdProductId}`);
       } else {
         router.push(`/admin/products/${createdProductId}`);
@@ -274,10 +277,12 @@ export const AddProductForm = () => {
 
   return (
     <section className="space-y-8">
-      <div className="flex items-center gap-4">
-        <ChevronLeft className="h-6 w-6 cursor-pointer" onClick={() => history.back()} />
-        <h4>Add Product</h4>
-      </div>
+      <DashboardHeader
+        title="Add Product"
+        subtitle={`Add a new product to your store`}
+        showSubscriptionBanner
+        icon={<Icons.chevronLeft className={`cursor-pointer stroke-3`} />}
+      />
 
       <FormProvider {...methods}>
         <form onSubmit={handleSubmit(handleSubmitForm)} className="grid grid-cols-1 gap-8 lg:grid-cols-12">

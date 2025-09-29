@@ -1,6 +1,6 @@
 "use client";
 
-import SubscriptionBanner from "@/components/shared/banner/subscription-banner";
+import { Icons } from "@/components/core/miscellaneous/icons";
 import SkiButton from "@/components/shared/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
@@ -12,6 +12,7 @@ import { useLocale } from "next-intl";
 import { useMemo } from "react";
 import { TbShoppingBag } from "react-icons/tb";
 
+import { DashboardHeader } from "../../_components/dashboard-header";
 import { OverViewCard } from "../../_components/overview-card";
 import { AllProducts } from "./_views/all-products";
 import { OutOfStockProducts } from "./_views/out-of-stock-products";
@@ -57,23 +58,25 @@ const Page = () => {
 
   return (
     <main className="space-y-8">
-      <section className="flex items-center justify-between">
-        <h4>Products</h4>
-        <div>
-          <SkiButton
-            href={`/${locale}/dashboard/products/new`}
-            isLeftIconVisible
-            icon={<LucidePlusCircle />}
-            variant="primary"
-            className="rounded-full"
-          >
-            Add New Product
-          </SkiButton>
-        </div>
+      <section className={`space-y-8`}>
+        <DashboardHeader
+          actionComponent={
+            <SkiButton
+              href={`/${locale}/dashboard/products/new`}
+              isLeftIconVisible
+              icon={<LucidePlusCircle />}
+              variant="primary"
+              className="rounded-full"
+            >
+              Add New Product
+            </SkiButton>
+          }
+          title="Products"
+          subtitle={`Manage your products`}
+          showSubscriptionBanner
+          icon={<Icons.product />}
+        />
       </section>
-      <div>
-        <SubscriptionBanner />
-      </div>
       <section className="grid grid-cols-1 gap-[31px] lg:grid-cols-2">
         <OverViewCard
           title="Total Products"

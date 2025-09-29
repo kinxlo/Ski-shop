@@ -1,7 +1,5 @@
 // NextAuth module augmentation for the Ski Shop application
 
-// import NextAuth from "next-auth";
-
 declare module "next-auth" {
   interface User {
     id: string;

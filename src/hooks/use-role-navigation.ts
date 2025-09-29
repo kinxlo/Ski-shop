@@ -21,7 +21,8 @@ import { TbBell, TbCreditCard, TbHelp, TbSettings2, TbShield, TbShoppingBag, TbU
 
 export const useRoleNavigation = (): NavItem[] => {
   const { data: session } = useSession();
-  const userRole = session?.user?.role?.name?.toUpperCase() || "";
+  const user = session?.user as SessionUser;
+  const userRole = user?.role?.name.toUpperCase();
 
   // Get order and payout data for dynamic badges
   const { useGetAllOrders } = useDashboardOrderService();
