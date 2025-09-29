@@ -2,6 +2,7 @@
 "use client";
 
 import { BlurImage } from "@/components/core/miscellaneous/blur-image";
+import { BackButton } from "@/components/shared/back-button";
 import SkiButton from "@/components/shared/button";
 import MainButton from "@/components/shared/button";
 import { AlertModal } from "@/components/shared/dialog/alert-modal";
@@ -29,6 +30,8 @@ import { useEffect, useRef, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import * as z from "zod";
+
+import { DashboardHeader } from "../../dashboard-header";
 
 const productSchema = z.object({
   name: z.string().min(1, "Product name is required").optional(),
@@ -396,9 +399,12 @@ export const EditProductForm = ({ product, onSuccess, onCancel }: EditProductFor
 
   return (
     <section className="space-y-8">
-      <div className="">
-        <h4>Edit Product</h4>
-      </div>
+      <DashboardHeader
+        title="Edit Product"
+        subtitle={`Edit the product ${product.name}`}
+        showSubscriptionBanner
+        icon={<BackButton />}
+      />
 
       <FormProvider {...methods}>
         <form onSubmit={handleSubmit(handleSubmitForm)} className="grid grid-cols-1 gap-8 lg:grid-cols-12">

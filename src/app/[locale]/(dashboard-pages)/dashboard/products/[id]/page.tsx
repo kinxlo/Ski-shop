@@ -16,6 +16,7 @@ import { toast } from "sonner";
 
 import { ProductActionsDropdown } from "../_components/product-actions-dropdown";
 import { PromoteProductModal } from "../_components/promote-product-modal";
+import { DashboardHeader } from "../../../_components/dashboard-header";
 import ProductDetailSkeleton from "./_components/product-detail-skeleton";
 
 // Helper function to determine if a product is from a star seller
@@ -148,26 +149,30 @@ export default function ProductDetailPage() {
   return (
     <div className="space-y-8">
       {/* Header */}
+
       <div className="">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-4">
-            <BackButton />
-            <h4>Product Details</h4>
-          </div>
-          <div className="flex items-center space-x-2">
-            {/* Star Seller Badge */}
-            {isStarSellerProduct && (
-              <SkiButton isIconOnly size={`icon`} icon={<Star className="h-4 w-4 fill-current" />} />
-            )}
-            <ProductActionsDropdown
-              product={product}
-              onEdit={handleEditProduct}
-              onPromote={handlePromoteProduct}
-              onUnpublish={handleUnpublishProduct}
-              onMarkOutOfStock={handleMarkOutOfStock}
-              onDelete={handleDeleteProduct}
-            />
-          </div>
+        <div className="space-y-8">
+          <DashboardHeader
+            actionComponent={
+              <div className="flex items-center space-x-2">
+                {!isStarSellerProduct && (
+                  <SkiButton isIconOnly size={`icon`} icon={<Star className="h-4 w-4 fill-current" />} />
+                )}
+                <ProductActionsDropdown
+                  product={product}
+                  onEdit={handleEditProduct}
+                  onPromote={handlePromoteProduct}
+                  onUnpublish={handleUnpublishProduct}
+                  onMarkOutOfStock={handleMarkOutOfStock}
+                  onDelete={handleDeleteProduct}
+                />
+              </div>
+            }
+            title="Product Details"
+            subtitle={`${product.name} details`}
+            showSubscriptionBanner
+            icon={<BackButton />}
+          />
         </div>
       </div>
 

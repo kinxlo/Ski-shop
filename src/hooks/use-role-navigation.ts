@@ -14,10 +14,10 @@ import { useSession } from "next-auth/react";
 import { FaGamepad } from "react-icons/fa";
 import { GiWallet } from "react-icons/gi";
 import { IoRibbonOutline } from "react-icons/io5";
-import { MdDashboard, MdOutlineAddCard, MdOutlinePrivacyTip, MdOutlineVerifiedUser } from "react-icons/md";
+import { MdDashboard, MdOutlineAddCard, MdOutlineVerifiedUser } from "react-icons/md";
 import { PiUsersThreeLight } from "react-icons/pi";
 import { RiAdvertisementLine, RiShoppingCartLine, RiUserLine } from "react-icons/ri";
-import { TbBell, TbCreditCard, TbHelp, TbSettings2, TbShield, TbShoppingBag, TbUserCog, TbUsers } from "react-icons/tb";
+import { TbCreditCard, TbSettings2, TbShoppingBag, TbUserCog, TbUsers } from "react-icons/tb";
 
 export const useRoleNavigation = (): NavItem[] => {
   const { data: session } = useSession();
@@ -40,18 +40,18 @@ export const useRoleNavigation = (): NavItem[] => {
 
   const createSettingsMenu = (role: string): NavItem => {
     const allCommonSettings = [
-      createNavItem("notifications", "Notifications", "/dashboard/settings/notifications", {
-        icon: TbBell,
-      }),
-      createNavItem("security-privacy", "Security & Privacy", "/dashboard/settings/security-privacy", {
-        icon: TbShield,
-      }),
-      createNavItem("help-support", "Help & Support", "/dashboard/settings/help-support", {
-        icon: TbHelp,
-      }),
-      createNavItem("account-preferences", "Account & Preferences", "/dashboard/settings/account-preferences", {
-        icon: RiUserLine,
-      }),
+      // createNavItem("notifications", "Notifications", "/dashboard/settings/notifications", {
+      //   icon: TbBell,
+      // }),
+      // createNavItem("security-privacy", "Security & Privacy", "/dashboard/settings/security-privacy", {
+      //   icon: TbShield,
+      // }),
+      // createNavItem("help-support", "Help & Support", "/dashboard/settings/help-support", {
+      //   icon: TbHelp,
+      // }),
+      // createNavItem("account-preferences", "Account & Preferences", "/dashboard/settings/account-preferences", {
+      //   icon: RiUserLine,
+      // }),
       createNavItem("supscription", "Supscription", "/dashboard/settings/supscription", {
         icon: IoRibbonOutline,
       }),
@@ -59,9 +59,9 @@ export const useRoleNavigation = (): NavItem[] => {
         icon: ThumbsUp,
         actionType: "open-rate-app-modal",
       }),
-      createNavItem("legal", "Legal", "/dashboard/settings/legal", {
-        icon: MdOutlinePrivacyTip,
-      }),
+      // createNavItem("legal", "Legal", "/dashboard/settings/legal", {
+      //   icon: MdOutlinePrivacyTip,
+      // }),
     ];
 
     const adminSpecificSettings = [

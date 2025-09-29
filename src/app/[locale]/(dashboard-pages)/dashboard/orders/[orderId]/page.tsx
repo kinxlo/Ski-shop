@@ -19,6 +19,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { use, useState } from "react";
 
+import { DashboardHeader } from "../../../_components/dashboard-header";
 import { AssignRiderModal } from "./_components/assign-rider-modal";
 import { OrderDetailSkeleton } from "./_components/order-detail-skeleton";
 
@@ -156,18 +157,18 @@ export default function OrderDetailPage({ params }: OrderDetailPageProperties) {
   return (
     <div className="space-y-8">
       {/* Header */}
-      <div>
-        <div className="">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <BackButton />
-              <h4>Order Details</h4>
-            </div>
+      <div className="space-y-8">
+        <DashboardHeader
+          actionComponent={
             <Badge className={cn("px-3 py-1 text-sm", getStatusColor(order.status))}>
               {order.status.charAt(0).toUpperCase() + order.status.slice(1)}
             </Badge>
-          </div>
-        </div>
+          }
+          title="Order Details"
+          subtitle={`Order details`}
+          showSubscriptionBanner
+          icon={<BackButton />}
+        />
       </div>
 
       <Wrapper className="mx-auto px-0 py-4">
@@ -177,7 +178,7 @@ export default function OrderDetailPage({ params }: OrderDetailPageProperties) {
             {/* Order Summary */}
             <Card className="border-none shadow-none">
               <CardHeader className="pb-3 sm:pb-6">
-                <CardTitle className="text-base sm:text-lg">Order Summary</CardTitle>
+                <CardTitle className="text-base sm:!text-lg">Order Summary</CardTitle>
               </CardHeader>
               <CardContent className="space-y-3 sm:space-y-4">
                 <div className="grid grid-cols-1 gap-3 text-sm sm:grid-cols-2 sm:gap-4">
@@ -196,7 +197,7 @@ export default function OrderDetailPage({ params }: OrderDetailPageProperties) {
             {/* Products Ordered */}
             <Card className="border-none shadow-none">
               <CardHeader className="pb-3 sm:pb-6">
-                <CardTitle className="text-base sm:text-lg">Products Ordered</CardTitle>
+                <CardTitle className="text-base sm:!text-lg">Products Ordered</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="space-y-3 sm:space-y-4">
@@ -243,7 +244,7 @@ export default function OrderDetailPage({ params }: OrderDetailPageProperties) {
             {/* Financial Summary */}
             <Card className="border-none shadow-none">
               <CardHeader className="pb-3 sm:pb-6">
-                <CardTitle className="text-base sm:text-lg">Financial Summary</CardTitle>
+                <CardTitle className="text-base sm:!text-lg">Financial Summary</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="space-y-2 sm:space-y-3">
@@ -294,7 +295,7 @@ export default function OrderDetailPage({ params }: OrderDetailPageProperties) {
             {/* Update Status Section */}
             <Card className="border-none shadow-none">
               <CardHeader className="pb-3 sm:pb-6">
-                <CardTitle className="text-base sm:text-lg">Update Status</CardTitle>
+                <CardTitle className="text-base sm:!text-lg">Update Status</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
@@ -336,7 +337,7 @@ export default function OrderDetailPage({ params }: OrderDetailPageProperties) {
             {/* Buyer Information */}
             <Card className="border-none shadow-none">
               <CardHeader className="pb-3 sm:pb-6">
-                <CardTitle className="flex items-center text-base sm:text-lg">
+                <CardTitle className="flex items-center text-base sm:!text-lg">
                   <User className="mr-2 h-4 w-4 sm:h-5 sm:w-5" />
                   Buyer Information
                 </CardTitle>
@@ -366,7 +367,7 @@ export default function OrderDetailPage({ params }: OrderDetailPageProperties) {
             {/* Payment Information */}
             <Card className="border-none shadow-none">
               <CardHeader className="pb-3 sm:pb-6">
-                <CardTitle className="flex items-center text-base sm:text-lg">
+                <CardTitle className="flex items-center text-base sm:!text-lg">
                   <CreditCard className="mr-2 h-4 w-4 sm:h-5 sm:w-5" />
                   Payment Information
                 </CardTitle>
@@ -387,7 +388,7 @@ export default function OrderDetailPage({ params }: OrderDetailPageProperties) {
             {assignedRider && (
               <Card className="border-none shadow-none">
                 <CardHeader className="pb-3 sm:pb-6">
-                  <CardTitle className="flex items-center text-base sm:text-lg">
+                  <CardTitle className="flex items-center text-base sm:!text-lg">
                     <User className="mr-2 h-4 w-4 sm:h-5 sm:w-5" />
                     Assigned Rider
                   </CardTitle>

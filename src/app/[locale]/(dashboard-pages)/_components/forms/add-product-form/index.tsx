@@ -2,7 +2,7 @@
 "use client";
 
 import { BlurImage } from "@/components/core/miscellaneous/blur-image";
-import { Icons } from "@/components/core/miscellaneous/icons";
+import { BackButton } from "@/components/shared/back-button";
 import SkiButton from "@/components/shared/button";
 import MainButton from "@/components/shared/button";
 import { AlertModal } from "@/components/shared/dialog/alert-modal";
@@ -279,9 +279,9 @@ export const AddProductForm = () => {
     <section className="space-y-8">
       <DashboardHeader
         title="Add Product"
-        subtitle={`Add a new product to your store`}
+        subtitle={`Add a new product to your store, you can publish it immediately or keep it in your draft folder.`}
         showSubscriptionBanner
-        icon={<Icons.chevronLeft className={`cursor-pointer stroke-3`} />}
+        icon={<BackButton />}
       />
 
       <FormProvider {...methods}>

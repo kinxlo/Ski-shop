@@ -1,12 +1,13 @@
 "use client";
 
 import { PromoteProductModal } from "@/app/[locale]/(dashboard-pages)/dashboard/products/_components/promote-product-modal";
-import SubscriptionBanner from "@/components/shared/banner/subscription-banner";
+import { Icons } from "@/components/core/miscellaneous/icons";
 import SkiButton from "@/components/shared/button";
 import { useDashboardProductService } from "@/services/dashboard/vendor/products/use-product-service";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
+import { DashboardHeader } from "../../_components/dashboard-header";
 import { ProductPromotionCard } from "./_components/product-card";
 
 const Page = () => {
@@ -37,13 +38,17 @@ const Page = () => {
 
   return (
     <main className="space-y-8">
-      <div className="flex items-center justify-between">
-        <h4 className="">Promotions</h4>
-        <SkiButton variant="primary" onClick={handleViewActiveCampaigns}>
-          Active Campaigns
-        </SkiButton>
-      </div>
-      <SubscriptionBanner />
+      <DashboardHeader
+        actionComponent={
+          <SkiButton variant="primary" onClick={handleViewActiveCampaigns}>
+            Active Campaigns
+          </SkiButton>
+        }
+        title="Promotions"
+        subtitle={`Manage your promotions, create new promotions and view active campaigns`}
+        showSubscriptionBanner
+        icon={<Icons.promotion />}
+      />
 
       {/* Products for Promotion */}
       <div className="space-y-4">

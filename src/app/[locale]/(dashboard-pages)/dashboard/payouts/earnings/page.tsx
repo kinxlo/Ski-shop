@@ -1,7 +1,6 @@
 "use client";
 
 import { BackButton } from "@/components/shared/back-button";
-import SubscriptionBanner from "@/components/shared/banner/subscription-banner";
 import SkiButton from "@/components/shared/button";
 import { AlertModal } from "@/components/shared/dialog/alert-modal";
 import { EmptyState } from "@/components/shared/empty-state";
@@ -10,6 +9,7 @@ import { Locale } from "@/lib/i18n/config";
 import { formatCurrency } from "@/lib/i18n/utils";
 import { usePayoutService } from "@/services/dashboard/vendor/payouts";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useQueryClient } from "@tanstack/react-query";
 import { useLocale } from "next-intl";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -17,6 +17,7 @@ import { FormProvider, useForm } from "react-hook-form";
 import { TbCheck, TbCurrencyNaira, TbInfoCircle, TbWallet } from "react-icons/tb";
 import { z } from "zod";
 
+import { DashboardHeader } from "../../../_components/dashboard-header";
 import { OverViewCard } from "../../../_components/overview-card";
 import { AddBankTrigger } from "./_components";
 
@@ -44,6 +45,7 @@ const Page = () => {
   const locale = useLocale() as Locale;
   const router = useRouter();
   const { useGetPayoutStore, useGetVendorBanks, useInitiateWithdrawal } = usePayoutService();
+  const queryClient = useQueryClient();
 
   // Fetch payout data
   const { data: payoutStore, isLoading } = useGetPayoutStore();
@@ -104,6 +106,7 @@ const Page = () => {
         onSuccess: (response) => {
           if (response?.success) {
             setShowSuccessModal(true);
+            queryClient.invalidateQueries({ queryKey: ["dashboard", "payouts"] });
           }
         },
       },
@@ -113,7 +116,6 @@ const Page = () => {
   const handleProceed = () => {
     setShowSuccessModal(false);
     router.push(`/${locale}/dashboard/payouts`);
-    // The router will trigger a refresh when navigating back to the payout page
   };
 
   const {
@@ -127,13 +129,12 @@ const Page = () => {
   return (
     <div className="space-y-8">
       {/* Header */}
-      <div className="">
-        <div className="flex items-center gap-4">
-          <BackButton />
-          <h4 className="">Withdraw Earnings</h4>
-        </div>
-      </div>
-      <SubscriptionBanner />
+      <DashboardHeader
+        title="Withdraw Earnings"
+        subtitle={`Manage your withdraw earnings, add a bank account and withdraw your earnings`}
+        showSubscriptionBanner
+        icon={<BackButton />}
+      />
       <section className="space-y-6">
         {/* Available Earnings */}
         <OverViewCard

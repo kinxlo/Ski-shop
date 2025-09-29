@@ -1,6 +1,6 @@
 "use client";
 
-import SubscriptionBanner from "@/components/shared/banner/subscription-banner";
+import { Icons } from "@/components/core/miscellaneous/icons";
 import SkiButton from "@/components/shared/button";
 import { Locale } from "@/lib/i18n/config";
 import { formatCurrency } from "@/lib/i18n/utils";
@@ -10,6 +10,7 @@ import { useRouter } from "next/navigation";
 import { useMemo } from "react";
 import { TbClock, TbCreditCard, TbDownload, TbWallet } from "react-icons/tb";
 
+import { DashboardHeader } from "../../_components/dashboard-header";
 import { OverViewCard } from "../../_components/overview-card";
 import { PayoutOverviewSkeleton, WithdrawalHistoryTable } from "./_components";
 
@@ -80,9 +81,8 @@ const Page = () => {
 
   return (
     <main className="space-y-8">
-      <section className="flex items-center justify-between">
-        <h4 className="">Payout</h4>
-        <div>
+      <DashboardHeader
+        actionComponent={
           <SkiButton
             isLeftIconVisible
             icon={<TbDownload />}
@@ -93,11 +93,12 @@ const Page = () => {
           >
             Withdraw Earnings
           </SkiButton>
-        </div>
-      </section>
-      <div>
-        <SubscriptionBanner />
-      </div>
+        }
+        title="Payout"
+        subtitle={`Manage your payout`}
+        showSubscriptionBanner
+        icon={<Icons.billing />}
+      />
       {/* Overview Cards Section */}
       {isOverviewLoading ? (
         <PayoutOverviewSkeleton />

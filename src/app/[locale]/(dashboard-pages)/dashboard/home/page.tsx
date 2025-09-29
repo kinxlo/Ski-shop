@@ -138,8 +138,9 @@ const Page = () => {
 
   const renderOrdersTableHeader = () => (
     <section className="flex flex-col-reverse justify-between gap-4 lg:flex-row lg:items-center">
-      <div>
-        <p className="text-lg !font-bold">Recent Orders</p>
+      <div className="mb-6">
+        <h5 className="flex items-center gap-2 !text-2xl font-semibold">Recent Orders</h5>
+        <p className="mt-1 text-sm text-gray-500">Track your recent orders and their status</p>
       </div>
       <div>
         <div className="flex items-center gap-2">

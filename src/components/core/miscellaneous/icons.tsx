@@ -26,12 +26,16 @@ import {
   IconShoppingBag,
   IconSun,
   IconTrash,
+  IconTrendingUp,
   IconUser,
   IconUserCircle,
   IconUserEdit,
   IconUserX,
+  IconWallet,
   IconX,
 } from "@tabler/icons-react";
+import { IoRibbonOutline } from "react-icons/io5";
+import { RiShoppingCartLine } from "react-icons/ri";
 
 export type Icon = React.ComponentType<IconProps>;
 
@@ -41,6 +45,7 @@ export const Icons = {
   login: IconLogin,
   close: IconX,
   product: IconShoppingBag,
+  cart: RiShoppingCartLine,
   spinner: IconLoader2,
   kanban: IconLayoutKanban,
   chevronLeft: IconChevronLeft,
@@ -67,4 +72,7 @@ export const Icons = {
   github: IconBrandGithub,
   twitter: IconBrandTwitter,
   check: IconCheck,
+  wallet: IconWallet,
+  promotion: IconTrendingUp,
+  ribbonOutline: IoRibbonOutline,
 };

@@ -1,10 +1,10 @@
 "use client";
 
-import SubscriptionBanner from "@/components/shared/banner/subscription-banner";
+import { BackButton } from "@/components/shared/back-button";
 import { usePromotionService } from "@/services/dashboard/vendor/promotions/use-promotion-service";
-import { ChevronLeft } from "lucide-react";
 
 import { CampaignCard } from "../_components/campaign-card";
+import { DashboardHeader } from "../../../_components/dashboard-header";
 
 const Page = () => {
   const { useGetActiveCampaigns } = usePromotionService();
@@ -12,16 +12,13 @@ const Page = () => {
 
   return (
     <main className="space-y-8">
-      <div className="flex items-center gap-4">
-        <ChevronLeft
-          onClick={() => {
-            history.back();
-          }}
-          className="h-6 w-6 stroke-3"
-        />
-        <h4 className="">Active Campaigns</h4>
-      </div>
-      <SubscriptionBanner />
+      <DashboardHeader
+        title="Active Campaigns"
+        subtitle={`View your active campaigns, view the performance of your campaigns and view the details of your campaigns`}
+        showSubscriptionBanner
+        icon={<BackButton />}
+      />
+
       <div className="space-y-4">
         {campaigns?.data?.items?.length ? (
           campaigns.data.items.map((campaign) => <CampaignCard key={campaign.id} campaign={campaign} />)

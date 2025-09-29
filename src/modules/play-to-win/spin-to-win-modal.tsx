@@ -27,6 +27,7 @@ const PRIZES = [
 const TOTAL_SEGMENTS = 8;
 const SEGMENT_ANGLE = 360 / TOTAL_SEGMENTS;
 const AUTO_OPEN_INTERVAL_MS = 15 * 60 * 1000;
+const INITIAL_OPEN_DELAY_MS = 5 * 1000;
 const STORAGE_KEY = "skicom.spinToWin.lastShownAt";
 
 export const SpinToWinModal = ({ children, autoOpen = true }: SpinToWinModalProperties) => {
@@ -101,10 +102,12 @@ export const SpinToWinModal = ({ children, autoOpen = true }: SpinToWinModalProp
         // Open immediately, then start regular cadence
         // Delay to next tick to avoid hydration flashes
         rafReference.current = requestAnimationFrame(() => {
-          if (document.visibilityState === "visible") {
-            openNow();
-          }
-          startInterval();
+          timeoutReference.current = window.setTimeout(() => {
+            if (document.visibilityState === "visible") {
+              openNow();
+            }
+            startInterval();
+          }, INITIAL_OPEN_DELAY_MS);
         });
       } else {
         // Wait remaining time, then open, then start interval
@@ -123,7 +126,7 @@ export const SpinToWinModal = ({ children, autoOpen = true }: SpinToWinModalProp
           openNow();
         }
         startInterval();
-      }, AUTO_OPEN_INTERVAL_MS);
+      }, INITIAL_OPEN_DELAY_MS);
     }
 
     return () => {

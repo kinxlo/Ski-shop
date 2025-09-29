@@ -58,25 +58,23 @@ const Page = () => {
 
   return (
     <main className="space-y-8">
-      <section className={`space-y-8`}>
-        <DashboardHeader
-          actionComponent={
-            <SkiButton
-              href={`/${locale}/dashboard/products/new`}
-              isLeftIconVisible
-              icon={<LucidePlusCircle />}
-              variant="primary"
-              className="rounded-full"
-            >
-              Add New Product
-            </SkiButton>
-          }
-          title="Products"
-          subtitle={`Manage your products`}
-          showSubscriptionBanner
-          icon={<Icons.product />}
-        />
-      </section>
+      <DashboardHeader
+        actionComponent={
+          <SkiButton
+            href={`/${locale}/dashboard/products/new`}
+            isLeftIconVisible
+            icon={<LucidePlusCircle />}
+            variant="primary"
+            className="rounded-full"
+          >
+            Add New Product
+          </SkiButton>
+        }
+        title="Products"
+        subtitle={`Manage your products`}
+        showSubscriptionBanner
+        icon={<Icons.product />}
+      />
       <section className="grid grid-cols-1 gap-[31px] lg:grid-cols-2">
         <OverViewCard
           title="Total Products"

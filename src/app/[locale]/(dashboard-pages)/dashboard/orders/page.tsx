@@ -1,14 +1,14 @@
 "use client";
 
-import SubscriptionBanner from "@/components/shared/banner/subscription-banner";
+import { Icons } from "@/components/core/miscellaneous/icons";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useDashboardSearchParameters } from "@/lib/nuqs/use-dashboard-search-parameters";
 import { useDashboardOrderService } from "@/services/dashboard/vendor/orders/use-order-service";
 import { useMemo } from "react";
-import { RiShoppingCartLine } from "react-icons/ri";
 
+import { DashboardHeader } from "../../_components/dashboard-header";
 import { OverViewCard } from "../../_components/overview-card";
 import { AllOrders } from "./_views/all-orders";
 import { PaidOrders } from "./_views/paid-orders";
@@ -49,25 +49,30 @@ const Page = () => {
 
   return (
     <main className="space-y-8">
-      <h4 className="text-mid-grey-III text-[18px] lg:text-[30px]">Orders</h4>
-      <SubscriptionBanner />
+      <DashboardHeader
+        title="Orders"
+        subtitle={`Manage your orders`}
+        showSubscriptionBanner
+        icon={<Icons.cart className="h-6 w-6" />}
+      />
+
       <section className="my-[38px] grid grid-cols-1 gap-[31px] lg:grid-cols-3">
         <OverViewCard
           title="All Orders"
           value={stats.totalOrders.toString()}
-          icon={<RiShoppingCartLine />}
+          icon={<Icons.cart />}
           iconClassName="bg-primary/10 text-primary text-[24px]"
         />
         <OverViewCard
           title="Pending Orders"
           value={stats.pendingOrders.toString()}
-          icon={<RiShoppingCartLine />}
+          icon={<Icons.cart />}
           iconClassName="bg-low-warning/20 text-mid-warning text-[24px]"
         />
         <OverViewCard
           title="Paid Orders"
           value={stats.paidOrders.toString()}
-          icon={<RiShoppingCartLine />}
+          icon={<Icons.cart />}
           iconClassName="bg-low-success text-mid-success text-[24px]"
         />
       </section>

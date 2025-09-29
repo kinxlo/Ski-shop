@@ -1,11 +1,8 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import { ChevronLeft } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { Icons } from "@/components/core/miscellaneous/icons";
+import { cn } from "@/lib/utils";
 import React from "react";
-
-import SkiButton from "../button";
 
 interface BackButtonProperties {
   href?: string;
@@ -17,36 +14,10 @@ interface BackButtonProperties {
   ariaLabel?: string;
 }
 
-export const BackButton: React.FC<BackButtonProperties> = ({
-  href,
-  onClick,
-  className = "",
-  size = "icon",
-  variant = "ghost",
-  iconClassName = "h-6 w-6 text-gray-600",
-  ariaLabel = "Go back",
-}) => {
-  const router = useRouter();
+const handleBack = () => {
+  history.back();
+};
 
-  const handleBack = () => {
-    if (onClick) {
-      onClick();
-    } else if (href) {
-      router.push(href);
-    } else {
-      router.back();
-    }
-  };
-
-  return (
-    <SkiButton
-      isIconOnly
-      size={size as any}
-      variant={variant}
-      icon={<ChevronLeft className={iconClassName} />}
-      onClick={handleBack}
-      className={className}
-      aria-label={ariaLabel}
-    />
-  );
+export const BackButton: React.FC<BackButtonProperties> = ({ iconClassName }) => {
+  return <Icons.chevronLeft onClick={handleBack} className={cn(`cursor-pointer stroke-3`, iconClassName)} />;
 };

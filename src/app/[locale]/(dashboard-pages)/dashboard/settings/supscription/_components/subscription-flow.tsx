@@ -1,6 +1,7 @@
 "use client";
 
-import SubscriptionBanner from "@/components/shared/banner/subscription-banner";
+import { DashboardHeader } from "@/app/[locale]/(dashboard-pages)/_components/dashboard-header";
+import { Icons } from "@/components/core/miscellaneous/icons";
 import SkiButton from "@/components/shared/button";
 import { ReusableDialog } from "@/components/shared/dialog/Dialog";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -79,22 +80,18 @@ export function SubscriptionFlow() {
   return (
     <section className="space-y-8">
       {/* Header / Progress */}
-      <div className="flex items-center justify-between">
-        <div className="">
-          <h4 className="">Become a Star Seller</h4>
-          <p className="text-mid-grey-II">Upgrade your store and unlock premium features that help you grow faster.</p>
-        </div>
-        <Image src="/images/skicom-star.svg" width={48} height={48} alt="Skicom Star" />
-      </div>
-      <div>
-        <SubscriptionBanner />
-      </div>
-
+      <DashboardHeader
+        actionComponent={<Image src="/images/skicom-star.svg" width={48} height={48} alt="Skicom Star" />}
+        title="Unlock Star Seller Benefits"
+        subtitle="Enjoy powerful tools and badges that boost your visibility and credibility."
+        icon={<Icons.ribbonOutline />}
+        showSubscriptionBanner
+      />
       {/* Steps */}
       {step === 1 && (
         <Card className={`border-none px-4 shadow-none`}>
           <CardHeader className="border-b">
-            <CardTitle>Unlock Star Seller Benefits</CardTitle>
+            <CardTitle className="text-mid-grey-II !text-xl !font-bold">Unlock Star Seller Benefits</CardTitle>
             <CardDescription>
               Enjoy powerful tools and badges that boost your visibility and credibility.
             </CardDescription>
