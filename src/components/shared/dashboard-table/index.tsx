@@ -54,14 +54,14 @@ export const DashboardTable = <T extends DataItem>({
   const currentPageNumber = currentPage ? Number.parseInt(currentPage) : 1;
 
   return (
-    <div className="w-full space-y-4">
+    <div className="w-full min-w-0 space-y-4">
       {/* Desktop Table View */}
-      <div className="bg-background hidden h-full overflow-auto md:block">
+      <div className="bg-background hidden h-full overflow-x-auto overflow-y-hidden lg:block">
         <Table>
           <TableHeader className={`bg-background`}>
             <TableRow className={`border-border/50`}>
               {columns.map((column, index) => (
-                <TableHead key={index} className={`py-4`}>
+                <TableHead key={index} className={`py-4 whitespace-nowrap`}>
                   {column.header}
                 </TableHead>
               ))}
@@ -82,8 +82,8 @@ export const DashboardTable = <T extends DataItem>({
                 )}
               >
                 {columns.map((column, colIndex) => (
-                  <TableCell key={`${rowIndex}-${colIndex}`} className={`py-4`}>
-                    {renderColumn(column, item)}
+                  <TableCell key={`${rowIndex}-${colIndex}`} className={`py-4 align-middle`}>
+                    <div className="max-w-[600px] min-w-0 break-words">{renderColumn(column, item)}</div>
                   </TableCell>
                 ))}
                 {rowActions && (
@@ -118,7 +118,7 @@ export const DashboardTable = <T extends DataItem>({
       </div>
 
       {/* Mobile Card View */}
-      <div className="grid grid-cols-1 gap-4 md:hidden">
+      <div className="grid grid-cols-1 gap-4 lg:hidden">
         {data.map((item, index) => (
           <div
             key={index}

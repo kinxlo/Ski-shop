@@ -48,10 +48,10 @@ export default function TopBar({ notificationsCount = 0, className = "" }: TopBa
 
   return (
     <header className={`bg-background flex h-16 items-center justify-between ${className}`}>
-      <div className="relative hidden md:block">
-        <SearchInput className={`bg-muted min-w-md border-none`} onSearch={() => {}} />
+      <div className="relative hidden min-w-0 flex-1 md:block">
+        <SearchInput className={`bg-muted w-full max-w-xl min-w-0 border-none`} onSearch={() => {}} />
       </div>
-      <div className="flex items-center gap-4">
+      <div className="flex shrink-0 items-center gap-3">
         <div className="relative">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -69,7 +69,7 @@ export default function TopBar({ notificationsCount = 0, className = "" }: TopBa
               </button>
             </DropdownMenuTrigger>
 
-            <DropdownMenuContent align="end" className="max-w-[100vw] p-3">
+            <DropdownMenuContent align="end" className="w-[min(92vw,380px)] p-3">
               <div className="max-h-96 space-y-3 overflow-y-auto">
                 {notifications.map((n) => (
                   <div key={n.id} className="flex gap-3 rounded-md p-3 hover:bg-gray-50">
@@ -82,7 +82,7 @@ export default function TopBar({ notificationsCount = 0, className = "" }: TopBa
                       <div className="flex items-center justify-between">
                         <p className="!font-bold">{n.title}</p>
                       </div>
-                      <p className="!text-sm">
+                      <p className="!text-sm break-words">
                         {n.message}
                         {n.actionText ? " " : ""}
                         {n.actionText && (

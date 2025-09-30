@@ -96,8 +96,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
   // Desktop view
   return (
-    <SidebarProvider defaultOpen={true}>
-      <div className="flex min-h-screen w-full">
+    <SidebarProvider>
+      <div className="flex min-h-screen w-full min-w-0 overflow-hidden">
         <DashboardSidebar
           navItems={navItems}
           autoExpandOnActiveChild={true}
@@ -109,16 +109,16 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           }}
           className="transition-all duration-300 ease-in-out"
         />
-        <SidebarInset className="flex-1">
-          <div className="flex h-full flex-col">
-            <header className="bg-background sticky top-0 z-50 flex h-20 shrink-0 items-center gap-2 border-b px-4 py-5">
+        <SidebarInset className="min-w-0 flex-1">
+          <div className="flex h-full min-h-0 flex-col">
+            <header className="bg-background sticky top-0 z-50 flex h-20 w-full shrink-0 items-center gap-2 overflow-hidden border-b px-4 py-5">
               <SidebarTrigger className="text-primary -ml-1 size-9" />
-              <div className="flex-1">
-                <TopBar notificationsCount={0} className="px-6" />
+              <div className="min-w-0 flex-1">
+                <TopBar notificationsCount={0} className="w-full min-w-0 px-6" />
               </div>
             </header>
-            <main className="min-h-screen overflow-auto bg-[#F8F8F9] p-6 dark:bg-[#111111]">
-              <div className="mx-auto max-w-[1400px] space-y-6">{children}</div>
+            <main className="min-h-0 flex-1 overflow-auto bg-[#F8F8F9] p-6 dark:bg-[#111111]">
+              <div className="mx-auto max-w-[1400px] min-w-0 space-y-6">{children}</div>
             </main>
           </div>
         </SidebarInset>
