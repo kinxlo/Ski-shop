@@ -34,7 +34,7 @@ export const Testimonial = () => {
   const selectedTestimonial = testimonialImages[selectedTestimonialIndex];
 
   return (
-    <Wrapper>
+    <Wrapper className="">
       <section className="flex flex-col gap-6">
         <section className="flex flex-col gap-6">
           <section className="items-center gap-3 md:flex">

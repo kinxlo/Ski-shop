@@ -12,12 +12,10 @@ export default function LandingLayout({
     <section>
       <Navbar />
       <div>{children}</div>
-
       {/* Mount the Spin-to-Win modal globally for external/shop routes */}
       <SpinToWinModal>
         <span aria-hidden="true" />
       </SpinToWinModal>
-
       <Footer />
     </section>
   );

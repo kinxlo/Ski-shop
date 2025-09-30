@@ -1,5 +1,6 @@
 "use client";
 
+import { Wrapper } from "@/components/core/layout/wrapper";
 import { useTranslations } from "next-intl";
 
 import { ServiceCard } from "../../_components/service-card";
@@ -30,7 +31,7 @@ export const SectionThree = () => {
   ];
 
   return (
-    <section className={`my-16 sm:my-20 lg:my-30`}>
+    <Wrapper className={`my-8 py-8`}>
       <div className={`space-y-4 pt-4 text-center sm:pt-6`}>
         <h2 className={`!text-2xl md:!text-4xl`}>{t("title")}</h2>
         <p className={`mx-auto max-w-2xl sm:!text-lg`}>{t("description")}</p>
@@ -40,6 +41,6 @@ export const SectionThree = () => {
           <ServiceCard strength={service} key={service.title} />
         ))}
       </div>
-    </section>
+    </Wrapper>
   );
 };

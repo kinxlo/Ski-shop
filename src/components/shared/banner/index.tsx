@@ -28,7 +28,7 @@ export const ReusableBanner: FC<BannerProperties> = ({
   imageStyle,
 }) => {
   return (
-    <Wrapper>
+    <Wrapper className="!my-0">
       <section
         className={cn(
           `bg-primary/10 relative flex flex-col-reverse items-center justify-between gap-4 rounded-lg px-4 py-8`, // Mobile padding

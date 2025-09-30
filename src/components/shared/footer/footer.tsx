@@ -30,7 +30,7 @@ export const Footer = () => {
   })();
 
   return (
-    <main className="w-full bg-black py-10 md:py-14">
+    <main className="mt-20 w-full bg-black py-10 md:py-14">
       <Wrapper>
         <section>
           <div>

@@ -89,7 +89,7 @@ export const Teams = () => {
             onSwiperInit={(swiper: SwiperType) => setActiveIndex(swiper.realIndex ?? 0)}
             swiperClassName="overflow-hidden py-8 sm:py-10 h-[220px] lg:h-[350px]"
             slideClassName="!w-auto"
-            className="relative mx-auto max-w-[1240px]"
+            className="relative mx-auto max-w-[1240p]"
           />
 
           <div

@@ -12,7 +12,7 @@ const typeBadgeClass: Record<Campaign["type"], string> = {
 
 export function CampaignCard({ campaign }: { campaign: Campaign }) {
   return (
-    <Card className="p-4 shadow-none sm:p-5">
+    <Card className="border-none p-4 shadow-none sm:p-5">
       <div className="mb-4 flex items-start justify-between gap-3">
         <div className="flex min-w-0 items-center gap-3">
           <div className="shrink-0">
