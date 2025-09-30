@@ -45,6 +45,14 @@ export const usePromotionService = () => {
       options,
     );
 
+  // Admin: Ads history (GET /ads)
+  const useGetAdsHistory = (filters?: Filters, options?: any) =>
+    useServiceQuery(
+      [...queryKeys.dashboard.promotions.history(filters)],
+      (service) => service.getAdsHistory(filters),
+      options,
+    );
+
   return {
     useGetAllAvailablePromotions,
     useGetPromotion,
@@ -53,5 +61,6 @@ export const usePromotionService = () => {
     useUpdatePromotion,
     useDeletePromotion,
     useGetActiveCampaigns,
+    useGetAdsHistory,
   };
 };

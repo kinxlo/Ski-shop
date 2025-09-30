@@ -103,6 +103,19 @@ export class PromotionService {
     });
   }
 
+  // admin: get ads history (no store scoping, no forced status)
+  async getAdsHistory(filters?: Filters) {
+    return tryCatchWrapper(async () => {
+      const queryString = filters ? this.buildQueryParameters(filters) : "";
+      const url = `/ads${queryString ? `?${queryString}` : ""}`;
+      const response = await this.http.get<PaginatedApiResponse<Campaign>>(url);
+      if (response?.status === 200) {
+        return response.data;
+      }
+      throw new Error("Failed to get ads history");
+    });
+  }
+
   private buildQueryParameters(filters: Filters): string {
     const queryParameters = new URLSearchParams();
     for (const [key, value] of Object.entries(filters)) {

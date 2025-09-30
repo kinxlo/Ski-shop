@@ -104,6 +104,16 @@ export const queryKeys = {
       list: (filters?: Filters) =>
         ["dashboard", "promotions", "list", filters?.page, filters?.limit, filters?.search] as const,
       details: (id: string) => ["dashboard", "promotions", "details", id] as const,
+      history: (filters?: Filters) =>
+        [
+          "dashboard",
+          "promotions",
+          "history",
+          filters?.page,
+          filters?.limit,
+          filters?.search,
+          filters?.status,
+        ] as const,
     },
   },
 };

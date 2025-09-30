@@ -382,7 +382,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     },
 
     session({ session, token }): Promise<any> {
-      // console.log("Session callback - Token:", token);
+      console.log("Session callback - Token:", token);
       // console.log("Session callback - Token role:", token.role);
       return Promise.resolve({
         ...session,
