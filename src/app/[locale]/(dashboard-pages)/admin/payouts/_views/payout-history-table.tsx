@@ -1,5 +1,6 @@
 "use client";
 
+import { Icons } from "@/components/core/miscellaneous/icons";
 import { SearchInput } from "@/components/core/miscellaneous/search-input";
 import { DashboardTable } from "@/components/shared/dashboard-table";
 import { useAdminPayoutHistoryColumn } from "@/components/shared/dashboard-table/admin/admin-table-data";
@@ -7,6 +8,8 @@ import { DownloadCsvButton } from "@/components/shared/download-csv-button";
 import { EmptyState } from "@/components/shared/empty-state";
 import { useDashboardSearchParameters } from "@/lib/nuqs/use-dashboard-search-parameters";
 import { useCallback } from "react";
+
+import { DashboardHeader } from "../../../_components/dashboard-header";
 
 export const PayoutHistoryTable = () => {
   const { search: searchQuery, setSearch: setSearchQuery, resetToFirstPage } = useDashboardSearchParameters();
@@ -84,25 +87,33 @@ export const PayoutHistoryTable = () => {
   );
 
   const renderPayoutHistoryTable = () => (
-    <section className={`bg-background rounded-lg p-6`}>
-      <div className="mb-2 flex items-center justify-between gap-2">
-        <h6 className="!text-lg !font-semibold">Payout History</h6>
-        <div className="flex items-center gap-2">
-          <SearchInput className="" onSearch={handleSearchChange} initialValue={searchQuery} />
-          <DownloadCsvButton
-            data={(payoutHistory || []) as Record<string, unknown>[]}
-            filename="payout-history"
-            headers={{
-              userName: "Store/Rider Name",
-              role: "Role",
-              amount: "Amount",
-              dateTime: "Date & Time",
-              status: "Status",
-              transactionId: "Transaction ID",
-            }}
-          />
-        </div>
-      </div>
+    <section className={`bg-background space-y-6 rounded-lg p-6`}>
+      <DashboardHeader
+        title="Payout History"
+        subtitle="Track all payout history from users"
+        showSubscriptionBanner={false}
+        icon={<Icons.payouts className={`size-6`} />}
+        titleClassName={`!text-lg`}
+        subtitleClassName={`!text-sm`}
+        actionComponent={
+          <div className="flex items-center gap-2">
+            <SearchInput className="" onSearch={handleSearchChange} initialValue={searchQuery} />
+            <DownloadCsvButton
+              data={(payoutHistory || []) as Record<string, unknown>[]}
+              filename="payout-history"
+              headers={{
+                userName: "Store/Rider Name",
+                role: "Role",
+                amount: "Amount",
+                dateTime: "Date & Time",
+                status: "Status",
+                transactionId: "Transaction ID",
+              }}
+            />
+          </div>
+        }
+      />
+
       <div>
         {!payoutHistory || payoutHistory.length === 0 ? (
           renderEmptyState()

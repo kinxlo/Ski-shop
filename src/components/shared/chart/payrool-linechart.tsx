@@ -1,6 +1,8 @@
 "use client";
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { DashboardHeader } from "@/app/[locale]/(dashboard-pages)/_components/dashboard-header";
+import { Icons } from "@/components/core/miscellaneous/icons";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { useAdminService } from "@/services/dashboard/admin/use-admin-service";
 import { Area, AreaChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 
@@ -37,7 +39,12 @@ export function PayrollLineChart() {
     return (
       <Card className="bg-background w-full border-none shadow-none">
         <CardHeader>
-          <CardTitle className="text-lg font-semibold text-gray-800">Sales Overview</CardTitle>
+          <DashboardHeader
+            showSubscriptionBanner={false}
+            title="Sales Overview"
+            titleClassName={`text-lg  text-gray-800`}
+            subtitle={`A graph of your sales over time, this year`}
+          />
         </CardHeader>
         <CardContent className="pt-0">
           <div className="flex h-[300px] w-full items-center justify-center">Loading...</div>
@@ -50,7 +57,12 @@ export function PayrollLineChart() {
     return (
       <Card className="bg-background w-full border-none shadow-none">
         <CardHeader>
-          <CardTitle className="text-lg font-semibold text-gray-800">Sales Overview</CardTitle>
+          <DashboardHeader
+            showSubscriptionBanner={false}
+            title="Sales Overview"
+            titleClassName={`text-lg  text-gray-800`}
+            subtitle={`A graph of your sales over time, this year`}
+          />
         </CardHeader>
         <CardContent className="pt-0">
           <div className="flex h-[300px] w-full items-center justify-center">Error loading data</div>
@@ -62,7 +74,14 @@ export function PayrollLineChart() {
   return (
     <Card className="bg-background w-full border-none shadow-none">
       <CardHeader>
-        <CardTitle className="text-lg font-semibold text-gray-800">Sales Overview</CardTitle>
+        <DashboardHeader
+          icon={<Icons.chart className="size-4" />}
+          showSubscriptionBanner={false}
+          title="Sales Overview"
+          titleClassName={`!text-lg`}
+          subtitle={`A graph of your sales over time, this year`}
+          subtitleClassName={`!text-sm`}
+        />
         {/* <p className="text-sm text-gray-500">This year</p> */}
       </CardHeader>
       <CardContent className="p-0 lg:px-6">

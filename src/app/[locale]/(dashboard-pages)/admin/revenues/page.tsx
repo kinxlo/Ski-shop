@@ -1,6 +1,7 @@
 "use client";
 
 import Loading from "@/app/Loading";
+import { Icons } from "@/components/core/miscellaneous/icons";
 import { SearchInput } from "@/components/core/miscellaneous/search-input";
 import { DashboardTable } from "@/components/shared/dashboard-table";
 import { DownloadCsvButton } from "@/components/shared/download-csv-button";
@@ -13,9 +14,9 @@ import { useAdminService } from "@/services/dashboard/admin/use-admin-service";
 import { useLocale } from "next-intl";
 import { GiWallet } from "react-icons/gi";
 
+import { DashboardHeader } from "../../_components/dashboard-header";
 // import { FilterDropdown } from "../../_components/dashboard-table/_components/filter-dropdown";
 import { OverViewCard } from "../../_components/overview-card";
-import { CurrencyDropdown } from "./_components/currency-dropdown";
 import { SectionTwo } from "./_components/currency-dropdown/section-two";
 import { AnalysisSkeleton, SectionTwoSkeleton, TableSkeleton } from "./_components/page-skeleton";
 import { useRevenueHistoryColumns } from "./_components/revenue-history-columns";
@@ -60,14 +61,14 @@ const Page = () => {
   // };
 
   return (
-    <main>
-      <section className="mb-5 flex items-center justify-between">
-        <h4 className="text-mid-grey-III text-[18px] lg:text-[30px]">Revenue</h4>
-        <div>
-          <CurrencyDropdown />
-          {/* impl month dropdown here, to filter all the revenue data */}
-        </div>
-      </section>
+    <main className="space-y-8">
+      <DashboardHeader
+        // actionComponent={<CurrencyDropdown />}
+        title="Revenue"
+        subtitle={`View all revenue data`}
+        showSubscriptionBanner={false}
+        icon={<Icons.wallet className={`size-6`} />}
+      />
 
       {/* Overview Cards Section */}
       {isOverviewLoading ? (
@@ -82,7 +83,7 @@ const Page = () => {
           images={[]}
         />
       ) : (
-        <section className="grid grid-cols-1 gap-5 lg:grid-cols-4">
+        <section className="grid grid-cols-1 gap-5 lg:grid-cols-2">
           <OverViewCard
             title={"Total Revenue"}
             value={formatCurrency(overviewData?.data?.totalRevenue || 0, locale as Locale)}
@@ -143,28 +144,34 @@ const Page = () => {
           />
         ) : (
           <section className={`bg-background mt-6 space-y-4 rounded-lg p-6`}>
-            <section className={`flex flex-col-reverse justify-between gap-4 lg:flex-row lg:items-center`}>
-              <div className="">
-                <p className="text-lg !font-semibold">Revenue History</p>
-              </div>
-              <div className="">
-                <div className="flex items-center gap-2">
-                  <SearchInput className={``} onSearch={handleSearchChange} initialValue={searchQuery} />
-                  {/* <FilterDropdown options={orderStatusOptions} value={status} onValueChange={handleStatusChange} /> */}
-                  <DownloadCsvButton
-                    data={(revenueHistory?.data || []) as Record<string, unknown>[]}
-                    filename="revenue-history"
-                    headers={{
-                      revenueSource: "Revenue Source",
-                      description: "Description",
-                      amount: "Amount",
-                      user: "User",
-                      date: "Date",
-                    }}
-                  />
+            <DashboardHeader
+              title="Revenue History"
+              subtitle="Track Skishop revenue history"
+              showSubscriptionBanner={false}
+              icon={<Icons.wallet className="mt-[-2] size-4" />}
+              titleClassName={`!text-lg`}
+              subtitleClassName={`!text-sm`}
+              actionComponent={
+                <div className="">
+                  <div className="flex items-center gap-2">
+                    <SearchInput className={``} onSearch={handleSearchChange} initialValue={searchQuery} />
+                    {/* <FilterDropdown options={orderStatusOptions} value={status} onValueChange={handleStatusChange} /> */}
+                    <DownloadCsvButton
+                      data={(revenueHistory?.data || []) as Record<string, unknown>[]}
+                      filename="revenue-history"
+                      headers={{
+                        revenueSource: "Revenue Source",
+                        description: "Description",
+                        amount: "Amount",
+                        user: "User",
+                        date: "Date",
+                      }}
+                    />
+                  </div>
                 </div>
-              </div>
-            </section>
+              }
+            />
+
             <section>
               {isRevenueHistoryError ? (
                 <Loading text="Loading revenue history..." className="w-fill h-fit p-20" />

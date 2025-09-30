@@ -1,6 +1,7 @@
 "use client";
 
 import Loading from "@/app/Loading";
+import { Icons } from "@/components/core/miscellaneous/icons";
 import { SearchInput } from "@/components/core/miscellaneous/search-input";
 import { DashboardTable } from "@/components/shared/dashboard-table";
 import { DownloadCsvButton } from "@/components/shared/download-csv-button";
@@ -13,6 +14,7 @@ import { useSettingsService } from "@/services/dashboard/vendor/settings/use-set
 import { useLocale } from "next-intl";
 import { GiWallet } from "react-icons/gi";
 
+import { DashboardHeader } from "../../_components/dashboard-header";
 // import { FilterDropdown } from "../../_components/dashboard-table/_components/filter-dropdown";
 import { OverViewCard } from "../../_components/overview-card";
 import { TableSkeleton } from "../home/_components/page-skeleton";
@@ -56,11 +58,13 @@ const Page = () => {
   // };
 
   return (
-    <main>
-      <section className="mb-5 flex items-center justify-between">
-        <h4 className="text-mid-grey-III text-[18px] lg:text-[30px]">Subscriptions</h4>
-      </section>
-
+    <main className="space-y-8">
+      <DashboardHeader
+        title="Subscriptions"
+        subtitle="Track Skishop subscriptions"
+        showSubscriptionBanner={false}
+        icon={<Icons.ribbonOutline className="size-6" />}
+      />
       {/* Overview Cards Section */}
       <section className="grid grid-cols-1 gap-5 lg:grid-cols-2">
         <OverViewCard
@@ -104,14 +108,16 @@ const Page = () => {
           />
         ) : (
           <section className={`bg-background mt-6 space-y-4 rounded-lg p-6`}>
-            <section className={`flex flex-col-reverse justify-between gap-4 lg:flex-row lg:items-center`}>
-              <div className="">
-                <p className="text-lg !font-semibold">Subscription History</p>
-              </div>
-              <div className="">
+            <DashboardHeader
+              title="Subscription History"
+              subtitle="Track Skishop subscription history"
+              showSubscriptionBanner={false}
+              icon={<Icons.ribbonOutline className="mt-[-2] size-4" />}
+              titleClassName={`!text-lg`}
+              subtitleClassName={`!text-sm`}
+              actionComponent={
                 <div className="flex items-center gap-2">
                   <SearchInput className={``} onSearch={handleSearchChange} initialValue={searchQuery} />
-                  {/* <FilterDropdown options={orderStatusOptions} value={status} onValueChange={handleStatusChange} /> */}
                   <DownloadCsvButton
                     data={(subscriptionHistory?.data || []) as Record<string, unknown>[]}
                     filename="subscription-history"
@@ -125,8 +131,9 @@ const Page = () => {
                     }}
                   />
                 </div>
-              </div>
-            </section>
+              }
+            />
+
             <section>
               {isSubscriptionHistoryError ? (
                 <Loading text="Loading subscription history..." className="w-fill h-fit p-20" />

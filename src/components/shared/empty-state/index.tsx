@@ -84,7 +84,7 @@ export const EmptyState = ({
 
 export const FilteredEmptyState = ({ onReset }: { onReset: () => void }) => (
   <EmptyState
-    images={[{ src: empty1.src, alt: "No filtered results", width: 50, height: 50 }]}
+    images={[{ src: empty1.src, alt: "No filtered results", width: 30, height: 30 }]}
     title="No matching results found"
     description="Try adjusting your date range or status filter to find what you're looking for."
     className={`space-y-0 py-10`}

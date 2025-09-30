@@ -1,5 +1,6 @@
 "use client";
 
+import { Icons } from "@/components/core/miscellaneous/icons";
 import { SearchInput } from "@/components/core/miscellaneous/search-input";
 import { DashboardTable } from "@/components/shared/dashboard-table";
 import { useAdminOrderColumn } from "@/components/shared/dashboard-table/admin/admin-table-data";
@@ -11,6 +12,7 @@ import { useDashboardOrderService } from "@/services/dashboard/vendor/orders/use
 import { useRouter } from "next/navigation";
 import { useCallback, useMemo } from "react";
 
+import { DashboardHeader } from "../../../_components/dashboard-header";
 import { TableSkeleton } from "../../home/_components/page-skeleton";
 
 export const AllOrders = () => {
@@ -117,25 +119,32 @@ export const AllOrders = () => {
   );
 
   const renderOrdersTable = () => (
-    <section>
-      <div className="mb-2 flex items-center justify-between gap-2">
-        <h6 className="!text-lg font-semibold">All Orders</h6>
-        <div className="flex items-center gap-2">
-          <SearchInput className="" onSearch={handleSearchChange} initialValue={searchQuery} />
-          {/* <FilterDropdown options={filterOptions} value={status} onValueChange={handleStatusChange} /> */}
-          <DownloadCsvButton
-            data={(orders || []) as Record<string, unknown>[]}
-            filename="all-orders"
-            headers={{
-              id: "Order ID",
-              customerName: "Customer Name",
-              totalAmount: "Total Amount",
-              status: "Status",
-              createdAt: "Date Created",
-            }}
-          />
-        </div>
-      </div>
+    <section className="space-y-6">
+      <DashboardHeader
+        title="All Orders"
+        subtitle="Track all orders from customers and their status"
+        titleClassName={`!text-lg`}
+        subtitleClassName={`!text-sm`}
+        showSubscriptionBanner={false}
+        icon={<Icons.cart className={`mt-[-4] size-4`} />}
+        actionComponent={
+          <div className="flex items-center gap-2">
+            <SearchInput className="" onSearch={handleSearchChange} initialValue={searchQuery} />
+            <DownloadCsvButton
+              data={(orders || []) as Record<string, unknown>[]}
+              filename="all-orders"
+              headers={{
+                id: "Order ID",
+                customerName: "Customer Name",
+                totalAmount: "Total Amount",
+                status: "Status",
+                createdAt: "Date Created",
+              }}
+            />
+          </div>
+        }
+      />
+
       <div>
         {isLoading ? (
           renderLoadingSkeleton()

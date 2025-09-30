@@ -1,8 +1,10 @@
+import { DashboardHeader } from "@/app/[locale]/(dashboard-pages)/_components/dashboard-header";
 import Loading from "@/app/Loading";
 import { BlurImage } from "@/components/core/miscellaneous/blur-image";
+import { Icons } from "@/components/core/miscellaneous/icons";
 import { PayrollLineChart } from "@/components/shared/chart/payrool-linechart";
 import { EmptyState } from "@/components/shared/empty-state";
-import { Card, CardTitle } from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
 import { Locale } from "@/lib/i18n/config";
 import { formatCurrency } from "@/lib/i18n/utils";
 import { useAppService } from "@/services/externals/app/use-app-service";
@@ -36,7 +38,14 @@ const BestSellerLayout = () => {
 
   return (
     <Card className={`h-full border-none p-6 shadow-none`}>
-      <CardTitle className="text-lg font-semibold text-gray-800">Best Sellers</CardTitle>
+      <DashboardHeader
+        icon={<Icons.product className="mt-[-2] size-4" />}
+        showSubscriptionBanner={false}
+        title="Best Sellers"
+        titleClassName={`!text-lg`}
+        subtitle={`The best selling products on Skishop`}
+        subtitleClassName={`!text-sm`}
+      />
       <section className={`h-[290px] space-y-4 overflow-auto`}>
         {isProductsLoading ? (
           <Loading text="Loading best selling products..." className="w-fill h-fit p-20" />
@@ -70,8 +79,8 @@ const BestSellerLayout = () => {
                 {
                   src: "/images/empty-state.svg",
                   alt: "Empty Cart",
-                  width: 50,
-                  height: 50,
+                  width: 30,
+                  height: 30,
                 },
               ]}
               title="No products found"

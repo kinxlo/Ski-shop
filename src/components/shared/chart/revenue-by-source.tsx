@@ -1,6 +1,7 @@
 "use client";
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { DashboardHeader } from "@/app/[locale]/(dashboard-pages)/_components/dashboard-header";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { useAdminService } from "@/services/dashboard/admin/use-admin-service";
 import { Cell, Pie, PieChart, ResponsiveContainer, Tooltip } from "recharts";
 
@@ -22,7 +23,12 @@ const RevenueBySource = () => {
     return (
       <Card className="bg-background h-full w-full border-none shadow-none">
         <CardHeader>
-          <CardTitle className="text-lg font-semibold text-gray-800">Revenue by Source</CardTitle>
+          <DashboardHeader
+            showSubscriptionBanner={false}
+            title="Revenue by Source"
+            titleClassName={`text-lg  text-gray-800`}
+            subtitle={`A graph of your revenue by source`}
+          />
         </CardHeader>
         <CardContent className="pt-0">
           <div className="flex h-[300px] w-full items-center justify-center">Loading...</div>
@@ -35,7 +41,12 @@ const RevenueBySource = () => {
     return (
       <Card className="bg-background w-full border-none shadow-none">
         <CardHeader>
-          <CardTitle className="text-lg font-semibold text-gray-800">Revenue by Source</CardTitle>
+          <DashboardHeader
+            showSubscriptionBanner={false}
+            title="Revenue by Source"
+            titleClassName={`text-lg  text-gray-800`}
+            subtitle={`A graph of your revenue by source`}
+          />
         </CardHeader>
         <CardContent className="pt-0">
           <div className="flex h-[300px] w-full items-center justify-center">Error loading data</div>
@@ -47,7 +58,12 @@ const RevenueBySource = () => {
   return (
     <Card className="bg-background h-full w-full border-none shadow-none">
       <CardHeader>
-        <CardTitle className="text-lg font-semibold text-gray-800">Revenue by Source</CardTitle>
+        <DashboardHeader
+          showSubscriptionBanner={false}
+          title="Revenue by Source"
+          titleClassName={`text-lg  text-gray-800`}
+          subtitle={`A graph of your revenue by source`}
+        />
       </CardHeader>
       <CardContent className="p-0 lg:px-6">
         <div className="h-[300px] w-full">

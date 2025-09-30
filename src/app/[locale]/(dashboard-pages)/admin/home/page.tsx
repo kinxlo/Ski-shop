@@ -1,6 +1,7 @@
 "use client";
 
 import Loading from "@/app/Loading";
+import { Icons } from "@/components/core/miscellaneous/icons";
 import { SearchInput } from "@/components/core/miscellaneous/search-input";
 import { DashboardTable } from "@/components/shared/dashboard-table";
 import { useAdminOrderColumn } from "@/components/shared/dashboard-table/admin/admin-table-data";
@@ -14,6 +15,7 @@ import { useDashboardOrderService } from "@/services/dashboard/vendor/orders/use
 import { usePayoutService } from "@/services/dashboard/vendor/payouts";
 import { useSettingsService } from "@/services/dashboard/vendor/settings/use-settings-service";
 import { useUserService } from "@/services/externals/user/use-user-service";
+import { useSession } from "next-auth/react";
 import { useLocale } from "next-intl";
 import { GiWallet } from "react-icons/gi";
 import { IoRibbonOutline } from "react-icons/io5";
@@ -21,14 +23,15 @@ import { MdOutlineAddCard } from "react-icons/md";
 import { PiUsersThreeLight } from "react-icons/pi";
 import { RiShoppingCartLine } from "react-icons/ri";
 
+import { DashboardHeader } from "../../_components/dashboard-header";
 import { FilterDropdown } from "../../_components/dashboard-table/_components/filter-dropdown";
 import { OverViewCard } from "../../_components/overview-card";
-import { CurrencyDropdown } from "./_components/currency-dropdown";
 import { SectionTwo } from "./_components/currency-dropdown/section-two";
 import { AnalysisSkeleton, SectionTwoSkeleton, TableSkeleton } from "./_components/page-skeleton";
 
 const Page = () => {
-  const locale = useLocale();
+  const locale = useLocale() as Locale;
+  const { data: session } = useSession();
 
   const {
     // page: currentPage,
@@ -84,13 +87,14 @@ const Page = () => {
   // };
 
   return (
-    <main>
-      <section className="mb-5 flex items-center justify-between">
-        <h4 className="text-mid-grey-III text-[18px] lg:text-[30px]">Dashboard Overview</h4>
-        <div>
-          <CurrencyDropdown />
-        </div>
-      </section>
+    <main className="space-y-8">
+      <DashboardHeader
+        // actionComponent={<CurrencyDropdown />}
+        title="Dashboard Overview"
+        subtitle={`Welcome admin, ${session?.user?.name}`}
+        showSubscriptionBanner={false}
+        icon={<Icons.dashboard />}
+      />
 
       {/* Overview Cards Section */}
       {isOverviewLoading ? (
@@ -108,7 +112,7 @@ const Page = () => {
         <section className="grid grid-cols-1 gap-5 lg:grid-cols-3">
           <OverViewCard
             title={"Total Revenue"}
-            value={formatCurrency(overviewData?.data?.totalRevenue || 0, locale as Locale)}
+            value={formatCurrency(overviewData?.data?.totalRevenue || 0, locale)}
             icon={<GiWallet />}
             iconClassName="bg-[#F2EBFB] text-[24px] text-purple"
           />
@@ -178,17 +182,22 @@ const Page = () => {
           />
         ) : (
           <section className={`bg-background mt-6 space-y-4 rounded-lg p-6`}>
-            <section className={`flex flex-col-reverse justify-between gap-4 lg:flex-row lg:items-center`}>
-              <div className="">
-                <p className="text-lg font-bold">Recent Orders</p>
-              </div>
-              <div className="">
-                <div className="flex items-center gap-2">
-                  <SearchInput className={``} onSearch={handleSearchChange} initialValue={searchQuery} />
-                  <FilterDropdown options={orderStatusOptions} value={status} onValueChange={handleStatusChange} />
+            <DashboardHeader
+              title="Recent Orders"
+              subtitle="Track Skishop recent orders and their status"
+              showSubscriptionBanner={false}
+              icon={<Icons.cart className="mt-[-2] size-4" />}
+              titleClassName={`!text-lg`}
+              subtitleClassName={`!text-sm`}
+              actionComponent={
+                <div className="">
+                  <div className="flex items-center gap-2">
+                    <SearchInput className={``} onSearch={handleSearchChange} initialValue={searchQuery} />
+                    <FilterDropdown options={orderStatusOptions} value={status} onValueChange={handleStatusChange} />
+                  </div>
                 </div>
-              </div>
-            </section>
+              }
+            />
             <section>
               {isAllOrdersError ? (
                 <Loading text="Loading orders..." className="w-fill h-fit p-20" />

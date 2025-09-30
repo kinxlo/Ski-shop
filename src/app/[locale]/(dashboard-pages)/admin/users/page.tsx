@@ -1,10 +1,11 @@
 "use client";
 
+import { Icons } from "@/components/core/miscellaneous/icons";
 import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useUserService } from "@/services/externals/user/use-user-service";
-import { PiUsersThreeLight } from "react-icons/pi";
 
+import { DashboardHeader } from "../../_components/dashboard-header";
 import { OverViewCard } from "../../_components/overview-card";
 // import { ActiveUsers } from "./_views/active-users";
 import { AllUsers } from "./_views/all-users";
@@ -23,32 +24,35 @@ const Page = () => {
 
   return (
     <main>
-      <section className="flex items-center justify-between">
-        <h4 className="text-mid-grey-III text-[18px] lg:text-[30px]">Users</h4>
-      </section>
+      <DashboardHeader
+        title="Users"
+        subtitle={`Manage skishop users, buyers, vendors and riders`}
+        showSubscriptionBanner={false}
+        icon={<Icons.users className={`mt-[-4]`} />}
+      />
       <section className="my-[38px] grid grid-cols-1 gap-[31px] lg:grid-cols-4">
         <OverViewCard
           title={"Total Users"}
           value={totalUsersData?.data.metadata.total || "0"}
-          icon={<PiUsersThreeLight />}
+          icon={<Icons.users />}
           iconClassName="bg-primary/10 text-primary text-[24px]"
         />
         <OverViewCard
           title={"Buyers"}
           value={customersData?.data.metadata.total || "0"}
-          icon={<PiUsersThreeLight />}
+          icon={<Icons.users />}
           iconClassName="bg-low-success text-mid-success text-[24px]"
         />
         <OverViewCard
           title={"Vendors"}
           value={vendorsData?.data.metadata.total || "0"}
-          icon={<PiUsersThreeLight />}
+          icon={<Icons.users />}
           iconClassName="bg-low-warning/20 text-mid-danger text-[24px]"
         />
         <OverViewCard
           title={"Riders"}
           value={ridersData?.data.metadata.total || "0"}
-          icon={<PiUsersThreeLight />}
+          icon={<Icons.rider />}
           iconClassName="bg-low-danger text-mid-danger text-[24px]"
         />
       </section>

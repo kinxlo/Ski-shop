@@ -1,5 +1,6 @@
 "use client";
 
+import { Icons } from "@/components/core/miscellaneous/icons";
 import { SearchInput } from "@/components/core/miscellaneous/search-input";
 import { DashboardTable } from "@/components/shared/dashboard-table";
 import { useProductColumn } from "@/components/shared/dashboard-table/table-data";
@@ -13,6 +14,7 @@ import { useRouter } from "next/navigation";
 import { useCallback, useMemo } from "react";
 
 import empty1 from "~/images/empty-state.svg";
+import { DashboardHeader } from "../../../_components/dashboard-header";
 import { TableSkeleton } from "../../home/page-skeleton";
 
 export const PublishedProducts = () => {
@@ -125,26 +127,33 @@ export const PublishedProducts = () => {
   );
 
   const renderHeader = () => (
-    <div className="mb-2 flex items-center justify-between gap-2">
-      <h6 className="!text-lg font-semibold">Published</h6>
-      <div className="flex items-center gap-2">
-        <SearchInput onSearch={handleSearchChange} initialValue={searchQuery} delay={500} />
-        {(session?.user?.role?.name === "admin" || session?.user?.role?.name === "vendor") && (
-          <DownloadCsvButton
-            data={products}
-            filename="published-products.csv"
-            headers={{
-              name: "Product Name",
-              category: "Category",
-              price: "Price",
-              stockCount: "Stock",
-              createdAt: "Date Added",
-              status: "Status",
-            }}
-          />
-        )}
-      </div>
-    </div>
+    <DashboardHeader
+      actionComponent={
+        <div className="flex items-center gap-2">
+          <SearchInput onSearch={handleSearchChange} initialValue={searchQuery} delay={500} />
+          {(session?.user?.role?.name === "admin" || session?.user?.role?.name === "vendor") && (
+            <DownloadCsvButton
+              data={products}
+              filename="published-products.csv"
+              headers={{
+                name: "Product Name",
+                category: "Category",
+                price: "Price",
+                stockCount: "Stock",
+                createdAt: "Date Added",
+                status: "Status",
+              }}
+            />
+          )}
+        </div>
+      }
+      title="Published Products"
+      subtitle={`View all published skishop products`}
+      showSubscriptionBanner={false}
+      titleClassName={`!text-lg`}
+      subtitleClassName={`!text-sm`}
+      icon={<Icons.product className={`mt-[-4] size-4`} />}
+    />
   );
 
   const renderProductsContent = () => {
@@ -169,10 +178,10 @@ export const PublishedProducts = () => {
     }
 
     return (
-      <>
+      <section className="space-y-6">
         {renderHeader()}
         <section>{renderProductsContent()}</section>
-      </>
+      </section>
     );
   };
 

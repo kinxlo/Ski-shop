@@ -1,5 +1,6 @@
 "use client";
 
+import { Icons } from "@/components/core/miscellaneous/icons";
 import SkiButton from "@/components/shared/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
@@ -11,6 +12,7 @@ import { useLocale } from "next-intl";
 import { useMemo } from "react";
 import { TbShoppingBag } from "react-icons/tb";
 
+import { DashboardHeader } from "../../_components/dashboard-header";
 import { OverViewCard } from "../../_components/overview-card";
 import { AllProducts } from "../../dashboard/products/_views/all-products";
 import { OutOfStockProducts } from "../../dashboard/products/_views/out-of-stock-products";
@@ -56,9 +58,8 @@ const Page = () => {
 
   return (
     <main className="space-y-8">
-      <section className="flex items-center justify-between">
-        <h4>Products</h4>
-        <div>
+      <DashboardHeader
+        actionComponent={
           <SkiButton
             href={`/${locale}/admin/products/new`}
             isLeftIconVisible
@@ -68,8 +69,12 @@ const Page = () => {
           >
             Add New Product
           </SkiButton>
-        </div>
-      </section>
+        }
+        title="Products"
+        subtitle={`Manage skishop products`}
+        showSubscriptionBanner={false}
+        icon={<Icons.product />}
+      />
       <section className="grid grid-cols-1 gap-[31px] lg:grid-cols-2">
         <OverViewCard
           title="Total Products"

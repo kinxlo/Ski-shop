@@ -1,5 +1,6 @@
 "use client";
 
+import { Icons } from "@/components/core/miscellaneous/icons";
 import { SearchInput } from "@/components/core/miscellaneous/search-input";
 import SkiButton from "@/components/shared/button";
 import { DashboardTable } from "@/components/shared/dashboard-table";
@@ -14,6 +15,7 @@ import { useRouter } from "next/navigation";
 import { useCallback, useMemo } from "react";
 
 import empty1 from "~/images/empty-state.svg";
+import { DashboardHeader } from "../../../_components/dashboard-header";
 import { TableSkeleton } from "../../home/page-skeleton";
 
 export const UnpublishedProducts = () => {
@@ -101,27 +103,34 @@ export const UnpublishedProducts = () => {
   const hasPreviousPage = productData?.data?.metadata?.hasPreviousPage || false;
 
   return (
-    <>
-      <div className="mb-2 flex items-center justify-between gap-2">
-        <h6 className={`!text-lg font-semibold`}>Draft</h6>
-        <div className={`flex items-center gap-2`}>
-          <SearchInput className={``} onSearch={handleSearchChange} initialValue={searchQuery} delay={500} />
-          {(session?.user?.role?.name === "admin" || session?.user?.role?.name === "vendor") && (
-            <DownloadCsvButton
-              data={products}
-              filename="unpublished-products.csv"
-              headers={{
-                name: "Product Name",
-                category: "Category",
-                price: "Price",
-                stockCount: "Stock",
-                createdAt: "Date Added",
-                status: "Status",
-              }}
-            />
-          )}
-        </div>
-      </div>
+    <section className="space-y-6">
+      <DashboardHeader
+        actionComponent={
+          <div className={`flex items-center gap-2`}>
+            <SearchInput className={``} onSearch={handleSearchChange} initialValue={searchQuery} delay={500} />
+            {(session?.user?.role?.name === "admin" || session?.user?.role?.name === "vendor") && (
+              <DownloadCsvButton
+                data={products}
+                filename="unpublished-products.csv"
+                headers={{
+                  name: "Product Name",
+                  category: "Category",
+                  price: "Price",
+                  stockCount: "Stock",
+                  createdAt: "Date Added",
+                  status: "Status",
+                }}
+              />
+            )}
+          </div>
+        }
+        title="Unpublished Products"
+        subtitle={`View all unpublished skishop products`}
+        showSubscriptionBanner={false}
+        titleClassName={`!text-lg`}
+        subtitleClassName={`!text-sm`}
+        icon={<Icons.product className={`mt-[-4] size-4`} />}
+      />
       <section>
         {isProductsLoading ? (
           <TableSkeleton />
@@ -161,6 +170,6 @@ export const UnpublishedProducts = () => {
           />
         )}
       </section>
-    </>
+    </section>
   );
 };

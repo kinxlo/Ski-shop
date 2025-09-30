@@ -1,8 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
+import { DashboardHeader } from "@/app/[locale]/(dashboard-pages)/_components/dashboard-header";
 import Loading from "@/app/Loading";
 import { SearchInput } from "@/components/core/miscellaneous/search-input";
+import { BackButton } from "@/components/shared/back-button";
 import { DashboardTable } from "@/components/shared/dashboard-table";
 import { useAdminOrderHistoryColumn } from "@/components/shared/dashboard-table/admin/admin-table-data";
 import { Details } from "@/components/shared/details";
@@ -13,7 +15,6 @@ import { orderStatusOptions } from "@/lib/constants";
 import { formatDate } from "@/lib/i18n/utils";
 import { useDashboardSearchParameters } from "@/lib/nuqs/use-dashboard-search-parameters";
 import { useDashboardOrderService } from "@/services/dashboard/vendor/orders/use-order-service";
-import { ChevronLeft } from "lucide-react";
 
 import { TableSkeleton } from "../../../../home/_components/page-skeleton";
 
@@ -62,26 +63,23 @@ const BuyersView = ({ id, profile }: { id: string; profile: any }) => {
   return (
     <>
       <section className={`flex flex-col items-center justify-between gap-4 lg:flex-row`}>
-        <div className="flex items-center gap-4">
-          <ChevronLeft className="h-6 w-6 cursor-pointer" onClick={() => history.back()} />
-          <h4 className="text-high-grey-III !text-[18px] lg:!text-[25px]">
-            Buyer&apos;s Profile -{" "}
-            <span className="text-low-grey-II capitalize">
-              {profile?.firstName} {profile?.lastName}
-            </span>
-          </h4>
-        </div>
-        <div>
-          <DownloadCsvButton
-            data={(orders || []) as Record<string, unknown>[]}
-            filename={`user-orders-${profile?.firstName || "user"}-${profile?.lastName || ""}`}
-            headers={{
-              reference: "Order ID",
-              createdAt: "Date and Time",
-              deliveryStatus: "Delivery Status",
-            }}
-          />
-        </div>
+        <DashboardHeader
+          title={`Buyer&apos;s Profile -${profile?.firstName} ${profile?.lastName}`}
+          subtitle={`${profile?.firstName} ${profile?.lastName}`}
+          showSubscriptionBanner={false}
+          icon={<BackButton />}
+          actionComponent={
+            <DownloadCsvButton
+              data={(orders || []) as Record<string, unknown>[]}
+              filename={`user-orders-${profile?.firstName || "user"}-${profile?.lastName || ""}`}
+              headers={{
+                reference: "Order ID",
+                createdAt: "Date and Time",
+                deliveryStatus: "Delivery Status",
+              }}
+            />
+          }
+        />
       </section>
       <section className="space-y-6">
         <Details.Section title="Profile Overview">

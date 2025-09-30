@@ -26,6 +26,7 @@ import { CSS } from "@dnd-kit/utilities";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { SerializedEditorState } from "lexical";
 import { PaperclipIcon, Trash2Icon } from "lucide-react";
+import { useSession } from "next-auth/react";
 import { useEffect, useRef, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -163,6 +164,7 @@ const convertExistingImages = (imageUrls: string[]): ProductImage[] => {
 
 export const EditProductForm = ({ product, onSuccess, onCancel }: EditProductFormProperties) => {
   // const { useGetAllProductCategory } = useAppService();
+  const { data: session } = useSession();
   const { useEditProduct } = useDashboardProductService();
   // const { data: productCategories } = useGetAllProductCategory();
   const { mutateAsync: editProduct, isPending: isEditingProduct } = useEditProduct();
@@ -402,7 +404,7 @@ export const EditProductForm = ({ product, onSuccess, onCancel }: EditProductFor
       <DashboardHeader
         title="Edit Product"
         subtitle={`Edit the product ${product.name}`}
-        showSubscriptionBanner
+        showSubscriptionBanner={session?.user?.role.name !== "admin" && false}
         icon={<BackButton />}
       />
 

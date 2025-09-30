@@ -1,15 +1,15 @@
 "use client";
 
 import { Wrapper } from "@/components/core/layout/wrapper";
+import { BackButton } from "@/components/shared/back-button";
 import SkiButton from "@/components/shared/button";
 import { Details } from "@/components/shared/details";
 import { EmptyState } from "@/components/shared/empty-state";
 import { useDashboardOrderService } from "@/services/dashboard/vendor/orders/use-order-service";
-import { ArrowLeft, ChevronLeft } from "lucide-react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { use } from "react";
 
+import { DashboardHeader } from "../../../_components/dashboard-header";
 import { OrderDetailSkeleton } from "./_components/order-detail-skeleton";
 
 interface OrderDetailPageProperties {
@@ -25,7 +25,6 @@ const formatDate = (dateString: string) => {
 
 export default function OrderDetailPage({ params }: OrderDetailPageProperties) {
   const { orderId } = use(params);
-  const router = useRouter();
   const { useGetOrderById } = useDashboardOrderService();
   const { data: orderResponse, isLoading, isError } = useGetOrderById(orderId);
 
@@ -36,21 +35,12 @@ export default function OrderDetailPage({ params }: OrderDetailPageProperties) {
   if (isError || !orderResponse?.data) {
     return (
       <div className="min-h-screen bg-gray-50">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="flex h-16 items-center justify-between">
-            <div className="flex items-center space-x-4">
-              <Link
-                href="/dashboard/orders"
-                className="text-high-grey-II flex items-center transition-colors hover:text-gray-900"
-              >
-                <ArrowLeft className="mr-2 h-5 w-5" />
-                <span className="hidden sm:inline">Back to Orders</span>
-              </Link>
-              <div className="hidden h-6 w-px bg-gray-300 sm:block" />
-              <h1 className="!text-lg font-semibold text-gray-900 sm:!text-3xl">Order Details</h1>
-            </div>
-          </div>
-        </div>
+        <DashboardHeader
+          title="Order Details"
+          subtitle="Track all orders from customers and their status"
+          showSubscriptionBanner={false}
+          icon={<BackButton />}
+        />
         <Wrapper className="mx-auto px-0 py-4">
           <EmptyState
             images={[{ src: "/images/empty-state.svg", width: 80, height: 80, alt: "Error" }]}
@@ -77,10 +67,12 @@ export default function OrderDetailPage({ params }: OrderDetailPageProperties) {
   return (
     <>
       <section className={`flex flex-col items-center justify-between gap-4 lg:flex-row`}>
-        <div className="flex items-center gap-4">
-          <ChevronLeft className="h-6 w-6 cursor-pointer" onClick={() => router.back()} />
-          <h4 className="text-high-grey-III !text-[18px] lg:!text-[25px]">Order Summary </h4>
-        </div>
+        <DashboardHeader
+          title="Order Details"
+          subtitle={`${order.reference} details`}
+          showSubscriptionBanner={false}
+          icon={<BackButton />}
+        />
         {/* TODO: Add order-specific CSV download functionality */}
       </section>
       <section className="space-y-6">

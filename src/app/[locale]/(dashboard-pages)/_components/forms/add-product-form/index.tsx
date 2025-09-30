@@ -280,7 +280,7 @@ export const AddProductForm = () => {
       <DashboardHeader
         title="Add Product"
         subtitle={`Add a new product to your store, you can publish it immediately or keep it in your draft folder.`}
-        showSubscriptionBanner
+        showSubscriptionBanner={session?.user?.role.name !== "admin" && false}
         icon={<BackButton />}
       />
 

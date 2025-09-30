@@ -1,9 +1,11 @@
 "use client";
 
+import { Icons } from "@/components/core/miscellaneous/icons";
 import { formatCurrency } from "@/lib/i18n/utils";
 import { useAdminService } from "@/services/dashboard/admin/use-admin-service";
 import { Clock, DollarSign, Wallet } from "lucide-react";
 
+import { DashboardHeader } from "../../_components/dashboard-header";
 import { OverViewCard } from "../../_components/overview-card";
 import { PayoutHistoryTable } from "./_views/payout-history-table";
 import { PayoutRequestTable } from "./_views/payout-request-table";
@@ -21,8 +23,12 @@ const Payout = () => {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-gray-900">Payouts Overview</h1>
-        <p className="mt-1 text-gray-600">Monitor your payout statistics and wallet balance</p>
+        <DashboardHeader
+          title="Payouts Overview"
+          subtitle="Monitor your payout statistics and wallet balance"
+          showSubscriptionBanner={false}
+          icon={<Icons.payouts className={`size-6`} />}
+        />
       </div>
 
       <div className="grid grid-cols-1 gap-6 md:grid-cols-3">

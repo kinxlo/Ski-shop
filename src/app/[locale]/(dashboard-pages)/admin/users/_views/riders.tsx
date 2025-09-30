@@ -1,12 +1,15 @@
 "use client";
 
 import Loading from "@/app/Loading";
+import { Icons } from "@/components/core/miscellaneous/icons";
 import { SearchInput } from "@/components/core/miscellaneous/search-input";
 import { DashboardTable } from "@/components/shared/dashboard-table";
 import { useAdminRiderColumn } from "@/components/shared/dashboard-table/admin/admin-table-data";
 import { DownloadCsvButton } from "@/components/shared/download-csv-button";
 import { useDashboardSearchParameters } from "@/lib/nuqs/use-dashboard-search-parameters";
 import { useUserService } from "@/services/externals/user/use-user-service";
+
+import { DashboardHeader } from "../../../_components/dashboard-header";
 
 export const Riders = () => {
   const { search: searchQuery, limit, setSearch: setSearchQuery, resetToFirstPage } = useDashboardSearchParameters();
@@ -43,24 +46,33 @@ export const Riders = () => {
 
   return (
     <section>
-      <div className="mb-2 flex items-center justify-between gap-2">
-        <h6 className={`!text-lg font-semibold`}>Riders</h6>
-        <div className={`flex items-center gap-2`}>
-          <SearchInput className={``} onSearch={handleSearchChange} initialValue={searchQuery} />
-          <DownloadCsvButton
-            data={(userData?.data?.items || []) as Record<string, unknown>[]}
-            filename="riders"
-            headers={{
-              firstName: "First Name",
-              lastName: "Last Name",
-              email: "Email Address",
-              phoneNumber: "Phone Number",
-              availability: "Availability",
-              deliveriesCount: "Deliveries",
-              isEmailVerified: "Status",
-            }}
-          />
-        </div>
+      <div className="mb-2">
+        <DashboardHeader
+          title="Riders"
+          subtitle="View all skishop riders information"
+          showSubscriptionBanner={false}
+          icon={<Icons.rider className={`mt-[-4]`} />}
+          titleClassName={`!text-lg`}
+          subtitleClassName={`!text-sm`}
+          actionComponent={
+            <div className={`flex items-center gap-2`}>
+              <SearchInput className={``} onSearch={handleSearchChange} initialValue={searchQuery} />
+              <DownloadCsvButton
+                data={(userData?.data?.items || []) as Record<string, unknown>[]}
+                filename="riders"
+                headers={{
+                  firstName: "First Name",
+                  lastName: "Last Name",
+                  email: "Email Address",
+                  phoneNumber: "Phone Number",
+                  availability: "Availability",
+                  deliveriesCount: "Deliveries",
+                  isEmailVerified: "Status",
+                }}
+              />
+            </div>
+          }
+        />
       </div>
       <div>
         {isUsersLoading ? (

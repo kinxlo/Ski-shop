@@ -14,6 +14,7 @@ import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
 
+import { DashboardHeader } from "../../../_components/dashboard-header";
 import { ProductActionsDropdown } from "../../../dashboard/products/_components/product-actions-dropdown";
 import { PromoteProductModal } from "../../../dashboard/products/_components/promote-product-modal";
 import ProductDetailSkeleton from "./_components/product-detail-skeleton";
@@ -150,26 +151,28 @@ export default function ProductDetailPage() {
     <div className="space-y-8">
       {/* Header */}
       <div className="">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-4">
-            <BackButton />
-            <h4>Product Details</h4>
-          </div>
-          <div className="flex items-center space-x-2">
-            {/* Star Seller Badge */}
-            {isStarSellerProduct && (
-              <SkiButton isIconOnly size={`icon`} icon={<Star className="h-4 w-4 fill-current" />} />
-            )}
-            <ProductActionsDropdown
-              product={product}
-              onEdit={handleEditProduct}
-              onPromote={handlePromoteProduct}
-              onUnpublish={handleUnpublishProduct}
-              onMarkOutOfStock={handleMarkOutOfStock}
-              onDelete={handleDeleteProduct}
-            />
-          </div>
-        </div>
+        <DashboardHeader
+          actionComponent={
+            <div className="flex items-center space-x-2">
+              {/* Star Seller Badge */}
+              {isStarSellerProduct && (
+                <SkiButton isIconOnly size={`icon`} icon={<Star className="h-4 w-4 fill-current" />} />
+              )}
+              <ProductActionsDropdown
+                product={product}
+                onEdit={handleEditProduct}
+                onPromote={handlePromoteProduct}
+                onUnpublish={handleUnpublishProduct}
+                onMarkOutOfStock={handleMarkOutOfStock}
+                onDelete={handleDeleteProduct}
+              />
+            </div>
+          }
+          title="Product Details"
+          subtitle={`${product.name} details`}
+          showSubscriptionBanner={false}
+          icon={<BackButton />}
+        />
       </div>
 
       {/* Main Content */}

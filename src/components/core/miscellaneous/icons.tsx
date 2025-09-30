@@ -3,6 +3,7 @@ import {
   IconArrowRight,
   IconBrandGithub,
   IconBrandTwitter,
+  IconChartLine,
   IconCheck,
   IconChevronLeft,
   IconChevronRight,
@@ -34,6 +35,9 @@ import {
   IconX,
 } from "@tabler/icons-react";
 import { IoRibbonOutline } from "react-icons/io5";
+import { LuBike } from "react-icons/lu";
+import { MdOutlineAddCard } from "react-icons/md";
+import { PiUsersThreeLight } from "react-icons/pi";
 import { RiAdvertisementLine, RiShoppingCartLine } from "react-icons/ri";
 
 export type Icon = React.ComponentType<IconProps>;
@@ -74,4 +78,8 @@ export const Icons = {
   wallet: IconWallet,
   promotion: RiAdvertisementLine,
   ribbonOutline: IoRibbonOutline,
+  chart: IconChartLine,
+  users: PiUsersThreeLight,
+  rider: LuBike,
+  payouts: MdOutlineAddCard,
 };

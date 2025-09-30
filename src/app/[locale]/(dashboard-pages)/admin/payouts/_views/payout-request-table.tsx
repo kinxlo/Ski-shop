@@ -1,11 +1,14 @@
 "use client";
 
+import { Icons } from "@/components/core/miscellaneous/icons";
 import { SearchInput } from "@/components/core/miscellaneous/search-input";
 import { DashboardTable } from "@/components/shared/dashboard-table";
 import { useAdminPayoutRequestColumn } from "@/components/shared/dashboard-table/admin/admin-table-data";
 import { EmptyState } from "@/components/shared/empty-state";
 import { useDashboardSearchParameters } from "@/lib/nuqs/use-dashboard-search-parameters";
 import { useCallback } from "react";
+
+import { DashboardHeader } from "../../../_components/dashboard-header";
 
 export const PayoutRequestTable = () => {
   const { search: searchQuery, setSearch: setSearchQuery, resetToFirstPage } = useDashboardSearchParameters();
@@ -84,12 +87,18 @@ export const PayoutRequestTable = () => {
   );
 
   const renderPayoutRequestsTable = () => (
-    <section className={`bg-background rounded-lg p-6`}>
-      <div className="mb-2 flex items-center justify-between gap-2">
-        <h6 className="!text-lg !font-semibold">Payout Requests</h6>
-        <div className="flex items-center gap-2">
-          <SearchInput className="" onSearch={handleSearchChange} initialValue={searchQuery} />
-          {/* <DownloadCsvButton
+    <section className={`bg-background space-y-6 rounded-lg p-6`}>
+      <DashboardHeader
+        title="Payout Requests"
+        subtitle="Track all payout requests from users"
+        showSubscriptionBanner={false}
+        titleClassName={`!text-lg`}
+        subtitleClassName={`!text-sm`}
+        icon={<Icons.payouts className={`size-6`} />}
+        actionComponent={
+          <div className="flex items-center gap-2">
+            <SearchInput className="" onSearch={handleSearchChange} initialValue={searchQuery} />
+            {/* <DownloadCsvButton
             data={(payoutRequests || []) as Record<string, unknown>[]}
             filename="payout-requests"
             headers={{
@@ -101,8 +110,9 @@ export const PayoutRequestTable = () => {
               status: "Status",
             }}
           /> */}
-        </div>
-      </div>
+          </div>
+        }
+      />
       <div>
         {!payoutRequests || payoutRequests.length === 0 ? (
           renderEmptyState()
