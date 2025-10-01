@@ -271,6 +271,30 @@ export const notificationSettingsSchema = z.object({
   newsUpdates: z.boolean().default(false),
 });
 
+// Play-2-Win: Coupon form schema
+export const couponFormSchema = z
+  .object({
+    title: z.string().min(1, "Coupon title is required"),
+
+    couponType: z.enum(["discount", "amount"]),
+    value: z.number().positive("Value must be greater than 0"),
+    quantity: z.number().int().positive("Quantity must be greater than 0"),
+    startDate: z.string().min(1, "Start date is required"),
+    endDate: z.string().min(1, "End date is required"),
+  })
+  .refine(
+    (data) => {
+      const start = new Date(data.startDate);
+      const end = new Date(data.endDate);
+      return end.getTime() >= start.getTime();
+    },
+    {
+      message: "End date must be after start date",
+      path: ["endDate"],
+    },
+  );
+
+// Types
 export type NotificationSettingsData = z.infer<typeof notificationSettingsSchema>;
 
 export type BankPayoutFormData = z.infer<typeof bankPayoutSchema>;

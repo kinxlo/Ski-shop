@@ -165,7 +165,7 @@ export const DangerConfirmationDialog = (properties: ConfirmationDialogPropertie
       danger: true,
       buttonVariant: "destructive",
       buttonName: properties.action.buttonName || "Delete",
-      wrapperClassName: "text-center space-y-2 sm:space-y-4",
+      wrapperClassName: "text-center items-center space-y-2 sm:space-y-4",
     }}
   />
 );

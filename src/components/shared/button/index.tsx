@@ -88,6 +88,7 @@ const SkiButton = forwardRef<HTMLButtonElement, ButtonProperties>(
       return (
         <Link href={isDisabled ? "" : localized} passHref aria-label={ariaLabel}>
           <Button
+            type={type}
             variant={variant}
             size={size}
             disabled={isDisabled}
@@ -105,6 +106,7 @@ const SkiButton = forwardRef<HTMLButtonElement, ButtonProperties>(
 
     return (
       <Button
+        type={type}
         variant={variant}
         size={size}
         disabled={isDisabled}

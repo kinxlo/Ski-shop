@@ -115,5 +115,34 @@ export const queryKeys = {
           filters?.status,
         ] as const,
     },
+    play2win: {
+      coupons: {
+        list: (filters?: Filters) =>
+          [
+            "dashboard",
+            "play2win",
+            "coupons",
+            "list",
+            // filters?.page,
+            filters?.limit,
+            filters?.search,
+            filters?.status,
+          ] as const,
+        details: (id: string) => ["dashboard", "play2win", "coupons", "details", id] as const,
+      },
+      winners: {
+        list: (filters?: Filters) =>
+          [
+            "dashboard",
+            "play2win",
+            "winners",
+            "list",
+            filters?.page,
+            filters?.limit,
+            filters?.search,
+            filters?.status,
+          ] as const,
+      },
+    },
   },
 };

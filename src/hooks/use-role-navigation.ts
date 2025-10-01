@@ -147,7 +147,8 @@ export const useRoleNavigation = (): NavItem[] => {
         createNavItem("promotions", "Promotions & Ads", "/admin/promotions", { icon: RiAdvertisementLine }),
         createNavItem("play-to-win", "Play 2 Win", "/admin/play-to-win", { icon: FaGamepad }),
         createDivider("settings-section"),
-        createSettingsMenu("ADMIN"),
+        createNavItem("settings", "Settings", "/admin/settings", { icon: TbSettings2 }),
+        // createSettingsMenu("ADMIN"),
       ];
     }
     default: {

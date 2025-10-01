@@ -13,7 +13,7 @@ import Image from "next/image";
 import { HTMLAttributes, ReactNode } from "react";
 
 interface ReusableDialogProperties extends HTMLAttributes<HTMLDivElement> {
-  trigger: ReactNode;
+  trigger?: ReactNode;
   title?: string;
   img?: string;
   description?: string;
@@ -42,25 +42,20 @@ export function ReusableDialog({
 }: ReusableDialogProperties) {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogTrigger asChild>{trigger}</DialogTrigger>
-      {/* Add backdrop filter to the portal container */}
-      <div className={cn("fixed inset-0 z-50", open ? "bg-black/50 backdrop-blur-sm" : "pointer-events-none")}>
-        <DialogContent
-          hideClose={hideClose}
-          className={cn("border-default h-full items-center sm:max-w-[425px] md:h-fit", className)}
-        >
-          {/* {wrapperClassName ?? */}
-          {/* (img && ( */}
-          <DialogHeader className={cn("h-fit", wrapperClassName)}>
-            {img && <Image width={100} height={100} src={img || ""} alt="dangerous" className="h-[100px] w-[100px]" />}
-            <DialogTitle className={cn("text-2xl", headerClassName)}>{title}</DialogTitle>
+      {trigger ? <DialogTrigger asChild>{trigger}</DialogTrigger> : null}
+      <DialogContent
+        hideClose={hideClose}
+        className={cn("border-default h-full items-center sm:max-w-[425px] md:h-fit", className)}
+      >
+        <DialogHeader className={cn("h-fit", wrapperClassName)}>
+          {img && <Image width={100} height={100} src={img || ""} alt="dangerous" className="h-[100px] w-[100px]" />}
+          {title && <DialogTitle className={cn("text-2xl", headerClassName)}>{title}</DialogTitle>}
+          {description && (
             <DialogDescription className={cn("text-center", descriptionClassName)}>{description}</DialogDescription>
-          </DialogHeader>
-          {/* )) */}
-          {/* } */}
-          {children}
-        </DialogContent>
-      </div>
+          )}
+        </DialogHeader>
+        {children}
+      </DialogContent>
     </Dialog>
   );
 }

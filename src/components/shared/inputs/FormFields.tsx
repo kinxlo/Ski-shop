@@ -290,7 +290,7 @@ export function FormField({
         }}
       />
 
-      {error && <p className="text-destructive text-sm">{error.message?.toString()}</p>}
+      {error && <p className="mt-1 text-sm text-red-500">{error.message?.toString()}</p>}
     </div>
   );
 }
@@ -403,7 +403,7 @@ export function MultiSelect({
         }}
       />
 
-      {error && <p className="text-destructive text-sm">{error.message?.toString()}</p>}
+      {error && <p className="mt-1 text-sm text-red-500">{error.message?.toString()}</p>}
     </div>
   );
 }

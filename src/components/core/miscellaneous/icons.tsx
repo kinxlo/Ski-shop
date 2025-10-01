@@ -34,6 +34,7 @@ import {
   IconWallet,
   IconX,
 } from "@tabler/icons-react";
+import { Plus } from "lucide-react";
 import { IoRibbonOutline } from "react-icons/io5";
 import { LuBike } from "react-icons/lu";
 import { MdOutlineAddCard } from "react-icons/md";
@@ -82,4 +83,5 @@ export const Icons = {
   users: PiUsersThreeLight,
   rider: LuBike,
   payouts: MdOutlineAddCard,
+  plus: Plus,
 };
