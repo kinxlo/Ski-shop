@@ -155,6 +155,73 @@ declare global {
   interface AdminPayoutHistoryApiResponse extends PaginatedApiResponse<PayoutHistory> {}
   interface AdminAllAvailablePlansApiResponse extends PaginatedApiResponse<AdminSubscriptionPlan[]> {}
   interface CreateSubscriptionApiResponse extends ApiResponse<CreateSubscription> {}
+
+  // Admin Settings
+  interface AdminGeneralSettings {
+    id: string;
+    purchaseEmailNotification: boolean;
+    newsAndUpdateEmailNotification: boolean;
+    productCreationEmailNotification: boolean;
+    payoutEmailNotification: boolean;
+    contactEmail: string;
+    alternativeContactEmail: string | null;
+  }
+
+  interface AdminPlay2WinSettings {
+    id: string;
+    couponRedemptionFrequency: string; // e.g. "Once Every 24 Hours"
+    drawCycleResetTime: string; // e.g. "08:00PM"
+    loginRequiredToPlay: boolean;
+    notifyAdminOnCouponExhaustion: boolean;
+    playFrequency: string; // e.g. "Once Every 24 Hours"
+    redemptionWindowDays: number;
+    showWinnersNotification: boolean;
+  }
+
+  interface AdminPromotionSettings {
+    id: string;
+    autoApprovePromotions: boolean;
+    bannerPromotion: boolean;
+    defaultDurationDays: number;
+    featuredSectionPromotion: boolean;
+    maxPromotionsPerDay: number;
+    notifyOnNewRequest: boolean;
+    notifyVendorOnApproval: boolean;
+  }
+
+  interface AdminRevenueSettings {
+    id: string;
+    autoExpiryNotification: boolean;
+    fulfillmentFeePercentage: number;
+    gasFee: number;
+    gracePeriodAfterExpiry: number;
+    maxPayoutAmount: number;
+    maxWithdrawalsPerDay: number;
+    minPayoutAmount: number;
+    monthlySubscriptionFee: number;
+    notifyOnCommissionDeduction: boolean;
+    notifyOnSubscriptionExpiry: boolean;
+    notifyUserOnApproval: boolean;
+    yearlySubscriptionFee: number;
+  }
+
+  interface AdminSettingsData {
+    id: string;
+    generalSettings: AdminGeneralSettings;
+    play2winSettings: AdminPlay2WinSettings;
+    promotionSettings: AdminPromotionSettings;
+    revenueSettings: AdminRevenueSettings;
+  }
+
+  // Payload used for POST/PATCH /settings
+  interface AdminSettingsPayload {
+    generalSetting?: Partial<Omit<AdminGeneralSettings, "id">>;
+    revenueSetting?: Partial<Omit<AdminRevenueSettings, "id">>;
+    promotionSetting?: Partial<Omit<AdminPromotionSettings, "id">>;
+    play2winSetting?: Partial<Omit<AdminPlay2WinSettings, "id">>;
+  }
+
+  interface AdminSettingsApiResponse extends ApiResponse<AdminSettingsData> {}
 }
 
 export {};

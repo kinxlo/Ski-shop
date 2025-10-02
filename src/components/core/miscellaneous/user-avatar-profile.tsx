@@ -101,7 +101,7 @@ export function UserAvatarProfile({ className, showInfo = false }: UserAvatarPro
             <span>{t("investEarn")}</span>
           </DropdownMenuItem>
         </LocaleLink>
-        <ComponentGuard requireAuth allowedRoles={["VENDOR"]}>
+        <ComponentGuard requireAuth allowedRoles={["VENDOR", "ADMIN"]}>
           <LocaleLink href={`/dashboard/home`}>
             <DropdownMenuItem className="cursor-pointer">
               <Box className="mr-2 h-4 w-4" />

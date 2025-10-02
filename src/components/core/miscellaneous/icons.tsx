@@ -34,7 +34,8 @@ import {
   IconWallet,
   IconX,
 } from "@tabler/icons-react";
-import { Plus } from "lucide-react";
+import { Mail, Plus } from "lucide-react";
+import { FaGamepad } from "react-icons/fa";
 import { IoRibbonOutline } from "react-icons/io5";
 import { LuBike } from "react-icons/lu";
 import { MdOutlineAddCard } from "react-icons/md";
@@ -84,4 +85,6 @@ export const Icons = {
   rider: LuBike,
   payouts: MdOutlineAddCard,
   plus: Plus,
+  mail: Mail,
+  controller: FaGamepad,
 };

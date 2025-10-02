@@ -1,6 +1,7 @@
 import { AuthService } from "@/services/auth/auth.service";
 import { AdminService } from "@/services/dashboard/admin/admin.service";
 import { Play2WinService } from "@/services/dashboard/admin/play2win/play2win.service";
+import { AdminSettingsService } from "@/services/dashboard/admin/settings/admin-settings.service";
 import { HomeService } from "@/services/dashboard/vendor/home/home.service";
 import { DashboardOrderService } from "@/services/dashboard/vendor/orders/order.service";
 import { PayoutService } from "@/services/dashboard/vendor/payouts/payout.service";
@@ -29,6 +30,7 @@ const dependencies = {
   ADMIN_SERVICE: Symbol("AdminService"),
   SETTINGS_SERVICE: Symbol("SettingsService"),
   PLAY2WIN_SERVICE: Symbol("Play2WinService"),
+  ADMIN_SETTINGS_SERVICE: Symbol("AdminSettingsService"),
 };
 
 // Types are now globally available in src/types/
@@ -47,6 +49,7 @@ const promotionService = new PromotionService(httpAdapter);
 const adminService = new AdminService(httpAdapter);
 const settingsService = new SettingsService(httpAdapter);
 const play2WinService = new Play2WinService(httpAdapter);
+const adminSettingsService = new AdminSettingsService(httpAdapter);
 
 class DependencyContainer implements IDependencyContainer {
   _dependencies = {};
@@ -78,5 +81,6 @@ container.add(dependencies.PROMOTION_SERVICE, promotionService);
 container.add(dependencies.ADMIN_SERVICE, adminService);
 container.add(dependencies.SETTINGS_SERVICE, settingsService);
 container.add(dependencies.PLAY2WIN_SERVICE, play2WinService);
+container.add(dependencies.ADMIN_SETTINGS_SERVICE, adminSettingsService);
 
 export { container, dependencies };

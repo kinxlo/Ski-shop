@@ -39,36 +39,30 @@ export const useRoleNavigation = (): NavItem[] => {
     : 0;
 
   const createSettingsMenu = (role: string): NavItem => {
+    const baseRoute =
+      role === "SUPER_ADMIN" ? "/super-admin/settings" : role === "ADMIN" ? "/admin/settings" : "/dashboard/settings";
+
     const allCommonSettings = [
-      // createNavItem("notifications", "Notifications", "/dashboard/settings/notifications", {
-      //   icon: TbBell,
-      // }),
-      // createNavItem("security-privacy", "Security & Privacy", "/dashboard/settings/security-privacy", {
-      //   icon: TbShield,
-      // }),
-      // createNavItem("help-support", "Help & Support", "/dashboard/settings/help-support", {
-      //   icon: TbHelp,
-      // }),
-      // createNavItem("account-preferences", "Account & Preferences", "/dashboard/settings/account-preferences", {
-      //   icon: RiUserLine,
-      // }),
-      createNavItem("supscription", "Supscription", "/dashboard/settings/supscription", {
+      createNavItem("supscription", "Supscription", `${baseRoute}/supscription`, {
         icon: IoRibbonOutline,
       }),
       createNavItem("rate-this-app", "Rate This App", "", {
         icon: ThumbsUp,
         actionType: "open-rate-app-modal",
       }),
-      // createNavItem("legal", "Legal", "/dashboard/settings/legal", {
-      //   icon: MdOutlinePrivacyTip,
-      // }),
     ];
 
     const adminSpecificSettings = [
-      createNavItem("user-management", "User Management", "/admin/settings/users", {
+      createNavItem("general", "General", "/admin/settings/general", {
         icon: TbUsers,
       }),
-      createNavItem("system-settings", "System Settings", "/admin/settings/system", {
+      createNavItem("revenue", "Revenue", "/admin/settings/revenue", {
+        icon: TbSettings2,
+      }),
+      createNavItem("promotion", "Promotion", "/admin/settings/promotion", {
+        icon: TbSettings2,
+      }),
+      createNavItem("play-to-win", "Play to win", "/admin/settings/play-to-win", {
         icon: TbSettings2,
       }),
     ];
@@ -89,9 +83,6 @@ export const useRoleNavigation = (): NavItem[] => {
     } else if (role === "SUPER_ADMIN") {
       finalSettings.push(...adminSpecificSettings, ...superAdminSpecificSettings);
     }
-
-    const baseRoute =
-      role === "SUPER_ADMIN" ? "/super-admin/settings" : role === "ADMIN" ? "/admin/settings" : "/dashboard/settings";
 
     return createNavItemWithChildren("settings", "Settings", baseRoute, finalSettings, {
       icon: TbSettings2,
@@ -147,8 +138,8 @@ export const useRoleNavigation = (): NavItem[] => {
         createNavItem("promotions", "Promotions & Ads", "/admin/promotions", { icon: RiAdvertisementLine }),
         createNavItem("play-to-win", "Play 2 Win", "/admin/play-to-win", { icon: FaGamepad }),
         createDivider("settings-section"),
-        createNavItem("settings", "Settings", "/admin/settings", { icon: TbSettings2 }),
-        // createSettingsMenu("ADMIN"),
+        // createNavItem("settings", "Settings", "/admin/settings", { icon: TbSettings2 }),
+        createSettingsMenu("ADMIN"),
       ];
     }
     default: {

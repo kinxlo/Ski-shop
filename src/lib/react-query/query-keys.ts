@@ -48,6 +48,11 @@ export const queryKeys = {
     createSubscription: () => ["settings", "create-subscription"] as const,
     // subscriptionHistory: () => ["settings", "subscription-history"] as const,
   },
+  admin: {
+    settings: {
+      my: () => ["admin", "settings", "my"] as const,
+    },
+  },
   dashboard: {
     overview: () => ["dashboard", "overview"] as const,
     products: {

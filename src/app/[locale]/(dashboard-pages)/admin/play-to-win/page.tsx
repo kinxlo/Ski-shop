@@ -44,7 +44,7 @@ const Play2WinAdminPage = () => {
   );
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       <DashboardHeader
         title="Play-2-Win"
         subtitle="Manage coupons, run draws and view winners"

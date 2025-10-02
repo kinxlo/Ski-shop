@@ -7,6 +7,7 @@ import "../styles/global.css";
 
 import { AppThemeProvider } from "@/components/core/miscellaneous/theme-provider";
 import { Toast } from "@/components/shared/Toast";
+import { PageWrapper } from "@/lib/animation";
 import { ReactQueryProvider } from "@/lib/react-query/query-provider";
 // import { MockServiceWorkerProvider } from "@/mocks/mock-provider";
 import { fontVariables } from "@/styles/font";
@@ -28,7 +29,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
                 <NextTopLoader showSpinner={false} />
                 <Toast />
                 {/* <MockServiceWorkerProvider isEnabled={true}> */}
-                {children}
+                <PageWrapper>{children}</PageWrapper>
                 {/* </MockServiceWorkerProvider> */}
               </NuqsAdapter>
             </AppThemeProvider>
