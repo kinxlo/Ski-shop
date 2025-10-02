@@ -54,7 +54,7 @@ const HeroSlide = ({ slide, position, t }: { slide: Slide; position: string; t: 
                 : "items-center justify-center text-center lg:items-end lg:justify-center lg:text-right",
           )}
         >
-          <div className="max-w-2xl space-y-[12px]">
+          <div className="mt-30 max-w-2xl space-y-[12px]">
             <h1 className="!text-[32px] leading-[44px] font-bold !text-white lg:!text-[48px] lg:leading-[78px]">
               {slide.title}
             </h1>

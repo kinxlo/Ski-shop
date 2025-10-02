@@ -2,7 +2,7 @@
 
 import { Wrapper } from "@/components/core/layout/wrapper";
 import SkiButton from "@/components/shared/button";
-import { EmptyState } from "@/components/shared/empty-state";
+import { EmptyState, ErrorState } from "@/components/shared/empty-state";
 import { cn } from "@/lib/utils";
 import { useAppService } from "@/services/externals/app/use-app-service";
 
@@ -34,37 +34,16 @@ const SavedItems = ({ headerStyle }: { title: string; headerStyle?: string; hasA
         )}
 
         {/* Error State */}
-        {isError && (
-          <EmptyState
-            images={[{ src: "/images/empty-state.svg", width: 80, height: 80, alt: "Empty State" }]}
-            title={"Failed to load saved items"}
-            description={"Something went wrong while loading your saved items."}
-            className={`space-y-0 rounded-lg`}
-            titleClassName={`!text-2xl !text-mid-danger`}
-            descriptionClassName={`text-mid-danger mb-4`}
-            actionButton={
-              <SkiButton
-                onClick={() => refetch()}
-                variant="outline"
-                className={`border-mid-danger text-mid-danger border`}
-              >
-                Try Again
-              </SkiButton>
-            }
-          />
-        )}
+        {isError && <ErrorState onRetry={() => refetch()} />}
 
         {/* Empty State */}
         {!isLoading && !isError && !hasSavedItems && (
           <EmptyState
-            images={[{ src: "/images/empty-state.svg", width: 80, height: 80, alt: "Empty State" }]}
             title={"No saved items yet"}
             description={"Start saving your favorite products to see them here."}
-            className={`bg-mid-grey-I space-y-0 rounded-lg`}
-            titleClassName="!text-lg md:!text-2xl"
-            descriptionClassName="!text-sm md:!text-base mb-4"
+            descriptionClassName={`mb-2`}
             actionButton={
-              <SkiButton href="/shop" variant="primary">
+              <SkiButton size={`lg`} href="/shop" variant="primary">
                 Browse Products
               </SkiButton>
             }

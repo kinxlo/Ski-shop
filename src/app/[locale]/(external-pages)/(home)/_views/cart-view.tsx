@@ -3,8 +3,9 @@
 "use client";
 
 import { Wrapper } from "@/components/core/layout/wrapper";
+import { BlurImage } from "@/components/core/miscellaneous/blur-image";
 import SkiButton from "@/components/shared/button";
-import { EmptyState } from "@/components/shared/empty-state";
+import { EmptyState, ErrorState } from "@/components/shared/empty-state";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Locale } from "@/lib/i18n/config";
 import { formatCurrency } from "@/lib/i18n/utils";
@@ -12,13 +13,11 @@ import { useAppService } from "@/services/externals/app/use-app-service";
 import { Minus, Plus, Trash2 } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { useLocale } from "next-intl";
-import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { useDebounce } from "use-debounce";
 
 export const CartView = () => {
-  const router = useRouter();
   const { data: session } = useSession();
   const { useGetCart, useRemoveFromCart, useUpdateCartItem } = useAppService();
   const locale = useLocale() as Locale;
@@ -100,23 +99,17 @@ export const CartView = () => {
 
   if (!session) {
     return (
-      <Wrapper>
-        <EmptyState
-          images={[
-            {
-              src: "/images/empty-state.svg",
-              alt: "Empty Cart",
-              width: 80,
-              height: 80,
-            },
-          ]}
-          title="Can't view cart"
-          description={"Please login to view your cart"}
-          titleClassName="!text-lg md:!text-2xl"
-          descriptionClassName="!text-sm md:!text-base mb-4"
-          className="bg-mid-grey-I space-y-0 rounded-lg py-10"
-        />
-      </Wrapper>
+      <EmptyState
+        className={`mx-auto mt-30 max-w-[1240px]`}
+        title="Can't view cart"
+        description={"Please login to view your cart"}
+        descriptionClassName={`mb-2`}
+        actionButton={
+          <SkiButton href={`/login`} size={`lg`} variant={`primary`}>
+            Log in
+          </SkiButton>
+        }
+      />
     );
   }
 
@@ -155,26 +148,7 @@ export const CartView = () => {
   }
 
   if (error) {
-    return (
-      <Wrapper>
-        <EmptyState
-          images={[
-            {
-              src: "/images/empty-state.svg",
-              alt: "Empty Cart",
-              width: 100,
-              height: 100,
-            },
-          ]}
-          description={"There was an error loading your cart"}
-          className="bg-mid-grey-I space-y-0 rounded-lg py-10"
-          button={{
-            text: "Try again",
-            onClick: () => refetch(),
-          }}
-        />
-      </Wrapper>
-    );
+    return <ErrorState className={`mx-auto mt-30 max-w-[1240px]`} onRetry={() => refetch()} />;
   }
 
   return (
@@ -184,25 +158,7 @@ export const CartView = () => {
       </p>
 
       {cartItems?.length === 0 ? (
-        <EmptyState
-          images={[
-            {
-              src: "/images/empty-state.svg",
-              alt: "Empty Cart",
-              width: 80,
-              height: 80,
-            },
-          ]}
-          title="Your cart is empty"
-          description={"Add products to your cart to get started"}
-          titleClassName="!text-lg md:!text-2xl"
-          descriptionClassName="!text-sm md:!text-base"
-          className="bg-mid-grey-I space-y-0 rounded-lg py-10"
-          button={{
-            text: "Continue Shopping",
-            onClick: () => router.push("/shop"),
-          }}
-        />
+        <EmptyState title={`No product avaliable`} description={`There are no product available in your cart`} />
       ) : (
         <div className="grid gap-8 lg:grid-cols-3">
           {isLoading && <CartViewSkeleton />}
@@ -216,15 +172,8 @@ export const CartView = () => {
                     <div className="flex items-start justify-between">
                       <div className="flex items-start gap-4">
                         <div className="relative h-16 w-16 flex-shrink-0 overflow-hidden rounded bg-gray-100">
-                          <div className="flex h-full items-center justify-center text-gray-400">
-                            <svg className="h-8 w-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth={2}
-                                d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
-                              />
-                            </svg>
+                          <div className="relative flex h-full items-center justify-center text-gray-400">
+                            <BlurImage alt={item?.name} fill src={item?.product.images[0]} />
                           </div>
                         </div>
                         <div>
@@ -315,15 +264,8 @@ export const CartView = () => {
                           <td className="px-4 py-4">
                             <div className="flex items-center gap-4">
                               <div className="border-border relative h-16 w-16 flex-shrink-0 overflow-hidden rounded border dark:bg-[#111111]">
-                                <div className="flex h-full items-center justify-center text-gray-400">
-                                  <svg className="h-8 w-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path
-                                      strokeLinecap="round"
-                                      strokeLinejoin="round"
-                                      strokeWidth={2}
-                                      d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
-                                    />
-                                  </svg>
+                                <div className="relative flex h-full items-center justify-center text-gray-400">
+                                  <BlurImage alt={item?.name} fill src={item?.product.images[0]} />
                                 </div>
                               </div>
                               <div>

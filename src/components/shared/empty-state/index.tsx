@@ -2,6 +2,7 @@
 
 import { cn } from "@/lib/utils";
 import Image from "next/image";
+import type { ReactNode } from "react";
 
 import empty1 from "~/images/alert.png";
 import SkiButton from "../button";
@@ -28,7 +29,7 @@ interface EmptyStateProperties {
   actionButton?: React.ReactNode;
 }
 
-export const EmptyState = ({
+export const EmptyStateTemplate = ({
   images,
   title,
   description,
@@ -83,7 +84,7 @@ export const EmptyState = ({
 };
 
 export const FilteredEmptyState = ({ onReset }: { onReset: () => void }) => (
-  <EmptyState
+  <EmptyStateTemplate
     images={[{ src: empty1.src, alt: "No filtered results", width: 30, height: 30 }]}
     title="No matching results found"
     description="Try adjusting your date range or status filter to find what you're looking for."
@@ -96,3 +97,129 @@ export const FilteredEmptyState = ({ onReset }: { onReset: () => void }) => (
     }}
   />
 );
+
+export interface ErrorStateProperties {
+  title?: string;
+  description?: string;
+  onRetry?: () => void;
+  retryText?: string;
+  imageSource?: string;
+  imageAlt?: string;
+  imageWidth?: number;
+  imageHeight?: number;
+  className?: string;
+  descriptionClassName?: string;
+  titleClassName?: string;
+  buttonClassName?: string;
+  actionButton?: ReactNode; // fully override the action area
+}
+
+export const ErrorState = ({
+  title,
+  description = `Something went wrong, please try again later.`,
+  onRetry,
+  retryText = "Retry",
+  imageSource = "/images/error.svg",
+  imageAlt = "Error",
+  imageWidth = 50,
+  imageHeight = 50,
+  className = "bg-low-warning/5 space-y-0 rounded-lg",
+  descriptionClassName = "text-mid-danger",
+  titleClassName,
+  buttonClassName = "border-mid-danger text-mid-danger hover:bg-mid-danger/10 mt-2 border",
+  actionButton,
+}: ErrorStateProperties) => {
+  const action =
+    actionButton ??
+    (onRetry && (
+      <SkiButton size="sm" onClick={onRetry} variant="outline" className={buttonClassName}>
+        {retryText}
+      </SkiButton>
+    ));
+
+  return (
+    <EmptyStateTemplate
+      images={[
+        {
+          src: imageSource,
+          alt: imageAlt,
+          width: imageWidth,
+          height: imageHeight,
+        },
+      ]}
+      title={title}
+      description={description}
+      className={className}
+      titleClassName={titleClassName}
+      descriptionClassName={descriptionClassName}
+      actionButton={action}
+    />
+  );
+};
+
+export interface EmptyStateProperties_ {
+  images?: ImageConfig[];
+  title?: string;
+  description?: string;
+  imageSource?: string;
+  imageAlt?: string;
+  imageWidth?: number;
+  imageHeight?: number;
+  className?: string;
+  descriptionClassName?: string;
+  titleClassName?: string;
+  button?: {
+    text: string;
+    onClick: () => void;
+    icon?: ReactNode;
+  };
+  actionButton?: ReactNode;
+}
+
+export const EmptyState = ({
+  images,
+  title = "No products found",
+  description = "There are no products available.",
+  imageSource = "/images/empty-state.svg",
+  imageAlt = "No products found",
+  imageWidth = 30,
+  imageHeight = 30,
+  className = "bg-mid-grey-I space-y-0 rounded-lg",
+  titleClassName = "!text-lg font-bold !text-mid-warning",
+  descriptionClassName = "",
+  button,
+  actionButton,
+}: EmptyStateProperties_) => {
+  const finalImages =
+    images && images.length > 0
+      ? images
+      : [
+          {
+            src: imageSource,
+            alt: imageAlt,
+            width: imageWidth,
+            height: imageHeight,
+          },
+        ];
+
+  const action =
+    actionButton ??
+    (button && (
+      <SkiButton onClick={button.onClick} variant="primary" size="xl" className="">
+        {button.icon && <span className="mr-2">{button.icon}</span>}
+        {button.text}
+      </SkiButton>
+    ));
+
+  return (
+    <EmptyStateTemplate
+      images={finalImages}
+      title={title}
+      description={description || ""}
+      className={className}
+      titleClassName={titleClassName}
+      descriptionClassName={descriptionClassName}
+      actionButton={action}
+    />
+  );
+};

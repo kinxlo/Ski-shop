@@ -3,7 +3,7 @@
 import { Wrapper } from "@/components/core/layout/wrapper";
 import { BlurImage } from "@/components/core/miscellaneous/blur-image";
 import { UniversalSwiper } from "@/components/shared/carousel";
-import { EmptyState } from "@/components/shared/empty-state";
+import { EmptyState, ErrorState } from "@/components/shared/empty-state";
 import { Ratings } from "@/components/shared/ratings";
 import { cn } from "@/lib/utils";
 import { useAppService } from "@/services/externals/app/use-app-service";
@@ -11,44 +11,16 @@ import { StarFilledIcon } from "@radix-ui/react-icons";
 
 export const TopVendors = () => {
   const { useGetAllProducts } = useAppService();
-  const { isLoading, isError, data } = useGetAllProducts({ flag: "top" });
+  const { isLoading, isError, data, refetch } = useGetAllProducts({ flag: "top" });
 
   const products: Product[] = data?.data?.items || [];
 
   if (isError) {
-    return (
-      <>
-        <EmptyState
-          className={`space-y-0`}
-          title="Failed to load products"
-          description="There was an error fetching the products. Please try again later."
-          images={[]}
-        />
-      </>
-    );
+    return <ErrorState className={`mx-auto mb-10 max-w-[1240px]`} retryText={"retry"} onRetry={() => refetch()} />;
   }
 
   if (!products?.length) {
-    return (
-      <Wrapper className={`min-h-[308px] gap-6 py-0`}>
-        <h2 className={cn("!text-lg lg:!text-4xl lg:!leading-[41.62px] lg:!tracking-[1px]")}>Top Vendors</h2>
-        <EmptyState
-          images={[
-            {
-              src: "/images/empty-state.svg",
-              alt: "Empty Cart",
-              width: 80,
-              height: 80,
-            },
-          ]}
-          title="No top vendors found"
-          titleClassName={`!text-lg font-bold !text-mid-warning`}
-          description={"There are no top vendors available at the moment. Please check back later."}
-          descriptionClassName={`text-mid-grey-II`}
-          className="bg-mid-grey-I space-y-0 rounded-lg"
-        />
-      </Wrapper>
-    );
+    return <EmptyState className={`mx-auto mb-10 max-w-[1240px]`} />;
   }
 
   return (

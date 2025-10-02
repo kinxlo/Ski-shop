@@ -1,10 +1,10 @@
 "use client";
 
 import { Wrapper } from "@/components/core/layout/wrapper";
-import SkiButton from "@/components/shared/button";
-import { EmptyState } from "@/components/shared/empty-state";
+import { EmptyState, ErrorState } from "@/components/shared/empty-state";
 import { useAppService } from "@/services/externals/app/use-app-service";
-import { useTranslations } from "next-intl";
+
+// import { useTranslations } from "next-intl";
 
 import { ShopCard } from "../_components/shop-card/shop-card";
 import { ShopCardSkeleton } from "./popular-products";
@@ -21,7 +21,7 @@ export const InterestedProducts = () => {
     limit: 4,
     flag: "interested",
   });
-  const t = useTranslations("home.interestedProducts");
+  // const t = useTranslations("home.interestedProducts");
 
   const products = productData?.data?.items || [];
 
@@ -52,49 +52,13 @@ export const InterestedProducts = () => {
   );
 
   const renderEmptyState = () => (
-    <div className="flex min-h-[360px] items-center justify-center">
-      <EmptyState
-        images={[
-          {
-            src: "/images/empty-state.svg",
-            alt: "No interested products found",
-            width: 80,
-            height: 80,
-          },
-        ]}
-        title="No products found"
-        titleClassName="!text-lg font-bold !text-mid-warning"
-        description="There are no products that match your interests. Check back later for new recommendations."
-        descriptionClassName="text-mid-grey-II"
-        className="bg-mid-grey-I space-y-0 rounded-lg py-10"
-      />
-    </div>
-  );
-
-  const renderErrorState = () => (
     <EmptyState
-      images={[
-        {
-          src: "/images/empty-state.svg",
-          alt: "Failed to load products",
-          width: 80,
-          height: 80,
-        },
-      ]}
-      description="Failed to load interested products"
-      descriptionClassName="text-mid-danger"
-      className="bg-low-warning/5 space-y-0 rounded-lg"
-      actionButton={
-        <SkiButton
-          onClick={() => refetch()}
-          variant="outline"
-          className="border-mid-danger text-mid-danger hover:bg-mid-danger/10 mt-4 border"
-        >
-          {t("retry")}
-        </SkiButton>
-      }
+      title="No products found"
+      description="There are no products that match your interests. Check back later for new recommendations."
     />
   );
+
+  const renderErrorState = () => <ErrorState onRetry={() => refetch()} />;
 
   const renderProductsGrid = () => {
     if (isLoading) {
@@ -115,7 +79,7 @@ export const InterestedProducts = () => {
   return (
     <Wrapper className="min-h-[480px] py-16">
       <div className="mb-8 flex items-baseline justify-between">
-        <h2 className="text-high-grey-II text-lg font-semibold sm:text-2xl">{t("title")}</h2>
+        <h2 className="!text-lg font-semibold sm:!text-2xl">{`Intrested Products`}</h2>
       </div>
 
       {renderProductsGrid()}

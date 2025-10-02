@@ -1,8 +1,7 @@
 "use client";
 
 import { Wrapper } from "@/components/core/layout/wrapper";
-import SkiButton from "@/components/shared/button";
-import { EmptyState } from "@/components/shared/empty-state";
+import { EmptyState, ErrorState } from "@/components/shared/empty-state";
 import { LocaleLink } from "@/components/shared/locale-link";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
@@ -61,49 +60,10 @@ export const PopularProducts = ({
     </div>
   );
 
-  const renderEmptyState = () => (
-    <div className="flex items-center justify-center">
-      <EmptyState
-        images={[
-          {
-            src: "/images/empty-state.svg",
-            alt: "No products found",
-            width: 80,
-            height: 80,
-          },
-        ]}
-        title="No products found"
-        titleClassName="!text-lg font-bold !text-mid-warning"
-        description="There are no top products available."
-        descriptionClassName="text-mid-grey-II"
-        className="bg-mid-grey-I space-y-0 rounded-lg dark:bg-[#111111]"
-      />
-    </div>
-  );
+  const renderEmptyState = () => <EmptyState />;
 
   const renderErrorState = () => (
-    <EmptyState
-      images={[
-        {
-          src: "/images/empty-state.svg",
-          alt: "Empty Cart",
-          width: 80,
-          height: 80,
-        },
-      ]}
-      description={t("failedToLoad")}
-      descriptionClassName={`text-mid-danger`}
-      className={`bg-low-warning/5 space-y-0 rounded-lg`}
-      actionButton={
-        <SkiButton
-          onClick={() => refetch()}
-          variant="outline"
-          className="border-mid-danger text-mid-danger hover:bg-mid-danger/10 border"
-        >
-          {t("retry")}
-        </SkiButton>
-      }
-    />
+    <ErrorState description={t("failedToLoad")} retryText={t("retry")} onRetry={() => refetch()} />
   );
 
   const renderProductsGrid = () => {
