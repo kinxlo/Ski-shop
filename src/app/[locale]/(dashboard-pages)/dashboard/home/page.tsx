@@ -4,7 +4,7 @@ import { Icons } from "@/components/core/miscellaneous/icons";
 import { SearchInput } from "@/components/core/miscellaneous/search-input";
 import { DashboardTable } from "@/components/shared/dashboard-table";
 import { useOrderColumn } from "@/components/shared/dashboard-table/table-data";
-import { EmptyState } from "@/components/shared/empty-state";
+import { EmptyState, ErrorState } from "@/components/shared/empty-state";
 import { orderStatusOptions } from "@/lib/constants";
 import { useDashboardSearchParameters } from "@/lib/nuqs/use-dashboard-search-parameters";
 import { useDashboardOrderService } from "@/services/dashboard/vendor/orders/use-order-service";
@@ -48,7 +48,7 @@ const Page = () => {
   const { useGetAllProducts } = useDashboardProductService();
   const { useGetAllOrders } = useDashboardOrderService();
   const { data: productData, isLoading: isProductsLoading, isError: isProductsError } = useGetAllProducts(filters);
-  const { data: orderData } = useGetAllOrders(filters);
+  const { data: orderData, refetch } = useGetAllOrders(filters);
 
   // Extract data from the correct structure
   const totalProducts = productData?.data?.metadata?.total || 0;
@@ -90,16 +90,7 @@ const Page = () => {
 
   const renderOverviewLoadingSkeleton = () => <AnalysisSkeleton />;
 
-  const renderOverviewErrorState = () => (
-    <EmptyState
-      title="Error loading data"
-      description="There was a problem fetching the overview data. Please try again later."
-      className="bg-low-warning/5 min-h-fit space-y-0 rounded-lg p-6"
-      titleClassName="!text-lg font-bold !text-mid-danger"
-      descriptionClassName="!text-mid-danger"
-      images={[]}
-    />
-  );
+  const renderOverviewErrorState = () => <ErrorState onRetry={() => refetch()} />;
 
   const renderOverviewCards = () => (
     <section className="grid grid-cols-1 gap-5 lg:grid-cols-3">
@@ -153,16 +144,7 @@ const Page = () => {
 
   const renderOrdersTableLoadingSkeleton = () => <TableSkeleton />;
 
-  const renderOrdersTableErrorState = () => (
-    <EmptyState
-      title="Error loading products"
-      description="There was a problem fetching the table data. Please try again later."
-      className="min-h-fit space-y-0 rounded-lg bg-red-50 p-6"
-      titleClassName="!text-lg font-bold !text-mid-danger"
-      descriptionClassName="!text-mid-danger"
-      images={[]}
-    />
-  );
+  const renderOrdersTableErrorState = () => <ErrorState onRetry={() => refetch()} />;
 
   const renderOrdersTable = () => (
     <DashboardTable
@@ -179,19 +161,9 @@ const Page = () => {
 
   const renderOrdersEmptyState = () => (
     <EmptyState
-      images={[
-        {
-          src: "/images/empty-state.svg",
-          alt: "Empty Cart",
-          width: 80,
-          height: 80,
-        },
-      ]}
       title="No products found"
-      titleClassName="!text-xl font-bold"
-      description="There are no products in the database. Please add a product to get started."
-      descriptionClassName="text-mid-grey-II"
-      className="bg-mid-grey-I space-y-0 rounded-lg py-10"
+      description="There are no order available."
+      descriptionClassName={`mb-2`}
       button={{
         text: "Add Product",
         onClick: () => router.push("/dashboard/products/new"),

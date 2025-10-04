@@ -2,12 +2,11 @@
 
 import { Icons } from "@/components/core/miscellaneous/icons";
 import { SearchInput } from "@/components/core/miscellaneous/search-input";
-import SkiButton from "@/components/shared/button";
 import { DashboardTable } from "@/components/shared/dashboard-table";
 import { useProductColumn } from "@/components/shared/dashboard-table/table-data";
 import { AlertModal } from "@/components/shared/dialog/alert-modal";
 import { DownloadCsvButton } from "@/components/shared/download-csv-button";
-import { EmptyState, FilteredEmptyState } from "@/components/shared/empty-state";
+import { EmptyState, ErrorState, FilteredEmptyState } from "@/components/shared/empty-state";
 import { useDashboardSearchParameters } from "@/lib/nuqs/use-dashboard-search-parameters";
 import { useDashboardProductService } from "@/services/dashboard/vendor/products/use-product-service";
 // import { useTranslations } from "next-intl";
@@ -164,30 +163,7 @@ export const AllProducts = () => {
   );
 
   if (isError) {
-    return (
-      <EmptyState
-        images={[
-          {
-            src: "/images/empty-state.svg",
-            alt: "Empty Cart",
-            width: 80,
-            height: 80,
-          },
-        ]}
-        description={"Failed to load products"}
-        descriptionClassName={`text-mid-danger`}
-        className={`bg-low-warning/5 space-y-0 rounded-lg`}
-        actionButton={
-          <SkiButton
-            onClick={() => refetch()}
-            variant="outline"
-            className="border-mid-danger text-mid-danger hover:bg-mid-danger/10 mt-4 border"
-          >
-            Retry
-          </SkiButton>
-        }
-      />
-    );
+    return <ErrorState onRetry={() => refetch()} />;
   }
 
   // Extract data from the correct structure (similar to shop page)
@@ -260,13 +236,11 @@ export const AllProducts = () => {
         ) : (
           <EmptyState
             images={[{ src: empty1.src, alt: "No products", width: 50, height: 50 }]}
-            title="No products yet."
-            description="Once you add products, you'll see their details here, including name, category, price, stock, and more."
-            className={`space-y-0`}
-            titleClassName={`!text-2xl text-primary font-semibold`}
-            descriptionClassName={`text-muted-foreground max-w-[500px] font-medium`}
+            title="No products found"
+            description="There are no products available."
+            descriptionClassName={`mb-2`}
             button={{
-              text: "Add New Product",
+              text: "Add Product",
               onClick: () => {
                 router.push(`/${locale}/dashboard/products/new`);
               },

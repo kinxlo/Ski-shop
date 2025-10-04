@@ -347,43 +347,121 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     },
 
     async jwt({ token, user, trigger, session }) {
+      // Helpers are defined inside the callback to keep file-wide changes minimal
+      const ACCESS_TOKEN_FALLBACK_MS = 15 * 60 * 1000;
+      const SAFETY_WINDOW_MS = 60 * 1000;
+
+      const getAccessTokenExpiry = (jwt?: string): number => {
+        if (!jwt) return Date.now() + ACCESS_TOKEN_FALLBACK_MS;
+        try {
+          const [, payload] = jwt.split(".");
+          if (!payload) return Date.now() + ACCESS_TOKEN_FALLBACK_MS;
+          // NextAuth callbacks run on the server - Buffer is available
+          const b64 = payload.replaceAll("-", "+").replaceAll("_", "/");
+          const decoded = Buffer.from(b64, "base64").toString("utf8");
+          const parsed = JSON.parse(decoded) as { exp?: number };
+          return parsed?.exp ? Number(parsed.exp) * 1000 : Date.now() + ACCESS_TOKEN_FALLBACK_MS;
+        } catch {
+          return Date.now() + ACCESS_TOKEN_FALLBACK_MS;
+        }
+      };
+
+      const refreshAccessToken = async (rt: string) => {
+        const base = process.env.NEXT_PUBLIC_BASE_URL?.replace(/\/$/, "") ?? "";
+        const url = `${base}/auth/refresh`;
+        const resp = await axios.post(url, { refreshToken: rt });
+
+        // Accept common response shapes:
+        // { success: true, data: { accessToken, refreshToken } }
+        // { success: true, data: { tokens: { accessToken, refreshToken } } }
+        // Or flattened variants
+        const body = resp?.data ?? {};
+        const data = body.data ?? body;
+        const tokens = data.tokens ?? data;
+
+        const newAccess = tokens?.accessToken as string | undefined;
+        const newRefresh = (tokens?.refreshToken as string | undefined) ?? rt;
+
+        if (!newAccess) {
+          throw new Error("No accessToken in refresh response");
+        }
+
+        return {
+          accessToken: newAccess,
+          refreshToken: newRefresh,
+          expiresAt: getAccessTokenExpiry(newAccess),
+        };
+      };
+
       // Initial sign in
       if (user) {
-        console.log("JWT callback - User:", user);
-        console.log("JWT callback - User role:", user.role);
+        const role =
+          typeof (user as any).role === "object"
+            ? {
+                id: String(((user as any).role as any)?.id ?? ((user as any).role as any)?.name ?? "customer"),
+                name: String(((user as any).role as any)?.name ?? ((user as any).role as any)?.id ?? "customer"),
+              }
+            : String((user as any).role ?? "customer");
+
+        const accessToken = (user as any).accessToken as string | undefined;
+        const refreshToken = (user as any).refreshToken as string | undefined;
+
         return {
           ...token,
-          id: user.id,
+          id: (user as any).id,
           name: user.name,
           email: user.email,
-          // Normalize role early to avoid case/format mismatches downstream
-          role:
-            typeof user.role === "object"
-              ? {
-                  id: String((user.role as any)?.id ?? (user.role as any)?.name ?? "customer"),
-                  name: String((user.role as any)?.name ?? (user.role as any)?.id ?? "customer"),
-                }
-              : String(user.role ?? "customer"),
-          accessToken: user.accessToken,
-          refreshToken: user.refreshToken,
+          role,
+          accessToken,
+          refreshToken,
+          accessTokenExpires: getAccessTokenExpiry(accessToken),
+          error: undefined,
         };
       }
 
       // Update triggered from client
       if (trigger === "update" && session) {
+        const accessToken = (session as any).accessToken as string | undefined;
+        const refreshToken = (session as any).refreshToken as string | undefined;
         return {
           ...token,
-          accessToken: session.accessToken,
-          refreshToken: session.refreshToken,
+          accessToken,
+          refreshToken: refreshToken ?? (token as any).refreshToken,
+          accessTokenExpires: accessToken ? getAccessTokenExpiry(accessToken) : (token as any).accessTokenExpires,
+          error: undefined,
         };
       }
 
-      return token;
+      // Subsequent calls: if token not near expiry, return as-is
+      const accessTokenExpires = (token as any).accessTokenExpires as number | undefined;
+      if (accessTokenExpires && Date.now() + SAFETY_WINDOW_MS < accessTokenExpires) {
+        return token;
+      }
+
+      // If no refresh token, nothing we can do
+      const rt = (token as any).refreshToken as string | undefined;
+      if (!rt) {
+        return token;
+      }
+
+      // Try to refresh
+      try {
+        const refreshed = await refreshAccessToken(rt);
+        return {
+          ...token,
+          accessToken: refreshed.accessToken,
+          refreshToken: refreshed.refreshToken ?? (token as any).refreshToken,
+          accessTokenExpires: refreshed.expiresAt ?? Date.now() + ACCESS_TOKEN_FALLBACK_MS,
+          error: undefined,
+        };
+      } catch {
+        // Signal to the client that re-authentication is needed
+        return { ...token, error: "RefreshAccessTokenError" as const };
+      }
     },
 
     session({ session, token }): Promise<any> {
       console.log("Session callback - Token:", token);
-      // console.log("Session callback - Token role:", token.role);
       return Promise.resolve({
         ...session,
         user: {
@@ -391,10 +469,11 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           id: token.id as string,
           name: token.name as string,
           email: token.email as string,
-          role: token.role,
+          role: (token as any).role,
         },
-        accessToken: token.accessToken,
-        refreshToken: token.refreshToken,
+        accessToken: (token as any).accessToken,
+        refreshToken: (token as any).refreshToken,
+        error: (token as any).error,
         expires: session.expires,
       });
     },

@@ -5,7 +5,7 @@ import { SearchInput } from "@/components/core/miscellaneous/search-input";
 import { DashboardTable } from "@/components/shared/dashboard-table";
 import { useProductColumn } from "@/components/shared/dashboard-table/table-data";
 import { DownloadCsvButton } from "@/components/shared/download-csv-button";
-import { EmptyState, FilteredEmptyState } from "@/components/shared/empty-state";
+import { EmptyState, ErrorState, FilteredEmptyState } from "@/components/shared/empty-state";
 import { useDashboardSearchParameters } from "@/lib/nuqs/use-dashboard-search-parameters";
 import { useDashboardProductService } from "@/services/dashboard/vendor/products/use-product-service";
 import { useSession } from "next-auth/react";
@@ -13,7 +13,6 @@ import { useLocale } from "next-intl";
 import { useRouter } from "next/navigation";
 import { useCallback, useMemo } from "react";
 
-import empty1 from "~/images/empty-state.svg";
 import { DashboardHeader } from "../../../_components/dashboard-header";
 import { TableSkeleton } from "../../home/page-skeleton";
 
@@ -43,6 +42,7 @@ export const PublishedProducts = () => {
     data: productData,
     isLoading: isProductsLoading,
     isError,
+    refetch,
   } = useGetAllProducts(filters, {
     keepPreviousData: true,
     staleTime: 1000 * 60 * 5, // 5 minutes cache
@@ -75,16 +75,7 @@ export const PublishedProducts = () => {
 
   const renderLoadingSkeleton = () => <TableSkeleton />;
 
-  const renderErrorState = () => (
-    <EmptyState
-      images={[{ src: empty1.src, alt: "No products", width: 50, height: 50 }]}
-      className="space-y-0"
-      titleClassName="!text-2xl text-primary font-semibold"
-      descriptionClassName="text-muted-foreground max-w-[500px] font-medium"
-      title="No published products yet."
-      description="Once you publish products, you'll see their details here, including name, category, price, stock, and more."
-    />
-  );
+  const renderErrorState = () => <ErrorState onRetry={() => refetch()} />;
 
   const renderFilteredEmptyState = () => (
     <FilteredEmptyState
@@ -97,14 +88,8 @@ export const PublishedProducts = () => {
 
   const renderEmptyState = () => (
     <EmptyState
-      images={[{ src: empty1.src, alt: "No products", width: 50, height: 50 }]}
-      className="space-y-0"
-      titleClassName="!text-2xl text-primary font-semibold"
-      descriptionClassName="text-muted-foreground max-w-[500px] font-medium"
-      title="No published products yet."
-      description="Once you publish products, you'll see their details here, including name, category, price, stock, and more."
       button={{
-        text: "Add New Product",
+        text: "Add Product",
         onClick: () => {
           router.push(`/${locale}/dashboard/products/new`);
         },

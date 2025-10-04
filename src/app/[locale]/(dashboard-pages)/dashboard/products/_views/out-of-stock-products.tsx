@@ -2,11 +2,10 @@
 
 import { Icons } from "@/components/core/miscellaneous/icons";
 import { SearchInput } from "@/components/core/miscellaneous/search-input";
-import SkiButton from "@/components/shared/button";
 import { DashboardTable } from "@/components/shared/dashboard-table";
 import { useProductColumn } from "@/components/shared/dashboard-table/table-data";
 import { DownloadCsvButton } from "@/components/shared/download-csv-button";
-import { EmptyState, FilteredEmptyState } from "@/components/shared/empty-state";
+import { EmptyState, ErrorState, FilteredEmptyState } from "@/components/shared/empty-state";
 import { useDashboardSearchParameters } from "@/lib/nuqs/use-dashboard-search-parameters";
 import { useDashboardProductService } from "@/services/dashboard/vendor/products/use-product-service";
 import { useSession } from "next-auth/react";
@@ -14,7 +13,6 @@ import { useLocale } from "next-intl";
 import { useRouter } from "next/navigation";
 import { useCallback, useMemo } from "react";
 
-import empty1 from "~/images/empty-state.svg";
 import { DashboardHeader } from "../../../_components/dashboard-header";
 import { TableSkeleton } from "../../home/page-skeleton";
 
@@ -75,30 +73,13 @@ export const OutOfStockProducts = () => {
   // Calculate pagination for out-of-stock products
   const totalOutOfStock = outOfStockProducts.length;
   const itemsPerPage = 10; // Assuming 10 items per page
-  const totalPages = Math.ceil(totalOutOfStock / itemsPerPage);
-  const hasNextPage = page < totalPages;
-  const hasPreviousPage = page > 1;
+  const totalPages = Math.max(1, Math.ceil(totalOutOfStock / itemsPerPage));
+  const currentPage = page ?? 1;
+  const hasNextPage = currentPage < totalPages;
+  const hasPreviousPage = currentPage > 1;
 
   if (isError) {
-    return (
-      <EmptyState
-        images={[{ src: empty1.src, alt: "No out of stock products", width: 50, height: 50 }]}
-        className={`space-y-0`}
-        titleClassName={`!text-2xl text-primary font-semibold`}
-        descriptionClassName={`text-muted-foreground max-w-[500px] font-medium`}
-        title="No out of stock products."
-        description="Great! All your products are currently in stock."
-        actionButton={
-          <SkiButton
-            onClick={() => refetch()}
-            variant="outline"
-            className="border-mid-danger text-mid-danger hover:bg-mid-danger/10 mt-4 border"
-          >
-            Retry
-          </SkiButton>
-        }
-      />
-    );
+    return <ErrorState onRetry={() => refetch()} />;
   }
 
   return (
@@ -162,12 +143,6 @@ export const OutOfStockProducts = () => {
           />
         ) : (
           <EmptyState
-            images={[{ src: empty1.src, alt: "No out of stock products", width: 50, height: 50 }]}
-            className={`space-y-0`}
-            titleClassName={`!text-2xl text-primary font-semibold`}
-            descriptionClassName={`text-muted-foreground max-w-[500px] font-medium`}
-            title="No out of stock products."
-            description="Great! All your products are currently in stock."
             button={{
               text: "View All Products",
               onClick: () => {

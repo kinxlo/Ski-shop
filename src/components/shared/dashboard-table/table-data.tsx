@@ -41,7 +41,7 @@ export const useOrderColumn = (): TableColumnDefinition<Order>[] => {
     {
       header: "Reference ID",
       accessorKey: "id",
-      render: (_, order: Order) => <span className="font-medium">{order.reference}...</span>,
+      render: (_, order: Order) => <span className="!text-sm font-medium">{order.reference.slice(0, 10)}...</span>,
     },
     {
       header: "Products",
@@ -65,10 +65,10 @@ export const useOrderColumn = (): TableColumnDefinition<Order>[] => {
             )}
           </div>
           <div>
-            <div className="font-medium">{order.products[0]?.name || "N/A"}</div>
-            <div className="text-sm text-gray-500">
+            <div className="!text-sm font-medium">{order.products[0]?.name || "N/A"}</div>
+            <p className="!text-sm text-gray-500">
               {order.products[0].quantity} item{order.products[0].quantity > 1 ? "s" : ""}
-            </div>
+            </p>
           </div>
         </div>
       ),
@@ -78,27 +78,27 @@ export const useOrderColumn = (): TableColumnDefinition<Order>[] => {
       accessorKey: "buyer",
       render: (_, order: Order) => (
         <div>
-          <div className="font-medium">{order.buyer.name}</div>
+          <p className="!text-sm font-medium">{order.buyer.name}</p>
         </div>
       ),
     },
     {
       header: "Delivery Address",
       accessorKey: "delivery",
-      render: () => <div className="max-w-xs truncate">N/A</div>,
+      render: () => <p className="max-w-xs truncate !text-sm">N/A</p>,
     },
     {
       header: "Total Amount",
       accessorKey: "products",
       render: (_, order: Order) => {
         const totalAmount = order.products.reduce((sum, product) => sum + product.price * product.quantity, 0);
-        return <span className="font-medium">{formatCurrency(totalAmount, locale as Locale)}</span>;
+        return <span className="!text-sm font-medium">{formatCurrency(totalAmount, locale as Locale)}</span>;
       },
     },
     {
       header: "Date",
       accessorKey: "createdAt",
-      render: (_, order: Order) => <span>{formatDate(order.createdAt, locale as Locale)}</span>,
+      render: (_, order: Order) => <span className={`!text-sm`}>{formatDate(order.createdAt, locale as Locale)}</span>,
     },
     {
       header: "Status",
@@ -106,7 +106,7 @@ export const useOrderColumn = (): TableColumnDefinition<Order>[] => {
       render: (_, order: Order) => (
         <span
           className={cn(
-            `rounded-full px-2 py-1 text-xs capitalize`,
+            `rounded-full px-2 py-1 !text-sm capitalize`,
             order.status === "paid" && "bg-low-success text-mid-success",
             order.status === "pending" && "bg-yellow-100 text-yellow-600",
             order.status === "cancelled" && "bg-red-100 text-red-600",
@@ -158,28 +158,30 @@ export const useProductColumn = (): TableColumnDefinition<Product>[] => {
     {
       header: "Product Name",
       accessorKey: "name",
-      render: (_, product: Product) => <span className="font-medium">{product.name}</span>,
+      render: (_, product: Product) => <span className="!text-sm font-medium">{product.name}</span>,
     },
     {
       header: "Category",
       accessorKey: "category",
+      render: (_, product: Product) => <span className="!text-sm">{product.category}</span>,
     },
     {
       header: "Price",
       accessorKey: "price",
       render: (_, product: Product) => (
-        <span className={`capitalize`}>{formatCurrency(product.price, locale as Locale)}</span>
+        <span className={`!text-sm capitalize`}>{formatCurrency(product.price, locale as Locale)}</span>
       ),
     },
     {
       header: "Stock",
       accessorKey: "stockCount",
+      render: (_, product: Product) => <span className="!text-sm">{product.stockCount}</span>,
     },
     {
       header: "Date Added",
       accessorKey: "createdAt",
       render: (_, product: Product) => (
-        <span className={`capitalize`}>{formatDate(product.createdAt, locale as Locale)}</span>
+        <span className={`!text-sm capitalize`}>{formatDate(product.createdAt, locale as Locale)}</span>
       ),
     },
     {
@@ -188,7 +190,7 @@ export const useProductColumn = (): TableColumnDefinition<Product>[] => {
       render: (_, product: Product) => (
         <span
           className={cn(
-            `rounded-full px-2 py-1 text-xs capitalize`,
+            `rounded-full px-2 py-1 !text-sm capitalize`,
             product.status.includes(`published`) && `bg-low-success text-mid-success`,
             product.status.includes(`draft`) && `bg-yellow-100 text-yellow-600`,
           )}
@@ -206,27 +208,30 @@ export const useUserColumn = (): TableColumnDefinition<User>[] => {
       header: "Name",
       accessorKey: "firstName",
       render: (_, user: User) => {
-        return <span>{`${user.firstName} ${user.lastName}`}</span>;
+        return <span className="!text-sm">{`${user.firstName} ${user.lastName}`}</span>;
       },
     },
     {
       header: "Phone Number",
       accessorKey: "phone",
+      render: (_, user: User) => <span className="!text-sm">{user.phone}</span>,
     },
     {
       header: "Email Address",
       accessorKey: "email",
+      render: (_, user: User) => <span className="!text-sm">{user.email}</span>,
     },
     {
       header: "Date & Time",
       accessorKey: "id",
+      render: (_, user: User) => <span className="!text-sm">{user.id}</span>,
     },
     {
       header: "Status",
       accessorKey: "status",
       render: (_, user: User) => (
         <span
-          className={`rounded-md px-2 py-1 text-sm capitalize ${Math.floor(Math.random() + 1 * 2) % 2 === 0 ? "bg-green-100 text-green-800" : "bg-green-100 text-green-800"}`}
+          className={`rounded-md px-2 py-1 !text-sm capitalize ${Math.floor(Math.random() + 1 * 2) % 2 === 0 ? "bg-green-100 text-green-800" : "bg-green-100 text-green-800"}`}
         >
           {user.status || `Completed`}
         </span>
@@ -242,7 +247,7 @@ export const useDashboardOrderColumn = (): TableColumnDefinition<Order>[] => {
     {
       header: "Reference ID",
       accessorKey: "id",
-      render: (_, order: Order) => <span className="font-medium">{order.reference}...</span>,
+      render: (_, order: Order) => <span className="!text-sm font-medium">{order.reference}...</span>,
     },
     {
       header: "Products",
@@ -266,8 +271,8 @@ export const useDashboardOrderColumn = (): TableColumnDefinition<Order>[] => {
             )}
           </div>
           <div>
-            <div className="font-medium">{order.products[0]?.name || "N/A"}</div>
-            <div className="text-sm text-gray-500">
+            <div className="!text-sm font-medium">{order.products[0]?.name || "N/A"}</div>
+            <div className="!text-sm text-gray-500">
               {order.products[0].quantity} item{order.products[0].quantity > 1 ? "s" : ""}
             </div>
           </div>
@@ -279,27 +284,31 @@ export const useDashboardOrderColumn = (): TableColumnDefinition<Order>[] => {
       accessorKey: "buyer",
       render: (_, order: Order) => (
         <div>
-          <div className="font-medium">{order.buyer.name}</div>
+          <div className="!text-sm font-medium">{order.buyer.name}</div>
         </div>
       ),
     },
     {
       header: "Delivery Address",
       accessorKey: "delivery",
-      render: () => <div className="max-w-xs truncate">N/A</div>,
+      render: () => (
+        <div className="max-w-xs truncate">
+          <span className="!text-sm">N/A</span>
+        </div>
+      ),
     },
     {
       header: "Total Amount",
       accessorKey: "products",
       render: (_, order: Order) => {
         const totalAmount = order.products.reduce((sum, product) => sum + product.price * product.quantity, 0);
-        return <span className="font-medium">{formatCurrency(totalAmount, locale as Locale)}</span>;
+        return <span className="!text-sm font-medium">{formatCurrency(totalAmount, locale as Locale)}</span>;
       },
     },
     {
       header: "Date",
       accessorKey: "createdAt",
-      render: (_, order: Order) => <span>{formatDate(order.createdAt, locale as Locale)}</span>,
+      render: (_, order: Order) => <span className="!text-sm">{formatDate(order.createdAt, locale as Locale)}</span>,
     },
     {
       header: "Status",
@@ -307,7 +316,7 @@ export const useDashboardOrderColumn = (): TableColumnDefinition<Order>[] => {
       render: (_, order: Order) => (
         <span
           className={cn(
-            `rounded-full px-2 py-1 text-xs capitalize`,
+            `rounded-full px-2 py-1 !text-sm capitalize`,
             order.status === "paid" && "bg-low-success text-mid-success",
             order.status === "pending" && "bg-yellow-100 text-yellow-600",
             order.status === "cancelled" && "bg-red-100 text-red-600",

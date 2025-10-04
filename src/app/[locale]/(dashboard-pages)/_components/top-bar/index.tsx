@@ -1,6 +1,7 @@
 "use client";
 
 import { SearchInput } from "@/components/core/miscellaneous/search-input";
+import { ModernThemeSwitcher } from "@/components/core/miscellaneous/theme-variant-switcher";
 import { UserAvatarProfile } from "@/components/core/miscellaneous/user-avatar-profile";
 import { LanguageToggle } from "@/components/shared/language-toggle";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
@@ -49,7 +50,11 @@ export default function TopBar({ notificationsCount = 0, className = "" }: TopBa
   return (
     <header className={`bg-background flex h-16 items-center justify-between ${className}`}>
       <div className="relative hidden min-w-0 flex-1 md:block">
-        <SearchInput className={`bg-muted w-full max-w-xl min-w-0 border-none`} onSearch={() => {}} />
+        <SearchInput
+          disabled
+          className={`bg-muted w-full max-w-xl min-w-0 rounded-md border-none`}
+          onSearch={() => {}}
+        />
       </div>
       <div className="flex shrink-0 items-center gap-3">
         <div className="relative">
@@ -102,6 +107,7 @@ export default function TopBar({ notificationsCount = 0, className = "" }: TopBa
         <div className="relative border-l border-black/20 pl-4">
           <UserAvatarProfile showInfo />
         </div>
+        <ModernThemeSwitcher />
         <LanguageToggle />
       </div>
     </header>

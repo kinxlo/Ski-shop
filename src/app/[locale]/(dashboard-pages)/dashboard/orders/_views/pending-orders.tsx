@@ -1,9 +1,10 @@
 "use client";
 
 import { SearchInput } from "@/components/core/miscellaneous/search-input";
+import SkiButton from "@/components/shared/button";
 import { DashboardTable } from "@/components/shared/dashboard-table";
 import { useOrderColumn } from "@/components/shared/dashboard-table/table-data";
-import { EmptyState } from "@/components/shared/empty-state";
+import { EmptyState, ErrorState } from "@/components/shared/empty-state";
 import { useDashboardSearchParameters } from "@/lib/nuqs/use-dashboard-search-parameters";
 import { useDashboardOrderService } from "@/services/dashboard/vendor/orders/use-order-service";
 import { useRouter } from "next/navigation";
@@ -61,33 +62,18 @@ export const PendingOrders = () => {
 
   const renderLoadingSkeleton = () => <TableSkeleton />;
 
-  const renderErrorState = () => (
-    <EmptyState
-      images={[{ src: "/images/empty-state.svg", width: 80, height: 80, alt: "Error" }]}
-      title="Something went wrong"
-      description="Failed to load pending orders. Please try again."
-      className="bg-mid-grey-I space-y-0 rounded-lg"
-      titleClassName="!text-2xl"
-      descriptionClassName="text-base mb-4"
-      actionButton={
-        <button
-          onClick={() => refetch()}
-          className="bg-primary hover:bg-primary/90 text-background rounded-md px-4 py-2"
-        >
-          Refresh
-        </button>
-      }
-    />
-  );
+  const renderErrorState = () => <ErrorState onRetry={() => refetch()} />;
 
   const renderEmptyState = () => (
     <EmptyState
-      images={[{ src: "/images/empty-state.svg", width: 80, height: 80, alt: "No pending orders" }]}
-      title="No pending orders"
-      description="There are no pending orders at the moment."
-      className="bg-mid-grey-I space-y-0 rounded-lg"
-      titleClassName="!text-2xl"
+      title="No orders found"
+      description="There are no orders matching your criteria."
       descriptionClassName="text-base mb-4"
+      actionButton={
+        <SkiButton variant={`primary`} size={`lg`} onClick={() => refetch()}>
+          Refresh
+        </SkiButton>
+      }
     />
   );
 

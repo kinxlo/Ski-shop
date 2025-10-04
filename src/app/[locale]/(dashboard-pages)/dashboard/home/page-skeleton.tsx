@@ -9,7 +9,7 @@ export const AnalysisSkeleton = () => {
       {Array.from({ length: 3 }).map((_, index) => (
         <div
           key={index}
-          className="border-border flex min-h-[144px] flex-col justify-center rounded-lg border bg-white p-6"
+          className="border-border flex min-h-[144px] flex-col justify-center rounded-lg border bg-white p-6 dark:bg-[#111111]"
         >
           <div className="flex items-start justify-between">
             <div className="space-y-4">
@@ -27,10 +27,10 @@ export const AnalysisSkeleton = () => {
 export const SectionTwoSkeleton = () => {
   return (
     <section className="mt-6 grid grid-cols-1 gap-5 lg:grid-cols-12">
-      <div className="rounded-lg bg-white p-6 lg:col-span-8">
+      <div className="rounded-lg bg-white p-6 lg:col-span-8 dark:bg-[#111111]">
         <Skeleton className="h-80 w-full" />
       </div>
-      <div className="space-y-4 rounded-lg bg-white p-6 lg:col-span-4">
+      <div className="space-y-4 rounded-lg bg-white p-6 lg:col-span-4 dark:bg-[#111111]">
         {Array.from({ length: 3 }).map((_, index) => (
           <div key={index} className="flex items-center gap-2">
             <Skeleton className="size-24" />
@@ -47,12 +47,12 @@ export const SectionTwoSkeleton = () => {
 
 export const TableSkeleton = () => {
   return (
-    <section className="mt-6 space-y-4 rounded-lg bg-white p-6">
+    <section className="mt-6 space-y-4 rounded-lg bg-white p-6 dark:bg-[#111111]">
       {/* Table Section */}
       <section>
         <div className="rounded-lg">
           {/* Table Header */}
-          <div className="-b bg-gray-50 px-6 py-3">
+          <div className="-b bg-gray-50 px-6 py-3 dark:bg-slate-800">
             <div className="grid grid-cols-6 gap-4">
               <Skeleton className="h-4 w-[80px]" />
               <Skeleton className="h-4 w-[100px]" />
