@@ -3,7 +3,10 @@
 import { PromoteProductModal } from "@/app/[locale]/(dashboard-pages)/dashboard/products/_components/promote-product-modal";
 import { Icons } from "@/components/core/miscellaneous/icons";
 import SkiButton from "@/components/shared/button";
+import { EmptyState, ErrorState } from "@/components/shared/empty-state";
+import { Skeleton } from "@/components/ui/skeleton";
 import { useDashboardProductService } from "@/services/dashboard/vendor/products/use-product-service";
+import { useLocale } from "next-intl";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
@@ -12,8 +15,9 @@ import { ProductPromotionCard } from "./_components/product-card";
 
 const Page = () => {
   const { useGetAllProducts } = useDashboardProductService();
-  const { data: products } = useGetAllProducts({});
+  const { data: products, isLoading, isError, refetch } = useGetAllProducts({});
   const router = useRouter();
+  const locale = useLocale();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<{
@@ -33,8 +37,10 @@ const Page = () => {
   };
 
   const handleViewActiveCampaigns = () => {
-    router.push("/dashboard/promotions/active-campaigns");
+    router.push(`/${locale}/dashboard/promotions/active-campaigns`);
   };
+
+  const items = products?.data?.items || [];
 
   return (
     <main className="space-y-8">
@@ -59,11 +65,42 @@ const Page = () => {
           subtitleClassName={`!text-sm`}
           showSubscriptionBanner={false}
         />
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-          {products?.data?.items?.map((product) => (
-            <ProductPromotionCard key={product.id} product={product} onPromote={handlePromoteProduct} />
-          ))}
-        </div>
+        {isLoading ? (
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+            {Array.from({ length: 8 }).map((_, index) => (
+              <div key={index} className="bg-background rounded-lg border p-3">
+                <div className="mb-3">
+                  <Skeleton className="h-40 w-full" />
+                </div>
+                <div className="space-y-2">
+                  <Skeleton className="h-3 w-24" />
+                  <Skeleton className="h-4 w-40" />
+                  <Skeleton className="h-4 w-20" />
+                  <Skeleton className="h-10 w-full" />
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : isError ? (
+          <ErrorState onRetry={() => refetch()} />
+        ) : !items || items.length === 0 ? (
+          <EmptyState
+            title="No products found"
+            description="There are no products available for promotion."
+            descriptionClassName="text-base mb-4"
+            actionButton={
+              <SkiButton variant="primary" size="lg" onClick={() => refetch()}>
+                Refresh
+              </SkiButton>
+            }
+          />
+        ) : (
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+            {items.map((product) => (
+              <ProductPromotionCard key={product.id} product={product} onPromote={handlePromoteProduct} />
+            ))}
+          </div>
+        )}
       </div>
 
       {/* Promotion Modal */}
