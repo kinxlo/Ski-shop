@@ -3,9 +3,9 @@
 import { Icons } from "@/components/core/miscellaneous/icons";
 import SkiButton from "@/components/shared/button";
 import { DashboardTable } from "@/components/shared/dashboard-table";
-import { EmptyState } from "@/components/shared/empty-state";
+import { EmptyState, ErrorState } from "@/components/shared/empty-state";
 
-import { WithdrawalHistorySkeleton } from "./payout-skeleton";
+import { TableSkeleton } from "../../home/page-skeleton";
 import { useWithdrawalHistoryColumns } from "./withdrawal-history-columns";
 
 interface WithdrawalHistoryTableProperties {
@@ -44,52 +44,22 @@ export const WithdrawalHistoryTable = ({
     </div>
   );
 
-  const renderLoadingSkeleton = () => <WithdrawalHistorySkeleton />;
+  const renderLoadingSkeleton = () => <TableSkeleton />;
 
-  const renderErrorState = () => (
-    <EmptyState
-      images={[
-        {
-          src: "/images/empty-state.svg",
-          alt: "Error loading withdrawals",
-          width: 80,
-          height: 80,
-        },
-      ]}
-      title="Something went wrong"
-      titleClassName="!text-lg font-bold !text-mid-danger"
-      description="Failed to load withdrawal history. Please try again."
-      descriptionClassName="text-mid-grey-II"
-      className="bg-mid-grey-I space-y-0 rounded-lg py-10"
-      actionButton={
-        onRefresh && (
-          <SkiButton
-            onClick={onRefresh}
-            variant="outline"
-            className="border-mid-danger text-mid-danger hover:bg-mid-danger/10 mt-4 border"
-          >
-            Try Again
-          </SkiButton>
-        )
-      }
-    />
-  );
+  const renderErrorState = () => <ErrorState onRetry={onRefresh} />;
 
   const renderEmptyState = () => (
     <EmptyState
-      images={[
-        {
-          src: "/images/empty-state.svg",
-          alt: "No withdrawal history",
-          width: 80,
-          height: 80,
-        },
-      ]}
-      title="No withdrawal history yet"
-      titleClassName="!text-lg font-bold !text-mid-warning"
-      description="You haven't made any withdrawal requests. Once you request a payout, it will appear here."
-      descriptionClassName="text-mid-grey-II"
-      className="bg-mid-grey-I space-y-0 rounded-lg py-10"
+      title="No withdrawals found"
+      description="There are no withdrawals matching your criteria."
+      descriptionClassName="text-base mb-4"
+      actionButton={
+        onRefresh && (
+          <SkiButton variant={`primary`} size={`lg`} onClick={onRefresh}>
+            Refresh
+          </SkiButton>
+        )
+      }
     />
   );
 

@@ -9,7 +9,7 @@ export const PayoutOverviewSkeleton = () => {
       {Array.from({ length: 4 }).map((_, index) => (
         <div
           key={index}
-          className="border-border flex min-h-[120px] flex-col justify-center rounded-lg border bg-white p-6 shadow-none"
+          className="border-border bg-background flex min-h-[120px] flex-col justify-center rounded-lg border p-6 shadow-none"
         >
           <div className="flex items-center justify-between">
             <div className="space-y-3">

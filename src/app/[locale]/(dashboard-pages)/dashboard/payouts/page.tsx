@@ -45,7 +45,12 @@ const Page = () => {
   // const payoutId = payoutStore?.success ? payoutStore.data.id : "";
 
   // Fetch withdrawals data using the payout ID
-  const { data: withdrawalsData, isLoading: isLoadingWithdrawals } = useGetWithdrawalsHistory();
+  const {
+    data: withdrawalsData,
+    isLoading: isLoadingWithdrawals,
+    isError: isWithdrawalsError,
+    refetch: refetchWithdrawals,
+  } = useGetWithdrawalsHistory();
 
   // Calculate stats and withdrawal history from API data
   const { stats, withdrawalHistory } = useMemo(() => {
@@ -141,7 +146,9 @@ const Page = () => {
           hasPreviousPage={false}
           showPagination={false}
           isLoading={isWithdrawalsLoading}
+          isError={isWithdrawalsError}
           onRowClick={handleWithdrawalRowClick}
+          onRefresh={refetchWithdrawals}
         />
       </section>
     </main>

@@ -13,7 +13,7 @@ export const useWithdrawalHistoryColumns = (): TableColumnDefinition<WithdrawalT
       header: "Transaction ID",
       accessorKey: "id",
       render: (_, transaction: WithdrawalTransaction) => (
-        <span className="text-high-grey-II text-sm font-medium">
+        <span className="text-high-grey-II !text-sm font-medium">
           {transaction.transactionId || transaction.id.slice(0, 8)}
         </span>
       ),
@@ -22,7 +22,7 @@ export const useWithdrawalHistoryColumns = (): TableColumnDefinition<WithdrawalT
       header: "Amount",
       accessorKey: "amount",
       render: (_, transaction: WithdrawalTransaction) => (
-        <span className="font-semibold">{formatCurrency(transaction.amount, locale as Locale)}</span>
+        <span className="!text-sm font-medium">{formatCurrency(transaction.amount, locale as Locale)}</span>
       ),
     },
     {
@@ -30,8 +30,8 @@ export const useWithdrawalHistoryColumns = (): TableColumnDefinition<WithdrawalT
       accessorKey: "bankName",
       render: (_, transaction: WithdrawalTransaction) => (
         <div>
-          <div className="font-medium">{transaction.bankName}</div>
-          <div className="text-sm">{transaction.bankAccount}</div>
+          <div className="!text-sm font-medium">{transaction.bankName}</div>
+          <div className="!text-sm">{transaction.bankAccount}</div>
         </div>
       ),
     },
@@ -39,7 +39,7 @@ export const useWithdrawalHistoryColumns = (): TableColumnDefinition<WithdrawalT
       header: "Date & Time",
       accessorKey: "date",
       render: (_, transaction: WithdrawalTransaction) => (
-        <span className="">{formatDate(transaction.date, locale as Locale)}</span>
+        <span className="!text-sm">{formatDate(transaction.date, locale as Locale)}</span>
       ),
     },
     {
@@ -48,7 +48,7 @@ export const useWithdrawalHistoryColumns = (): TableColumnDefinition<WithdrawalT
       render: (_, transaction: WithdrawalTransaction) => (
         <span
           className={cn(
-            "rounded-full px-3 py-1 text-xs font-medium capitalize",
+            "rounded-full px-2 py-1 !text-sm capitalize",
             transaction.status === "approved" && "bg-low-success text-mid-success",
             transaction.status === "pending" && "bg-yellow-100 text-yellow-600",
             transaction.status === "processing" && "bg-blue-100 text-blue-600",

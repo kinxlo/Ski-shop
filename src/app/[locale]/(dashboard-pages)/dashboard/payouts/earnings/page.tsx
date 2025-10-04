@@ -3,7 +3,7 @@
 import { BackButton } from "@/components/shared/back-button";
 import SkiButton from "@/components/shared/button";
 import { AlertModal } from "@/components/shared/dialog/alert-modal";
-import { EmptyState } from "@/components/shared/empty-state";
+import { EmptyState, ErrorState } from "@/components/shared/empty-state";
 import { FormField } from "@/components/shared/inputs/FormFields";
 import { Locale } from "@/lib/i18n/config";
 import { formatCurrency } from "@/lib/i18n/utils";
@@ -168,29 +168,14 @@ const Page = () => {
                 ))}
               </div>
             ) : isBanksError ? (
-              <div className="bg-background rounded-lg p-6">
-                <EmptyState
-                  images={[{ src: "/images/alert.png", alt: "Error", width: 50, height: 50 }]}
-                  title="Failed to Load Bank Accounts"
-                  description="Unable to load your bank accounts. Please check your connection and try again."
-                  className="min-h-0 space-y-4"
-                  titleClassName="!text-lg text-red-600"
-                  descriptionClassName="text-sm text-gray-600"
-                  button={{
-                    text: "Retry",
-                    onClick: () => refetchBanks(),
-                  }}
-                />
-              </div>
+              <ErrorState className={`!bg-background`} onRetry={() => refetchBanks()} />
             ) : bankAccounts.length === 0 ? (
               <div className="bg-background rounded-lg p-6">
                 <EmptyState
-                  images={[{ src: "/images/alert.png", alt: "No banks", width: 50, height: 50 }]}
                   title="No Bank Accounts"
                   description="Add a bank account to withdraw your earnings"
-                  className="min-h-0 space-y-4"
-                  titleClassName="!text-lg text-gray-700"
-                  descriptionClassName="text-sm text-gray-600"
+                  descriptionClassName="mb-2"
+                  actionButton={<AddBankTrigger onBankAdded={handleBankAdded} />}
                 />
               </div>
             ) : (
