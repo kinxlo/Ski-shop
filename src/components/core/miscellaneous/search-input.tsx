@@ -76,8 +76,18 @@ export function SearchInput({
     }
   }, [initialValue, isControlled]);
 
+  /**
+   * Avoid re-triggering search due to unstable onSearch function identity from parents.
+   * We store the latest onSearch in a ref and only depend on the debouncedQuery and config values.
+   */
+  const onSearchReference = useRef<SearchInputProperties["onSearch"]>(onSearch);
   useEffect(() => {
-    if (!onSearch) {
+    onSearchReference.current = onSearch;
+  }, [onSearch]);
+
+  useEffect(() => {
+    const searchFunction = onSearchReference.current;
+    if (!searchFunction) {
       mountedReference.current = true;
       return;
     }
@@ -85,15 +95,16 @@ export function SearchInput({
     if (!mountedReference.current) {
       mountedReference.current = true;
       if (triggerOnMount && (debouncedQuery.length >= minLength || debouncedQuery.length === 0)) {
-        onSearch(debouncedQuery);
+        searchFunction?.(debouncedQuery);
       }
       return;
     }
 
     if (debouncedQuery.length >= minLength || debouncedQuery.length === 0) {
-      onSearch(debouncedQuery);
+      searchFunction?.(debouncedQuery);
     }
-  }, [debouncedQuery, minLength, onSearch, triggerOnMount]);
+    // Intentionally exclude onSearch from deps to prevent effect from firing on every parent render
+  }, [debouncedQuery, minLength, triggerOnMount]);
 
   useEffect(() => {
     if (isControlled) {
@@ -113,7 +124,7 @@ export function SearchInput({
 
   const handleKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
     if (event.key === "Enter") {
-      onSearch?.(currentValue);
+      onSearchReference.current?.(currentValue);
     } else if (event.key === "Escape") {
       clear();
     }
@@ -131,7 +142,7 @@ export function SearchInput({
 
     onClear?.();
     referenceToUse.current?.focus();
-    onSearch?.("");
+    onSearchReference.current?.("");
   };
 
   return (

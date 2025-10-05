@@ -12,7 +12,10 @@ export const useDashboardSearchParameters = () => {
     "status",
     parseAsStringEnum(["all", "delivered", "pending", "cancelled", "paid", "active", "inactive"]),
   );
-  const [productStatus, setProductStatus] = useQueryState("status", parseAsStringEnum(["all", "published", "draft"]));
+  const [productStatus, setProductStatus] = useQueryState(
+    "productStatus",
+    parseAsStringEnum(["all", "published", "draft"]),
+  );
   const [role, setRole] = useQueryState("role", parseAsStringEnum(["all", "customer", "vendor", "rider"]));
 
   return {

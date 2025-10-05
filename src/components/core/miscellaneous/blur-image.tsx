@@ -24,8 +24,8 @@ export function BlurImage({ style, ...properties }: ComponentProps<typeof Image>
       blurDataURL={computedBlur}
       style={style}
       className={cn(
-        "duration-700 ease-in-out",
-        isLoading ? "scale-105 blur-lg" : "blur-0 scale-100",
+        "transition-opacity duration-500 ease-in-out",
+        isLoading ? "opacity-0" : "opacity-100",
         properties.className,
       )}
       onLoad={() => {

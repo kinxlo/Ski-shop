@@ -1,11 +1,10 @@
 "use client";
 
-import Loading from "@/app/Loading";
 import { Icons } from "@/components/core/miscellaneous/icons";
 import { SearchInput } from "@/components/core/miscellaneous/search-input";
 import { DashboardTable } from "@/components/shared/dashboard-table";
 import { useAdminOrderColumn } from "@/components/shared/dashboard-table/admin/admin-table-data";
-import { EmptyState } from "@/components/shared/empty-state";
+import { EmptyState, ErrorState } from "@/components/shared/empty-state";
 import { orderStatusOptions } from "@/lib/constants";
 import { Locale } from "@/lib/i18n/config";
 import { formatCurrency } from "@/lib/i18n/utils";
@@ -58,8 +57,13 @@ const Page = () => {
 
   const orderColumn = useAdminOrderColumn();
 
-  const { data: overviewData, isLoading: isOverviewLoading, isError: isOverviewError } = useGetOverview();
-  const { data: allOrders, isLoading: isAllOrdersLoading, isError: isAllOrdersError } = useGetAllOrders(orderFilters);
+  const { data: overviewData, isLoading: isOverviewLoading, isError: isOverviewError, refetch } = useGetOverview();
+  const {
+    data: allOrders,
+    isLoading: isAllOrdersLoading,
+    isError: isAllOrdersError,
+    refetch: refetchOrders,
+  } = useGetAllOrders(orderFilters);
   const { data: newOrders } = useGetAllOrders({ status: "pending" });
 
   const orders = allOrders?.data?.items || [];
@@ -100,14 +104,7 @@ const Page = () => {
       {isOverviewLoading ? (
         <AnalysisSkeleton />
       ) : isOverviewError ? (
-        <EmptyState
-          title="Error loading data"
-          description="There was a problem fetching the overview data. Please try again later."
-          className="min-h-fit space-y-0 rounded-lg bg-red-50 p-6"
-          titleClassName={`!text-lg font-bold !text-mid-danger`}
-          descriptionClassName={`!text-mid-danger`}
-          images={[]}
-        />
+        <ErrorState onRetry={() => refetch()} />
       ) : (
         <section className="grid grid-cols-1 gap-5 lg:grid-cols-3">
           <OverViewCard
@@ -154,14 +151,7 @@ const Page = () => {
         {isOverviewLoading ? (
           <SectionTwoSkeleton />
         ) : isOverviewError ? (
-          <EmptyState
-            title="Error loading Graph data"
-            description="There was a problem fetching the graph data. Please try again later."
-            className="min-h-fit space-y-0 rounded-lg bg-red-50 p-6"
-            titleClassName={`!text-lg font-bold !text-mid-danger`}
-            descriptionClassName={`!text-mid-danger`}
-            images={[]}
-          />
+          <ErrorState onRetry={() => refetch()} />
         ) : (
           <SectionTwo />
         )}
@@ -169,58 +159,52 @@ const Page = () => {
 
       {/* Orders Table Section */}
       <section>
-        {isAllOrdersLoading ? (
-          <TableSkeleton />
-        ) : isAllOrdersError ? (
-          <EmptyState
-            title="Error loading orders"
-            description="There was a problem fetching the orders data. Please try again later."
-            className="min-h-fit space-y-0 rounded-lg bg-red-50 p-6"
-            titleClassName={`!text-lg font-bold !text-mid-danger`}
-            descriptionClassName={`!text-mid-danger`}
-            images={[]}
+        <section className={`bg-background mt-6 space-y-4 rounded-lg p-6`}>
+          <DashboardHeader
+            title="Recent Orders"
+            subtitle="Track Skishop recent orders and their status"
+            showSubscriptionBanner={false}
+            icon={<Icons.cart className="mt-[-2] size-4" />}
+            titleClassName={`!text-lg`}
+            subtitleClassName={`!text-sm`}
+            actionComponent={
+              <div className="">
+                <div className="flex items-center gap-2">
+                  <SearchInput className={``} onSearch={handleSearchChange} initialValue={searchQuery} />
+                  <FilterDropdown options={orderStatusOptions} value={status} onValueChange={handleStatusChange} />
+                </div>
+              </div>
+            }
           />
-        ) : (
-          <section className={`bg-background mt-6 space-y-4 rounded-lg p-6`}>
-            <DashboardHeader
-              title="Recent Orders"
-              subtitle="Track Skishop recent orders and their status"
-              showSubscriptionBanner={false}
-              icon={<Icons.cart className="mt-[-2] size-4" />}
-              titleClassName={`!text-lg`}
-              subtitleClassName={`!text-sm`}
-              actionComponent={
-                <div className="">
-                  <div className="flex items-center gap-2">
-                    <SearchInput className={``} onSearch={handleSearchChange} initialValue={searchQuery} />
-                    <FilterDropdown options={orderStatusOptions} value={status} onValueChange={handleStatusChange} />
-                  </div>
-                </div>
-              }
-            />
-            <section>
-              {isAllOrdersError ? (
-                <Loading text="Loading orders..." className="w-fill h-fit p-20" />
-              ) : orders?.length ? (
-                <DashboardTable
-                  data={orders}
-                  columns={orderColumn}
-                  totalPages={totalPages}
-                  itemsPerPage={limit || 10}
-                  hasNextPage={hasNextPage}
-                  hasPreviousPage={hasPreviousPage}
-                  showPagination
-                  pageParameter="page"
-                  // onRowClick={handleRowClick}
-                />
-              ) : (
-                <div className="flex items-center justify-center p-20">
-                  <p>No orders found.</p>
-                </div>
-              )}
-            </section>
+          <section aria-busy={isAllOrdersLoading} aria-live="polite">
+            {isAllOrdersLoading ? (
+              <TableSkeleton />
+            ) : isAllOrdersError ? (
+              <ErrorState onRetry={refetchOrders} />
+            ) : Array.isArray(orders) && orders.length > 0 ? (
+              <DashboardTable
+                data={orders}
+                columns={orderColumn}
+                totalPages={totalPages}
+                itemsPerPage={limit ?? 10}
+                hasNextPage={hasNextPage}
+                hasPreviousPage={hasPreviousPage}
+                showPagination
+                pageParameter="page"
+                // onRowClick={handleRowClick}
+              />
+            ) : (
+              <div className="flex items-center justify-center p-20" role="status" aria-live="polite">
+                {searchQuery || status !== "all" ? "" : "No orders found."}
+                {searchQuery || status !== "all" ? (
+                  <EmptyState className={`bg-transparent`} title={`No orders match your filters.`} />
+                ) : (
+                  <EmptyState className={`bg-transparent`} title={`No orders match your filters.`} />
+                )}
+              </div>
+            )}
           </section>
-        )}
+        </section>
       </section>
     </main>
   );

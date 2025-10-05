@@ -4,6 +4,7 @@ import { DashboardHeader } from "@/app/[locale]/(dashboard-pages)/_components/da
 import { Icons } from "@/components/core/miscellaneous/icons";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { useAdminService } from "@/services/dashboard/admin/use-admin-service";
+import { useMemo } from "react";
 import { Area, AreaChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 
 // Assuming AdminSalesOverviewData is available globally or import it if needed
@@ -23,17 +24,19 @@ export function PayrollLineChart() {
   const { useGetSalesOverview } = useAdminService();
   const { data, isLoading, error } = useGetSalesOverview();
 
-  // Fixed list of months for the x-axis
-  const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-
   // Create chart data with all months, using API data where available
-  const chartData = months.map((month) => {
-    const apiData = data?.data?.find((item: AdminSalesOverviewData) => item.month.includes(month));
-    return {
-      month,
-      amount: apiData ? apiData.total : 0,
-    };
-  });
+  const chartData = useMemo(() => {
+    // Define months inside useMemo to avoid changing dependency identity each render
+    const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+    return months.map((month) => {
+      const apiData = data?.data?.find((item: AdminSalesOverviewData) => item.month.includes(month));
+      return {
+        month,
+        amount: apiData ? apiData.total : 0,
+      };
+    });
+  }, [data?.data]);
 
   if (isLoading) {
     return (
@@ -86,7 +89,7 @@ export function PayrollLineChart() {
       </CardHeader>
       <CardContent className="p-0 lg:px-6">
         <div className="h-[300px] w-full">
-          <ResponsiveContainer width="100%" height="100%">
+          <ResponsiveContainer width="100%" height="100%" debounce={200}>
             <AreaChart
               data={chartData}
               margin={{
@@ -131,6 +134,7 @@ export function PayrollLineChart() {
                 fillOpacity={1}
                 fill="url(#colorAmount)"
                 activeDot={{ r: 6, fill: "#3B82F6", strokeWidth: 2, stroke: "#FFFFFF" }}
+                isAnimationActive={false}
               />
             </AreaChart>
           </ResponsiveContainer>

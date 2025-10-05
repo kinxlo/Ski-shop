@@ -3,6 +3,7 @@
 import { DashboardHeader } from "@/app/[locale]/(dashboard-pages)/_components/dashboard-header";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { useAdminService } from "@/services/dashboard/admin/use-admin-service";
+import { useMemo } from "react";
 import { Cell, Pie, PieChart, ResponsiveContainer, Tooltip } from "recharts";
 
 const RevenueBySource = () => {
@@ -11,11 +12,14 @@ const RevenueBySource = () => {
 
   const overview = data?.data;
 
-  const pieData = [
-    { name: "Subscriptions", value: overview?.subscriptions || 0, color: "lch(29 41.99 271.87)" },
-    { name: "Promotions", value: overview?.promotionAds || 0, color: "lch(35 46.61 142.58)" },
-    { name: "Commissions", value: overview?.commisions || 0, color: "lch(80 46.8 60.34)" },
-  ];
+  const pieData = useMemo(
+    () => [
+      { name: "Subscriptions", value: overview?.subscriptions || 0, color: "lch(29 41.99 271.87)" },
+      { name: "Promotions", value: overview?.promotionAds || 0, color: "lch(35 46.61 142.58)" },
+      { name: "Commissions", value: overview?.commisions || 0, color: "lch(80 46.8 60.34)" },
+    ],
+    [overview?.subscriptions, overview?.promotionAds, overview?.commisions],
+  );
 
   const total = pieData.reduce((sum, item) => sum + item.value, 0);
 
@@ -67,7 +71,7 @@ const RevenueBySource = () => {
       </CardHeader>
       <CardContent className="p-0 lg:px-6">
         <div className="h-[300px] w-full">
-          <ResponsiveContainer width="100%" height="100%">
+          <ResponsiveContainer width="100%" height="100%" debounce={200}>
             <PieChart>
               <Pie
                 data={pieData}
@@ -77,9 +81,9 @@ const RevenueBySource = () => {
                 outerRadius={100}
                 paddingAngle={5}
                 dataKey="value"
+                labelLine={false}
                 label={({ percent }) => `${(percent * 100).toFixed(1)}%`}
-                animationDuration={1000}
-                animationEasing="ease-out"
+                isAnimationActive={false}
               >
                 {pieData.map((entry, index) => (
                   <Cell key={`cell-${index}`} fill={entry.color} />
