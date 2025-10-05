@@ -1,12 +1,14 @@
 "use client";
 
-import Loading from "@/app/Loading";
 import { SearchInput } from "@/components/core/miscellaneous/search-input";
 import { DashboardTable } from "@/components/shared/dashboard-table";
 import { useAdminUserColumn } from "@/components/shared/dashboard-table/admin/admin-table-data";
 import { DownloadCsvButton } from "@/components/shared/download-csv-button";
+import { EmptyState, ErrorState } from "@/components/shared/empty-state";
 import { useDashboardSearchParameters } from "@/lib/nuqs/use-dashboard-search-parameters";
 import { useUserService } from "@/services/externals/user/use-user-service";
+
+import { TableSkeleton } from "../../../_components/dashboard-table/_components/table-skeleton";
 
 export const InactiveUsers = () => {
   const { search: searchQuery, limit, setSearch: setSearchQuery, resetToFirstPage } = useDashboardSearchParameters();
@@ -34,11 +36,7 @@ export const InactiveUsers = () => {
   };
 
   if (isError) {
-    return (
-      <div className="flex items-center justify-center p-20">
-        <p>Error loading users. Please try again later.</p>
-      </div>
-    );
+    return <ErrorState />;
   }
 
   return (
@@ -63,7 +61,7 @@ export const InactiveUsers = () => {
       </div>
       <div>
         {isUsersLoading ? (
-          <Loading text="Loading inactive users..." className="w-fill h-fit p-20" />
+          <TableSkeleton />
         ) : userData?.data?.items?.length ? (
           <DashboardTable
             data={userData.data.items as Users[]}
@@ -76,9 +74,11 @@ export const InactiveUsers = () => {
             pageParameter="page"
           />
         ) : (
-          <div className="flex items-center justify-center p-20">
-            <p>No inactive users found.</p>
-          </div>
+          <EmptyState
+            className={`bg-transparent`}
+            title={`No match found`}
+            description={`No user match your filters.`}
+          />
         )}
       </div>
     </section>

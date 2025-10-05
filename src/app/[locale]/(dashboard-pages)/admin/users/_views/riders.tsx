@@ -1,15 +1,16 @@
 "use client";
 
-import Loading from "@/app/Loading";
 import { Icons } from "@/components/core/miscellaneous/icons";
 import { SearchInput } from "@/components/core/miscellaneous/search-input";
 import { DashboardTable } from "@/components/shared/dashboard-table";
 import { useAdminRiderColumn } from "@/components/shared/dashboard-table/admin/admin-table-data";
 import { DownloadCsvButton } from "@/components/shared/download-csv-button";
+import { EmptyState, ErrorState } from "@/components/shared/empty-state";
 import { useDashboardSearchParameters } from "@/lib/nuqs/use-dashboard-search-parameters";
 import { useUserService } from "@/services/externals/user/use-user-service";
 
 import { DashboardHeader } from "../../../_components/dashboard-header";
+import { TableSkeleton } from "../../../_components/dashboard-table/_components/table-skeleton";
 
 export const Riders = () => {
   const { search: searchQuery, limit, setSearch: setSearchQuery, resetToFirstPage } = useDashboardSearchParameters();
@@ -37,11 +38,7 @@ export const Riders = () => {
   };
 
   if (isError) {
-    return (
-      <div className="flex items-center justify-center p-20">
-        <p>Error loading riders. Please try again later.</p>
-      </div>
-    );
+    return <ErrorState />;
   }
 
   return (
@@ -76,7 +73,7 @@ export const Riders = () => {
       </div>
       <div>
         {isUsersLoading ? (
-          <Loading text="Loading riders..." className="w-fill h-fit p-20" />
+          <TableSkeleton />
         ) : userData?.data?.items?.length ? (
           <DashboardTable
             data={userData.data.items as Users[]}
@@ -89,9 +86,11 @@ export const Riders = () => {
             pageParameter="page"
           />
         ) : (
-          <div className="flex items-center justify-center p-20">
-            <p>No riders found.</p>
-          </div>
+          <EmptyState
+            className={`bg-transparent`}
+            title={`No match found`}
+            description={`No user match your filters.`}
+          />
         )}
       </div>
     </section>

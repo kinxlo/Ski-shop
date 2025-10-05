@@ -1,17 +1,18 @@
 "use client";
 
-import Loading from "@/app/Loading";
 import { Icons } from "@/components/core/miscellaneous/icons";
 import { SearchInput } from "@/components/core/miscellaneous/search-input";
 import { DashboardTable } from "@/components/shared/dashboard-table";
 import { useAdminUserColumn } from "@/components/shared/dashboard-table/admin/admin-table-data";
 import { DownloadCsvButton } from "@/components/shared/download-csv-button";
+import { EmptyState, ErrorState } from "@/components/shared/empty-state";
 import { FilterDropdown } from "@/components/shared/filter-dropdown";
 import { useDashboardSearchParameters } from "@/lib/nuqs/use-dashboard-search-parameters";
 import { useUserService } from "@/services/externals/user/use-user-service";
 import { useParams, useRouter } from "next/navigation";
 
 import { DashboardHeader } from "../../../_components/dashboard-header";
+import { TableSkeleton } from "../../../_components/dashboard-table/_components/table-skeleton";
 
 export const AllUsers = () => {
   const {
@@ -65,11 +66,7 @@ export const AllUsers = () => {
   ];
 
   if (isError) {
-    return (
-      <div className="flex items-center justify-center p-20">
-        <p>Error loading users. Please try again later.</p>
-      </div>
-    );
+    return <ErrorState />;
   }
 
   return (
@@ -104,7 +101,7 @@ export const AllUsers = () => {
       </div>
       <div>
         {isUsersLoading ? (
-          <Loading text="Loading all users..." className="w-fill h-fit p-20" />
+          <TableSkeleton />
         ) : userData?.data?.items?.length ? (
           <DashboardTable
             data={userData.data.items as Users[]}
@@ -118,9 +115,11 @@ export const AllUsers = () => {
             onRowClick={handleRowClick}
           />
         ) : (
-          <div className="flex items-center justify-center p-20">
-            <p>No users found.</p>
-          </div>
+          <EmptyState
+            className={`bg-transparent`}
+            title={`No match found`}
+            description={`No user match your filters.`}
+          />
         )}
       </div>
     </section>

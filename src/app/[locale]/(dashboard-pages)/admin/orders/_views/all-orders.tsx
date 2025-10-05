@@ -2,10 +2,11 @@
 
 import { Icons } from "@/components/core/miscellaneous/icons";
 import { SearchInput } from "@/components/core/miscellaneous/search-input";
+import SkiButton from "@/components/shared/button";
 import { DashboardTable } from "@/components/shared/dashboard-table";
 import { useAdminOrderColumn } from "@/components/shared/dashboard-table/admin/admin-table-data";
 import { DownloadCsvButton } from "@/components/shared/download-csv-button";
-import { EmptyState } from "@/components/shared/empty-state";
+import { EmptyState, ErrorState } from "@/components/shared/empty-state";
 // import { FilterDropdown } from "@/components/shared/filter-dropdown";
 import { useDashboardSearchParameters } from "@/lib/nuqs/use-dashboard-search-parameters";
 import { useDashboardOrderService } from "@/services/dashboard/vendor/orders/use-order-service";
@@ -80,40 +81,16 @@ export const AllOrders = () => {
 
   const renderLoadingSkeleton = () => <TableSkeleton />;
 
-  const renderErrorState = () => (
-    <EmptyState
-      images={[{ src: "/images/empty-state.svg", width: 80, height: 80, alt: "Error" }]}
-      title="Something went wrong"
-      description="Failed to load orders. Please try again."
-      className="bg-mid-grey-I space-y-0 rounded-lg"
-      titleClassName="!text-2xl"
-      descriptionClassName="text-base mb-4"
-      actionButton={
-        <button
-          onClick={() => refetch()}
-          className="bg-primary hover:bg-primary/90 text-background rounded-md px-4 py-2"
-        >
-          Try Again
-        </button>
-      }
-    />
-  );
+  const renderErrorState = () => <ErrorState onRetry={() => refetch()} />;
 
   const renderEmptyState = () => (
     <EmptyState
-      images={[{ src: "/images/empty-state.svg", width: 80, height: 80, alt: "No orders" }]}
       title="No orders found"
       description="There are no orders matching your criteria."
-      className="bg-mid-grey-I space-y-0 rounded-lg"
-      titleClassName="!text-2xl"
-      descriptionClassName="text-base mb-4"
       actionButton={
-        <button
-          onClick={() => refetch()}
-          className="bg-primary hover:bg-primary/90 text-background rounded-md px-4 py-2"
-        >
+        <SkiButton variant={`primary`} size={`lg`} onClick={() => refetch()}>
           Refresh
-        </button>
+        </SkiButton>
       }
     />
   );

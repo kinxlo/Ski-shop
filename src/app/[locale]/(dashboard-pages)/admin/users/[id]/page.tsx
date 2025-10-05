@@ -1,10 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import Loading from "@/app/Loading";
+import { ErrorState } from "@/components/shared/empty-state";
 import { useUserService } from "@/services/externals/user/use-user-service";
 import { useParams } from "next/navigation";
 
+import UserDetailSkeleton from "./_components/user-detail-skeleton";
 import BuyersView from "./views/buyers-view";
 import RidersView from "./views/riders-view";
 import VendorsView from "./views/vendors-view";
@@ -17,10 +18,10 @@ const UserDetailsPage = () => {
   const { data, isLoading, isError } = useGetUserById(id, { staleTime: 0 });
 
   if (isLoading) {
-    return <Loading text="Loading user..." className="w-fill h-fit p-20" />;
+    return <UserDetailSkeleton />;
   }
   if (isError) {
-    return <div className="p-6">Failed to load user</div>;
+    return <ErrorState className={`!bg-background min-h-[calc(100vh-130px)]`} />;
   }
 
   const profile: any = data?.data ?? {};

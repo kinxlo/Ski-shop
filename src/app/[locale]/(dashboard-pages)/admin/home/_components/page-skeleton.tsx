@@ -44,7 +44,7 @@ export const SectionTwoSkeleton = () => {
 
 export const TableSkeleton = () => {
   return (
-    <section className="mt-6 space-y-4 rounded-lg bg-white p-6">
+    <section className="bg-background mt-6 space-y-4 rounded-lg p-6">
       {/* Header with search and filter */}
       <section className="flex flex-col-reverse justify-between gap-4 lg:flex-row lg:items-center">
         <div>
@@ -62,7 +62,7 @@ export const TableSkeleton = () => {
       <section>
         <div className="rounded-lg">
           {/* Table Header */}
-          <div className="-b bg-gray-50 px-6 py-3">
+          <div className="-b px-6 py-3">
             <div className="grid grid-cols-6 gap-4">
               <Skeleton className="h-4 w-[80px]" />
               <Skeleton className="h-4 w-[100px]" />

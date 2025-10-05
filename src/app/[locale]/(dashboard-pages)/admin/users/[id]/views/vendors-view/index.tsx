@@ -1,7 +1,9 @@
 "use client";
 
+import { DashboardHeader } from "@/app/[locale]/(dashboard-pages)/_components/dashboard-header";
 import Loading from "@/app/Loading";
 import { SearchInput } from "@/components/core/miscellaneous/search-input";
+import { BackButton } from "@/components/shared/back-button";
 import SkiButton from "@/components/shared/button";
 import { DashboardTable } from "@/components/shared/dashboard-table";
 import { useAdminOrderHistoryColumn } from "@/components/shared/dashboard-table/admin/admin-table-data";
@@ -15,7 +17,6 @@ import { useDashboardSearchParameters } from "@/lib/nuqs/use-dashboard-search-pa
 import { useDashboardOrderService } from "@/services/dashboard/vendor/orders/use-order-service";
 import { useDashboardProductService } from "@/services/dashboard/vendor/products/use-product-service";
 import { useSettingsService } from "@/services/dashboard/vendor/settings/use-settings-service";
-import { ChevronLeft } from "lucide-react";
 
 import { TableSkeleton } from "../../../../home/_components/page-skeleton";
 
@@ -67,29 +68,23 @@ const VendorsView = ({ id, profile }: { id: string; profile: Users }) => {
   const hasPreviousPage = allOrders?.data?.metadata?.hasPreviousPage || false;
 
   return (
-    <>
-      <section className={`flex flex-col items-center justify-between gap-4 lg:flex-row`}>
-        <div className="flex items-center gap-4">
-          <ChevronLeft className="h-6 w-6 cursor-pointer" onClick={() => history.back()} />
-          <h4 className="text-high-grey-III !text-[18px] lg:!text-[25px]">
-            Vendor&apos;s Profile -{" "}
-            <span className="text-low-grey-II capitalize">
-              {profile?.firstName} {profile?.lastName}
-            </span>
-          </h4>
-        </div>
-        <div>
+    <section className={`space-y-8`}>
+      <DashboardHeader
+        title={`Vendor's Profile - ${profile?.firstName} ${profile?.lastName}`}
+        showSubscriptionBanner={false}
+        icon={<BackButton />}
+        actionComponent={
           <DownloadCsvButton
             data={(orders || []) as Record<string, unknown>[]}
             filename={`user-sales-${profile?.firstName || "user"}-${profile?.lastName || ""}`}
             headers={{
-              reference: "Order ID",
+              reference: "Profile ID",
               createdAt: "Date and Time",
-              deliveryStatus: "Delivery Status",
+              // deliveryStatus: "Delivery Status",
             }}
           />
-        </div>
-      </section>
+        }
+      />
       <section className="space-y-6">
         <Details.Section title="Profile Overview">
           <Details.Grid className={``}>
@@ -219,7 +214,7 @@ const VendorsView = ({ id, profile }: { id: string; profile: Users }) => {
           )}
         </section>
       </section>
-    </>
+    </section>
   );
 };
 

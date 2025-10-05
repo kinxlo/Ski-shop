@@ -9,7 +9,7 @@ import { DashboardTable } from "@/components/shared/dashboard-table";
 import { useAdminOrderHistoryColumn } from "@/components/shared/dashboard-table/admin/admin-table-data";
 import { Details } from "@/components/shared/details";
 import { DownloadCsvButton } from "@/components/shared/download-csv-button";
-import { EmptyState } from "@/components/shared/empty-state";
+import { ErrorState } from "@/components/shared/empty-state";
 import { FilterDropdown } from "@/components/shared/filter-dropdown";
 import { orderStatusOptions } from "@/lib/constants";
 import { formatDate } from "@/lib/i18n/utils";
@@ -61,26 +61,24 @@ const BuyersView = ({ id, profile }: { id: string; profile: any }) => {
   const hasPreviousPage = allOrders?.data?.metadata?.hasPreviousPage || false;
 
   return (
-    <>
-      <section className={`flex flex-col items-center justify-between gap-4 lg:flex-row`}>
-        <DashboardHeader
-          title={`Buyer&apos;s Profile -${profile?.firstName} ${profile?.lastName}`}
-          subtitle={`${profile?.firstName} ${profile?.lastName}`}
-          showSubscriptionBanner={false}
-          icon={<BackButton />}
-          actionComponent={
-            <DownloadCsvButton
-              data={(orders || []) as Record<string, unknown>[]}
-              filename={`user-orders-${profile?.firstName || "user"}-${profile?.lastName || ""}`}
-              headers={{
-                reference: "Order ID",
-                createdAt: "Date and Time",
-                deliveryStatus: "Delivery Status",
-              }}
-            />
-          }
-        />
-      </section>
+    <section className={`space-y-8`}>
+      <DashboardHeader
+        title={`Buyer's Profile - ${profile?.firstName} ${profile?.lastName}`}
+        showSubscriptionBanner={false}
+        icon={<BackButton />}
+        actionComponent={
+          <DownloadCsvButton
+            data={(orders || []) as Record<string, unknown>[]}
+            filename={`user-orders-${profile?.firstName || "user"}-${profile?.lastName || ""}`}
+            headers={{
+              reference: "Order ID",
+              createdAt: "Date and Time",
+              deliveryStatus: "Delivery Status",
+            }}
+          />
+        }
+      />
+
       <section className="space-y-6">
         <Details.Section title="Profile Overview">
           <Details.Grid className={`lg:flex lg:justify-between`}>
@@ -98,14 +96,7 @@ const BuyersView = ({ id, profile }: { id: string; profile: any }) => {
           {isAllOrdersLoading ? (
             <TableSkeleton />
           ) : isAllOrdersError ? (
-            <EmptyState
-              title="Error loading orders"
-              description="There was a problem fetching the orders data. Please try again later."
-              className="min-h-fit space-y-0 rounded-lg bg-red-50 p-6"
-              titleClassName={`!text-lg font-bold !text-mid-danger`}
-              descriptionClassName={`!text-mid-danger`}
-              images={[]}
-            />
+            <ErrorState />
           ) : (
             <section className={`bg-background mt-6 space-y-4 rounded-lg p-6`}>
               <section className={`flex flex-col-reverse justify-between gap-4 lg:flex-row lg:items-center`}>
@@ -144,7 +135,7 @@ const BuyersView = ({ id, profile }: { id: string; profile: any }) => {
           )}
         </section>
       </section>
-    </>
+    </section>
   );
 };
 

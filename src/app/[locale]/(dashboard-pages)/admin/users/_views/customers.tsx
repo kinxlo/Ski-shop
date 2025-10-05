@@ -1,15 +1,16 @@
 "use client";
 
-import Loading from "@/app/Loading";
 import { Icons } from "@/components/core/miscellaneous/icons";
 import { SearchInput } from "@/components/core/miscellaneous/search-input";
 import { DashboardTable } from "@/components/shared/dashboard-table";
 import { useAdminUserColumn } from "@/components/shared/dashboard-table/admin/admin-table-data";
 import { DownloadCsvButton } from "@/components/shared/download-csv-button";
+import { EmptyState, ErrorState } from "@/components/shared/empty-state";
 import { useDashboardSearchParameters } from "@/lib/nuqs/use-dashboard-search-parameters";
 import { useUserService } from "@/services/externals/user/use-user-service";
 
 import { DashboardHeader } from "../../../_components/dashboard-header";
+import { TableSkeleton } from "../../../_components/dashboard-table/_components/table-skeleton";
 
 export const Customers = () => {
   const { search: searchQuery, limit, setSearch: setSearchQuery, resetToFirstPage } = useDashboardSearchParameters();
@@ -37,11 +38,7 @@ export const Customers = () => {
   };
 
   if (isError) {
-    return (
-      <div className="flex items-center justify-center p-20">
-        <p>Error loading customers. Please try again later.</p>
-      </div>
-    );
+    return <ErrorState />;
   }
 
   return (
@@ -75,7 +72,7 @@ export const Customers = () => {
       </div>
       <div>
         {isUsersLoading ? (
-          <Loading text="Loading customers..." className="w-fill h-fit p-20" />
+          <TableSkeleton />
         ) : userData?.data?.items?.length ? (
           <DashboardTable
             data={userData.data.items as Users[]}
@@ -88,9 +85,11 @@ export const Customers = () => {
             pageParameter="page"
           />
         ) : (
-          <div className="flex items-center justify-center p-20">
-            <p>No customers found.</p>
-          </div>
+          <EmptyState
+            className={`bg-transparent`}
+            title={`No match found`}
+            description={`No user match your filters.`}
+          />
         )}
       </div>
     </section>

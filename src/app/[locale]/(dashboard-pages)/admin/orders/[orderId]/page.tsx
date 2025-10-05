@@ -1,12 +1,9 @@
 "use client";
 
-import { Wrapper } from "@/components/core/layout/wrapper";
 import { BackButton } from "@/components/shared/back-button";
-import SkiButton from "@/components/shared/button";
 import { Details } from "@/components/shared/details";
-import { EmptyState } from "@/components/shared/empty-state";
+import { EmptyState, ErrorState } from "@/components/shared/empty-state";
 import { useDashboardOrderService } from "@/services/dashboard/vendor/orders/use-order-service";
-import Link from "next/link";
 import { use } from "react";
 
 import { DashboardHeader } from "../../../_components/dashboard-header";
@@ -26,55 +23,28 @@ const formatDate = (dateString: string) => {
 export default function OrderDetailPage({ params }: OrderDetailPageProperties) {
   const { orderId } = use(params);
   const { useGetOrderById } = useDashboardOrderService();
-  const { data: orderResponse, isLoading, isError } = useGetOrderById(orderId);
+  const { data: orderResponse, isLoading, isError, refetch } = useGetOrderById(orderId);
 
   if (isLoading) {
     return <OrderDetailSkeleton />;
   }
 
   if (isError || !orderResponse?.data) {
-    return (
-      <div className="min-h-screen bg-gray-50">
-        <DashboardHeader
-          title="Order Details"
-          subtitle="Track all orders from customers and their status"
-          showSubscriptionBanner={false}
-          icon={<BackButton />}
-        />
-        <Wrapper className="mx-auto px-0 py-4">
-          <EmptyState
-            images={[{ src: "/images/empty-state.svg", width: 80, height: 80, alt: "Error" }]}
-            title="Order not found"
-            description="The order you're looking for doesn't exist or has been removed."
-            className="bg-mid-grey-I space-y-0 rounded-lg"
-            titleClassName="!text-2xl"
-            descriptionClassName="text-base mb-4"
-            actionButton={
-              <Link href="/dashboard/orders">
-                <SkiButton variant="primary" size="lg">
-                  Back to Orders
-                </SkiButton>
-              </Link>
-            }
-          />
-        </Wrapper>
-      </div>
-    );
+    return <ErrorState className={`bg-background min-h-[calc(100vh-130px)]`} onRetry={() => refetch()} />;
   }
 
   const order = orderResponse.data;
 
   return (
-    <>
-      <section className={`flex flex-col items-center justify-between gap-4 lg:flex-row`}>
-        <DashboardHeader
-          title="Order Details"
-          subtitle={`${order.reference} details`}
-          showSubscriptionBanner={false}
-          icon={<BackButton />}
-        />
-        {/* TODO: Add order-specific CSV download functionality */}
-      </section>
+    <section className={`space-y-8`}>
+      <DashboardHeader
+        title="Order Details"
+        subtitle={`${order.reference} details`}
+        showSubscriptionBanner={false}
+        icon={<BackButton />}
+      />
+      {/* TODO: Add order-specific CSV download functionality */}
+
       <section className="space-y-6">
         <Details.Section title="Order Details">
           <Details.Grid className={`lg:flex lg:justify-between`}>
@@ -89,26 +59,34 @@ export default function OrderDetailPage({ params }: OrderDetailPageProperties) {
           </Details.Grid>
         </Details.Section>
         <Details.Section title="Order Products">
-          <div className="space-y-4">
-            {order.products.map((product) => (
-              <div key={product.id} className="flex items-center justify-between rounded-lg border p-4">
-                <div className="flex items-center space-x-4">
-                  {/* <img src={product.images[0]} alt={product.name} className="h-16 w-16 rounded object-cover" /> */}
-                  <div>
-                    <h4 className="font-semibold">{product.name || `Some product`}</h4>
-                    <p className="text-sm text-gray-600">Vendor: {product.vendor.name || `Unknown vendor`}</p>
-                    <p className="text-sm text-gray-600">Rating: {product.rating || `No rating`}</p>
+          {!order.products || order.products.length === 0 ? (
+            <EmptyState
+              title="No products in this order"
+              description="This order has no products to display."
+              descriptionClassName="mb-4"
+            />
+          ) : (
+            <div className="space-y-4">
+              {order.products.map((product) => (
+                <div key={product.id} className="flex items-center justify-between rounded-lg border p-4">
+                  <div className="flex items-center space-x-4">
+                    {/* <img src={product.images[0]} alt={product.name} className="h-16 w-16 rounded object-cover" /> */}
+                    <div>
+                      <h4 className="font-semibold">{product.name || `Some product`}</h4>
+                      <p className="text-sm text-gray-600">Vendor: {product.vendor?.name || `Unknown vendor`}</p>
+                      <p className="text-sm text-gray-600">Rating: {product.rating || `No rating`}</p>
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <p className="font-semibold">${product.price || `0.00`}</p>
+                    <p className="text-sm text-gray-600">Qty: {product.quantity || `0`}</p>
                   </div>
                 </div>
-                <div className="text-right">
-                  <p className="font-semibold">${product.price || `0.00`}</p>
-                  <p className="text-sm text-gray-600">Qty: {product.quantity || `0`}</p>
-                </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
         </Details.Section>
       </section>
-    </>
+    </section>
   );
 }
