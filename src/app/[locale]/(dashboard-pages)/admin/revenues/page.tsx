@@ -5,7 +5,7 @@ import { Icons } from "@/components/core/miscellaneous/icons";
 import { SearchInput } from "@/components/core/miscellaneous/search-input";
 import { DashboardTable } from "@/components/shared/dashboard-table";
 import { DownloadCsvButton } from "@/components/shared/download-csv-button";
-import { EmptyState } from "@/components/shared/empty-state";
+import { ErrorState } from "@/components/shared/empty-state";
 // import { orderStatusOptions } from "@/lib/constants";
 import { Locale } from "@/lib/i18n/config";
 import { formatCurrency } from "@/lib/i18n/utils";
@@ -15,10 +15,11 @@ import { useLocale } from "next-intl";
 import { GiWallet } from "react-icons/gi";
 
 import { DashboardHeader } from "../../_components/dashboard-header";
+import { TableSkeleton } from "../../_components/dashboard-table/_components/table-skeleton";
 // import { FilterDropdown } from "../../_components/dashboard-table/_components/filter-dropdown";
 import { OverViewCard } from "../../_components/overview-card";
 import { SectionTwo } from "./_components/currency-dropdown/section-two";
-import { AnalysisSkeleton, SectionTwoSkeleton, TableSkeleton } from "./_components/page-skeleton";
+import { AnalysisSkeleton, SectionTwoSkeleton } from "./_components/page-skeleton";
 import { useRevenueHistoryColumns } from "./_components/revenue-history-columns";
 
 const Page = () => {
@@ -74,14 +75,7 @@ const Page = () => {
       {isOverviewLoading ? (
         <AnalysisSkeleton />
       ) : isOverviewError ? (
-        <EmptyState
-          title="Error loading data"
-          description="There was a problem fetching the overview data. Please try again later."
-          className="min-h-fit space-y-0 rounded-lg bg-red-50 p-6"
-          titleClassName={`!text-lg font-bold !text-mid-danger`}
-          descriptionClassName={`!text-mid-danger`}
-          images={[]}
-        />
+        <ErrorState />
       ) : (
         <section className="grid grid-cols-1 gap-5 lg:grid-cols-2">
           <OverViewCard
@@ -113,20 +107,7 @@ const Page = () => {
 
       {/* Section Two */}
       <section>
-        {isOverviewLoading ? (
-          <SectionTwoSkeleton />
-        ) : isOverviewError ? (
-          <EmptyState
-            title="Error loading Graph data"
-            description="There was a problem fetching the graph data. Please try again later."
-            className="min-h-fit space-y-0 rounded-lg bg-red-50 p-6"
-            titleClassName={`!text-lg font-bold !text-mid-danger`}
-            descriptionClassName={`!text-mid-danger`}
-            images={[]}
-          />
-        ) : (
-          <SectionTwo />
-        )}
+        {isOverviewLoading ? <SectionTwoSkeleton /> : isOverviewError ? <ErrorState /> : <SectionTwo />}
       </section>
 
       {/* Revenue History Table Section */}
@@ -134,14 +115,7 @@ const Page = () => {
         {isRevenueHistoryLoading ? (
           <TableSkeleton />
         ) : isRevenueHistoryError ? (
-          <EmptyState
-            title="Error loading revenue history"
-            description="There was a problem fetching the revenue history data. Please try again later."
-            className="min-h-fit space-y-0 rounded-lg bg-red-50 p-6"
-            titleClassName={`!text-lg font-bold !text-mid-danger`}
-            descriptionClassName={`!text-mid-danger`}
-            images={[]}
-          />
+          <ErrorState />
         ) : (
           <section className={`bg-background mt-6 space-y-4 rounded-lg p-6`}>
             <DashboardHeader
@@ -154,7 +128,7 @@ const Page = () => {
               actionComponent={
                 <div className="">
                   <div className="flex items-center gap-2">
-                    <SearchInput className={``} onSearch={handleSearchChange} initialValue={searchQuery} />
+                    <SearchInput disabled onSearch={handleSearchChange} initialValue={searchQuery} />
                     {/* <FilterDropdown options={orderStatusOptions} value={status} onValueChange={handleStatusChange} /> */}
                     <DownloadCsvButton
                       data={(revenueHistory?.data || []) as Record<string, unknown>[]}
